@@ -5,6 +5,20 @@ import './App.css'
 
 function App() {
   const [count, setCount] = useState(0)
+  const [apiResponse, setApiResponse] = useState<string>('')
+  const [loading, setLoading] = useState(false)
+
+  const checkBackendConnection = async () => {
+    setLoading(true)
+    try {
+      const response = await fetch('http://localhost:3001/api/health')
+      const data = await response.json()
+      setApiResponse(JSON.stringify(data, null, 2))
+    } catch (error) {
+      setApiResponse(`Error: ${error instanceof Error ? error.message : 'Unknown error'}`)
+    }
+    setLoading(false)
+  }
 
   return (
     <>
@@ -25,6 +39,19 @@ function App() {
           Edit <code>src/App.tsx</code> and save to test HMR
         </p>
       </div>
+      
+      <div className="card">
+        <h2>Backend Connection Test</h2>
+        <button onClick={checkBackendConnection} disabled={loading}>
+          {loading ? 'Checking...' : 'Check Backend Connection'}
+        </button>
+        {apiResponse && (
+          <pre style={{ textAlign: 'left', marginTop: '1rem', padding: '1rem', backgroundColor: '#f4f4f4', borderRadius: '4px' }}>
+            {apiResponse}
+          </pre>
+        )}
+      </div>
+      
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
       </p>
