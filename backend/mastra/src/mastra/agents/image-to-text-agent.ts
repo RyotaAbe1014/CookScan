@@ -1,6 +1,5 @@
 import { Agent } from '@mastra/core/agent';
 import { googleGemini25Flash } from '../models/google';
-import { imageToTextTool } from '../tools/image-to-text-tool';
 
 export const imageToTextAgent = new Agent({
   name: 'Image to Text Agent',
@@ -22,5 +21,4 @@ export const imageToTextAgent = new Agent({
 - 余計な説明や解釈は加えず、純粋にテキストの抽出のみを行ってください
 `,
   model: googleGemini25Flash,
-  tools: { imageToTextTool },
 });

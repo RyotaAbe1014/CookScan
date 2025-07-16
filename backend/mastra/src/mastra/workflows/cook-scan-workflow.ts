@@ -13,11 +13,6 @@ const imageToTextStep = createStep({
       .refine((files) => 0 < files.length && files.length < 2, {
         message: "添付できる画像ファイルは1枚までです",
       })
-      .refine(
-        (files) =>
-          Array.from(files).every((file) => ['image/jpeg', 'image/png'].includes(file.type)),
-        { message: "添付できる画像ファイルはjpegかpngです" },
-      ),
   }),
   outputSchema: z.object({
     text: z.string(),
@@ -100,11 +95,6 @@ const cookScanWorkflow = createWorkflow({
       .refine((files) => 0 < files.length && files.length < 2, {
         message: "添付できる画像ファイルは1枚までです",
       })
-      .refine(
-        (files) =>
-          Array.from(files).every((file) => ['image/jpeg', 'image/png'].includes(file.type)),
-        { message: "添付できる画像ファイルはjpegかpngです" },
-      ),
   }),
   outputSchema: z.object({
     title: z.string(),
