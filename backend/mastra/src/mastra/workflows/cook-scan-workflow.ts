@@ -34,7 +34,9 @@ const imageToTextStep = createStep({
           },
         ]
       },
-    ]);
+    ], {
+      temperature: 0,
+    });
 
     return {
       text: response.text,
