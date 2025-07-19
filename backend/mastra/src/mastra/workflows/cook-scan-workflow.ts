@@ -1,46 +1,56 @@
 import { createStep, createWorkflow } from "@mastra/core";
 import { z } from "zod";
+import { generateText } from "ai";
+import { googleGemini25Flash } from "../models/google";
 
 const imageToTextStep = createStep({
   id: 'image-to-text',
   description: 'Convert image to text',
   inputSchema: z.object({
-    images: z
-      .custom<FileList>()
-      .refine((files) => 0 < files.length, {
-        message: "画像ファイルの添付は必須です",
-      })
-      .refine((files) => 0 < files.length && files.length < 2, {
-        message: "添付できる画像ファイルは1枚までです",
-      })
+    image: z.custom<File>(),
   }),
   outputSchema: z.object({
     text: z.string(),
   }),
-  execute: async ({ inputData, mastra }) => {
-    const agent = mastra?.getAgent('imageToTextAgent');
-    if (!agent) {
-      throw new Error('Image to text agent not found');
-    }
+  execute: async ({ inputData }) => {
+    try {
+      console.log('Processing image:', inputData.image.name, inputData.image.type, inputData.image.size);
 
-    const response = await agent.generate([
-      {
-        role: 'user',
-        content: [
+      const arrayBuffer = await inputData.image.arrayBuffer();
+      const buffer = Buffer.from(arrayBuffer);
+
+      console.log('Image converted to buffer, size:', buffer.length);
+
+      const response = await generateText({
+        model: googleGemini25Flash,
+        messages: [
           {
-            type: 'file',
-            data: await inputData.images[0].arrayBuffer(),
-            mimeType: inputData.images[0].type,
-          },
-        ]
-      },
-    ], {
-      temperature: 0,
-    });
+            role: 'user',
+            content: [
+              {
+                type: 'text',
+                text: 'この画像からすべてのテキストを抽出してください。',
+              },
+              {
+                type: 'file',
+                data: buffer,
+                mimeType: inputData.image.type,
+              }
+            ]
+          }
+        ],
+        temperature: 0.0,
+      });
 
-    return {
-      text: response.text,
-    };
+      console.log('Gemini API response:', response);
+
+      return {
+        text: response.text,
+      };
+    } catch (error) {
+      console.error('Error in image-to-text step:', error);
+      throw new Error(`Failed to extract text from image: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
   },
 });
 
@@ -89,14 +99,7 @@ const convertTextToRecipeStep = createStep({
 const cookScanWorkflow = createWorkflow({
   id: 'cook-scan-workflow',
   inputSchema: z.object({
-    images: z
-      .custom<FileList>()
-      .refine((files) => 0 < files.length, {
-        message: "画像ファイルの添付は必須です",
-      })
-      .refine((files) => 0 < files.length && files.length < 2, {
-        message: "添付できる画像ファイルは1枚までです",
-      })
+    image: z.custom<File>(),
   }),
   outputSchema: z.object({
     title: z.string(),
