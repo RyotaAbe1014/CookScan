@@ -14,10 +14,6 @@ app.use('/*', cors({
   allowHeaders: ['Content-Type', 'Authorization'],
 }))
 
-app.get('/', (c) => {
-  return c.text('Hello Hono!')
-})
-
 // ヘルスチェックエンドポイント
 app.get('/api/health', (c) => {
   c.header('Content-Type', 'application/json; charset=utf-8')
