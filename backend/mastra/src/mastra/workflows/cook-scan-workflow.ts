@@ -14,13 +14,8 @@ const imageToTextStep = createStep({
   }),
   execute: async ({ inputData }) => {
     try {
-      console.log('Processing image:', inputData.image.name, inputData.image.type, inputData.image.size);
-
       const arrayBuffer = await inputData.image.arrayBuffer();
       const buffer = Buffer.from(arrayBuffer);
-
-      console.log('Image converted to buffer, size:', buffer.length);
-
       const response = await generateText({
         model: googleGemini25Flash,
         messages: [
@@ -41,8 +36,6 @@ const imageToTextStep = createStep({
         ],
         temperature: 0.0,
       });
-
-      console.log('Gemini API response:', response);
 
       return {
         text: response.text,

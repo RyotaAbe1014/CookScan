@@ -31,7 +31,6 @@ app.get('/api/health', (c) => {
 // レシピ抽出エンドポイント
 app.post('/api/recipes/extract', async (c) => {
   try {
-    console.log(process.env.GOOGLE_API_KEY);
 
     // リクエストボディからフォームデータを取得
     const formData = await c.req.formData()
@@ -53,7 +52,6 @@ app.post('/api/recipes/extract', async (c) => {
     }
 
     // Mastraワークフローの実行
-    console.log('Executing cook-scan workflow...')
     const workflow = mastra.getWorkflow('cookScanWorkflow')
 
     const run = await workflow.createRunAsync()
