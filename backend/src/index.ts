@@ -1,9 +1,12 @@
 import 'dotenv/config'
 import { Hono } from 'hono'
+import { v4 as uuidv4 } from 'uuid'
 import { handle } from 'hono/aws-lambda'
 import { cors } from 'hono/cors'
 import { serve } from '@hono/node-server'
 import { mastra } from '../mastra/src/mastra'
+import recipes from './routes/recipes'
+import { db, ensureDatabase, initDatabase } from './db/database'
 
 const app = new Hono()
 
@@ -13,6 +16,9 @@ app.use('/*', cors({
   allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowHeaders: ['Content-Type', 'Authorization'],
 }))
+
+// データベース初期化
+await initDatabase()
 
 // ヘルスチェックエンドポイント
 app.get('/api/health', (c) => {
@@ -24,9 +30,14 @@ app.get('/api/health', (c) => {
   })
 })
 
+// レシピAPIルート
+app.route('/api/recipes', recipes)
+
 // レシピ抽出エンドポイント
 app.post('/api/recipes/extract', async (c) => {
   try {
+    // クエリパラメータからsaveオプションを取得
+    const save = c.req.query('save') === 'true'
 
     // リクエストボディからフォームデータを取得
     const formData = await c.req.formData()
@@ -63,11 +74,31 @@ app.post('/api/recipes/extract', async (c) => {
       return c.json({ error: 'レシピの抽出中にエラーが発生しました' }, 500)
     }
 
+    let savedRecipe = null
+
+    // saveパラメータがtrueの場合、レシピを保存
+    if (save && response.result) {
+      await ensureDatabase()
+
+      const now = new Date().toISOString()
+      const newRecipe = {
+        id: uuidv4(),
+        ...response.result,
+        createdAt: now,
+        updatedAt: now
+      }
+
+      db.data?.recipes.push(newRecipe)
+      await db.write()
+
+      savedRecipe = newRecipe
+    }
+
     // レスポンスを返す
     c.header('Content-Type', 'application/json; charset=utf-8')
     return c.json({
       success: true,
-      recipe: response.result
+      recipe: savedRecipe || response.result
     })
 
   } catch (error) {
