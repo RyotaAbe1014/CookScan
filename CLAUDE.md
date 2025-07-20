@@ -1,115 +1,99 @@
 # CLAUDE.md
 
-このファイルは、このリポジトリでコードを扱う際のClaude Code (claude.ai/code)向けのガイダンスを提供します。
+このファイルは、このリポジトリでコードを扱う際のClaude Code (claude.ai/code)へのガイダンスを提供します。
 
 ## プロジェクト概要
 
-CookScanは、AI を使用して画像（スクリーンショット、写真、手書きメモ）を構造化されたレシピデータに変換する日本語レシピ抽出アプリケーションです。プロジェクトは3つの主要コンポーネントを持つモノレポとして構成されています：
-
-- **フロントエンド** (`/frontend/`) - React+Vite アプリケーション（TypeScript）
-- **バックエンド** (`/backend/`) - Hono API サーバー（AWS Lambda デプロイメント）
-- **Mastra AI** (`/backend/mastra/`) - レシピ処理用 AI ワークフローフレームワーク
+CookScanは、画像（スクリーンショット、写真、手書きメモ）からレシピ情報を抽出し、構造化されたJSONデータに変換するWebアプリケーションです。OCRとLLM技術を使用してレシピデータを解析・構造化します。
 
 ## 開発コマンド
 
-### フロントエンド開発
+### バックエンド（backend/）
 ```bash
-cd frontend
-npm run dev      # 開発サーバー起動 (ポート 5173)
-npm run build    # 本番用ビルド
-npm run lint     # ESLint 実行
-npm run preview  # 本番ビルドのプレビュー
+# 開発サーバー起動（ポート3001）
+npm run dev
+
+# ビルド（AWS Lambda用）
+npm run build
+
+# AWSへのデプロイ
+npm run deploy
 ```
 
-### バックエンド開発
+### フロントエンド（frontend/）
 ```bash
-cd backend
-npm run dev      # 開発サーバー起動 (ポート 3001)
-npm run build    # esbuild でバンドル
-npm run deploy   # AWS Lambda 完全デプロイメントパイプライン
+# 開発サーバー起動
+npm run dev
+
+# ビルド
+npm run build
+
+# リント
+npm run lint
 ```
 
-### AI フレームワーク (Mastra)
+### Mastra AIワークフロー（backend/mastra/）
 ```bash
-cd backend/mastra
-npm run dev      # Mastra 開発サーバー起動
-npm run build    # Mastra アプリケーションビルド
-npm run start    # 本番サーバー起動
+# 開発
+npm run dev
+
+# ビルド
+npm run build
+
+# 起動
+npm run start
 ```
 
 ## アーキテクチャ
 
-### フロントエンドアーキテクチャ
-- **React 19** と TypeScript、Vite による高速開発
-- **コンポーネント構造**: API ヘルスチェック統合を含む基本的なアプリ構造
-- **API 通信**: ポート 3001 のバックエンドへの接続を設定
-- **ビルドプロセス**: TypeScript コンパイル + Vite バンドリング
-
-### バックエンドアーキテクチャ
-- **Hono フレームワーク**: サーバーレス向けに最適化された高速Webフレームワーク
-- **CORS 設定**: フロントエンド通信用に有効化（ポート 5173）
-- **AWS Lambda 対応**: Lambda 関数用のデプロイメントスクリプト設定済み
-- **API エンドポイント**: `/api/health` でヘルスチェックエンドポイント
-
-### AI 統合 (Mastra)
-- **OpenAI 統合**: テキスト処理用 GPT-4o-mini
-- **データベース**: データストレージ用 LibSQL（SQLite 互換）
-- **スキーマ検証**: 型安全なデータ検証用 Zod
-- **ツールアーキテクチャ**: AI 操作用の拡張可能なワークフローシステム
-
-## レシピ処理ワークフロー（計画中）
-
-アプリケーションは以下のワークフローに従います：
-1. **画像アップロード**: ユーザーが画像ファイルをドラッグ＆ドロップ
-2. **OCR 処理**: Gemini 2.5 Pro が画像からテキストを抽出
-3. **AI 解析**: GPT-4o がテキストを構造化されたレシピ JSON に変換
-4. **プレビュー＆編集**: ユーザーが抽出されたデータを確認・修正
-5. **保存**: レシピデータをローカル SQLite データベースに保存
-
-## コード構成
-
-### フロントエンド (`/frontend/`)
-- `src/App.tsx` - メインアプリケーションコンポーネント
-- `src/main.tsx` - アプリケーションエントリーポイント
-- `vite.config.ts` - Vite 設定
-- `tsconfig.json` - TypeScript 設定
-
-### バックエンド (`/backend/`)
-- `src/index.ts` - CORS 付き Hono サーバー設定
-- `esbuild.config.js` - ビルド設定
-- `deploy.sh` - AWS Lambda デプロイメントスクリプト
-
-### Mastra (`/backend/mastra/`)
-- `src/index.ts` - Mastra アプリケーションエントリーポイント
-- `src/tools/` - AI ワークフローツール
-- `src/workflows/` - AI 処理ワークフロー
-- `drizzle.config.ts` - データベース設定
-
-## 重要な注意事項
-
 ### 技術スタック
-- **フロントエンド**: React 19, TypeScript, Vite, ESLint
-- **バックエンド**: Hono, Node.js, esbuild, AWS Lambda
-- **AI**: Mastra フレームワーク, OpenAI GPT-4o-mini, LibSQL
-- **言語**: プロジェクトは日本語テキスト処理をサポート
+- **フロントエンド**: React + TypeScript + Vite + Material-UI
+- **バックエンド**: Node.js + Hono（軽量Webフレームワーク）
+- **データベース**: lowdb（JSONベースのローカルDB）
+- **AI/ML**: 
+  - 画像処理: Google Gemini 2.5 Flash（OCR/テキスト抽出）
+  - テキスト処理: OpenAI GPT-4o（レシピ構造化）
+  - ワークフロー: Mastraフレームワーク
 
-### 開発環境
-- Node.js 20.9.0+ が必要
-- すべてのプロジェクトでロックファイル付きの npm を使用
-- 全体で ESM モジュール
-- 開発時にホットモジュールリプレースメントが有効
+### 主要なディレクトリ構造
+- `backend/src/`: バックエンドのメインコード
+  - `routes/`: APIエンドポイント定義
+  - `db/`: データベース設定
+  - `types/`: TypeScript型定義
+- `backend/mastra/src/mastra/`: AIワークフロー実装
+  - `agents/`: テキスト/画像処理エージェント
+  - `workflows/`: レシピ抽出ワークフロー
+- `frontend/src/`: フロントエンドコード
+  - `api/`: バックエンドAPIクライアント
+  - `components/`: Reactコンポーネント
 
-### テスト
-現在、テストフレームワークは設定されていません。テストを実装する際は以下を検討してください：
-- フロントエンド: Vitest（Vite と良好に統合）
-- バックエンド: Node.js テストフレームワーク
-- AI ワークフロー: Mastra ツール用ユニットテスト
+### APIエンドポイント
+- `POST /api/recipes/extract`: 画像からレシピを抽出（保存オプション付き）
+- `GET /api/recipes`: 全レシピ一覧
+- `GET /api/recipes/:id`: 特定のレシピ取得
+- `PUT /api/recipes/:id`: レシピ更新
+- `DELETE /api/recipes/:id`: レシピ削除
 
-### 一般的な開発タスク
-- 完全な開発開始: `/frontend/` と `/backend/` ディレクトリで `npm run dev` を実行
-- フロントエンドルートでバックエンド接続テストが利用可能
-- AWS デプロイメントには適切な Lambda 関数設定が必要
-- Mastra ワークフローには OpenAI API キー設定が必要
+### データモデル
+```typescript
+interface Recipe {
+  id: string;
+  title: string;
+  ingredients: Array<{
+    name: string;
+    quantity: string;
+  }>;
+  steps: string[];
+  memo?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+```
 
-### プロジェクトステータス
-これは基本的なインフラストラクチャが整った初期段階のプロジェクトです。コアとなるレシピ抽出機能はまだ実装されていません - 現在の Mastra 設定には、レシピ処理ワークフローに置き換える必要がある天気ワークフローの例が含まれています。
+## 開発時の注意点
+
+1. **環境変数**: AIモデルのAPIキー（OPENAI_API_KEY、GOOGLE_GENERATIVE_AI_API_KEY）が必要
+2. **ポート**: バックエンドは3001番ポートで起動
+3. **画像制限**: アップロード可能な画像は10MBまで、JPEG/PNG/WebP形式
+4. **データベース**: `backend/db.json`にレシピデータが保存される
+5. **AWS Lambda**: バックエンドはLambda対応でビルド・デプロイ可能
