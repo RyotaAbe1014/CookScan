@@ -1,18 +1,22 @@
-import { useState } from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import {
-  Container,
-  Typography,
-  Box,
-  Alert,
-  Snackbar,
   ThemeProvider,
   createTheme,
   CssBaseline,
+  AppBar,
+  Toolbar,
+  Typography,
+  Button,
+  Container,
 } from '@mui/material';
-import { ImageUpload } from './components/ImageUpload';
-import { RecipeDisplay } from './components/RecipeDisplay';
-import { extractRecipe } from './api/recipe';
-import type { Recipe } from './types/recipe';
+import HomeIcon from '@mui/icons-material/Home';
+import CameraAltIcon from '@mui/icons-material/CameraAlt';
+import { useNavigate } from 'react-router-dom';
+
+import RecipeList from './pages/RecipeList';
+import RecipeDetail from './pages/RecipeDetail';
+import RecipeEdit from './pages/RecipeEdit';
+import RecipeExtract from './pages/RecipeExtract';
 
 const theme = createTheme({
   palette: {
@@ -43,92 +47,60 @@ const theme = createTheme({
   },
 });
 
-function App() {
-  const [recipe, setRecipe] = useState<Recipe | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
-
-  const handleImageUpload = async (file: File) => {
-    setLoading(true);
-    setError(null);
-    setRecipe(null);
-
-    const result = await extractRecipe(file);
-
-    if (result.success && result.recipe) {
-      setRecipe(result.recipe);
-      setSuccessMessage('レシピの抽出に成功しました！');
-    } else {
-      setError(result.error || 'レシピの抽出に失敗しました');
-    }
-
-    setLoading(false);
-  };
+const AppContent = () => {
+  const navigate = useNavigate();
 
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Container maxWidth="lg">
-        <Box sx={{ py: 4 }}>
+    <>
+      <AppBar position="static" elevation={0}>
+        <Toolbar>
           <Typography
-            variant="h3"
-            component="h1"
-            align="center"
-            gutterBottom
-            sx={{ fontWeight: 'bold', color: 'primary.main' }}
+            variant="h6"
+            component="div"
+            sx={{ flexGrow: 1, fontWeight: 'bold', cursor: 'pointer' }}
+            onClick={() => navigate('/')}
           >
             CookScan
           </Typography>
-          <Typography
-            variant="h6"
-            align="center"
-            color="text.secondary"
-            gutterBottom
-            sx={{ mb: 4 }}
+          <Button
+            color="inherit"
+            startIcon={<HomeIcon />}
+            onClick={() => navigate('/')}
           >
-            レシピ画像を簡単にデータ化
-          </Typography>
-
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: { xs: 'column', md: 'row' },
-              gap: 4,
-              alignItems: 'flex-start',
-              justifyContent: 'center',
-            }}
+            レシピ一覧
+          </Button>
+          <Button
+            color="inherit"
+            startIcon={<CameraAltIcon />}
+            onClick={() => navigate('/extract')}
           >
-            <Box sx={{ flex: recipe ? { xs: '1', md: '0 0 50%' } : { xs: 1, md: '0 0 60%' }, maxWidth: { md: '600px' } }}>
-              <ImageUpload onUpload={handleImageUpload} loading={loading} />
-            </Box>
+            レシピ抽出
+          </Button>
+        </Toolbar>
+      </AppBar>
 
-            {recipe && (
-              <Box sx={{ flex: { xs: '1', md: '0 0 50%' } }}>
-                <RecipeDisplay recipe={recipe} />
-              </Box>
-            )}
-          </Box>
-
-          {error && (
-            <Alert severity="error" sx={{ mt: 3 }}>
-              {error}
-            </Alert>
-          )}
-        </Box>
-
-        <Snackbar
-          open={!!successMessage}
-          autoHideDuration={6000}
-          onClose={() => setSuccessMessage(null)}
-        >
-          <Alert severity="success" onClose={() => setSuccessMessage(null)}>
-            {successMessage}
-          </Alert>
-        </Snackbar>
+      <Container sx={{ minHeight: 'calc(100vh - 64px)' }}>
+        <Routes>
+          <Route path="/" element={<RecipeList />} />
+          <Route path="/extract" element={<RecipeExtract />} />
+          <Route path="/recipes/:id" element={<RecipeDetail />} />
+          <Route path="/recipes/:id/edit" element={<RecipeEdit />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
       </Container>
+    </>
+  );
+};
+
+function App() {
+  return (
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <BrowserRouter>
+        <AppContent />
+      </BrowserRouter>
     </ThemeProvider>
-  )
+  );
 }
 
-export default App
+export default App;

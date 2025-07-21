@@ -82,3 +82,5 @@ export const RecipeDisplay: React.FC<RecipeDisplayProps> = ({ recipe }) => {
     </Card>
   );
 };
+
+export default RecipeDisplay;

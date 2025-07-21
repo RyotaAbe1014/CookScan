@@ -3,11 +3,13 @@ import { Box, Paper, Typography, IconButton, LinearProgress } from '@mui/materia
 import { CloudUpload, Close } from '@mui/icons-material';
 
 interface ImageUploadProps {
-  onUpload: (file: File) => void;
+  onImageSelect?: (file: File) => void;
+  onUpload?: (file: File) => void;
   loading?: boolean;
+  onReset?: () => void;
 }
 
-export const ImageUpload: React.FC<ImageUploadProps> = ({ onUpload, loading = false }) => {
+export const ImageUpload: React.FC<ImageUploadProps> = ({ onImageSelect, onUpload, loading = false, onReset }) => {
   const [isDragging, setIsDragging] = useState(false);
   const [preview, setPreview] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -29,7 +31,11 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({ onUpload, loading = fa
       setPreview(e.target?.result as string);
     };
     reader.readAsDataURL(file);
-    onUpload(file);
+    if (onImageSelect) {
+      onImageSelect(file);
+    } else if (onUpload) {
+      onUpload(file);
+    }
   };
 
   const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -42,6 +48,9 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({ onUpload, loading = fa
   const clearSelection = () => {
     setSelectedFile(null);
     setPreview(null);
+    if (onReset) {
+      onReset();
+    }
   };
 
   return (
@@ -132,3 +141,5 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({ onUpload, loading = fa
     </Paper>
   );
 };
+
+export default ImageUpload;
