@@ -10,7 +10,7 @@
     "db:generate": "prisma generate",
     "db:format": "prisma format",
     "db:validate": "prisma validate",
-    "db:migrate:dev": "dotenv -e .env.local -- prisma migrate dev",
+    "db:migrate:dev": "dotenv -e .env.local -- prisma migrate dev --name ${npm_config_name}",
     "db:push:dev": "dotenv -e .env.local -- prisma db push",
     "db:seed:dev": "dotenv -e .env.local -- prisma db seed",
     "db:reset:dev": "dotenv -e .env.local -- prisma migrate reset",

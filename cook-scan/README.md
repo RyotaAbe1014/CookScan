@@ -1,36 +1,124 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# CookScan
 
-## Getting Started
+A web application that extracts recipe information from food images.
 
-First, run the development server:
+## Tech Stack
 
+- **Framework**: Next.js 15.4 (App Router)
+- **Language**: TypeScript
+- **Database**: PostgreSQL
+- **ORM**: Prisma
+- **Styling**: Tailwind CSS
+
+## Setup
+
+### Prerequisites
+
+- Node.js 18+
+- Docker Desktop
+- npm or yarn
+
+### Environment Setup
+
+1. **Clone the repository**
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone [repository-url]
+cd cook-scan
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. **Install dependencies**
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. **Start PostgreSQL**
+```bash
+docker compose up -d
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+4. **Set environment variables**
+Create `.env.local` file with:
+```
+DATABASE_URL=postgresql://postgres:postgres@localhost:5433/cookscan_dev
+```
 
-## Learn More
+5. **Setup database**
+```bash
+npm run db:migrate:dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+6. **Start development server**
+```bash
+npm run dev
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Application will be available at http://localhost:3000
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Development Commands
 
-## Deploy on Vercel
+### Application
+- `npm run dev` - Start development server (Turbopack)
+- `npm run build` - Production build
+- `npm run start` - Start production server
+- `npm run lint` - Run lint check
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Database (Development)
+- `npm run db:migrate:dev` - Run migrations
+- `npm run db:push:dev` - Push schema changes directly
+- `npm run db:reset:dev` - Reset database
+- `npm run db:studio:dev` - Open Prisma Studio
+- `npm run db:seed:dev` - Seed database
+- `npm run db:migrate:status` - Check migration status
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Database (Production)
+- `npm run db:migrate:prod` - Production migration
+- `npm run db:migrate:deploy` - Safe deploy
+- `npm run db:studio:prod` - Production Prisma Studio
+
+### Common Commands
+- `npm run db:generate` - Generate Prisma Client
+- `npm run db:format` - Format schema
+- `npm run db:validate` - Validate schema
+
+## Project Structure
+
+```
+cook-scan/
+├── prisma/           # Prisma schema
+├── public/           # Static files
+├── src/
+│   └── app/         # Next.js App Router
+├── docker-compose.yml # PostgreSQL configuration
+└── package.json
+```
+
+## Docker Environment
+
+PostgreSQL is managed with Docker:
+- Port: 5433 (host) → 5432 (container)
+- Database: cookscan_dev
+- User: postgres
+- Password: postgres
+
+### Docker Operations
+```bash
+# Start
+docker compose up -d
+
+# Stop
+docker compose down
+
+# Check logs
+docker compose logs -f postgres
+```
+
+## Troubleshooting
+
+### Migration fails
+1. Check if PostgreSQL is running
+2. Verify .env.local file is correctly configured
+3. Check container status with `docker ps`
+
+### Build errors
+1. Regenerate Prisma Client with `npm run db:generate`
+2. Delete node_modules and reinstall
