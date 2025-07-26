@@ -12,3 +12,161 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+// ユーザーテーブル（Supabase Auth用）
+model User {
+  id        String   @id @default(uuid())
+  authId    String   @unique @map("auth_id")
+  email     String   @unique
+  name      String?
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  recipes              Recipe[]
+  tagCategories        TagCategory[]
+  ocrProcessingHistory OcrProcessingHistory[]
+  recipeVersions       RecipeVersion[]
+
+  @@map("users")
+}
+
+// レシピテーブル
+model Recipe {
+  id             String   @id @default(uuid())
+  userId         String   @map("user_id")
+  title          String
+  parentRecipeId String?  @map("parent_recipe_id")
+  sourceInfo     Json?    @map("source_info") // {book_name, page_number, url等}
+  imageUrl       String?  @map("image_url")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  user                 User                  @relation(fields: [userId], references: [id])
+  parentRecipe         Recipe?               @relation("ParentChild", fields: [parentRecipeId], references: [id])
+  childRecipes         Recipe[]              @relation("ParentChild")
+  ingredients          Ingredient[]
+  steps                Step[]
+  recipeTags           RecipeTag[]
+  ocrProcessingHistory OcrProcessingHistory?
+  recipeVersions       RecipeVersion[]
+
+  @@map("recipes")
+}
+
+// 材料テーブル
+model Ingredient {
+  id         String   @id @default(uuid())
+  recipeId   String   @map("recipe_id")
+  name       String
+  unit       String?
+  orderIndex Int      @map("order_index")
+  notes      String?
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  recipe Recipe @relation(fields: [recipeId], references: [id])
+
+  @@map("ingredients")
+}
+
+// 調理手順テーブル
+model Step {
+  id           String   @id @default(uuid())
+  recipeId     String   @map("recipe_id")
+  stepNumber   Int      @map("step_number")
+  instruction  String
+  timerMinutes Int?     @map("timer_minutes")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  recipe Recipe @relation(fields: [recipeId], references: [id])
+
+  @@map("steps")
+}
+
+// タグカテゴリテーブル
+model TagCategory {
+  id          String   @id @default(uuid())
+  userId      String   @map("user_id")
+  name        String
+  description String?
+  isSystem    Boolean  @default(false) @map("is_system")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  user User  @relation(fields: [userId], references: [id])
+  tags Tag[]
+
+  @@map("tag_categories")
+}
+
+// タグテーブル
+model Tag {
+  id          String   @id @default(uuid())
+  categoryId  String   @map("category_id")
+  name        String
+  description String?
+  isSystem    Boolean  @default(false) @map("is_system")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  category   TagCategory @relation(fields: [categoryId], references: [id])
+  recipeTags RecipeTag[]
+
+  @@map("tags")
+}
+
+// レシピ・タグ中間テーブル
+model RecipeTag {
+  recipeId  String   @map("recipe_id")
+  tagId     String   @map("tag_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  // Relations
+  recipe Recipe @relation(fields: [recipeId], references: [id])
+  tag    Tag    @relation(fields: [tagId], references: [id])
+
+  @@id([recipeId, tagId])
+  @@map("recipe_tags")
+}
+
+// OCR処理履歴テーブル
+model OcrProcessingHistory {
+  id             String   @id @default(uuid())
+  userId         String   @map("user_id")
+  recipeId       String   @unique @map("recipe_id")
+  ocrResult      Json     @map("ocr_result")
+  structuredData Json     @map("structured_data")
+  status         String
+  processedAt    DateTime @map("processed_at")
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  // Relations
+  user   User   @relation(fields: [userId], references: [id])
+  recipe Recipe @relation(fields: [recipeId], references: [id])
+
+  @@map("ocr_processing_history")
+}
+
+// レシピ版管理テーブル（Could要件）
+model RecipeVersion {
+  id            String   @id @default(uuid())
+  recipeId      String   @map("recipe_id")
+  versionNumber Int      @map("version_number")
+  snapshot      Json
+  changeNote    String?  @map("change_note")
+  createdBy     String   @map("created_by")
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  // Relations
+  recipe Recipe @relation(fields: [recipeId], references: [id])
+  user   User   @relation(fields: [createdBy], references: [id])
+
+  @@map("recipe_versions")
+}
