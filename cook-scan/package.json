@@ -4,8 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "dotenv -e .env -- next dev --turbopack",
-    "build:dev": "dotenv -e .env -- next build",
-    "build:prod": "next build",
+    "build": "dotenv -e .env -- next build",
     "start": "next start",
     "lint": "next lint",
     "db:generate": "prisma generate",
