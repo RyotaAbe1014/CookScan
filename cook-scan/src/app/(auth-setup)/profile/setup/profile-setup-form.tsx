@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useTransition } from 'react'
 import { createProfile } from './actions'
 
 interface ProfileSetupFormProps {
@@ -10,20 +10,16 @@ interface ProfileSetupFormProps {
 
 export default function ProfileSetupForm({ userId, userEmail }: ProfileSetupFormProps) {
   const [name, setName] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [isPending, startTransition] = useTransition()
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    setIsLoading(true)
     setError(null)
 
-    try {
+    startTransition(async () => {
       await createProfile(userId, userEmail, name)
-    } catch (err) {
-      setError('プロフィールの作成に失敗しました')
-      setIsLoading(false)
-    }
+    })
   }
 
   return (
@@ -64,10 +60,10 @@ export default function ProfileSetupForm({ userId, userEmail }: ProfileSetupForm
 
       <button
         type="submit"
-        disabled={isLoading || !name.trim()}
+        disabled={isPending || !name.trim()}
         className="w-full rounded-md bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:bg-gray-300 disabled:cursor-not-allowed"
       >
-        {isLoading ? '作成中...' : 'プロフィールを作成'}
+        {isPending ? '作成中...' : 'プロフィールを作成'}
       </button>
     </form>
   )
