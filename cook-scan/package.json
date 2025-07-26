@@ -16,11 +16,10 @@
     "db:seed:dev": "dotenv -e .env.local -- prisma db seed",
     "db:reset:dev": "dotenv -e .env.local -- prisma migrate reset",
     "db:studio:dev": "dotenv -e .env.local -- prisma studio",
-    "db:migrate:status": "dotenv -e .env.local -- prisma migrate status",
-    "db:migrate:prod": "dotenv -e .env -- prisma migrate deploy",
-    "db:migrate:deploy": "dotenv -e .env -- prisma migrate deploy",
-    "db:seed:prod": "dotenv -e .env -- prisma db seed",
-    "db:studio:prod": "dotenv -e .env -- prisma studio"
+    "db:migrate:status": "dotenv -e .env.production -- prisma migrate status",
+    "db:migrate:deploy": "dotenv -e .env.production -- prisma migrate deploy",
+    "db:seed:prod": "dotenv -e .env.production -- prisma db seed",
+    "db:studio:prod": "dotenv -e .env.production -- prisma studio"
   },
   "dependencies": {
     "@prisma/client": "^6.12.0",
