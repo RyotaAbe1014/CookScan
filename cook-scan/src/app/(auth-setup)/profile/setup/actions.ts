@@ -16,6 +16,6 @@ export async function createProfile(authId: string, email: string, name: string)
     console.error('Failed to create profile:', error)
     throw new Error('プロフィールの作成に失敗しました')
   }
-  
-  redirect('/')
+
+  redirect('/dashboard')
 }
