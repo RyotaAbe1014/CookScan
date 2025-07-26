@@ -1,7 +1,7 @@
 'use server'
 
 import { prisma } from '@/lib/prisma'
-import { revalidatePath } from 'next/cache'
+import { redirect } from 'next/navigation'
 
 export async function createProfile(authId: string, email: string, name: string) {
   try {
@@ -12,10 +12,10 @@ export async function createProfile(authId: string, email: string, name: string)
         name,
       },
     })
-
-    revalidatePath('/')
   } catch (error) {
     console.error('Failed to create profile:', error)
     throw new Error('プロフィールの作成に失敗しました')
   }
+  
+  redirect('/')
 }

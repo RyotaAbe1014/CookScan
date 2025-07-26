@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { createProfile } from './actions'
 
 interface ProfileSetupFormProps {
@@ -10,7 +9,6 @@ interface ProfileSetupFormProps {
 }
 
 export default function ProfileSetupForm({ userId, userEmail }: ProfileSetupFormProps) {
-  const router = useRouter()
   const [name, setName] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -22,8 +20,6 @@ export default function ProfileSetupForm({ userId, userEmail }: ProfileSetupForm
 
     try {
       await createProfile(userId, userEmail, name)
-      router.push('/')
-      router.refresh()
     } catch (err) {
       setError('プロフィールの作成に失敗しました')
       setIsLoading(false)
