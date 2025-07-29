@@ -1,6 +1,7 @@
 import { createClient } from '@/utils/supabase/server'
 import { checkUserProfile } from '@/lib/auth-utils'
 import Link from 'next/link'
+import { logout } from '@/actions/auth'
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -15,7 +16,7 @@ export default async function DashboardPage() {
             <h1 className="text-3xl font-bold tracking-tight text-gray-900">
               CookScan ダッシュボード
             </h1>
-            <form action="/auth/signout" method="post">
+            <form action={logout}>
               <button className="text-sm text-gray-500 hover:text-gray-700">
                 ログアウト
               </button>
