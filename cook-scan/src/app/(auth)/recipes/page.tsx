@@ -1,4 +1,3 @@
-import { createClient } from '@/utils/supabase/server'
 import { checkUserProfile } from '@/lib/auth-utils'
 import Link from 'next/link'
 import { prisma } from '@/lib/prisma'
