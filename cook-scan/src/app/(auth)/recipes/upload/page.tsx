@@ -5,13 +5,14 @@ import Link from 'next/link'
 import MethodSelector from './method-selector'
 import ImageUpload from './image-upload'
 import RecipeForm from './recipe-form'
+import type { ExtractedRecipeData } from './types'
 
 type Step = 'method-selection' | 'image-upload' | 'form'
 
 export default function RecipeUploadPage() {
   const [currentStep, setCurrentStep] = useState<Step>('method-selection')
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null)
-  const [extractedData, setExtractedData] = useState<any>(null)
+  const [extractedData, setExtractedData] = useState<ExtractedRecipeData | null>(null)
 
   const handleMethodSelect = (method: 'scan' | 'manual') => {
     if (method === 'scan') {

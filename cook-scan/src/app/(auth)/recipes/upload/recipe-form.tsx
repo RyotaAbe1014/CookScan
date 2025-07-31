@@ -16,9 +16,11 @@ type Step = {
   timerMinutes: string
 }
 
+import type { ExtractedRecipeData } from './types'
+
 type Props = {
   imageUrl: string | null
-  extractedData: any
+  extractedData: ExtractedRecipeData | null
 }
 
 export default function RecipeForm({ imageUrl, extractedData }: Props) {
