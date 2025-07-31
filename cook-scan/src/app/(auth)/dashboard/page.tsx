@@ -35,7 +35,7 @@ export default async function DashboardPage() {
 
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           <Link
-            href="/recipes/scan"
+            href="/recipes/upload"
             className="group relative rounded-lg border border-gray-200 bg-white p-6 hover:shadow-lg transition-shadow"
           >
             <div>
