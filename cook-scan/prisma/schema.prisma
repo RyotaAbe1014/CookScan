@@ -37,7 +37,6 @@ model Recipe {
   userId         String   @map("user_id")
   title          String
   parentRecipeId String?  @map("parent_recipe_id")
-  sourceInfo     Json?    @map("source_info") // {book_name, page_number, url等}
   imageUrl       String?  @map("image_url")
   createdAt      DateTime @default(now()) @map("created_at")
   updatedAt      DateTime @updatedAt @map("updated_at")
@@ -51,6 +50,7 @@ model Recipe {
   recipeTags           RecipeTag[]
   ocrProcessingHistory OcrProcessingHistory?
   recipeVersions       RecipeVersion[]
+  sourceInfo           SourceInfo[]
 
   @@map("recipes")
 }
@@ -61,7 +61,6 @@ model Ingredient {
   recipeId   String   @map("recipe_id")
   name       String
   unit       String?
-  orderIndex Int      @map("order_index")
   notes      String?
   createdAt  DateTime @default(now()) @map("created_at")
   updatedAt  DateTime @updatedAt @map("updated_at")
@@ -76,9 +75,9 @@ model Ingredient {
 model Step {
   id           String   @id @default(uuid())
   recipeId     String   @map("recipe_id")
-  stepNumber   Int      @map("step_number")
+  orderIndex   Int      @map("order_index")
   instruction  String
-  timerMinutes Int?     @map("timer_minutes")
+  timerSeconds Int?     @map("timer_seconds")
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
 
@@ -169,4 +168,21 @@ model RecipeVersion {
   user   User   @relation(fields: [createdBy], references: [id])
 
   @@map("recipe_versions")
+}
+
+// ソース情報テーブル
+model SourceInfo {
+  id String @id @default(uuid())
+  recipeId String @map("recipe_id")
+  sourceType String?
+  sourceName String?
+  sourceUrl String?
+  pageNumber String?
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  recipe Recipe @relation(fields: [recipeId], references: [id])
+
+  @@map("source_infos")
 }
