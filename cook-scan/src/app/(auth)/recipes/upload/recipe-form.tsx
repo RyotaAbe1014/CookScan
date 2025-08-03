@@ -3,19 +3,6 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
-type Ingredient = {
-  id: string
-  name: string
-  unit: string
-  notes: string
-}
-
-type Step = {
-  id: string
-  instruction: string
-  timerMinutes: string
-}
-
 import type { ExtractedRecipeData } from './types'
 
 type Props = {
@@ -26,60 +13,54 @@ type Props = {
 export default function RecipeForm({ imageUrl, extractedData }: Props) {
   const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
-
-  // フォームの状態
   const [title, setTitle] = useState(extractedData?.title || '')
   const [sourceInfo, setSourceInfo] = useState({
     bookName: extractedData?.sourceInfo?.bookName || '',
     pageNumber: extractedData?.sourceInfo?.pageNumber || '',
     url: extractedData?.sourceInfo?.url || ''
   })
-  const [ingredients, setIngredients] = useState<Ingredient[]>(
-    extractedData?.ingredients || [
-      { id: '1', name: '', unit: '', notes: '' }
-    ]
+  const [ingredients, setIngredients] = useState<ExtractedRecipeData['ingredients']>(
+    extractedData?.ingredients || []
   )
-  const [steps, setSteps] = useState<Step[]>(
-    extractedData?.steps || [
-      { id: '1', instruction: '', timerMinutes: '' }
-    ]
+  const [steps, setSteps] = useState<ExtractedRecipeData['steps']>(
+    extractedData?.steps || []
   )
 
   const addIngredient = () => {
     setIngredients([
       ...ingredients,
-      { id: Date.now().toString(), name: '', unit: '', notes: '' }
+      { name: '', unit: '', notes: '' }
     ])
   }
 
-  const removeIngredient = (id: string) => {
+  const removeIngredient = (index: number) => {
     if (ingredients.length > 1) {
-      setIngredients(ingredients.filter(ing => ing.id !== id))
+      setIngredients(ingredients.filter((_, i) => i !== index))
     }
   }
 
-  const updateIngredient = (id: string, field: keyof Ingredient, value: string) => {
-    setIngredients(ingredients.map(ing =>
-      ing.id === id ? { ...ing, [field]: value } : ing
+  const updateIngredient = (index: number, field: keyof ExtractedRecipeData['ingredients'][number], value: string) => {
+    setIngredients(ingredients.map((ing, i) =>
+      i === index ? { ...ing, [field]: value } : ing
     ))
   }
 
   const addStep = () => {
     setSteps([
       ...steps,
-      { id: Date.now().toString(), instruction: '', timerMinutes: '' }
+      { instruction: '', timerMinutes: undefined, order: steps.length + 1 }
     ])
   }
 
-  const removeStep = (id: string) => {
+  const removeStep = (index: number) => {
     if (steps.length > 1) {
-      setSteps(steps.filter(step => step.id !== id))
+      setSteps(steps.filter((_, i) => i !== index))
     }
   }
 
-  const updateStep = (id: string, field: keyof Step, value: string) => {
-    setSteps(steps.map(step =>
-      step.id === id ? { ...step, [field]: value } : step
+  const updateStep = (index: number, field: keyof ExtractedRecipeData['steps'][number], value: string) => {
+    setSteps(steps.map((step, i) =>
+      i === index ? { ...step, [field]: value } : step
     ))
   }
 
@@ -186,13 +167,13 @@ export default function RecipeForm({ imageUrl, extractedData }: Props) {
           </div>
           <div className="space-y-3">
             {ingredients.map((ingredient, index) => (
-              <div key={ingredient.id} className="flex gap-3">
+              <div key={index} className="flex gap-3">
                 <div className="flex-1">
                   <input
                     type="text"
                     placeholder="材料名"
                     value={ingredient.name}
-                    onChange={(e) => updateIngredient(ingredient.id, 'name', e.target.value)}
+                    onChange={(e) => updateIngredient(index, 'name', e.target.value)}
                     className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                   />
                 </div>
@@ -201,7 +182,7 @@ export default function RecipeForm({ imageUrl, extractedData }: Props) {
                     type="text"
                     placeholder="分量"
                     value={ingredient.unit}
-                    onChange={(e) => updateIngredient(ingredient.id, 'unit', e.target.value)}
+                    onChange={(e) => updateIngredient(index, 'unit', e.target.value)}
                     className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                   />
                 </div>
@@ -210,13 +191,13 @@ export default function RecipeForm({ imageUrl, extractedData }: Props) {
                     type="text"
                     placeholder="メモ"
                     value={ingredient.notes}
-                    onChange={(e) => updateIngredient(ingredient.id, 'notes', e.target.value)}
+                    onChange={(e) => updateIngredient(index, 'notes', e.target.value)}
                     className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                   />
                 </div>
                 <button
                   type="button"
-                  onClick={() => removeIngredient(ingredient.id)}
+                  onClick={() => removeIngredient(index)}
                   disabled={ingredients.length === 1}
                   className="rounded-md p-2 text-gray-400 hover:text-red-500 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
@@ -246,7 +227,7 @@ export default function RecipeForm({ imageUrl, extractedData }: Props) {
           </div>
           <div className="space-y-4">
             {steps.map((step, index) => (
-              <div key={step.id} className="flex gap-3">
+              <div key={index} className="flex gap-3">
                 <div className="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-100 text-sm font-medium text-indigo-600">
                   {index + 1}
                 </div>
@@ -254,7 +235,7 @@ export default function RecipeForm({ imageUrl, extractedData }: Props) {
                   <textarea
                     placeholder="手順の説明"
                     value={step.instruction}
-                    onChange={(e) => updateStep(step.id, 'instruction', e.target.value)}
+                    onChange={(e) => updateStep(index, 'instruction', e.target.value)}
                     rows={2}
                     className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                   />
@@ -266,7 +247,7 @@ export default function RecipeForm({ imageUrl, extractedData }: Props) {
                       type="number"
                       placeholder="タイマー（分）"
                       value={step.timerMinutes}
-                      onChange={(e) => updateStep(step.id, 'timerMinutes', e.target.value)}
+                      onChange={(e) => updateStep(index, 'timerMinutes', e.target.value)}
                       className="w-24 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     />
                     <span className="text-sm text-gray-500">分</span>
@@ -274,7 +255,7 @@ export default function RecipeForm({ imageUrl, extractedData }: Props) {
                 </div>
                 <button
                   type="button"
-                  onClick={() => removeStep(step.id)}
+                  onClick={() => removeStep(index)}
                   disabled={steps.length === 1}
                   className="rounded-md p-2 text-gray-400 hover:text-red-500 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
