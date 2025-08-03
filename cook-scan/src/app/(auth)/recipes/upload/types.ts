@@ -12,8 +12,7 @@ export type ExtractedRecipeData = {
   }[]
   steps: {
     instruction: string
-    timerMinutes?: number
-    order: number
+    timerSeconds?: number
   }[]
   tags: string[]
 }

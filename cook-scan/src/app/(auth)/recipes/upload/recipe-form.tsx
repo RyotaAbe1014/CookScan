@@ -48,7 +48,7 @@ export default function RecipeForm({ imageUrl, extractedData }: Props) {
   const addStep = () => {
     setSteps([
       ...steps,
-      { instruction: '', timerMinutes: undefined, order: steps.length + 1 }
+      { instruction: '', timerSeconds: undefined }
     ])
   }
 
@@ -245,12 +245,12 @@ export default function RecipeForm({ imageUrl, extractedData }: Props) {
                     </svg>
                     <input
                       type="number"
-                      placeholder="タイマー（分）"
-                      value={step.timerMinutes}
-                      onChange={(e) => updateStep(index, 'timerMinutes', e.target.value)}
+                      placeholder="タイマー（秒）"
+                      value={step.timerSeconds}
+                      onChange={(e) => updateStep(index, 'timerSeconds', e.target.value)}
                       className="w-24 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     />
-                    <span className="text-sm text-gray-500">分</span>
+                    <span className="text-sm text-gray-500">秒</span>
                   </div>
                 </div>
                 <button
