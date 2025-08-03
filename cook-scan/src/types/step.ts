@@ -1,8 +1,9 @@
 export type Step = {
   id: string
+  recipeId: string
+  orderIndex: number
   instruction: string
-  timerMinutes?: number
-  order: number
+  timerSeconds?: number
   createdAt: Date
   updatedAt: Date
 }

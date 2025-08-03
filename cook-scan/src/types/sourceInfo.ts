@@ -1,8 +1,10 @@
 export type SourceInfo = {
   id: string
-  bookName: string
-  pageNumber: string
-  url?: string
+  recipeId: string
+  sourceType?: string
+  sourceName?: string
+  sourceUrl?: string
+  pageNumber?: string
   createdAt: Date
   updatedAt: Date
 }
