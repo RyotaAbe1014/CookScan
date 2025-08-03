@@ -91,7 +91,7 @@ model Step {
 // タグカテゴリテーブル
 model TagCategory {
   id          String   @id @default(uuid())
-  userId      String   @map("user_id")
+  userId      String?  @map("user_id")
   name        String
   description String?
   isSystem    Boolean  @default(false) @map("is_system")
@@ -99,7 +99,7 @@ model TagCategory {
   updatedAt   DateTime @updatedAt @map("updated_at")
 
   // Relations
-  user User  @relation(fields: [userId], references: [id])
+  user User?  @relation(fields: [userId], references: [id])
   tags Tag[]
 
   @@map("tag_categories")
