@@ -1,18 +1,18 @@
 export type ExtractedRecipeData = {
-  title?: string
-  sourceInfo?: {
-    bookName?: string
-    pageNumber?: string
+  title: string
+  sourceInfo: {
+    bookName: string
+    pageNumber: string
     url?: string
-  }
-  ingredients?: Array<{
+  } | null
+  ingredients: {
     name: string
     unit?: string
     notes?: string
-  }>
-  steps?: Array<{
+  }[]
+  steps: {
     instruction: string
     timerMinutes?: number
-  }>
-  tags?: string[]
+  }[]
+  tags: string[]
 }
