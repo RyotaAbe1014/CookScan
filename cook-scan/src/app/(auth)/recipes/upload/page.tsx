@@ -94,7 +94,7 @@ export default function RecipeUploadPage() {
         )}
 
         {currentStep === 'image-upload' && (
-          <ImageUpload onUpload={handleImageUpload} />
+          <ImageUpload onUpload={handleImageUpload} setExtractedData={setExtractedData} />
         )}
 
         {currentStep === 'form' && (

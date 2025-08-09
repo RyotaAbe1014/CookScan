@@ -1,12 +1,14 @@
 'use client'
 
 import { useState, useRef } from 'react'
+import { ExtractedRecipeData } from './types'
 
 type Props = {
   onUpload: (imageUrl: string) => void
+  setExtractedData: (data: ExtractedRecipeData) => void
 }
 
-export default function ImageUpload({ onUpload }: Props) {
+export default function ImageUpload({ onUpload, setExtractedData }: Props) {
   const [isDragging, setIsDragging] = useState(false)
   const [preview, setPreview] = useState<string | null>(null)
   const [isUploading, setIsUploading] = useState(false)
@@ -75,6 +77,8 @@ export default function ImageUpload({ onUpload }: Props) {
         return
       }
 
+      const data = await res.json()
+      setExtractedData(data.result)
       onUpload(preview)
     } catch (e) {
       console.error(e)
