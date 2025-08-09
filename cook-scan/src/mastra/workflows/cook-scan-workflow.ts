@@ -57,9 +57,12 @@ const convertTextToRecipeStep = createStep({
     title: z.string(),
     ingredients: z.array(z.object({
       name: z.string(),
-      quantity: z.string(),
+      unit: z.string(),
     })),
-    steps: z.array(z.string()),
+    steps: z.array(z.object({
+      instruction: z.string(),
+      timerSeconds: z.number().optional(),
+    })),
     memo: z.string().optional(),
   }),
   execute: async ({ inputData, mastra }) => {
@@ -78,9 +81,12 @@ const convertTextToRecipeStep = createStep({
         title: z.string(),
         ingredients: z.array(z.object({
           name: z.string(),
-          quantity: z.string(),
+          unit: z.string(),
         })),
-        steps: z.array(z.string()),
+        steps: z.array(z.object({
+          instruction: z.string(),
+          timerSeconds: z.number().optional(),
+        })),
         memo: z.string().optional(),
       })
     });
@@ -98,9 +104,12 @@ const cookScanWorkflow = createWorkflow({
     title: z.string(),
     ingredients: z.array(z.object({
       name: z.string(),
-      quantity: z.string(),
+      unit: z.string(),
     })),
-    steps: z.array(z.string()),
+    steps: z.array(z.object({
+      instruction: z.string(),
+      timerSeconds: z.number().optional(),
+    })),
     memo: z.string().optional(),
   }),
 })

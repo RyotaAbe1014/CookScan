@@ -22,16 +22,13 @@ export async function POST(request: NextRequest) {
       }
     })
 
-    console.log('Workflow completed successfully')
-
     if (response.status === 'failed' || response.status === 'suspended') {
       return NextResponse.json(
         { success: false, error: 'Failed to process request' },
         { status: 500 }
       )
     }
-    console.log(response.result)
-    return NextResponse.json({}, { status: 200 })
+    return NextResponse.json({ success: true, result: response.result }, { status: 200 })
   } catch (error) {
     console.error(error)
     return NextResponse.json(

@@ -21,8 +21,11 @@ export const convertTextToRecipeAgent = new Agent({
 - title: レシピのタイトル（文字列）
 - ingredients: 材料リスト（配列）
   - name: 材料名（文字列）
-  - quantity: 分量（文字列）
-- steps: 調理手順（文字列の配列）
+  - unit: 分量（文字列）
+  - notes: メモ（文字列、任意）
+- steps: 調理手順（配列）
+  - instruction: 調理手順の説明（文字列）
+  - timerSeconds: 調理時間（秒、任意）
 - memo: メモ・補足情報（文字列、任意）
 
 ## 注意事項

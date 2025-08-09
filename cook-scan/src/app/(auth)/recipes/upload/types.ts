@@ -14,5 +14,6 @@ export type ExtractedRecipeData = {
     instruction: string
     timerSeconds?: number
   }[]
+  memo?: string
   tags: string[]
 }

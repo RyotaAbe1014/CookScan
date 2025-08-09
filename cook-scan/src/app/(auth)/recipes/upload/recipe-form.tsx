@@ -25,6 +25,7 @@ export default function RecipeForm({ imageUrl, extractedData }: Props) {
   const [steps, setSteps] = useState<ExtractedRecipeData['steps']>(
     extractedData?.steps || []
   )
+  const [memo, setMemo] = useState(extractedData?.memo || '')
 
   const addIngredient = () => {
     setIngredients([
@@ -146,6 +147,17 @@ export default function RecipeForm({ imageUrl, extractedData }: Props) {
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-4 py-2"
                 />
               </div>
+            </div>
+            <div>
+              <label htmlFor="memo" className="block text-sm font-medium text-gray-700">
+                メモ
+              </label>
+              <textarea
+                id="memo"
+                value={memo}
+                onChange={(e) => setMemo(e.target.value)}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-4 py-2"
+              />
             </div>
           </div>
         </div>
