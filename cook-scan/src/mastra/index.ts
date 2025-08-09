@@ -1,9 +1,9 @@
 
 import { Mastra } from '@mastra/core/mastra';
 import { PinoLogger } from '@mastra/loggers';
-import { cookScanWorkflow } from './src/mastra/workflows/cook-scan-workflow';
-import { imageToTextAgent } from './src/mastra/agents/image-to-text-agent';
-import { convertTextToRecipeAgent } from './src/mastra/agents/convert-text-to-recipe-agent';
+import { cookScanWorkflow } from './workflows/cook-scan-workflow';
+import { imageToTextAgent } from './agents/image-to-text-agent';
+import { convertTextToRecipeAgent } from './agents/convert-text-to-recipe-agent';
 
 export const mastra = new Mastra({
   workflows: { cookScanWorkflow },
