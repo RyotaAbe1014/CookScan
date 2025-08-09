@@ -10,6 +10,7 @@ export default function ImageUpload({ onUpload }: Props) {
   const [isDragging, setIsDragging] = useState(false)
   const [preview, setPreview] = useState<string | null>(null)
   const [isUploading, setIsUploading] = useState(false)
+  const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleDragOver = (e: React.DragEvent) => {
@@ -45,6 +46,7 @@ export default function ImageUpload({ onUpload }: Props) {
       return
     }
 
+    setSelectedFile(file)
     const reader = new FileReader()
     reader.onload = (e) => {
       setPreview(e.target?.result as string)
@@ -53,19 +55,38 @@ export default function ImageUpload({ onUpload }: Props) {
   }
 
   const handleUpload = async () => {
-    if (!preview) return
+    if (!selectedFile || !preview) return
 
     setIsUploading(true)
-    // TODO: 実際のアップロード処理を実装
-    // 現時点では仮のURLを返す
-    setTimeout(() => {
-      setIsUploading(false)
+    try {
+      const formData = new FormData()
+      formData.append('file', selectedFile)
+
+      const res = await fetch('/recipes/extract', {
+        method: 'POST',
+        body: formData,
+      })
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}))
+        const msg = (data && data.error) || 'アップロードに失敗しました'
+        alert(msg)
+        setIsUploading(false)
+        return
+      }
+
       onUpload(preview)
-    }, 1500)
+    } catch (e) {
+      console.error(e)
+      alert('ネットワークエラーが発生しました')
+    } finally {
+      setIsUploading(false)
+    }
   }
 
   const handleRemove = () => {
     setPreview(null)
+    setSelectedFile(null)
     if (fileInputRef.current) {
       fileInputRef.current.value = ''
     }
