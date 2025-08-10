@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/utils/supabase/server'
 import { prisma } from '@/lib/prisma'
-import ProfileSetupForm from './profile-setup-form'
+import ProfileSetupForm from '@/features/profile/setup/profile-setup-form'
 
 export default async function ProfileSetupPage() {
   const supabase = await createClient()
