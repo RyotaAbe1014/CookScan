@@ -3,6 +3,10 @@
 import { useState, useRef } from 'react'
 import { ExtractedRecipeData } from './types'
 
+type ExtractResponse =
+  | { success: true; result: ExtractedRecipeData }
+  | { success: false; error: string }
+
 type Props = {
   onUpload: (imageUrl: string) => void
   setExtractedData: (data: ExtractedRecipeData) => void
@@ -69,16 +73,16 @@ export default function ImageUpload({ onUpload, setExtractedData }: Props) {
         body: formData,
       })
 
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}))
-        const msg = (data && (data as any).error) || 'アップロードに失敗しました'
+      const data: ExtractResponse = await res.json().catch(() => ({ success: false, error: 'アップロードに失敗しました' }))
+
+      if (!res.ok || data.success === false) {
+        const msg = data.success === false ? data.error : 'アップロードに失敗しました'
         alert(msg)
         setIsUploading(false)
         return
       }
 
-      const data = await res.json()
-      setExtractedData((data as any).result)
+      setExtractedData(data.result)
       onUpload(preview)
     } catch (e) {
       console.error(e)
