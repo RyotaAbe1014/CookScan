@@ -17,3 +17,4 @@ export type ExtractedRecipeData = {
   memo?: string
   tags: string[]
 }
+

@@ -2,10 +2,10 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import MethodSelector from './method-selector'
-import ImageUpload from './image-upload'
-import RecipeForm from './recipe-form'
-import type { ExtractedRecipeData } from './types'
+import MethodSelector from '@/features/recipes/upload/method-selector'
+import ImageUpload from '@/features/recipes/upload/image-upload'
+import RecipeForm from '@/features/recipes/upload/recipe-form'
+import type { ExtractedRecipeData } from '@/features/recipes/upload/types'
 
 type Step = 'method-selection' | 'image-upload' | 'form'
 

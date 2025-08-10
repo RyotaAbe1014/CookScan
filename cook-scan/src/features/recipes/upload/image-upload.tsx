@@ -71,14 +71,14 @@ export default function ImageUpload({ onUpload, setExtractedData }: Props) {
 
       if (!res.ok) {
         const data = await res.json().catch(() => ({}))
-        const msg = (data && data.error) || 'アップロードに失敗しました'
+        const msg = (data && (data as any).error) || 'アップロードに失敗しました'
         alert(msg)
         setIsUploading(false)
         return
       }
 
       const data = await res.json()
-      setExtractedData(data.result)
+      setExtractedData((data as any).result)
       onUpload(preview)
     } catch (e) {
       console.error(e)
