@@ -1,5 +1,5 @@
 import { createClient } from '@/utils/supabase/server'
-import { prisma } from './prisma'
+import { prisma } from '@/lib/prisma'
 
 export async function checkUserProfile() {
   const supabase = await createClient()

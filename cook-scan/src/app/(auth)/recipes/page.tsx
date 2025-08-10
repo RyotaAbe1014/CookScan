@@ -1,4 +1,4 @@
-import { checkUserProfile } from '@/lib/auth-utils'
+import { checkUserProfile } from '@/features/auth/auth-utils'
 import Link from 'next/link'
 import { prisma } from '@/lib/prisma'
 

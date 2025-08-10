@@ -1,7 +1,7 @@
 import { createClient } from '@/utils/supabase/server'
-import { checkUserProfile } from '@/lib/auth-utils'
+import { checkUserProfile } from '@/features/auth/auth-utils'
 import Link from 'next/link'
-import { logout } from '@/actions/auth'
+import { logout } from '@/features/auth/actions'
 
 export default async function DashboardPage() {
   const supabase = await createClient()

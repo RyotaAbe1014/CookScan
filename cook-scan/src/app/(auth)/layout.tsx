@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/utils/supabase/server'
-import { checkUserProfile } from '@/lib/auth-utils'
+import { checkUserProfile } from '@/features/auth/auth-utils'
 
 export default async function AuthLayout({
   children,
