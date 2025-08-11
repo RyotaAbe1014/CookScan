@@ -21,10 +21,9 @@ export default function RecipeUploadContent() {
     }
   }
 
-  const handleImageUpload = (imageUrl: string) => {
+  const handleImageUpload = (imageUrl: string, extractedData: ExtractedRecipeData) => {
     setUploadedImageUrl(imageUrl)
-    // TODO: OCR処理を実装
-    // 現時点では空のフォームに遷移
+    setExtractedData(extractedData)
     setCurrentStep('form')
   }
 
@@ -69,7 +68,7 @@ export default function RecipeUploadContent() {
       )}
 
       {currentStep === 'image-upload' && (
-        <ImageUpload onUpload={handleImageUpload} setExtractedData={setExtractedData} />
+        <ImageUpload onUpload={handleImageUpload} />
       )}
 
       {currentStep === 'form' && (

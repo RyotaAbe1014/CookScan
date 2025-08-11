@@ -8,11 +8,10 @@ type ExtractResponse =
   | { success: false; error: string }
 
 type Props = {
-  onUpload: (imageUrl: string) => void
-  setExtractedData: (data: ExtractedRecipeData) => void
+  onUpload: (imageUrl: string, extractedData: ExtractedRecipeData) => void
 }
 
-export default function ImageUpload({ onUpload, setExtractedData }: Props) {
+export default function ImageUpload({ onUpload }: Props) {
   const [isDragging, setIsDragging] = useState(false)
   const [preview, setPreview] = useState<string | null>(null)
   const [isUploading, setIsUploading] = useState(false)
@@ -81,9 +80,7 @@ export default function ImageUpload({ onUpload, setExtractedData }: Props) {
         setIsUploading(false)
         return
       }
-
-      setExtractedData(data.result)
-      onUpload(preview)
+      onUpload(preview, data.result)
     } catch (e) {
       console.error(e)
       alert('ネットワークエラーが発生しました')
@@ -107,11 +104,10 @@ export default function ImageUpload({ onUpload, setExtractedData }: Props) {
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
-          className={`relative rounded-lg border-2 border-dashed p-12 text-center transition-colors ${
-            isDragging
+          className={`relative rounded-lg border-2 border-dashed p-12 text-center transition-colors ${isDragging
               ? 'border-indigo-500 bg-indigo-50'
               : 'border-gray-300 bg-white hover:border-gray-400'
-          }`}
+            }`}
         >
           <svg
             className="mx-auto h-16 w-16 text-gray-400"
