@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
 import type { ExtractedRecipeData } from './types'
+import { createRecipe } from './actions'
 
 type Props = {
   imageUrl: string | null
@@ -69,12 +70,29 @@ export default function RecipeForm({ imageUrl, extractedData }: Props) {
     e.preventDefault()
     setIsSubmitting(true)
 
-    // TODO: 実際の保存処理を実装
-    setTimeout(() => {
+    try {
+      const result = await createRecipe({
+        title,
+        sourceInfo: sourceInfo.bookName || sourceInfo.pageNumber || sourceInfo.url 
+          ? sourceInfo 
+          : null,
+        ingredients,
+        steps,
+        memo,
+        tags: [] // タグは一旦空配列
+      })
+
+      if (result.success) {
+        router.push(`/recipes/${result.recipeId}`)
+      } else {
+        alert(result.error || 'レシピの保存に失敗しました')
+        setIsSubmitting(false)
+      }
+    } catch (error) {
+      console.error('Error creating recipe:', error)
+      alert('エラーが発生しました')
       setIsSubmitting(false)
-      alert('レシピを保存しました（仮）')
-      router.push('/recipes')
-    }, 1500)
+    }
   }
 
   return (
