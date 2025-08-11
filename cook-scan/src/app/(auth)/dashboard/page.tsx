@@ -1,12 +1,14 @@
-import { createClient } from '@/utils/supabase/server'
 import { checkUserProfile } from '@/features/auth/auth-utils'
 import Link from 'next/link'
 import { logout } from '@/features/auth/actions'
+import { redirect } from 'next/navigation'
 
 export default async function DashboardPage() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
   const { profile } = await checkUserProfile()
+
+  if (!profile) {
+    return redirect('/login')
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -28,9 +30,9 @@ export default async function DashboardPage() {
       <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="mb-8">
           <h2 className="text-xl font-semibold text-gray-900">
-            こんにちは、{profile?.name}さん
+            こんにちは、{profile.name}さん
           </h2>
-          <p className="mt-1 text-sm text-gray-600">{user?.email}</p>
+          <p className="mt-1 text-sm text-gray-600">{profile.email}</p>
         </div>
 
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
