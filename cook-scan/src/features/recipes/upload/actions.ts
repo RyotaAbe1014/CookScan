@@ -10,7 +10,7 @@ export async function createRecipe(request: CreateRecipeRequest) {
 
   // Get current user
   const { hasAuth, hasProfile, profile } = await checkUserProfile()
-  
+
   if (!hasAuth || !hasProfile || !profile) {
     redirect('/login')
   }
@@ -23,6 +23,7 @@ export async function createRecipe(request: CreateRecipeRequest) {
         data: {
           userId: profile.id,
           title,
+          memo: memo || null,
         }
       })
 
@@ -62,20 +63,6 @@ export async function createRecipe(request: CreateRecipeRequest) {
         })
       }
 
-      // Store memo in recipe version as a snapshot
-      if (memo) {
-        await tx.recipeVersion.create({
-          data: {
-            recipeId: newRecipe.id,
-            versionNumber: 1,
-            snapshot: {
-              memo: memo
-            },
-            changeNote: 'Initial recipe creation',
-            createdBy: profile.id,
-          }
-        })
-      }
 
       return newRecipe
     })
