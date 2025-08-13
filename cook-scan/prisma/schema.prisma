@@ -38,6 +38,7 @@ model Recipe {
   title          String
   parentRecipeId String?  @map("parent_recipe_id")
   imageUrl       String?  @map("image_url")
+  memo           String?
   createdAt      DateTime @default(now()) @map("created_at")
   updatedAt      DateTime @updatedAt @map("updated_at")
 
