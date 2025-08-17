@@ -30,12 +30,20 @@ export default async function RecipeDetailPage({ params }: RecipeDetailPageProps
                 作成日: {recipe.createdAt.toLocaleDateString('ja-JP')}
               </p>
             </div>
-            <Link
-              href="/recipes"
-              className="text-sm text-gray-500 hover:text-gray-700"
-            >
-              マイレシピに戻る
-            </Link>
+            <div className="flex items-center space-x-4">
+              <Link
+                href={`/recipes/${recipe.id}/edit`}
+                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              >
+                編集
+              </Link>
+              <Link
+                href="/recipes"
+                className="text-sm text-gray-500 hover:text-gray-700"
+              >
+                マイレシピに戻る
+              </Link>
+            </div>
           </div>
         </div>
       </header>
