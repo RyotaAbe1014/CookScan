@@ -6,15 +6,15 @@ import { login, signup } from '@/features/auth/actions'
 export default function LoginPage() {
   const [isPending, startTransition] = useTransition()
 
-  const handleLogin = (formData: FormData) => {
-    startTransition(() => {
-      login(formData)
+  const handleLogin = async (formData: FormData) => {
+    startTransition(async () => {
+      await login(formData)
     })
   }
 
-  const handleSignup = (formData: FormData) => {
-    startTransition(() => {
-      signup(formData)
+  const handleSignup = async (formData: FormData) => {
+    startTransition(async () => {
+      await signup(formData)
     })
   }
 
