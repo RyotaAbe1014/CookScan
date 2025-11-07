@@ -61,9 +61,9 @@ const convertTextToRecipeStep = createStep({
     })),
     steps: z.array(z.object({
       instruction: z.string(),
-      timerSeconds: z.number().optional(),
+      timerSeconds: z.number().nullable(),
     })),
-    memo: z.string().optional(),
+    memo: z.string().nullable(),
   }),
   execute: async ({ inputData, mastra }) => {
     const agent = mastra?.getAgent('convertTextToRecipeAgent');
@@ -85,9 +85,9 @@ const convertTextToRecipeStep = createStep({
         })),
         steps: z.array(z.object({
           instruction: z.string(),
-          timerSeconds: z.number().optional(),
+          timerSeconds: z.number().nullable(),
         })),
-        memo: z.string().optional(),
+        memo: z.string().nullable(),
       })
     });
 
@@ -108,9 +108,9 @@ const cookScanWorkflow = createWorkflow({
     })),
     steps: z.array(z.object({
       instruction: z.string(),
-      timerSeconds: z.number().optional(),
+      timerSeconds: z.number().nullable(),
     })),
-    memo: z.string().optional(),
+    memo: z.string().nullable(),
   }),
 })
   .then(imageToTextStep)
