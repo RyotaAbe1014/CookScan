@@ -27,9 +27,9 @@ const imageToTextStep = createStep({
                 text: 'この画像からすべてのテキストを抽出してください。',
               },
               {
-                type: 'file',
-                data: buffer,
-                mimeType: inputData.image.type,
+                type: 'image',
+                image: buffer,
+                mediaType: inputData.image.type,
               }
             ]
           }
