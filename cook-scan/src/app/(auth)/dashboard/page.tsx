@@ -1,7 +1,7 @@
 import { checkUserProfile } from '@/features/auth/auth-utils'
 import Link from 'next/link'
-import { logout } from '@/features/auth/actions'
 import { redirect } from 'next/navigation'
+import LogoutButton from '@/features/auth/logout-button'
 
 export default async function DashboardPage() {
   const { profile } = await checkUserProfile()
@@ -18,11 +18,7 @@ export default async function DashboardPage() {
             <h1 className="text-3xl font-bold tracking-tight text-gray-900">
               CookScan ダッシュボード
             </h1>
-            <form action={logout}>
-              <button className="text-sm text-gray-500 hover:text-gray-700">
-                ログアウト
-              </button>
-            </form>
+            <LogoutButton />
           </div>
         </div>
       </header>
