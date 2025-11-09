@@ -29,7 +29,7 @@ export async function updateRecipe(request: UpdateRecipeRequest): Promise<Update
     }
 
     // Update recipe with all related data in a transaction
-    const updatedRecipe = await prisma.$transaction(async (tx) => {
+    const updatedRecipe = await prisma.$transaction(async (tx: typeof prisma) => {
       // Update the main recipe
       const recipe = await tx.recipe.update({
         where: { id: recipeId },

@@ -109,7 +109,7 @@ export default async function RecipeDetailPage({ params }: RecipeDetailPageProps
               <h3 className="mb-4 text-lg font-medium text-gray-900">材料</h3>
               {recipe.ingredients.length > 0 ? (
                 <div className="space-y-2">
-                  {recipe.ingredients.map((ingredient) => (
+                  {recipe.ingredients.map((ingredient: (typeof recipe.ingredients)[number]) => (
                     <div key={ingredient.id} className="flex items-center justify-between border-b border-gray-100 py-2 last:border-0">
                       <span className="font-medium text-gray-900">{ingredient.name}</span>
                       <div className="text-right">
@@ -133,7 +133,7 @@ export default async function RecipeDetailPage({ params }: RecipeDetailPageProps
               <h3 className="mb-4 text-lg font-medium text-gray-900">調理手順</h3>
               {recipe.steps.length > 0 ? (
                 <div className="space-y-4">
-                  {recipe.steps.map((step) => (
+                  {recipe.steps.map((step: (typeof recipe.steps)[number]) => (
                     <div key={step.id} className="flex gap-4">
                       <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-indigo-100 text-sm font-medium text-indigo-600">
                         {step.orderIndex}

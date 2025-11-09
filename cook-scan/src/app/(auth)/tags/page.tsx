@@ -78,7 +78,7 @@ export default async function TagsPage() {
           </div>
         ) : (
           <div className="space-y-6">
-            {tagCategories.map((category) => (
+            {tagCategories.map((category: (typeof tagCategories)[number]) => (
               <div key={category.id} className="overflow-hidden rounded-lg bg-white shadow">
                 <div className="border-b border-gray-200 bg-white px-6 py-4">
                   <div className="flex items-center justify-between">
@@ -102,7 +102,7 @@ export default async function TagsPage() {
                     </p>
                   ) : (
                     <div className="flex flex-wrap gap-3">
-                      {category.tags.map((tag) => {
+                      {category.tags.map((tag: (typeof category.tags)[number]) => {
                         const usageCount = tag.recipeTags.length
 
                         return (
