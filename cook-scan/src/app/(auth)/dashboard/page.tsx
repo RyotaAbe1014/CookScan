@@ -88,6 +88,30 @@ export default async function DashboardPage() {
               </p>
             </div>
           </Link>
+
+          <Link
+            href="/tags"
+            className="group relative rounded-lg border border-gray-200 bg-white p-6 hover:shadow-lg transition-shadow"
+          >
+            <div>
+              <span className="inline-flex rounded-lg bg-yellow-50 p-3 text-yellow-600 group-hover:bg-yellow-100">
+                <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M7 7h.01M7 7a2 2 0 012-2h6l6 6-8 8-6-6V7zm0 0H5a2 2 0 00-2 2v2a2 2 0 00.586 1.414l6 6"
+                  />
+                </svg>
+              </span>
+            </div>
+            <div className="mt-4">
+              <h3 className="text-lg font-medium text-gray-900">タグ一覧</h3>
+              <p className="mt-2 text-sm text-gray-500">
+                作成済みのタグカテゴリとタグを確認できます
+              </p>
+            </div>
+          </Link>
         </div>
 
         <div className="mt-8 rounded-lg bg-white p-6 shadow">
