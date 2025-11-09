@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { createRecipe } from './actions'
 import { CreateRecipeRequest } from './types'
+import type { User } from '@prisma/client'
 
 // Mock dependencies
 vi.mock('@/lib/prisma')
@@ -43,11 +44,11 @@ describe('createRecipe', () => {
     vi.mocked(checkUserProfile).mockResolvedValue({
       hasAuth: true,
       hasProfile: true,
-      profile: { id: mockUserId, name: 'Test User' } as any,
+      profile: { id: mockUserId, name: 'Test User' } as Partial<User> as User,
     })
 
     // Mock Prisma transaction
-    const mockTransaction = vi.fn(async (callback: any) => {
+    const mockTransaction = vi.fn(async <R>(callback: (tx: typeof prisma) => Promise<R>): Promise<R> => {
       const mockTx = {
         recipe: {
           create: vi.fn().mockResolvedValue({ id: mockRecipeId, userId: mockUserId }),
@@ -62,10 +63,10 @@ describe('createRecipe', () => {
           create: vi.fn(),
         },
       }
-      return callback(mockTx)
+      return callback(mockTx as unknown as typeof prisma)
     })
 
-    vi.mocked(prisma.$transaction).mockImplementation(mockTransaction as any)
+    vi.mocked(prisma.$transaction).mockImplementation(mockTransaction)
 
     const request: CreateRecipeRequest = {
       title: 'Test Recipe',
@@ -100,7 +101,7 @@ describe('createRecipe', () => {
     vi.mocked(checkUserProfile).mockResolvedValue({
       hasAuth: true,
       hasProfile: true,
-      profile: { id: 'user-123' } as any,
+      profile: { id: 'user-123' } as Partial<User> as User,
     })
 
     // Mock Prisma transaction to throw error
