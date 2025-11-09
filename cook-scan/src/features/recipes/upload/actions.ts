@@ -17,7 +17,7 @@ export async function createRecipe(request: CreateRecipeRequest) {
 
   try {
     // Create recipe with all related data in a transaction
-    const recipe = await prisma.$transaction(async (tx) => {
+    const recipe = await prisma.$transaction(async (tx: typeof prisma) => {
       // Create the main recipe
       const newRecipe = await tx.recipe.create({
         data: {

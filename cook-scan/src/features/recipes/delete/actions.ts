@@ -26,7 +26,7 @@ export async function deleteRecipe(recipeId: string) {
     }
 
     // Delete recipe and all related data (cascade delete)
-    await prisma.$transaction(async (tx) => {
+    await prisma.$transaction(async (tx: typeof prisma) => {
       // Delete related data first (due to foreign key constraints)
       await tx.ingredient.deleteMany({
         where: { recipeId }

@@ -87,7 +87,7 @@ export default async function RecipesPage() {
           </div>
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {recipes.map((recipe) => (
+            {recipes.map((recipe: (typeof recipes)[number]) => (
               <Link
                 key={recipe.id}
                 href={`/recipes/${recipe.id}`}
@@ -112,7 +112,7 @@ export default async function RecipesPage() {
                     </p>
                     {recipe.recipeTags.length > 0 && (
                       <div className="mt-2 flex flex-wrap gap-1">
-                        {recipe.recipeTags.slice(0, 3).map((recipeTag) => (
+                        {recipe.recipeTags.slice(0, 3).map((recipeTag: (typeof recipe.recipeTags)[number]) => (
                           <span
                             key={recipeTag.tagId}
                             className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800"
