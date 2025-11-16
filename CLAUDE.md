@@ -1,213 +1,213 @@
 # CLAUDE.md
 
-This file provides guidance for Claude Code (claude.ai/code) and other AI assistants when working with the CookScan repository.
+このファイルは、CookScanリポジトリでコードを扱う際のClaude Code (claude.ai/code)および他のAIアシスタントへのガイダンスを提供します。
 
-## Project Overview
+## プロジェクト概要
 
-CookScan is a recipe extraction and management web application that uses AI to extract recipe information from images (screenshots, photos, handwritten notes) and converts them into structured JSON data. The project uses OCR and LLM technology to parse and structure recipe data.
+CookScanは、AIを使用して画像（スクリーンショット、写真、手書きメモ）からレシピ情報を抽出し、構造化されたJSONデータに変換するレシピ抽出・管理Webアプリケーションです。OCRとLLM技術を使用してレシピデータを解析・構造化します。
 
-**Key Features:**
-- AI-powered recipe extraction from images
-- User authentication and profile management
-- Recipe versioning and history tracking
-- Tag-based organization with categories
-- Source attribution for recipes
-- OCR processing history
+**主な機能:**
+- AI搭載の画像からのレシピ抽出
+- ユーザー認証とプロフィール管理
+- レシピのバージョン管理と履歴追跡
+- カテゴリ付きタグベースの整理
+- レシピのソース帰属
+- OCR処理履歴
 
-## Repository Structure
+## リポジトリ構造
 
-This is a **monorepo** with two main applications:
+このプロジェクトは2つのメインアプリケーションを含む**モノレポ**です:
 
 ```
 CookScan/
-├── cook-scan/          # Main Next.js production application
-├── sample/             # Sample/prototype application
-│   ├── backend/        # Hono + Mastra backend
-│   ├── frontend/       # React + Vite frontend
-│   └── docs/           # Documentation
-├── docker-compose.yml  # PostgreSQL 16 service
-└── CLAUDE.md          # This file
+├── cook-scan/          # メインのNext.js本番アプリケーション
+├── sample/             # サンプル/プロトタイプアプリケーション
+│   ├── backend/        # Hono + Mastra バックエンド
+│   ├── frontend/       # React + Vite フロントエンド
+│   └── docs/           # ドキュメント
+├── docker-compose.yml  # PostgreSQL 16 サービス
+└── CLAUDE.md          # このファイル
 ```
 
-### cook-scan/ (Main Production Application)
+### cook-scan/ (メイン本番アプリケーション)
 
-The primary Next.js 15 full-stack application with:
-- **prisma/** - Database schema and migrations
-- **public/** - Static assets
+Next.js 15フルスタックアプリケーション:
+- **prisma/** - データベーススキーマとマイグレーション
+- **public/** - 静的アセット
 - **src/**
-  - **app/** - Next.js App Router pages and API routes
-    - `(auth)/` - Protected routes (dashboard, recipes, tags)
-    - `(auth-setup)/` - Profile setup flow
-    - `(public)/` - Public routes (login)
-  - **features/** - Feature-based modules (auth, recipes, profile)
-  - **lib/** - Shared libraries (Prisma client)
-  - **mastra/** - AI workflow implementation
-  - **types/** - TypeScript type definitions
-  - **utils/** - Utility functions (Supabase integration)
+  - **app/** - Next.js App RouterページとAPIルート
+    - `(auth)/` - 保護されたルート（ダッシュボード、レシピ、タグ）
+    - `(auth-setup)/` - プロフィール設定フロー
+    - `(public)/` - 公開ルート（ログイン）
+  - **features/** - 機能ベースのモジュール（認証、レシピ、プロフィール）
+  - **lib/** - 共有ライブラリ（Prismaクライアント）
+  - **mastra/** - AIワークフロー実装
+  - **types/** - TypeScript型定義
+  - **utils/** - ユーティリティ関数（Supabase統合）
 
-### sample/ (Prototype Application)
+### sample/ (プロトタイプアプリケーション)
 
-A simpler reference implementation with:
-- **backend/** - Hono-based API server (AWS Lambda compatible)
+シンプルなリファレンス実装:
+- **backend/** - HonoベースのAPIサーバー（AWS Lambda対応）
 - **frontend/** - React + Vite + Material-UI SPA
-- **docs/** - Additional documentation
+- **docs/** - 追加ドキュメント
 
-## Technology Stack
+## 技術スタック
 
-### Main Application (cook-scan/)
+### メインアプリケーション (cook-scan/)
 
-**Frontend:**
-- Framework: Next.js 15.5.6 (App Router, React Server Components)
+**フロントエンド:**
+- フレームワーク: Next.js 15.5.6 (App Router, React Server Components)
 - React: 19.1.0
-- Styling: Tailwind CSS v4
-- Build Tool: Turbopack (via Next.js)
+- スタイリング: Tailwind CSS v4
+- ビルドツール: Turbopack (Next.js経由)
 - TypeScript: v5
 
-**Backend:**
-- Framework: Next.js API Routes
-- Database: PostgreSQL 16 (via Docker)
+**バックエンド:**
+- フレームワーク: Next.js APIルート
+- データベース: PostgreSQL 16 (Docker経由)
 - ORM: Prisma 6.12.0
-- Auth: Supabase Auth (@supabase/ssr, @supabase/supabase-js)
+- 認証: Supabase Auth (@supabase/ssr, @supabase/supabase-js)
 
 **AI/ML:**
-- Framework: Mastra v0.18.0 (@mastra/core v0.24.0)
-- Image Processing: Google Gemini 2.5 Flash
-- Text Processing: OpenAI GPT-4o
+- フレームワーク: Mastra v0.18.0 (@mastra/core v0.24.0)
+- 画像処理: Google Gemini 2.5 Flash
+- テキスト処理: OpenAI GPT-4o
 - AI SDK: Vercel AI SDK v5.0.0
 
-### Sample Application
+### サンプルアプリケーション
 
-**Frontend:**
+**フロントエンド:**
 - React 19.1.0 + Vite 7.0.4
-- UI Library: Material-UI (MUI) v7.2.0
-- Routing: React Router DOM v7.7.0
+- UIライブラリ: Material-UI (MUI) v7.2.0
+- ルーティング: React Router DOM v7.7.0
 
-**Backend:**
-- Framework: Hono v4.8.5
-- Database: lowdb v7.0.1 (JSON file storage)
-- Deployment: AWS Lambda compatible
+**バックエンド:**
+- フレームワーク: Hono v4.8.5
+- データベース: lowdb v7.0.1 (JSONファイルストレージ)
+- デプロイ: AWS Lambda対応
 
-## Development Commands
+## 開発コマンド
 
-### Main Application (cook-scan/)
+### メインアプリケーション (cook-scan/)
 
 ```bash
-# Development server (with Turbopack)
+# 開発サーバー起動（Turbopack使用）
 npm run dev
 
-# Production build
+# 本番ビルド
 npm run build
 npm run start
 
-# Database operations (uses .env.migration for local dev)
-npm run db:generate      # Generate Prisma Client
-npm run db:migrate:dev   # Run migrations (development)
-npm run db:push:dev      # Push schema changes
-npm run db:seed:dev      # Seed database
-npm run db:reset:dev     # Reset database
-npm run db:studio:dev    # Open Prisma Studio (dev)
-npm run db:studio:prod   # Open Prisma Studio (prod)
+# データベース操作（ローカル開発は .env.migration を使用）
+npm run db:generate      # Prisma Clientを生成
+npm run db:migrate:dev   # マイグレーション実行（開発環境）
+npm run db:push:dev      # スキーマ変更をプッシュ
+npm run db:seed:dev      # データベースにシードデータを投入
+npm run db:reset:dev     # データベースをリセット
+npm run db:studio:dev    # Prisma Studioを開く（開発環境）
+npm run db:studio:prod   # Prisma Studioを開く（本番環境）
 
-# Docker operations
-docker-compose up -d     # Start PostgreSQL
-docker-compose down      # Stop PostgreSQL
-docker-compose ps        # Check status
+# Docker操作
+docker-compose up -d     # PostgreSQLを起動
+docker-compose down      # PostgreSQLを停止
+docker-compose ps        # ステータス確認
 ```
 
-### Sample Application
+### サンプルアプリケーション
 
-**Backend (sample/backend/):**
+**バックエンド (sample/backend/):**
 ```bash
-npm run dev              # Development server (port 3001)
-npm run build            # Build for AWS Lambda
-npm run deploy           # Deploy to AWS
+npm run dev              # 開発サーバー起動（ポート3001）
+npm run build            # AWS Lambda用にビルド
+npm run deploy           # AWSへデプロイ
 ```
 
-**Frontend (sample/frontend/):**
+**フロントエンド (sample/frontend/):**
 ```bash
-npm run dev              # Development server
-npm run build            # Production build
-npm run lint             # Run ESLint
+npm run dev              # 開発サーバー起動
+npm run build            # 本番ビルド
+npm run lint             # ESLint実行
 ```
 
 **Mastra (sample/backend/mastra/):**
 ```bash
-npm run dev              # Development mode
-npm run build            # Build
-npm run start            # Start server
+npm run dev              # 開発モード
+npm run build            # ビルド
+npm run start            # サーバー起動
 ```
 
-## Architecture
+## アーキテクチャ
 
-### AI Workflow (Mastra)
+### AIワークフロー (Mastra)
 
-The core recipe extraction uses a **two-step workflow**:
+レシピ抽出のコア処理は**2ステップワークフロー**を使用:
 
 ```typescript
 cookScanWorkflow:
-  Step 1: imageToTextStep (Google Gemini 2.5 Flash)
-    - Extract text from image using OCR
-    - Input: File (image)
-    - Output: Extracted text string
+  ステップ1: imageToTextStep (Google Gemini 2.5 Flash)
+    - OCRを使用して画像からテキストを抽出
+    - 入力: ファイル（画像）
+    - 出力: 抽出されたテキスト文字列
 
-  Step 2: convertTextToRecipeStep (OpenAI GPT-4o)
-    - Convert text to structured recipe
-    - Input: Text string
-    - Output: Structured recipe JSON
+  ステップ2: convertTextToRecipeStep (OpenAI GPT-4o)
+    - テキストを構造化されたレシピに変換
+    - 入力: テキスト文字列
+    - 出力: 構造化されたレシピJSON
 ```
 
-**Agents:**
-1. `imageToTextAgent` - OCR specialist (uses GPT-4o for agent, Gemini for workflow)
-   - Location: `src/mastra/agents/image-to-text-agent.ts`
-   - Extracts all text from images including handwriting and labels
+**エージェント:**
+1. `imageToTextAgent` - OCR専門家（エージェントはGPT-4o、ワークフローはGemini使用）
+   - 場所: `src/mastra/agents/image-to-text-agent.ts`
+   - 手書き文字やラベルを含むすべてのテキストを抽出
 
-2. `convertTextToRecipeAgent` - Recipe structuring specialist (GPT-4o)
-   - Location: `src/mastra/agents/convert-text-to-recipe-agent.ts`
-   - Parses text into structured recipe format with validation
+2. `convertTextToRecipeAgent` - レシピ構造化専門家（GPT-4o）
+   - 場所: `src/mastra/agents/convert-text-to-recipe-agent.ts`
+   - テキストを検証付きの構造化レシピフォーマットに解析
 
-### Database Schema (PostgreSQL via Prisma)
+### データベーススキーマ (PostgreSQL via Prisma)
 
-**Core Tables:**
+**主要テーブル:**
 
-1. **users** - User management (Supabase Auth integration)
-   - Links to Supabase via `authId`
-   - Relations: recipes, tagCategories, ocrProcessingHistory, recipeVersions
+1. **users** - ユーザー管理（Supabase Auth統合）
+   - `authId`経由でSupabaseに接続
+   - リレーション: recipes, tagCategories, ocrProcessingHistory, recipeVersions
 
-2. **recipes** - Main recipe table
-   - Fields: title, userId, parentRecipeId, imageUrl, memo
-   - Relations: ingredients, steps, recipeTags, sourceInfo, ocrProcessingHistory
+2. **recipes** - メインのレシピテーブル
+   - フィールド: title, userId, parentRecipeId, imageUrl, memo
+   - リレーション: ingredients, steps, recipeTags, sourceInfo, ocrProcessingHistory
 
-3. **ingredients** - Recipe ingredients
-   - Fields: name, unit, notes
-   - Many-to-one with recipe
+3. **ingredients** - レシピの材料
+   - フィールド: name, unit, notes
+   - recipeとの多対一関係
 
-4. **steps** - Cooking steps
-   - Fields: orderIndex, instruction, timerSeconds
-   - Ordered list per recipe
+4. **steps** - 調理手順
+   - フィールド: orderIndex, instruction, timerSeconds
+   - レシピごとに順序付きリスト
 
-5. **tag_categories** - Tag organization
-   - System and user-defined categories
-   - Optional userId (null for system)
+5. **tag_categories** - タグの整理
+   - システムおよびユーザー定義のカテゴリ
+   - 任意のuserId（システムの場合はnull）
 
-6. **tags** - Recipe tags
-   - Belongs to category
-   - System and user-defined
+6. **tags** - レシピタグ
+   - カテゴリに所属
+   - システムおよびユーザー定義
 
-7. **recipe_tags** - Many-to-many relationship
-   - Composite key: [recipeId, tagId]
+7. **recipe_tags** - 多対多リレーション
+   - 複合キー: [recipeId, tagId]
 
-8. **ocr_processing_history** - OCR processing logs
-   - Stores raw OCR and structured data as JSON
-   - One-to-one with recipe
+8. **ocr_processing_history** - OCR処理ログ
+   - 生のOCR結果と構造化データをJSONとして保存
+   - recipeと一対一関係
 
-9. **recipe_versions** - Version control
-   - Stores recipe snapshots as JSON
-   - Tracks changes with changeNote
+9. **recipe_versions** - バージョン管理
+   - レシピのスナップショットをJSONで保存
+   - changeNoteで変更を追跡
 
-10. **source_infos** - Recipe source metadata
+10. **source_infos** - レシピのソースメタデータ
     - sourceType, sourceName, sourceUrl, pageNumber
 
-**Data Models:**
+**データモデル:**
 
 ```typescript
 interface Recipe {
@@ -243,42 +243,42 @@ interface Step {
 }
 ```
 
-### API Endpoints
+### APIエンドポイント
 
-#### Main Application (cook-scan/)
+#### メインアプリケーション (cook-scan/)
 
-**API Routes:**
-- `POST /recipes/extract` - Extract recipe from image (uses Mastra workflow)
+**APIルート:**
+- `POST /recipes/extract` - 画像からレシピを抽出（Mastraワークフロー使用）
 
-**Protected Pages:**
-- `GET /dashboard` - User dashboard
-- `GET /recipes` - Recipe list
-- `GET /recipes/[id]` - Recipe detail
-- `GET /recipes/[id]/edit` - Edit recipe
-- `GET /recipes/upload` - Upload interface
-- `GET /tags` - Tag management
-- `GET /profile/setup` - Profile setup
+**保護されたページ:**
+- `GET /dashboard` - ユーザーダッシュボード
+- `GET /recipes` - レシピ一覧
+- `GET /recipes/[id]` - レシピ詳細
+- `GET /recipes/[id]/edit` - レシピ編集
+- `GET /recipes/upload` - アップロードインターフェース
+- `GET /tags` - タグ管理
+- `GET /profile/setup` - プロフィール設定
 
-**Public Pages:**
-- `GET /login` - Login page
-- `GET /auth/confirm` - Auth confirmation callback
+**公開ページ:**
+- `GET /login` - ログインページ
+- `GET /auth/confirm` - 認証確認コールバック
 
-#### Sample Application (backend/)
+#### サンプルアプリケーション (backend/)
 
 **REST API:**
 ```
-GET  /api/health              # Health check
-POST /api/recipes/extract     # Extract recipe (?save=true to persist)
-GET  /api/recipes             # List all recipes
-GET  /api/recipes/:id         # Get specific recipe
-POST /api/recipes             # Create recipe
-PUT  /api/recipes/:id         # Update recipe
-DELETE /api/recipes/:id       # Delete recipe
+GET  /api/health              # ヘルスチェック
+POST /api/recipes/extract     # レシピ抽出（?save=trueで保存）
+GET  /api/recipes             # 全レシピ一覧
+GET  /api/recipes/:id         # 特定のレシピ取得
+POST /api/recipes             # レシピ作成
+PUT  /api/recipes/:id         # レシピ更新
+DELETE /api/recipes/:id       # レシピ削除
 ```
 
-**Request/Response Example:**
+**リクエスト/レスポンス例:**
 ```typescript
-// Extract recipe
+// レシピ抽出
 POST /api/recipes/extract?save=true
 Content-Type: multipart/form-data
 Body: { image: File }
@@ -294,123 +294,123 @@ Response: {
 }
 ```
 
-### Feature-Based Architecture
+### 機能ベースアーキテクチャ
 
-Code is organized by feature, not layer:
+コードは層ではなく機能で整理されています:
 
 ```
 features/
-├── auth/           # Authentication logic
+├── auth/           # 認証ロジック
 │   └── actions.ts  # Server Actions
-├── profile/        # User profile management
+├── profile/        # ユーザープロフィール管理
 │   └── setup/
-└── recipes/        # Recipe CRUD operations
-    ├── upload/     # Upload & extract
-    ├── edit/       # Edit functionality
-    ├── detail/     # Detail view
-    └── delete/     # Delete functionality
+└── recipes/        # レシピのCRUD操作
+    ├── upload/     # アップロードと抽出
+    ├── edit/       # 編集機能
+    ├── detail/     # 詳細表示
+    └── delete/     # 削除機能
 ```
 
-### Next.js Route Groups
+### Next.jsルートグループ
 
-Uses parentheses for route organization without affecting URLs:
-- `(auth)` - Authenticated routes with auth layout
-- `(auth-setup)` - Profile setup flow
-- `(public)` - Public routes
+URLに影響を与えずにルートを整理するために括弧を使用:
+- `(auth)` - 認証レイアウト付きの認証済みルート
+- `(auth-setup)` - プロフィール設定フロー
+- `(public)` - 公開ルート
 
-### Server Actions Pattern
+### Server Actionsパターン
 
-All mutations use Next.js Server Actions (`'use server'`):
+すべてのミューテーションはNext.js Server Actions (`'use server'`)を使用:
 - `/src/features/recipes/upload/actions.ts`
 - `/src/features/recipes/edit/actions.ts`
 - `/src/features/auth/actions.ts`
 
-## Development Conventions
+## 開発規約
 
-### Code Style
+### コードスタイル
 
-1. **TypeScript Strict Mode**: Always enabled
-2. **Path Aliases**: Use `@/*` for imports from `src/`
+1. **TypeScript Strictモード**: 常に有効
+2. **パスエイリアス**: `src/`からのインポートには`@/*`を使用
    ```typescript
    import { prisma } from '@/lib/prisma'
    import { RecipeWithRelations } from '@/types/recipe'
    ```
 
-3. **File Naming**:
-   - React components: PascalCase (e.g., `RecipeDisplay.tsx`)
-   - Utilities/helpers: camelCase (e.g., `createClient.ts`)
+3. **ファイル命名**:
+   - Reactコンポーネント: PascalCase (例: `RecipeDisplay.tsx`)
+   - ユーティリティ/ヘルパー: camelCase (例: `createClient.ts`)
    - Server Actions: `actions.ts`
-   - API routes: `route.ts`
+   - APIルート: `route.ts`
 
-4. **Component Organization**:
-   - Prefer Server Components by default
-   - Use `'use client'` only when necessary (hooks, events)
-   - Keep client components small and focused
+4. **コンポーネント構成**:
+   - デフォルトでServer Componentsを優先
+   - 必要な場合のみ`'use client'`を使用（フック、イベント）
+   - Client Componentsは小さく焦点を絞る
 
-### Database Conventions
+### データベース規約
 
-1. **Migrations**: Always use migrations for schema changes
+1. **マイグレーション**: スキーマ変更には常にマイグレーションを使用
    ```bash
    npm run db:migrate:dev -- --name descriptive_migration_name
    ```
 
-2. **Environment Files**:
-   - `.env` - Main application (Supabase, API keys)
-   - `.env.migration` - Local database for migrations (localhost PostgreSQL)
+2. **環境ファイル**:
+   - `.env` - メインアプリケーション（Supabase、APIキー）
+   - `.env.migration` - マイグレーション用のローカルデータベース（localhost PostgreSQL）
 
-3. **Prisma Client**: Always regenerate after schema changes
+3. **Prisma Client**: スキーマ変更後は必ず再生成
    ```bash
    npm run db:generate
    ```
 
-4. **Seeding**: Use seed scripts for development data
+4. **シード**: 開発データにはシードスクリプトを使用
    ```bash
    npm run db:seed:dev
    ```
 
-### Error Handling
+### エラーハンドリング
 
-1. **API Routes**: Return structured error responses
+1. **APIルート**: 構造化されたエラーレスポンスを返す
    ```typescript
    return NextResponse.json(
-     { success: false, error: 'Error message' },
+     { success: false, error: 'エラーメッセージ' },
      { status: 400 }
    )
    ```
 
-2. **Server Actions**: Throw errors or return result objects
+2. **Server Actions**: エラーをスローするか結果オブジェクトを返す
    ```typescript
    if (!user) {
-     throw new Error('Unauthorized')
+     throw new Error('認証されていません')
    }
    ```
 
-3. **Client Components**: Use error boundaries and try-catch
+3. **Client Components**: エラーバウンダリとtry-catchを使用
 
-### Security Practices
+### セキュリティプラクティス
 
-1. **Authentication**: All protected routes check Supabase session
-2. **Authorization**: Verify user ownership before mutations
-3. **Input Validation**: Use Zod schemas for all inputs
-4. **SQL Injection**: Use Prisma (parameterized queries)
-5. **XSS**: React escapes by default, be careful with dangerouslySetInnerHTML
+1. **認証**: すべての保護されたルートでSupabaseセッションを確認
+2. **認可**: ミューテーション前にユーザー所有権を確認
+3. **入力検証**: すべての入力にZodスキーマを使用
+4. **SQLインジェクション**: Prismaを使用（パラメータ化クエリ）
+5. **XSS**: Reactはデフォルトでエスケープ、dangerouslySetInnerHTMLには注意
 
-### AI/ML Best Practices
+### AI/MLベストプラクティス
 
-1. **API Keys**: Store in environment variables, never commit
-2. **Error Handling**: Gracefully handle AI service failures
-3. **Rate Limiting**: Implement for production deployments
-4. **Cost Management**: Monitor API usage
-5. **Model Selection**:
-   - Use Gemini 2.5 Flash for OCR (cost-effective)
-   - Use GPT-4o for structured output (reliable)
+1. **APIキー**: 環境変数に保存、コミットしない
+2. **エラーハンドリング**: AIサービスの障害を適切に処理
+3. **レート制限**: 本番デプロイメントに実装
+4. **コスト管理**: API使用量を監視
+5. **モデル選択**:
+   - OCRにはGemini 2.5 Flashを使用（コスト効果的）
+   - 構造化出力にはGPT-4oを使用（信頼性が高い）
 
-## Environment Variables
+## 環境変数
 
-### Main Application (.env)
+### メインアプリケーション (.env)
 
 ```env
-# Database
+# データベース
 DATABASE_URL="postgresql://user:pass@host:port/dbname"
 
 # Supabase
@@ -422,224 +422,224 @@ GOOGLE_API_KEY="your-google-api-key"
 OPENAI_API_KEY="your-openai-api-key"
 ```
 
-### Local Development (.env.migration)
+### ローカル開発 (.env.migration)
 
 ```env
-# Local PostgreSQL for migrations
+# マイグレーション用のローカルPostgreSQL
 DATABASE_URL="postgresql://postgres:postgres@localhost:5433/cookscan_dev"
 ```
 
-### Sample Application (.env)
+### サンプルアプリケーション (.env)
 
 ```env
 # AI APIs
 OPENAI_API_KEY="your-openai-api-key"
 GOOGLE_GENERATIVE_AI_API_KEY="your-google-api-key"
 
-# AWS (for deployment)
+# AWS（デプロイ用）
 AWS_REGION="ap-northeast-1"
 AWS_ACCESS_KEY_ID="your-key"
 AWS_SECRET_ACCESS_KEY="your-secret"
 ```
 
-## Common Tasks
+## 一般的なタスク
 
-### Adding a New Feature
+### 新機能の追加
 
-1. Create feature directory in `src/features/`
-2. Add types to `src/types/`
-3. Create server actions if needed
-4. Add API routes if needed
-5. Create UI components
-6. Update database schema if needed (with migration)
+1. `src/features/`に機能ディレクトリを作成
+2. `src/types/`に型を追加
+3. 必要に応じてServer Actionsを作成
+4. 必要に応じてAPIルートを追加
+5. UIコンポーネントを作成
+6. 必要に応じてデータベーススキーマを更新（マイグレーションで）
 
-### Modifying Database Schema
+### データベーススキーマの変更
 
-1. Edit `prisma/schema.prisma`
-2. Create migration:
+1. `prisma/schema.prisma`を編集
+2. マイグレーションを作成:
    ```bash
    npm run db:migrate:dev -- --name your_migration_name
    ```
-3. Regenerate Prisma Client:
+3. Prisma Clientを再生成:
    ```bash
    npm run db:generate
    ```
-4. Update TypeScript types in `src/types/`
+4. `src/types/`のTypeScript型を更新
 
-### Adding a New AI Agent
+### 新しいAIエージェントの追加
 
-1. Create agent file in `src/mastra/agents/`
-2. Define agent with model and instructions
-3. Register in `src/mastra/index.ts`
-4. Add to workflow if needed
+1. `src/mastra/agents/`にエージェントファイルを作成
+2. モデルと指示でエージェントを定義
+3. `src/mastra/index.ts`に登録
+4. 必要に応じてワークフローに追加
 
-### Debugging
+### デバッグ
 
-**Database:**
+**データベース:**
 ```bash
-npm run db:studio:dev  # Open Prisma Studio
+npm run db:studio:dev  # Prisma Studioを開く
 ```
 
-**Logs:**
-- Server: Check terminal output
-- Client: Check browser console
-- AI: Check Mastra logs (pino logger)
+**ログ:**
+- サーバー: ターミナル出力を確認
+- クライアント: ブラウザコンソールを確認
+- AI: Mastraログを確認（pinoロガー）
 
 **Docker:**
 ```bash
-docker-compose logs postgres  # View PostgreSQL logs
-docker-compose ps             # Check container status
+docker-compose logs postgres  # PostgreSQLログを表示
+docker-compose ps             # コンテナステータスを確認
 ```
 
-## Testing
+## テスト
 
-### Manual Testing
+### 手動テスト
 
-1. **Recipe Extraction**:
-   - Upload various image types (handwritten, printed, screenshots)
-   - Verify OCR accuracy
-   - Check structured data format
+1. **レシピ抽出**:
+   - 様々な画像タイプをアップロード（手書き、印刷、スクリーンショット）
+   - OCR精度を確認
+   - 構造化データフォーマットを確認
 
-2. **Database**:
-   - Test CRUD operations
-   - Verify relationships (foreign keys)
-   - Check version history
+2. **データベース**:
+   - CRUD操作をテスト
+   - リレーション（外部キー）を確認
+   - バージョン履歴を確認
 
-3. **Authentication**:
-   - Test login/logout flow
-   - Verify protected routes
-   - Check user isolation
+3. **認証**:
+   - ログイン/ログアウトフローをテスト
+   - 保護されたルートを確認
+   - ユーザー分離を確認
 
-### Development Data
+### 開発データ
 
-Use seed scripts to populate development database:
+開発データベースを設定するためにシードスクリプトを使用:
 ```bash
 npm run db:seed:dev
 ```
 
-## Troubleshooting
+## トラブルシューティング
 
-### Database Connection Issues
+### データベース接続の問題
 
-1. Check PostgreSQL is running:
+1. PostgreSQLが実行中か確認:
    ```bash
    docker-compose ps
    ```
 
-2. Verify connection string in `.env.migration`
+2. `.env.migration`の接続文字列を確認
 
-3. Check port availability (5433)
+3. ポートの可用性を確認（5433）
 
-### Migration Errors
+### マイグレーションエラー
 
-1. Check Prisma schema syntax
-2. Verify database is accessible
-3. Review migration files in `prisma/migrations/`
-4. Reset if necessary:
+1. Prismaスキーマの構文を確認
+2. データベースがアクセス可能か確認
+3. `prisma/migrations/`のマイグレーションファイルを確認
+4. 必要に応じてリセット:
    ```bash
    npm run db:reset:dev
    ```
 
-### Build Errors
+### ビルドエラー
 
-1. Clear Next.js cache:
+1. Next.jsキャッシュをクリア:
    ```bash
    rm -rf .next
    ```
 
-2. Reinstall dependencies:
+2. 依存関係を再インストール:
    ```bash
    rm -rf node_modules package-lock.json
    npm install
    ```
 
-3. Regenerate Prisma Client:
+3. Prisma Clientを再生成:
    ```bash
    npm run db:generate
    ```
 
-### AI Service Errors
+### AIサービスエラー
 
-1. Verify API keys in `.env`
-2. Check API rate limits and quotas
-3. Review error messages from Mastra logs
-4. Test with simpler inputs
+1. `.env`のAPIキーを確認
+2. APIのレート制限とクォータを確認
+3. Mastraログからエラーメッセージを確認
+4. よりシンプルな入力でテスト
 
-## Deployment
+## デプロイ
 
-### Main Application
+### メインアプリケーション
 
-**Vercel (Recommended):**
-1. Connect GitHub repository
-2. Set environment variables
-3. Configure build settings:
-   - Build Command: `npm run build`
-   - Output Directory: `.next`
-4. Deploy
+**Vercel（推奨）:**
+1. GitHubリポジトリを接続
+2. 環境変数を設定
+3. ビルド設定を構成:
+   - ビルドコマンド: `npm run build`
+   - 出力ディレクトリ: `.next`
+4. デプロイ
 
-**Database:**
-- Use managed PostgreSQL (Supabase, Neon, Railway)
-- Run migrations: `npx prisma migrate deploy`
+**データベース:**
+- マネージドPostgreSQLを使用（Supabase、Neon、Railway）
+- マイグレーションを実行: `npx prisma migrate deploy`
 
-### Sample Application
+### サンプルアプリケーション
 
-**Backend (AWS Lambda):**
+**バックエンド（AWS Lambda）:**
 ```bash
 cd sample/backend
 npm run build
 npm run deploy
 ```
 
-**Frontend (Static Hosting):**
+**フロントエンド（静的ホスティング）:**
 ```bash
 cd sample/frontend
 npm run build
-# Deploy dist/ to S3, Netlify, or Vercel
+# dist/をS3、Netlify、またはVercelにデプロイ
 ```
 
-## Key Files Reference
+## 主要ファイルリファレンス
 
-### Configuration Files
+### 設定ファイル
 
-- `/cook-scan/prisma/schema.prisma` - Database schema
-- `/cook-scan/next.config.ts` - Next.js configuration
-- `/cook-scan/tailwind.config.ts` - Tailwind CSS configuration
-- `/cook-scan/tsconfig.json` - TypeScript configuration
-- `/cook-scan/eslint.config.mjs` - ESLint configuration
-- `/docker-compose.yml` - PostgreSQL setup
+- `/cook-scan/prisma/schema.prisma` - データベーススキーマ
+- `/cook-scan/next.config.ts` - Next.js設定
+- `/cook-scan/tailwind.config.ts` - Tailwind CSS設定
+- `/cook-scan/tsconfig.json` - TypeScript設定
+- `/cook-scan/eslint.config.mjs` - ESLint設定
+- `/docker-compose.yml` - PostgreSQLセットアップ
 
-### Core Application Files
+### コアアプリケーションファイル
 
-- `/cook-scan/src/lib/prisma.ts` - Prisma client instance
-- `/cook-scan/src/utils/supabase/server.ts` - Supabase server client
-- `/cook-scan/src/utils/supabase/client.ts` - Supabase client-side client
-- `/cook-scan/src/mastra/index.ts` - Mastra configuration
-- `/cook-scan/src/mastra/workflows/cook-scan-workflow.ts` - Main workflow
+- `/cook-scan/src/lib/prisma.ts` - Prismaクライアントインスタンス
+- `/cook-scan/src/utils/supabase/server.ts` - Supabaseサーバークライアント
+- `/cook-scan/src/utils/supabase/client.ts` - Supabaseクライアントサイドクライアント
+- `/cook-scan/src/mastra/index.ts` - Mastra設定
+- `/cook-scan/src/mastra/workflows/cook-scan-workflow.ts` - メインワークフロー
 
-### Sample Application Files
+### サンプルアプリケーションファイル
 
-- `/sample/backend/src/index.ts` - Hono API server
-- `/sample/backend/src/routes/recipes.ts` - Recipe endpoints
-- `/sample/backend/mastra/src/mastra/index.ts` - Mastra setup
-- `/sample/frontend/src/App.tsx` - React app root
+- `/sample/backend/src/index.ts` - Hono APIサーバー
+- `/sample/backend/src/routes/recipes.ts` - レシピエンドポイント
+- `/sample/backend/mastra/src/mastra/index.ts` - Mastraセットアップ
+- `/sample/frontend/src/App.tsx` - Reactアプリルート
 
-## Additional Resources
+## 追加リソース
 
-- **Next.js Documentation**: https://nextjs.org/docs
-- **Prisma Documentation**: https://www.prisma.io/docs
-- **Mastra Documentation**: https://mastra.ai/docs
-- **Supabase Documentation**: https://supabase.com/docs
+- **Next.jsドキュメント**: https://nextjs.org/docs
+- **Prismaドキュメント**: https://www.prisma.io/docs
+- **Mastraドキュメント**: https://mastra.ai/docs
+- **Supabaseドキュメント**: https://supabase.com/docs
 - **Tailwind CSS**: https://tailwindcss.com/docs
 
-## Notes for AI Assistants
+## AIアシスタントへの注意事項
 
-1. **Database Changes**: Always create migrations, never use `db push` for production
-2. **Type Safety**: Leverage Prisma types and TypeScript strict mode
-3. **Server vs Client**: Be mindful of Next.js component boundaries
-4. **Authentication**: Always verify user session before data access
-5. **AI Costs**: Be aware of API costs when modifying AI workflows
-6. **Monorepo**: Remember this is a monorepo - changes may affect multiple apps
-7. **Environment**: Use correct `.env` file for the context (main app vs migrations)
-8. **Feature Organization**: Follow feature-based structure for new code
-9. **Error Handling**: Provide user-friendly error messages
-10. **Security**: Validate all inputs, especially user-generated content
+1. **データベース変更**: 常にマイグレーションを作成、本番では`db push`を使用しない
+2. **型安全性**: Prisma型とTypeScript strictモードを活用
+3. **ServerとClient**: Next.jsコンポーネントの境界に注意
+4. **認証**: データアクセス前に必ずユーザーセッションを確認
+5. **AIコスト**: AIワークフローを変更する際はAPIコストに注意
+6. **モノレポ**: これはモノレポであることを忘れずに - 変更が複数のアプリに影響する可能性
+7. **環境**: コンテキストに応じて正しい`.env`ファイルを使用（メインアプリ vs マイグレーション）
+8. **機能構成**: 新しいコードは機能ベース構造に従う
+9. **エラーハンドリング**: ユーザーフレンドリーなエラーメッセージを提供
+10. **セキュリティ**: すべての入力を検証、特にユーザー生成コンテンツ
