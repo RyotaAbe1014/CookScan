@@ -160,19 +160,8 @@ export default async function RecipeDetailPage({ params }: RecipeDetailPageProps
         </div>
 
         {/* アクションボタン */}
-        <div className="mt-8 flex justify-center gap-4">
-          <Link
-            href={`/recipes/${recipe.id}/edit`}
-            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          >
-            編集
-          </Link>
-          <button
-            type="button"
-            className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          >
-            削除
-          </button>
+        <div className="mt-8 flex justify-center">
+          <RecipeDetailActions recipe={recipe} />
         </div>
       </main>
     </div>
