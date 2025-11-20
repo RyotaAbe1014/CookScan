@@ -9,7 +9,7 @@ terraform {
 
 provider "vercel" {
   api_token = var.vercel_api_token
-  team = var.team_id
+  team      = var.team_id
 }
 
 resource "vercel_project" "cook-scan" {
@@ -19,5 +19,14 @@ resource "vercel_project" "cook-scan" {
   git_repository = {
     type = "github"
     repo = "RyotaAbe1014/CookScan"
+  }
+  team_id          = var.team_id
+  build_command    = "npm run db:generate && next build"
+  output_directory = ".next"
+  install_command  = "npm install"
+  dev_command      = "npm run dev"
+  root_directory   = "cook-scan"
+  resource_config = {
+    function_default_regions = ["hnd1"]
   }
 }
