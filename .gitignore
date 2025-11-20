@@ -39,3 +39,5 @@ next-env.d.ts
 postgres-data/
 .terraform
 terraform.tfvars
+*.tfstate
+*.tfstate.backup
