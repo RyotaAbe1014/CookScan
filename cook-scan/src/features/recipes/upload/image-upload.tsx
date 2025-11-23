@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { ExtractedRecipeData } from './types'
 
 type ExtractResponse =
@@ -58,6 +58,30 @@ export default function ImageUpload({ onUpload }: Props) {
     }
     reader.readAsDataURL(file)
   }
+
+  const handlePaste = (e: ClipboardEvent) => {
+    const items = e.clipboardData?.items
+    if (!items) return
+
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i]
+      if (item.type.startsWith('image/')) {
+        e.preventDefault()
+        const file = item.getAsFile()
+        if (file) {
+          handleFile(file)
+        }
+        break
+      }
+    }
+  }
+
+  useEffect(() => {
+    document.addEventListener('paste', handlePaste)
+    return () => {
+      document.removeEventListener('paste', handlePaste)
+    }
+  }, [])
 
   const handleUpload = async () => {
     if (!selectedFile || !preview) return
@@ -124,6 +148,9 @@ export default function ImageUpload({ onUpload }: Props) {
           </svg>
           <p className="mt-4 text-lg font-medium text-gray-900">
             画像をドラッグ&ドロップ
+          </p>
+          <p className="mt-1 text-sm text-gray-500">
+            または Ctrl+V で貼り付け
           </p>
           <p className="mt-1 text-sm text-gray-500">
             または
