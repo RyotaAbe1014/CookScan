@@ -1,6 +1,8 @@
 import { checkUserProfile } from '@/features/auth/auth-utils'
 import { prisma } from '@/lib/prisma'
 import Link from 'next/link'
+import { TagCreateForm } from '@/features/tags/tag-create-form'
+import { CategoryItem } from '@/features/tags/category-item'
 
 export default async function TagsPage() {
   const { profile } = await checkUserProfile()
@@ -44,7 +46,7 @@ export default async function TagsPage() {
               タグ一覧
             </h1>
             <p className="mt-1 text-sm text-gray-500">
-              レシピ整理に使えるタグを確認できます
+              レシピ整理に使えるタグを確認・作成できます
             </p>
           </div>
           <Link href="/dashboard" className="text-sm text-gray-500 hover:text-gray-700">
@@ -53,8 +55,14 @@ export default async function TagsPage() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        {tagCategories.length === 0 ? (
+      <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-8">
+        {/* タグ作成フォーム */}
+        <TagCreateForm categories={tagCategories} />
+
+        {/* タグ一覧セクション */}
+        <div>
+          <h2 className="mb-4 text-xl font-semibold text-gray-900">登録済みのタグ</h2>
+          {tagCategories.length === 0 ? (
           <div className="rounded-lg bg-white p-8 text-center shadow">
             <svg
               className="mx-auto h-12 w-12 text-gray-400"
@@ -79,51 +87,15 @@ export default async function TagsPage() {
         ) : (
           <div className="space-y-6">
             {tagCategories.map((category) => (
-              <div key={category.id} className="overflow-hidden rounded-lg bg-white shadow">
-                <div className="border-b border-gray-200 bg-white px-6 py-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h2 className="text-xl font-semibold text-gray-900">
-                        {category.name}
-                      </h2>
-                      <p className="mt-1 text-sm text-gray-500">
-                        {category.isSystem ? 'システム提供のタグカテゴリです' : 'あなたが作成したタグカテゴリです'}
-                      </p>
-                    </div>
-                    <span className="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-800">
-                      タグ {category.tags.length} 件
-                    </span>
-                  </div>
-                </div>
-                <div className="px-6 py-4">
-                  {category.tags.length === 0 ? (
-                    <p className="text-sm text-gray-500">
-                      このカテゴリにはまだタグがありません。
-                    </p>
-                  ) : (
-                    <div className="flex flex-wrap gap-3">
-                      {category.tags.map((tag) => {
-                        const usageCount = tag.recipeTags.length
-
-                        return (
-                          <span
-                            key={tag.id}
-                            className="inline-flex items-center gap-2 rounded-full bg-indigo-50 px-4 py-2 text-sm font-medium text-indigo-700"
-                          >
-                            <span>{tag.name}</span>
-                            <span className="rounded-full bg-white px-2 py-0.5 text-xs font-semibold text-indigo-600">
-                              {usageCount} 件のレシピ
-                            </span>
-                          </span>
-                        )
-                      })}
-                    </div>
-                  )}
-                </div>
-              </div>
+              <CategoryItem
+                key={category.id}
+                category={category}
+                currentUserId={profile?.id || ''}
+              />
             ))}
           </div>
-        )}
+          )}
+        </div>
       </main>
     </div>
   )
