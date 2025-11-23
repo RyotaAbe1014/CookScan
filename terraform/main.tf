@@ -5,6 +5,13 @@ terraform {
       version = "~> 4.0"
     }
   }
+
+  cloud {
+    organization = "ryota-abe-terraform"
+    workspaces {
+      name = "cook-scan"
+    }
+  }
 }
 
 provider "vercel" {
