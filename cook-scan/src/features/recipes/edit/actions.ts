@@ -88,6 +88,20 @@ export async function updateRecipe(request: UpdateRecipeRequest): Promise<Update
         })
       }
 
+      // Update recipe tags
+      await tx.recipeTag.deleteMany({
+        where: { recipeId }
+      })
+
+      if (tags && tags.length > 0) {
+        await tx.recipeTag.createMany({
+          data: tags.map(tagId => ({
+            recipeId,
+            tagId
+          }))
+        })
+      }
+
       return recipe
     })
 
