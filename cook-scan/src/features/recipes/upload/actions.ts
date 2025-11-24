@@ -63,6 +63,15 @@ export async function createRecipe(request: CreateRecipeRequest) {
         })
       }
 
+      // Create recipe tags if provided
+      if (tags && tags.length > 0) {
+        await tx.recipeTag.createMany({
+          data: tags.map(tagId => ({
+            recipeId: newRecipe.id,
+            tagId
+          }))
+        })
+      }
 
       return newRecipe
     })
