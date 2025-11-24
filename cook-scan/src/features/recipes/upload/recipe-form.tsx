@@ -1,10 +1,11 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 
 import type { ExtractedRecipeData } from './types'
 import { createRecipe } from './actions'
+import { getAllTagsForRecipe } from '@/features/tags/actions'
 
 type Props = {
   imageUrl: string | null
@@ -27,6 +28,26 @@ export default function RecipeForm({ imageUrl, extractedData }: Props) {
     extractedData?.steps || []
   )
   const [memo, setMemo] = useState(extractedData?.memo || '')
+  const [selectedTagIds, setSelectedTagIds] = useState<string[]>([])
+  const [tagCategories, setTagCategories] = useState<Array<{
+    id: string
+    name: string
+    description: string | null
+    tags: Array<{
+      id: string
+      name: string
+      description: string | null
+    }>
+  }>>([])
+
+  // タグデータの取得
+  useEffect(() => {
+    const fetchTags = async () => {
+      const categories = await getAllTagsForRecipe()
+      setTagCategories(categories)
+    }
+    fetchTags()
+  }, [])
 
   const addIngredient = () => {
     setIngredients([
@@ -66,6 +87,14 @@ export default function RecipeForm({ imageUrl, extractedData }: Props) {
     ))
   }
 
+  const toggleTag = (tagId: string) => {
+    setSelectedTagIds(prev =>
+      prev.includes(tagId)
+        ? prev.filter(id => id !== tagId)
+        : [...prev, tagId]
+    )
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
@@ -73,13 +102,13 @@ export default function RecipeForm({ imageUrl, extractedData }: Props) {
     try {
       const result = await createRecipe({
         title,
-        sourceInfo: sourceInfo.bookName || sourceInfo.pageNumber || sourceInfo.url 
-          ? sourceInfo 
+        sourceInfo: sourceInfo.bookName || sourceInfo.pageNumber || sourceInfo.url
+          ? sourceInfo
           : null,
         ingredients,
         steps,
         memo,
-        tags: [] // タグは一旦空配列
+        tags: selectedTagIds
       })
 
       if (result.success) {
@@ -179,6 +208,46 @@ export default function RecipeForm({ imageUrl, extractedData }: Props) {
             </div>
           </div>
         </div>
+
+        {/* タグ */}
+        {tagCategories.length > 0 && (
+          <div className="rounded-lg bg-white p-6 shadow">
+            <h3 className="text-lg font-medium text-gray-900 mb-4">タグ</h3>
+            <div className="space-y-4">
+              {tagCategories.map((category) => (
+                <div key={category.id}>
+                  <h4 className="text-sm font-medium text-gray-700 mb-2">
+                    {category.name}
+                  </h4>
+                  {category.tags.length > 0 ? (
+                    <div className="flex flex-wrap gap-2">
+                      {category.tags.map((tag) => (
+                        <label
+                          key={tag.id}
+                          className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm cursor-pointer transition-colors ${
+                            selectedTagIds.includes(tag.id)
+                              ? 'bg-indigo-100 text-indigo-700 border-2 border-indigo-500'
+                              : 'bg-gray-100 text-gray-700 border-2 border-transparent hover:bg-gray-200'
+                          }`}
+                        >
+                          <input
+                            type="checkbox"
+                            checked={selectedTagIds.includes(tag.id)}
+                            onChange={() => toggleTag(tag.id)}
+                            className="sr-only"
+                          />
+                          <span>{tag.name}</span>
+                        </label>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-sm text-gray-500">このカテゴリにはタグがありません</p>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* 材料 */}
         <div className="rounded-lg bg-white p-6 shadow">

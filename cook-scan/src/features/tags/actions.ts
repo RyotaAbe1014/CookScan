@@ -272,3 +272,36 @@ export async function deleteTagCategory(categoryId: string) {
     return { success: false, error: 'カテゴリの削除に失敗しました' }
   }
 }
+
+/**
+ * すべてのタグカテゴリとタグを取得（レシピ作成・編集時のタグ選択用）
+ */
+export async function getAllTagsForRecipe() {
+  const { hasAuth, hasProfile, profile } = await checkUserProfile()
+
+  if (!hasAuth || !hasProfile || !profile) {
+    redirect('/login')
+  }
+
+  try {
+    const tagCategories = await prisma.tagCategory.findMany({
+      where: {
+        OR: [
+          { isSystem: true },
+          { userId: profile.id }
+        ]
+      },
+      include: {
+        tags: {
+          orderBy: { name: 'asc' }
+        }
+      },
+      orderBy: { createdAt: 'asc' }
+    })
+
+    return tagCategories
+  } catch (error) {
+    console.error('Failed to fetch tags:', error)
+    return []
+  }
+}
