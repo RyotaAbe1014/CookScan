@@ -8,9 +8,12 @@ CookScanは、AIを使用して画像（スクリーンショット、写真、�
 
 **主な機能:**
 - AI搭載の画像からのレシピ抽出
+- クリップボードからの画像貼り付け対応
 - ユーザー認証とプロフィール管理
 - レシピのバージョン管理と履歴追跡
+- タグの作成・編集・削除機能
 - カテゴリ付きタグベースの整理
+- レシピ作成時のタグ紐付け
 - レシピのソース帰属
 - OCR処理履歴
 
@@ -25,6 +28,7 @@ CookScan/
 │   ├── backend/        # Hono + Mastra バックエンド
 │   ├── frontend/       # React + Vite フロントエンド
 │   └── docs/           # ドキュメント
+├── terraform/          # Vercelデプロイ自動化設定
 ├── docker-compose.yml  # PostgreSQL 16 サービス
 └── CLAUDE.md          # このファイル
 ```
@@ -39,7 +43,7 @@ Next.js 15フルスタックアプリケーション:
     - `(auth)/` - 保護されたルート（ダッシュボード、レシピ、タグ）
     - `(auth-setup)/` - プロフィール設定フロー
     - `(public)/` - 公開ルート（ログイン）
-  - **features/** - 機能ベースのモジュール（認証、レシピ、プロフィール）
+  - **features/** - 機能ベースのモジュール（認証、レシピ、プロフィール、タグ）
   - **lib/** - 共有ライブラリ（Prismaクライアント）
   - **mastra/** - AIワークフロー実装
   - **types/** - TypeScript型定義
@@ -206,6 +210,7 @@ cookScanWorkflow:
 
 10. **source_infos** - レシピのソースメタデータ
     - sourceType, sourceName, sourceUrl, pageNumber
+    - recipeとの一対多関係（1つのレシピに複数のソース情報）
 
 **データモデル:**
 
@@ -248,20 +253,21 @@ interface Step {
 #### メインアプリケーション (cook-scan/)
 
 **APIルート:**
-- `POST /recipes/extract` - 画像からレシピを抽出（Mastraワークフロー使用）
+- `POST /(auth)/recipes/extract` - 画像からレシピを抽出（Mastraワークフロー使用）
+- `GET /auth/confirm` - Supabase認証コールバック
 
 **保護されたページ:**
 - `GET /dashboard` - ユーザーダッシュボード
 - `GET /recipes` - レシピ一覧
 - `GET /recipes/[id]` - レシピ詳細
 - `GET /recipes/[id]/edit` - レシピ編集
-- `GET /recipes/upload` - アップロードインターフェース
-- `GET /tags` - タグ管理
+- `GET /recipes/upload` - アップロードインターフェース（クリップボード貼り付け対応）
+- `GET /tags` - タグ管理（カテゴリ・タグのCRUD操作）
 - `GET /profile/setup` - プロフィール設定
 
 **公開ページ:**
 - `GET /login` - ログインページ
-- `GET /auth/confirm` - 認証確認コールバック
+- `GET /` - ルートページ（リダイレクト）
 
 #### サンプルアプリケーション (backend/)
 
@@ -304,11 +310,16 @@ features/
 │   └── actions.ts  # Server Actions
 ├── profile/        # ユーザープロフィール管理
 │   └── setup/
-└── recipes/        # レシピのCRUD操作
-    ├── upload/     # アップロードと抽出
-    ├── edit/       # 編集機能
-    ├── detail/     # 詳細表示
-    └── delete/     # 削除機能
+├── recipes/        # レシピのCRUD操作
+│   ├── upload/     # アップロードと抽出
+│   ├── edit/       # 編集機能
+│   ├── detail/     # 詳細表示
+│   └── delete/     # 削除機能
+└── tags/           # タグ管理
+    ├── actions.ts  # タグ・カテゴリのCRUD Server Actions
+    ├── tag-item.tsx         # タグアイテムコンポーネント
+    ├── category-item.tsx    # カテゴリアイテムコンポーネント
+    └── tag-create-form.tsx  # タグ作成フォーム
 ```
 
 ### Next.jsルートグループ
@@ -321,9 +332,10 @@ URLに影響を与えずにルートを整理するために括弧を使用:
 ### Server Actionsパターン
 
 すべてのミューテーションはNext.js Server Actions (`'use server'`)を使用:
-- `/src/features/recipes/upload/actions.ts`
-- `/src/features/recipes/edit/actions.ts`
-- `/src/features/auth/actions.ts`
+- `/src/features/recipes/upload/actions.ts` - レシピアップロードと抽出
+- `/src/features/recipes/edit/actions.ts` - レシピ編集
+- `/src/features/auth/actions.ts` - 認証関連
+- `/src/features/tags/actions.ts` - タグとカテゴリのCRUD操作
 
 ## 開発規約
 
@@ -569,17 +581,38 @@ npm run db:seed:dev
 
 ### メインアプリケーション
 
-**Vercel（推奨）:**
-1. GitHubリポジトリを接続
-2. 環境変数を設定
-3. ビルド設定を構成:
-   - ビルドコマンド: `npm run build`
-   - 出力ディレクトリ: `.next`
-4. デプロイ
+**Vercel（Terraform経由）:**
+
+このプロジェクトはTerraformを使用してVercelデプロイを自動化しています。
+
+1. **Terraform設定** (`/terraform/main.tf`):
+   - Vercelプロバイダー v4.0
+   - プロジェクト設定（Next.js、ビルドコマンド等）
+   - カスタムドメイン設定: `cookscan.aberyouta.jp`
+   - 自動リダイレクト: `cook-scan.vercel.app` → `cookscan.aberyouta.jp`
+   - デプロイリージョン: `hnd1` (東京)
+   - ビルドコマンド: `npm run db:generate && next build`
+
+2. **手動デプロイ（Terraform不使用の場合）:**
+   - GitHubリポジトリを接続
+   - 環境変数を設定
+   - ビルド設定を構成:
+     - ビルドコマンド: `npm run db:generate && next build`
+     - 出力ディレクトリ: `.next`
+     - ルートディレクトリ: `cook-scan`
+   - デプロイ
 
 **データベース:**
 - マネージドPostgreSQLを使用（Supabase、Neon、Railway）
 - マイグレーションを実行: `npx prisma migrate deploy`
+
+**Terraformコマンド:**
+```bash
+cd terraform
+terraform init      # 初期化
+terraform plan      # 変更プレビュー
+terraform apply     # デプロイ実行
+```
 
 ### サンプルアプリケーション
 
@@ -607,6 +640,8 @@ npm run build
 - `/cook-scan/tsconfig.json` - TypeScript設定
 - `/cook-scan/eslint.config.mjs` - ESLint設定
 - `/docker-compose.yml` - PostgreSQLセットアップ
+- `/terraform/main.tf` - Vercelデプロイ自動化設定
+- `/terraform/variable.tf` - Terraform変数定義
 
 ### コアアプリケーションファイル
 
@@ -623,6 +658,57 @@ npm run build
 - `/sample/backend/mastra/src/mastra/index.ts` - Mastraセットアップ
 - `/sample/frontend/src/App.tsx` - Reactアプリルート
 
+## 最近追加された機能
+
+### タグ管理システム（2024年11月）
+
+完全なCRUD操作を持つタグ管理機能:
+
+**タグカテゴリ:**
+- カテゴリの作成・編集・削除
+- システムカテゴリとユーザーカテゴリの区別
+- カテゴリごとのタグ整理
+
+**タグ:**
+- タグの作成・編集・削除
+- カテゴリへの所属
+- レシピへのタグ付け
+
+**実装ファイル:**
+- `/src/features/tags/actions.ts` - Server Actions
+- `/src/app/(auth)/tags/page.tsx` - タグ管理ページ
+- `/src/features/tags/*.tsx` - UIコンポーネント
+
+**使用方法:**
+```typescript
+// タグカテゴリ作成
+await createTagCategory('料理ジャンル', '料理の種類を分類')
+
+// タグ作成
+await createTag(categoryId, '和食', '日本料理')
+
+// タグ編集
+await updateTag(tagId, '和食・日本料理', '伝統的な日本料理')
+
+// タグ削除
+await deleteTag(tagId)
+```
+
+### クリップボード画像貼り付け（2024年11月）
+
+レシピアップロード画面でクリップボードから画像を直接貼り付け可能:
+- スクリーンショットの直接貼り付け
+- 画像ファイルのコピー＆ペースト
+- ドラッグ＆ドロップとの併用
+
+### Terraformインフラ自動化（2024年11月）
+
+Vercelデプロイの完全自動化:
+- プロジェクト設定の自動化
+- カスタムドメイン設定
+- ビルド設定の一元管理
+- Terraform Cloud連携
+
 ## 追加リソース
 
 - **Next.jsドキュメント**: https://nextjs.org/docs
@@ -630,6 +716,7 @@ npm run build
 - **Mastraドキュメント**: https://mastra.ai/docs
 - **Supabaseドキュメント**: https://supabase.com/docs
 - **Tailwind CSS**: https://tailwindcss.com/docs
+- **Terraform Vercelプロバイダー**: https://registry.terraform.io/providers/vercel/vercel/latest/docs
 
 ## AIアシスタントへの注意事項
 
@@ -643,3 +730,6 @@ npm run build
 8. **機能構成**: 新しいコードは機能ベース構造に従う
 9. **エラーハンドリング**: ユーザーフレンドリーなエラーメッセージを提供
 10. **セキュリティ**: すべての入力を検証、特にユーザー生成コンテンツ
+11. **タグ管理**: タグとカテゴリの作成時は必ずユーザー所有権を確認
+12. **インフラ変更**: Terraformファイル変更時は慎重に、本番環境に影響
+13. **リレーション**: SourceInfoは一対多関係（1レシピ:複数ソース）に注意
