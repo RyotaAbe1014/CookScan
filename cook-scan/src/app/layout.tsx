@@ -8,26 +8,6 @@ export const metadata: Metadata = {
   },
   description:
     "AIを使用して画像からレシピを抽出・管理。スクリーンショット、写真、手書きメモからレシピ情報を自動で構造化データに変換します。",
-  keywords: ["レシピ", "AI", "OCR", "料理", "レシピ管理", "画像認識"],
-  authors: [{ name: "CookScan" }],
-  openGraph: {
-    title: "CookScan - AIレシピ抽出アプリ",
-    description:
-      "AIを使用して画像からレシピを抽出・管理。スクリーンショット、写真、手書きメモからレシピ情報を自動で構造化データに変換します。",
-    type: "website",
-    locale: "ja_JP",
-    siteName: "CookScan",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "CookScan - AIレシピ抽出アプリ",
-    description:
-      "AIを使用して画像からレシピを抽出・管理。スクリーンショット、写真、手書きメモからレシピ情報を自動で構造化データに変換します。",
-  },
-  robots: {
-    index: true,
-    follow: true,
-  },
 };
 
 export default function RootLayout({
