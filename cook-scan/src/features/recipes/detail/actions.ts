@@ -26,7 +26,11 @@ export async function getRecipeById(recipeId: string) {
         },
         recipeTags: {
           include: {
-            tag: true
+            tag: {
+              include: {
+                category: true
+              }
+            }
           }
         },
         sourceInfo: true

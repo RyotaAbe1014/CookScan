@@ -100,6 +100,49 @@ export default async function RecipeDetailPage({ params }: RecipeDetailPageProps
                 <p className="whitespace-pre-wrap text-sm text-gray-600">{memo}</p>
               </div>
             )}
+
+            {/* タグ */}
+            {recipe.recipeTags.length > 0 && (() => {
+              const tagsByCategory = recipe.recipeTags.reduce((acc, recipeTag) => {
+                const categoryId = recipeTag.tag.category.id
+                const categoryName = recipeTag.tag.category.name
+
+                if (!acc.has(categoryId)) {
+                  acc.set(categoryId, {
+                    name: categoryName,
+                    tags: []
+                  })
+                }
+
+                acc.get(categoryId)!.tags.push(recipeTag.tag)
+                return acc
+              }, new Map<string, { name: string; tags: Array<{ id: string; name: string }> }>())
+
+              return (
+                <div className="mb-6 rounded-lg bg-white p-6 shadow">
+                  <h3 className="mb-4 text-lg font-medium text-gray-900">タグ</h3>
+                  <div className="space-y-4">
+                    {Array.from(tagsByCategory.entries()).map(([categoryId, category]) => (
+                      <div key={categoryId}>
+                        <h4 className="mb-2 text-sm font-medium text-gray-700">
+                          {category.name}
+                        </h4>
+                        <div className="flex flex-wrap gap-2">
+                          {category.tags.map((tag) => (
+                            <span
+                              key={tag.id}
+                              className="inline-flex items-center rounded-full border-2 border-indigo-500 bg-indigo-100 px-3 py-1.5 text-sm text-indigo-700"
+                            >
+                              {tag.name}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )
+            })()}
           </div>
 
           {/* 右側: 材料と調理手順 */}
