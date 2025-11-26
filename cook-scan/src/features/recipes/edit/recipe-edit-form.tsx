@@ -1,11 +1,12 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 
 import { updateRecipe } from './actions'
 import type { UpdateRecipeRequest } from './types'
+import { getAllTagsForRecipe } from '@/features/tags/actions'
 
 type RecipeData = {
   id: string
@@ -29,6 +30,13 @@ type RecipeData = {
     sourceName: string | null
     pageNumber: string | null
     sourceUrl: string | null
+  }[]
+  recipeTags: {
+    tagId: string
+    tag: {
+      id: string
+      name: string
+    }
   }[]
 }
 
@@ -72,6 +80,28 @@ export default function RecipeEditForm({ recipe }: Props) {
     }))
   )
   const [memo, setMemo] = useState(recipe.memo || '')
+  const [selectedTagIds, setSelectedTagIds] = useState<string[]>(
+    recipe.recipeTags.map(rt => rt.tagId)
+  )
+  const [tagCategories, setTagCategories] = useState<Array<{
+    id: string
+    name: string
+    description: string | null
+    tags: Array<{
+      id: string
+      name: string
+      description: string | null
+    }>
+  }>>([])
+
+  // タグデータの取得
+  useEffect(() => {
+    const fetchTags = async () => {
+      const categories = await getAllTagsForRecipe()
+      setTagCategories(categories)
+    }
+    fetchTags()
+  }, [])
 
   const addIngredient = () => {
     setIngredients([
@@ -109,15 +139,23 @@ export default function RecipeEditForm({ recipe }: Props) {
 
   const updateStep = (index: number, field: 'instruction' | 'timerSeconds', value: string) => {
     setSteps(steps.map((step, i) =>
-      i === index 
-        ? { 
-            ...step, 
-            [field]: field === 'timerSeconds' 
+      i === index
+        ? {
+            ...step,
+            [field]: field === 'timerSeconds'
               ? (value ? parseInt(value) : undefined)
-              : value 
-          } 
+              : value
+          }
         : step
     ))
+  }
+
+  const toggleTag = (tagId: string) => {
+    setSelectedTagIds(prev =>
+      prev.includes(tagId)
+        ? prev.filter(id => id !== tagId)
+        : [...prev, tagId]
+    )
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -144,7 +182,7 @@ export default function RecipeEditForm({ recipe }: Props) {
           orderIndex: step.orderIndex
         })),
         memo,
-        tags: []
+        tags: selectedTagIds
       }
 
       const result = await updateRecipe(request)
@@ -265,6 +303,46 @@ export default function RecipeEditForm({ recipe }: Props) {
                 </div>
               </div>
             </div>
+
+            {/* タグ */}
+            {tagCategories.length > 0 && (
+              <div className="rounded-lg bg-white p-6 shadow">
+                <h3 className="text-lg font-medium text-gray-900 mb-4">タグ</h3>
+                <div className="space-y-4">
+                  {tagCategories.map((category) => (
+                    <div key={category.id}>
+                      <h4 className="text-sm font-medium text-gray-700 mb-2">
+                        {category.name}
+                      </h4>
+                      {category.tags.length > 0 ? (
+                        <div className="flex flex-wrap gap-2">
+                          {category.tags.map((tag) => (
+                            <label
+                              key={tag.id}
+                              className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm cursor-pointer transition-colors ${
+                                selectedTagIds.includes(tag.id)
+                                  ? 'bg-indigo-100 text-indigo-700 border-2 border-indigo-500'
+                                  : 'bg-gray-100 text-gray-700 border-2 border-transparent hover:bg-gray-200'
+                              }`}
+                            >
+                              <input
+                                type="checkbox"
+                                checked={selectedTagIds.includes(tag.id)}
+                                onChange={() => toggleTag(tag.id)}
+                                className="sr-only"
+                              />
+                              <span>{tag.name}</span>
+                            </label>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="text-sm text-gray-500">このカテゴリにはタグがありません</p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* 材料 */}
             <div className="rounded-lg bg-white p-6 shadow">
