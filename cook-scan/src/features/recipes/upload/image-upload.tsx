@@ -9,9 +9,10 @@ type ExtractResponse =
 
 type Props = {
   onUpload: (imageUrl: string, extractedData: ExtractedRecipeData) => void
+  onUploadingChange: (isUploading: boolean) => void
 }
 
-export default function ImageUpload({ onUpload }: Props) {
+export default function ImageUpload({ onUpload, onUploadingChange }: Props) {
   const [isDragging, setIsDragging] = useState(false)
   const [preview, setPreview] = useState<string | null>(null)
   const [isUploading, setIsUploading] = useState(false)
@@ -87,6 +88,7 @@ export default function ImageUpload({ onUpload }: Props) {
     if (!selectedFile || !preview) return
 
     setIsUploading(true)
+    onUploadingChange(true)
     try {
       const formData = new FormData()
       formData.append('file', selectedFile)
@@ -102,6 +104,7 @@ export default function ImageUpload({ onUpload }: Props) {
         const msg = data.success === false ? data.error : 'アップロードに失敗しました'
         alert(msg)
         setIsUploading(false)
+        onUploadingChange(false)
         return
       }
       onUpload(preview, data.result)
@@ -110,6 +113,7 @@ export default function ImageUpload({ onUpload }: Props) {
       alert('ネットワークエラーが発生しました')
     } finally {
       setIsUploading(false)
+      onUploadingChange(false)
     }
   }
 
@@ -182,7 +186,8 @@ export default function ImageUpload({ onUpload }: Props) {
             />
             <button
               onClick={handleRemove}
-              className="absolute top-2 right-2 rounded-full bg-white p-2 shadow-md hover:bg-gray-100"
+              disabled={isUploading}
+              className="absolute top-2 right-2 rounded-full bg-white p-2 shadow-md hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <svg
                 className="h-5 w-5 text-gray-600"
@@ -202,7 +207,8 @@ export default function ImageUpload({ onUpload }: Props) {
           <div className="mt-6 flex justify-center space-x-4">
             <button
               onClick={handleRemove}
-              className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              disabled={isUploading}
+              className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               別の画像を選択
             </button>
