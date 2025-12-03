@@ -13,7 +13,8 @@ CookScanは、AIを使用して画像（スクリーンショット、写真、�
 - レシピのバージョン管理と履歴追跡
 - タグの作成・編集・削除機能
 - カテゴリ付きタグベースの整理
-- レシピ作成時のタグ紐付け
+- レシピ作成・編集時のタグ紐付け
+- レシピ詳細画面でのタグ表示（カテゴリ別グループ化）
 - レシピのソース帰属
 - OCR処理履歴
 
@@ -246,7 +247,30 @@ interface Step {
   instruction: string;
   timerSeconds?: number;
 }
+
+// タグ（カテゴリ情報を含む）
+interface TagWithCategory {
+  id: string;
+  name: string;
+  category: {
+    id: string;
+    name: string;
+  };
+}
+
+// レシピタグ（詳細画面で使用）
+interface RecipeTagWithDetails {
+  tag: TagWithCategory;
+}
 ```
+
+**RecipeWithRelations型:**
+
+レシピ詳細取得時は `RecipeWithRelations` 型を使用し、すべてのリレーションを含む:
+- `ingredients` - 材料一覧
+- `steps` - 調理手順一覧（orderIndexでソート）
+- `recipeTags` - タグ一覧（タグ→カテゴリのネストを含む）
+- `sourceInfo` - ソース情報一覧
 
 ### APIエンドポイント
 
@@ -307,19 +331,36 @@ Response: {
 ```
 features/
 ├── auth/           # 認証ロジック
-│   └── actions.ts  # Server Actions
+│   ├── actions.ts      # Server Actions
+│   ├── auth-utils.ts   # プロフィール確認ユーティリティ
+│   └── logout-button.tsx  # ログアウトボタン
 ├── profile/        # ユーザープロフィール管理
 │   └── setup/
+│       ├── actions.ts           # プロフィール設定Actions
+│       └── profile-setup-form.tsx  # 設定フォーム
 ├── recipes/        # レシピのCRUD操作
 │   ├── upload/     # アップロードと抽出
+│   │   ├── actions.ts           # タグ付きレシピ作成
+│   │   ├── types.ts             # リクエスト/レスポンス型
+│   │   ├── recipe-form.tsx      # フォームコンポーネント
+│   │   ├── recipe-upload-content.tsx  # アップロードUI
+│   │   ├── image-upload.tsx     # 画像ハンドリング
+│   │   └── method-selector.tsx  # 入力方法選択
 │   ├── edit/       # 編集機能
+│   │   ├── actions.ts           # タグ更新を含む編集
+│   │   ├── types.ts             # 更新リクエスト型
+│   │   └── recipe-edit-form.tsx # タグ選択付き編集フォーム
 │   ├── detail/     # 詳細表示
+│   │   ├── actions.ts              # レシピ詳細取得
+│   │   └── recipe-detail-actions.tsx  # 編集/削除ボタン
 │   └── delete/     # 削除機能
+│       ├── actions.ts              # レシピ削除
+│       └── delete-recipe-dialog.tsx  # 確認ダイアログ
 └── tags/           # タグ管理
-    ├── actions.ts  # タグ・カテゴリのCRUD Server Actions
+    ├── actions.ts           # タグ・カテゴリのCRUD（7関数）
     ├── tag-item.tsx         # タグアイテムコンポーネント
     ├── category-item.tsx    # カテゴリアイテムコンポーネント
-    └── tag-create-form.tsx  # タグ作成フォーム
+    └── tag-create-form.tsx  # タブ付きタグ/カテゴリ作成フォーム
 ```
 
 ### Next.jsルートグループ
@@ -334,6 +375,8 @@ URLに影響を与えずにルートを整理するために括弧を使用:
 すべてのミューテーションはNext.js Server Actions (`'use server'`)を使用:
 - `/src/features/recipes/upload/actions.ts` - レシピアップロードと抽出
 - `/src/features/recipes/edit/actions.ts` - レシピ編集
+- `/src/features/recipes/detail/actions.ts` - レシピ詳細取得
+- `/src/features/recipes/delete/actions.ts` - レシピ削除
 - `/src/features/auth/actions.ts` - 認証関連
 - `/src/features/tags/actions.ts` - タグとカテゴリのCRUD操作
 
@@ -660,7 +703,17 @@ npm run build
 
 ## 最近追加された機能
 
-### タグ管理システム（2024年11月）
+### レシピ詳細画面でのタグ表示（2025年11月）
+
+レシピ詳細ページでタグをカテゴリ別にグループ化して表示:
+- カテゴリ名をヘッダーとして表示
+- 各カテゴリ内でタグを視覚的に区別
+- タグはインディゴカラーのバッジスタイルで表示
+
+**実装場所:**
+- `/src/app/(auth)/recipes/[id]/page.tsx` - レシピ詳細ページ
+
+### タグ管理システム（2025年11月）
 
 完全なCRUD操作を持つタグ管理機能:
 
@@ -669,15 +722,24 @@ npm run build
 - システムカテゴリとユーザーカテゴリの区別
 - カテゴリごとのタグ整理
 
+**システムタグカテゴリ（シードデータ）:**
+- `cuisine` - 料理のジャンル（和食、洋食、中華など）
+- `course` - 料理のコース（前菜、メイン、デザートなど）
+- `method` - 調理方法（焼く、煮る、揚げるなど）
+- `ingredient_category` - 主要食材カテゴリ（肉、魚、野菜など）
+- `free` - 自由タグ
+
 **タグ:**
 - タグの作成・編集・削除
 - カテゴリへの所属
-- レシピへのタグ付け
+- レシピへのタグ付け（作成時・編集時）
+- レシピ詳細画面でのタグ表示
 
 **実装ファイル:**
-- `/src/features/tags/actions.ts` - Server Actions
+- `/src/features/tags/actions.ts` - Server Actions（7つの関数）
 - `/src/app/(auth)/tags/page.tsx` - タグ管理ページ
 - `/src/features/tags/*.tsx` - UIコンポーネント
+- `/prisma/seed.ts` - システムタグカテゴリのシードデータ
 
 **使用方法:**
 ```typescript
@@ -694,14 +756,26 @@ await updateTag(tagId, '和食・日本料理', '伝統的な日本料理')
 await deleteTag(tagId)
 ```
 
-### クリップボード画像貼り付け（2024年11月）
+### レシピへのタグ紐付け（2025年11月）
+
+レシピ作成・編集時にタグを選択して紐付け可能:
+- アップロード時のタグ選択UI
+- 編集画面でのタグ更新
+- 複数タグの同時紐付け
+
+**実装ファイル:**
+- `/src/features/recipes/upload/actions.ts` - タグ付きレシピ作成
+- `/src/features/recipes/edit/actions.ts` - タグ更新を含むレシピ編集
+- `/src/features/recipes/edit/recipe-edit-form.tsx` - タグ選択UI
+
+### クリップボード画像貼り付け（2025年11月）
 
 レシピアップロード画面でクリップボードから画像を直接貼り付け可能:
 - スクリーンショットの直接貼り付け
 - 画像ファイルのコピー＆ペースト
 - ドラッグ＆ドロップとの併用
 
-### Terraformインフラ自動化（2024年11月）
+### Terraformインフラ自動化（2025年11月）
 
 Vercelデプロイの完全自動化:
 - プロジェクト設定の自動化
@@ -731,5 +805,7 @@ Vercelデプロイの完全自動化:
 9. **エラーハンドリング**: ユーザーフレンドリーなエラーメッセージを提供
 10. **セキュリティ**: すべての入力を検証、特にユーザー生成コンテンツ
 11. **タグ管理**: タグとカテゴリの作成時は必ずユーザー所有権を確認
-12. **インフラ変更**: Terraformファイル変更時は慎重に、本番環境に影響
-13. **リレーション**: SourceInfoは一対多関係（1レシピ:複数ソース）に注意
+12. **タグ表示**: レシピ詳細ページではタグをカテゴリ別にグループ化して表示
+13. **インフラ変更**: Terraformファイル変更時は慎重に、本番環境に影響
+14. **リレーション**: SourceInfoは一対多関係（1レシピ:複数ソース）に注意
+15. **Prismaインクルード**: タグ表示には `recipeTags: { include: { tag: { include: { category: true } } } }` のようなネストしたインクルードが必要
