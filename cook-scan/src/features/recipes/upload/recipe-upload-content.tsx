@@ -12,6 +12,7 @@ export default function RecipeUploadContent() {
   const [currentStep, setCurrentStep] = useState<Step>('method-selection')
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null)
   const [extractedData, setExtractedData] = useState<ExtractedRecipeData | null>(null)
+  const [isUploading, setIsUploading] = useState(false)
 
   const handleMethodSelect = (method: 'scan' | 'manual') => {
     if (method === 'scan') {
@@ -44,7 +45,8 @@ export default function RecipeUploadContent() {
       {currentStep !== 'method-selection' && (
         <button
           onClick={handleBack}
-          className="mb-6 inline-flex items-center text-sm text-gray-500 hover:text-gray-700"
+          disabled={isUploading}
+          className="mb-6 inline-flex items-center text-sm text-gray-500 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <svg
             className="mr-1 h-4 w-4"
@@ -68,7 +70,10 @@ export default function RecipeUploadContent() {
       )}
 
       {currentStep === 'image-upload' && (
-        <ImageUpload onUpload={handleImageUpload} />
+        <ImageUpload
+          onUpload={handleImageUpload}
+          onUploadingChange={setIsUploading}
+        />
       )}
 
       {currentStep === 'form' && (
