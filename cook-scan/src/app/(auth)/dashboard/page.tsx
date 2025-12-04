@@ -71,25 +71,6 @@ export default async function DashboardPage() {
           </Link>
 
           <Link
-            href="/recipes/search"
-            className="group relative rounded-lg border border-gray-200 bg-white p-6 hover:shadow-lg transition-shadow"
-          >
-            <div>
-              <span className="inline-flex rounded-lg bg-purple-50 p-3 text-purple-600 group-hover:bg-purple-100">
-                <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-              </span>
-            </div>
-            <div className="mt-4">
-              <h3 className="text-lg font-medium text-gray-900">レシピを検索</h3>
-              <p className="mt-2 text-sm text-gray-500">
-                材料やタグでレシピを簡単に見つけられます
-              </p>
-            </div>
-          </Link>
-
-          <Link
             href="/tags"
             className="group relative rounded-lg border border-gray-200 bg-white p-6 hover:shadow-lg transition-shadow"
           >
