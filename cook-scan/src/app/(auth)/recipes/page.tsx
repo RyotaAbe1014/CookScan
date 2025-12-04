@@ -1,22 +1,69 @@
 import { checkUserProfile } from '@/features/auth/auth-utils'
 import Link from 'next/link'
 import { prisma } from '@/lib/prisma'
+import { TagFilter } from '@/features/recipes/list/tag-filter'
+import { Suspense } from 'react'
 
-export default async function RecipesPage() {
+type SearchParams = Promise<{ tag?: string | string[] }>
+
+export default async function RecipesPage({
+  searchParams,
+}: {
+  searchParams: SearchParams
+}) {
   const { profile } = await checkUserProfile()
+  const params = await searchParams
 
-  const recipes = await prisma.recipe.findMany({
-    where: { userId: profile?.id as string },
-    include: {
-      ingredients: true,
-      recipeTags: {
-        include: {
-          tag: true
+  // Get selected tag IDs from URL
+  const selectedTagIds = params.tag
+    ? Array.isArray(params.tag)
+      ? params.tag
+      : [params.tag]
+    : []
+
+  // Build where clause for recipe filtering
+  const tagFilters = selectedTagIds.length > 0
+    ? selectedTagIds.map(tagId => ({
+        recipeTags: {
+          some: {
+            tagId: tagId,
+          },
+        },
+      }))
+    : undefined
+
+  // Fetch recipes and tag categories in parallel
+  const [recipes, tagCategories] = await Promise.all([
+    prisma.recipe.findMany({
+      where: {
+        userId: profile?.id as string,
+        ...(tagFilters && { AND: tagFilters }),
+      },
+      include: {
+        ingredients: true,
+        recipeTags: {
+          include: {
+            tag: true
+          }
         }
-      }
-    },
-    orderBy: { createdAt: 'desc' }
-  })
+      },
+      orderBy: { createdAt: 'desc' }
+    }),
+    prisma.tagCategory.findMany({
+      where: {
+        OR: [
+          { isSystem: true },
+          { userId: profile?.id as string }
+        ]
+      },
+      include: {
+        tags: {
+          orderBy: { name: 'asc' }
+        }
+      },
+      orderBy: { createdAt: 'asc' }
+    })
+  ])
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -42,6 +89,10 @@ export default async function RecipesPage() {
       </header>
 
       <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        <Suspense fallback={null}>
+          <TagFilter tagCategories={tagCategories} />
+        </Suspense>
+
         {recipes.length === 0 ? (
           <div className="text-center py-12">
             <svg
@@ -57,33 +108,54 @@ export default async function RecipesPage() {
                 d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
               />
             </svg>
-            <h3 className="mt-2 text-sm font-medium text-gray-900">
-              レシピがありません
-            </h3>
-            <p className="mt-1 text-sm text-gray-500">
-              レシピをスキャンして、マイレシピに追加しましょう
-            </p>
-            <div className="mt-6">
-              <Link
-                href="/recipes/upload"
-                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-              >
-                <svg
-                  className="-ml-1 mr-2 h-5 w-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 4v16m8-8H4"
-                  />
-                </svg>
-                レシピをスキャン
-              </Link>
-            </div>
+            {selectedTagIds.length > 0 ? (
+              <>
+                <h3 className="mt-2 text-sm font-medium text-gray-900">
+                  該当するレシピがありません
+                </h3>
+                <p className="mt-1 text-sm text-gray-500">
+                  選択したタグに一致するレシピが見つかりませんでした
+                </p>
+                <div className="mt-6">
+                  <Link
+                    href="/recipes"
+                    className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  >
+                    フィルターをクリア
+                  </Link>
+                </div>
+              </>
+            ) : (
+              <>
+                <h3 className="mt-2 text-sm font-medium text-gray-900">
+                  レシピがありません
+                </h3>
+                <p className="mt-1 text-sm text-gray-500">
+                  レシピをスキャンして、マイレシピに追加しましょう
+                </p>
+                <div className="mt-6">
+                  <Link
+                    href="/recipes/upload"
+                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  >
+                    <svg
+                      className="-ml-1 mr-2 h-5 w-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 4v16m8-8H4"
+                      />
+                    </svg>
+                    レシピをスキャン
+                  </Link>
+                </div>
+              </>
+            )}
           </div>
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
