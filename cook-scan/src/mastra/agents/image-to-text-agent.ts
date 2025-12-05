@@ -1,5 +1,5 @@
 import { Agent } from '@mastra/core/agent';
-import { openaiGpt4o } from '../models/openai';
+import { openaiGpt } from '../models/openai';
 
 export const imageToTextAgent = new Agent({
   name: 'Image to Text Agent',
@@ -20,5 +20,5 @@ export const imageToTextAgent = new Agent({
 - 不明瞭で読み取れない文字がある場合は、[判読不能]と表記してください
 - 余計な説明や解釈は加えず、純粋にテキストの抽出のみを行ってください
 `,
-  model: openaiGpt4o,
+  model: openaiGpt,
 });

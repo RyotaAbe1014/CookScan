@@ -1,5 +1,5 @@
 import { Agent } from '@mastra/core/agent';
-import { openaiGpt4o } from '../models/openai';
+import { openaiGpt } from '../models/openai';
 
 export const convertTextToRecipeAgent = new Agent({
   name: 'Convert Text to Recipe Agent',
@@ -34,5 +34,5 @@ export const convertTextToRecipeAgent = new Agent({
 - 調理手順は論理的な順序で整理してください
 - メモには調理のコツや注意点があれば含めてください
 `,
-  model: openaiGpt4o,
+  model: openaiGpt,
 });
