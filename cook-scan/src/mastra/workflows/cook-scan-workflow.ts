@@ -1,7 +1,7 @@
 import { createStep, createWorkflow } from "@mastra/core";
 import { z } from "zod";
 import { generateText } from "ai";
-import { googleGemini25Flash } from "../models/google";
+import { openaiGpt } from "../models/openai";
 
 const imageToTextStep = createStep({
   id: 'image-to-text',
@@ -17,7 +17,7 @@ const imageToTextStep = createStep({
       const arrayBuffer = await inputData.image.arrayBuffer();
       const buffer = Buffer.from(arrayBuffer);
       const response = await generateText({
-        model: googleGemini25Flash,
+        model: openaiGpt,
         messages: [
           {
             role: 'user',
