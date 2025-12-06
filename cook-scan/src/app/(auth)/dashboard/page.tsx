@@ -94,13 +94,6 @@ export default async function DashboardPage() {
             </div>
           </Link>
         </div>
-
-        <div className="mt-8 rounded-lg bg-white p-6 shadow">
-          <h3 className="text-lg font-medium text-gray-900">最近のアクティビティ</h3>
-          <p className="mt-2 text-sm text-gray-500">
-            まだレシピがありません。上のボタンから最初のレシピをスキャンしてみましょう！
-          </p>
-        </div>
       </main>
     </div>
   )
