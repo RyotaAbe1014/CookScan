@@ -7,12 +7,13 @@ export default function MethodSelector({ onSelect }: Props) {
     <div className="grid gap-6 sm:grid-cols-2">
       <button
         onClick={() => onSelect('scan')}
-        className="group relative rounded-lg border-2 border-gray-200 bg-white p-8 text-left hover:border-indigo-500 hover:shadow-lg transition-all"
+        className="group relative overflow-hidden rounded-xl bg-white p-8 text-left shadow-lg ring-1 ring-gray-900/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
       >
-        <div className="flex flex-col items-center text-center">
-          <div className="rounded-full bg-indigo-50 p-4 group-hover:bg-indigo-100 transition-colors">
+        <div className="absolute right-0 top-0 h-32 w-32 translate-x-8 -translate-y-8 rounded-full bg-gradient-to-br from-indigo-100 to-purple-100 opacity-50 transition-transform group-hover:scale-110" />
+        <div className="relative flex flex-col items-center text-center">
+          <div className="rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 p-4 shadow-lg transition-transform group-hover:scale-110">
             <svg
-              className="h-12 w-12 text-indigo-600"
+              className="h-12 w-12 text-white"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -31,15 +32,20 @@ export default function MethodSelector({ onSelect }: Props) {
               />
             </svg>
           </div>
-          <h3 className="mt-4 text-lg font-medium text-gray-900">
+          <h3 className="mt-4 text-xl font-bold text-gray-900">
             画像からスキャン
           </h3>
-          <p className="mt-2 text-sm text-gray-500">
+          <p className="mt-2 text-sm leading-relaxed text-gray-600">
             料理本やレシピカードの写真を撮影して、自動でレシピを抽出します
           </p>
-          <div className="mt-4 inline-flex items-center text-sm font-medium text-indigo-600 group-hover:text-indigo-500">
-            推奨
-            <span className="ml-2 inline-flex items-center rounded-full bg-indigo-100 px-2.5 py-0.5 text-xs font-medium text-indigo-800">
+          <div className="mt-4 flex items-center gap-2">
+            <span className="inline-flex items-center gap-1 rounded-lg bg-gradient-to-r from-indigo-600 to-purple-600 px-3 py-1.5 text-xs font-semibold text-white shadow-md shadow-indigo-500/30">
+              <svg className="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+              </svg>
+              推奨
+            </span>
+            <span className="inline-flex items-center rounded-lg bg-indigo-50 px-3 py-1.5 text-xs font-medium text-indigo-700 ring-1 ring-indigo-200">
               簡単
             </span>
           </div>
@@ -48,12 +54,13 @@ export default function MethodSelector({ onSelect }: Props) {
 
       <button
         onClick={() => onSelect('manual')}
-        className="group relative rounded-lg border-2 border-gray-200 bg-white p-8 text-left hover:border-gray-400 hover:shadow-lg transition-all"
+        className="group relative overflow-hidden rounded-xl bg-white p-8 text-left shadow-lg ring-1 ring-gray-900/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
       >
-        <div className="flex flex-col items-center text-center">
-          <div className="rounded-full bg-gray-50 p-4 group-hover:bg-gray-100 transition-colors">
+        <div className="absolute right-0 top-0 h-32 w-32 translate-x-8 -translate-y-8 rounded-full bg-gradient-to-br from-gray-100 to-slate-100 opacity-50 transition-transform group-hover:scale-110" />
+        <div className="relative flex flex-col items-center text-center">
+          <div className="rounded-xl bg-gradient-to-br from-gray-500 to-slate-600 p-4 shadow-lg transition-transform group-hover:scale-110">
             <svg
-              className="h-12 w-12 text-gray-600"
+              className="h-12 w-12 text-white"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -66,13 +73,16 @@ export default function MethodSelector({ onSelect }: Props) {
               />
             </svg>
           </div>
-          <h3 className="mt-4 text-lg font-medium text-gray-900">
+          <h3 className="mt-4 text-xl font-bold text-gray-900">
             手動で入力
           </h3>
-          <p className="mt-2 text-sm text-gray-500">
+          <p className="mt-2 text-sm leading-relaxed text-gray-600">
             レシピの詳細を一つずつ入力して、オリジナルレシピを作成します
           </p>
-          <div className="mt-4 inline-flex items-center text-sm font-medium text-gray-600">
+          <div className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-gray-700">
+            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
             詳細な編集が可能
           </div>
         </div>

@@ -6,15 +6,29 @@ import { Header } from '@/components/header'
 export default function RecipeUploadPage() {
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
       <Header
         title="レシピをアップロード"
+        subtitle="画像から自動抽出、または手動で入力"
         rightAction={
           <Link
             href="/dashboard"
-            className="text-sm text-gray-500 hover:text-gray-700"
+            className="flex items-center gap-1.5 text-sm text-gray-600 transition-colors hover:text-indigo-600"
           >
-            ダッシュボードに戻る
+            <svg
+              className="h-4 w-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M10 19l-7-7m0 0l7-7m-7 7h18"
+              />
+            </svg>
+            ダッシュボード
           </Link>
         }
       />
