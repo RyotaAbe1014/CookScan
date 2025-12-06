@@ -7,6 +7,7 @@ import Link from 'next/link'
 import { updateRecipe } from './actions'
 import type { UpdateRecipeRequest } from './types'
 import { getAllTagsForRecipe } from '@/features/tags/actions'
+import { Header } from '@/components/header'
 
 type RecipeData = {
   id: string
@@ -166,8 +167,8 @@ export default function RecipeEditForm({ recipe }: Props) {
       const request: UpdateRecipeRequest = {
         recipeId: recipe.id,
         title,
-        sourceInfo: sourceInfo.bookName || sourceInfo.pageNumber || sourceInfo.url 
-          ? sourceInfo 
+        sourceInfo: sourceInfo.bookName || sourceInfo.pageNumber || sourceInfo.url
+          ? sourceInfo
           : null,
         ingredients: ingredients.map(ing => ({
           id: ing.id,
@@ -202,21 +203,17 @@ export default function RecipeEditForm({ recipe }: Props) {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <header className="bg-white shadow">
-        <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between">
-            <h1 className="text-3xl font-bold tracking-tight text-gray-900">
-              レシピを編集
-            </h1>
-            <Link
-              href={`/recipes/${recipe.id}`}
-              className="text-sm text-gray-500 hover:text-gray-700"
-            >
-              詳細画面に戻る
-            </Link>
-          </div>
-        </div>
-      </header>
+      <Header
+        title="レシピを編集"
+        rightAction={
+          <Link
+            href={`/recipes/${recipe.id}`}
+            className="text-sm text-gray-500 hover:text-gray-700"
+          >
+            詳細画面に戻る
+          </Link>
+        }
+      />
 
       <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <form onSubmit={handleSubmit} className="mx-auto max-w-4xl">

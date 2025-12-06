@@ -1,23 +1,20 @@
 import Link from 'next/link'
+import { Header } from '@/components/header'
 
 export default function NotFound() {
   return (
     <div className="min-h-screen bg-gray-50">
-      <header className="bg-white shadow">
-        <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between">
-            <h1 className="text-3xl font-bold tracking-tight text-gray-900">
-              レシピが見つかりません
-            </h1>
-            <Link
-              href="/recipes"
-              className="text-sm text-gray-500 hover:text-gray-700"
-            >
-              マイレシピに戻る
-            </Link>
-          </div>
-        </div>
-      </header>
+      <Header
+        title="レシピが見つかりません"
+        rightAction={
+          <Link
+            href="/recipes"
+            className="text-sm text-gray-500 hover:text-gray-700"
+          >
+            マイレシピに戻る
+          </Link>
+        }
+      />
 
       <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="text-center py-12">
