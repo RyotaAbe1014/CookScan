@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { prisma } from '@/lib/prisma'
 import { TagFilter } from '@/features/recipes/list/tag-filter'
 import { Suspense } from 'react'
+import { Header } from '@/components/header'
 
 type SearchParams = Promise<{ tag?: string | string[] }>
 
@@ -67,26 +68,18 @@ export default async function RecipesPage({
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <header className="bg-white shadow">
-        <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold tracking-tight text-gray-900">
-                マイレシピ
-              </h1>
-              <p className="mt-1 text-sm text-gray-500">
-                保存済みのレシピ一覧
-              </p>
-            </div>
-            <Link
-              href="/dashboard"
-              className="text-sm text-gray-500 hover:text-gray-700"
-            >
-              ダッシュボードに戻る
-            </Link>
-          </div>
-        </div>
-      </header>
+      <Header
+        title="マイレシピ"
+        subtitle="保存済みのレシピ一覧"
+        rightAction={
+          <Link
+            href="/dashboard"
+            className="text-sm text-gray-500 hover:text-gray-700"
+          >
+            ダッシュボードに戻る
+          </Link>
+        }
+      />
 
       <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <Suspense fallback={null}>

@@ -2,6 +2,7 @@ import { checkUserProfile } from '@/features/auth/auth-utils'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import LogoutButton from '@/features/auth/logout-button'
+import { Header } from '@/components/header'
 
 export default async function DashboardPage() {
   const { profile } = await checkUserProfile()
@@ -12,16 +13,10 @@ export default async function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <header className="bg-white shadow">
-        <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between">
-            <h1 className="text-3xl font-bold tracking-tight text-gray-900">
-              CookScan ダッシュボード
-            </h1>
-            <LogoutButton />
-          </div>
-        </div>
-      </header>
+      <Header
+        title="CookScan ダッシュボード"
+        rightAction={<LogoutButton />}
+      />
 
       <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="mb-8">

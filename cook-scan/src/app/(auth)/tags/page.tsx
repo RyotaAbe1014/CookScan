@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma'
 import Link from 'next/link'
 import { TagCreateForm } from '@/features/tags/tag-create-form'
 import { CategoryItem } from '@/features/tags/category-item'
+import { Header } from '@/components/header'
 
 export default async function TagsPage() {
   const { profile } = await checkUserProfile()
@@ -39,21 +40,15 @@ export default async function TagsPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <header className="bg-white shadow">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-6 sm:px-6 lg:px-8">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight text-gray-900">
-              タグ一覧
-            </h1>
-            <p className="mt-1 text-sm text-gray-500">
-              レシピ整理に使えるタグを確認・作成できます
-            </p>
-          </div>
+      <Header
+        title="タグ一覧"
+        subtitle="レシピ整理に使えるタグを確認・作成できます"
+        rightAction={
           <Link href="/dashboard" className="text-sm text-gray-500 hover:text-gray-700">
             ダッシュボードに戻る
           </Link>
-        </div>
-      </header>
+        }
+      />
 
       <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-8">
         {/* タグ作成フォーム */}
