@@ -20,7 +20,7 @@ export default async function RecipeDetailPage({ params }: RecipeDetailPageProps
   const sourceInfo = recipe.sourceInfo[0]
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
       <Header
         title={recipe.title}
         subtitle={`作成日: ${recipe.createdAt.toLocaleDateString('ja-JP')}`}
@@ -29,8 +29,11 @@ export default async function RecipeDetailPage({ params }: RecipeDetailPageProps
             <RecipeDetailActions recipe={recipe} />
             <Link
               href="/recipes"
-              className="text-sm text-gray-500 hover:text-gray-700"
+              className="inline-flex items-center gap-1.5 text-sm text-gray-600 transition-colors hover:text-indigo-600"
             >
+              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+              </svg>
               マイレシピに戻る
             </Link>
           </>
@@ -43,54 +46,99 @@ export default async function RecipeDetailPage({ params }: RecipeDetailPageProps
           <div className="lg:col-span-1">
             {/* レシピ画像 */}
             {recipe.imageUrl && (
-              <div className="mb-6 rounded-lg bg-white p-6 shadow">
+              <div className="mb-6 overflow-hidden rounded-xl bg-white p-6 shadow-lg ring-1 ring-gray-900/5">
+                <div className="mb-4 flex items-center gap-2">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 shadow-md">
+                    <svg className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-lg font-bold text-gray-900">レシピ画像</h3>
+                </div>
                 <img
                   src={recipe.imageUrl}
                   alt={recipe.title}
-                  className="w-full rounded-lg object-cover"
+                  className="w-full rounded-xl object-cover shadow-md"
                 />
               </div>
             )}
 
             {/* ソース情報 */}
             {sourceInfo && (
-              <div className="mb-6 rounded-lg bg-white p-6 shadow">
-                <h3 className="mb-4 text-lg font-medium text-gray-900">ソース情報</h3>
-                <div className="space-y-2 text-sm">
-                  {sourceInfo.sourceName && (
-                    <div>
-                      <span className="font-medium text-gray-700">本の名前:</span>
-                      <span className="ml-2 text-gray-600">{sourceInfo.sourceName}</span>
+              <div className="mb-6 overflow-hidden rounded-xl bg-white shadow-lg ring-1 ring-gray-900/5">
+                <div className="border-b border-gray-200 bg-gradient-to-r from-gray-50 to-white px-6 py-4">
+                  <div className="flex items-center gap-2">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-amber-500 to-orange-600 shadow-md">
+                      <svg className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                      </svg>
                     </div>
-                  )}
-                  {sourceInfo.pageNumber && (
-                    <div>
-                      <span className="font-medium text-gray-700">ページ番号:</span>
-                      <span className="ml-2 text-gray-600">{sourceInfo.pageNumber}</span>
-                    </div>
-                  )}
-                  {sourceInfo.sourceUrl && (
-                    <div>
-                      <span className="font-medium text-gray-700">参照URL:</span>
-                      <a
-                        href={sourceInfo.sourceUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="ml-2 text-indigo-600 hover:text-indigo-500"
-                      >
-                        {sourceInfo.sourceUrl}
-                      </a>
-                    </div>
-                  )}
+                    <h3 className="text-lg font-bold text-gray-900">ソース情報</h3>
+                  </div>
+                </div>
+                <div className="p-6">
+                  <div className="space-y-3 text-sm">
+                    {sourceInfo.sourceName && (
+                      <div className="flex items-start gap-2 rounded-lg bg-gradient-to-r from-gray-50 to-white p-3 ring-1 ring-gray-200">
+                        <svg className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                        </svg>
+                        <div>
+                          <span className="font-semibold text-gray-900">本の名前</span>
+                          <p className="mt-1 text-gray-600">{sourceInfo.sourceName}</p>
+                        </div>
+                      </div>
+                    )}
+                    {sourceInfo.pageNumber && (
+                      <div className="flex items-start gap-2 rounded-lg bg-gradient-to-r from-gray-50 to-white p-3 ring-1 ring-gray-200">
+                        <svg className="mt-0.5 h-4 w-4 shrink-0 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                        </svg>
+                        <div>
+                          <span className="font-semibold text-gray-900">ページ番号</span>
+                          <p className="mt-1 text-gray-600">{sourceInfo.pageNumber}</p>
+                        </div>
+                      </div>
+                    )}
+                    {sourceInfo.sourceUrl && (
+                      <div className="flex items-start gap-2 rounded-lg bg-gradient-to-r from-gray-50 to-white p-3 ring-1 ring-gray-200">
+                        <svg className="mt-0.5 h-4 w-4 shrink-0 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                        </svg>
+                        <div className="flex-1 overflow-hidden">
+                          <span className="font-semibold text-gray-900">参照URL</span>
+                          <a
+                            href={sourceInfo.sourceUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="mt-1 block truncate text-indigo-600 transition-colors hover:text-indigo-700 hover:underline"
+                          >
+                            {sourceInfo.sourceUrl}
+                          </a>
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             )}
 
             {/* メモ */}
             {memo && (
-              <div className="mb-6 rounded-lg bg-white p-6 shadow">
-                <h3 className="mb-4 text-lg font-medium text-gray-900">メモ</h3>
-                <p className="whitespace-pre-wrap text-sm text-gray-600">{memo}</p>
+              <div className="mb-6 overflow-hidden rounded-xl bg-white shadow-lg ring-1 ring-gray-900/5">
+                <div className="border-b border-gray-200 bg-gradient-to-r from-gray-50 to-white px-6 py-4">
+                  <div className="flex items-center gap-2">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-purple-500 to-pink-600 shadow-md">
+                      <svg className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                      </svg>
+                    </div>
+                    <h3 className="text-lg font-bold text-gray-900">メモ</h3>
+                  </div>
+                </div>
+                <div className="p-6">
+                  <p className="whitespace-pre-wrap text-sm leading-relaxed text-gray-600">{memo}</p>
+                </div>
               </div>
             )}
 
@@ -112,26 +160,43 @@ export default async function RecipeDetailPage({ params }: RecipeDetailPageProps
               }, new Map<string, { name: string; tags: Array<{ id: string; name: string }> }>())
 
               return (
-                <div className="mb-6 rounded-lg bg-white p-6 shadow">
-                  <h3 className="mb-4 text-lg font-medium text-gray-900">タグ</h3>
-                  <div className="space-y-4">
-                    {Array.from(tagsByCategory.entries()).map(([categoryId, category]) => (
-                      <div key={categoryId}>
-                        <h4 className="mb-2 text-sm font-medium text-gray-700">
-                          {category.name}
-                        </h4>
-                        <div className="flex flex-wrap gap-2">
-                          {category.tags.map((tag) => (
-                            <span
-                              key={tag.id}
-                              className="inline-flex items-center rounded-full border-2 border-indigo-500 bg-indigo-100 px-3 py-1.5 text-sm text-indigo-700"
-                            >
-                              {tag.name}
-                            </span>
-                          ))}
-                        </div>
+                <div className="mb-6 overflow-hidden rounded-xl bg-white shadow-lg ring-1 ring-gray-900/5">
+                  <div className="border-b border-gray-200 bg-gradient-to-r from-gray-50 to-white px-6 py-4">
+                    <div className="flex items-center gap-2">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-amber-500 to-orange-600 shadow-md">
+                        <svg className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                        </svg>
                       </div>
-                    ))}
+                      <h3 className="text-lg font-bold text-gray-900">タグ</h3>
+                    </div>
+                  </div>
+                  <div className="p-6">
+                    <div className="space-y-4">
+                      {Array.from(tagsByCategory.entries()).map(([categoryId, category]) => (
+                        <div key={categoryId}>
+                          <div className="mb-2 flex items-center gap-2">
+                            <div className="h-1 w-1 rounded-full bg-amber-600" />
+                            <h4 className="text-sm font-semibold text-gray-900">
+                              {category.name}
+                            </h4>
+                          </div>
+                          <div className="flex flex-wrap gap-2">
+                            {category.tags.map((tag) => (
+                              <span
+                                key={tag.id}
+                                className="inline-flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-indigo-600 to-purple-600 px-3 py-2 text-sm font-medium text-white shadow-lg shadow-indigo-500/30 ring-2 ring-indigo-600"
+                              >
+                                <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                                </svg>
+                                {tag.name}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
               )
@@ -141,56 +206,83 @@ export default async function RecipeDetailPage({ params }: RecipeDetailPageProps
           {/* 右側: 材料と調理手順 */}
           <div className="lg:col-span-2">
             {/* 材料 */}
-            <div className="mb-8 rounded-lg bg-white p-6 shadow">
-              <h3 className="mb-4 text-lg font-medium text-gray-900">材料</h3>
-              {recipe.ingredients.length > 0 ? (
-                <div className="space-y-2">
-                  {recipe.ingredients.map((ingredient) => (
-                    <div key={ingredient.id} className="flex items-center justify-between border-b border-gray-100 py-2 last:border-0">
-                      <span className="font-medium text-gray-900">{ingredient.name}</span>
-                      <div className="text-right">
-                        {ingredient.unit && (
-                          <span className="text-sm text-gray-600">{ingredient.unit}</span>
-                        )}
-                        {ingredient.notes && (
-                          <div className="text-xs text-gray-500">{ingredient.notes}</div>
-                        )}
-                      </div>
-                    </div>
-                  ))}
+            <div className="mb-8 overflow-hidden rounded-xl bg-white shadow-lg ring-1 ring-gray-900/5">
+              <div className="border-b border-gray-200 bg-gradient-to-r from-gray-50 to-white px-6 py-4">
+                <div className="flex items-center gap-2">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-green-500 to-emerald-600 shadow-md">
+                    <svg className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                    </svg>
+                  </div>
+                  <h3 className="text-lg font-bold text-gray-900">材料</h3>
                 </div>
-              ) : (
-                <p className="text-gray-500">材料が登録されていません</p>
-              )}
+              </div>
+              <div className="p-6">
+                {recipe.ingredients.length > 0 ? (
+                  <div className="space-y-2">
+                    {recipe.ingredients.map((ingredient) => (
+                      <div key={ingredient.id} className="flex items-center justify-between rounded-lg bg-gradient-to-r from-gray-50 to-white p-3 ring-1 ring-gray-200 transition-all hover:shadow-md">
+                        <div className="flex items-center gap-2">
+                          <div className="h-2 w-2 rounded-full bg-green-500" />
+                          <span className="font-semibold text-gray-900">{ingredient.name}</span>
+                        </div>
+                        <div className="text-right">
+                          {ingredient.unit && (
+                            <span className="text-sm font-medium text-gray-600">{ingredient.unit}</span>
+                          )}
+                          {ingredient.notes && (
+                            <div className="text-xs text-gray-500">{ingredient.notes}</div>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-gray-500">材料が登録されていません</p>
+                )}
+              </div>
             </div>
 
             {/* 調理手順 */}
-            <div className="rounded-lg bg-white p-6 shadow">
-              <h3 className="mb-4 text-lg font-medium text-gray-900">調理手順</h3>
-              {recipe.steps.length > 0 ? (
-                <div className="space-y-4">
-                  {recipe.steps.map((step) => (
-                    <div key={step.id} className="flex gap-4">
-                      <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-indigo-100 text-sm font-medium text-indigo-600">
-                        {step.orderIndex}
-                      </div>
-                      <div className="flex-1">
-                        <p className="text-gray-900">{step.instruction}</p>
-                        {step.timerSeconds && (
-                          <div className="mt-2 flex items-center text-sm text-gray-500">
-                            <svg className="mr-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                            タイマー: {Math.floor(step.timerSeconds / 60)}分{step.timerSeconds % 60}秒
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  ))}
+            <div className="overflow-hidden rounded-xl bg-white shadow-lg ring-1 ring-gray-900/5">
+              <div className="border-b border-gray-200 bg-gradient-to-r from-gray-50 to-white px-6 py-4">
+                <div className="flex items-center gap-2">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 shadow-md">
+                    <svg className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                    </svg>
+                  </div>
+                  <h3 className="text-lg font-bold text-gray-900">調理手順</h3>
                 </div>
-              ) : (
-                <p className="text-gray-500">調理手順が登録されていません</p>
-              )}
+              </div>
+              <div className="p-6">
+                {recipe.steps.length > 0 ? (
+                  <div className="space-y-4">
+                    {recipe.steps.map((step) => (
+                      <div key={step.id} className="group flex gap-4 rounded-lg bg-gradient-to-r from-gray-50 to-white p-4 ring-1 ring-gray-200 transition-all hover:shadow-md">
+                        <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 text-base font-bold text-white shadow-md">
+                          {step.orderIndex}
+                        </div>
+                        <div className="flex-1">
+                          <p className="leading-relaxed text-gray-900">{step.instruction}</p>
+                          {step.timerSeconds && (
+                            <div className="mt-3 inline-flex items-center gap-2 rounded-lg bg-white px-3 py-2 ring-1 ring-gray-200">
+                              <svg className="h-4 w-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                              </svg>
+                              <span className="text-sm font-medium text-gray-700">
+                                タイマー: {Math.floor(step.timerSeconds / 60)}分{step.timerSeconds % 60}秒
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-gray-500">調理手順が登録されていません</p>
+                )}
+              </div>
             </div>
           </div>
         </div>

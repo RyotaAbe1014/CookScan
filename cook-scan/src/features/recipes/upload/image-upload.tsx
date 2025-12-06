@@ -132,65 +132,86 @@ export default function ImageUpload({ onUpload, onUploadingChange }: Props) {
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
-          className={`relative rounded-lg border-2 border-dashed p-12 text-center transition-colors ${isDragging
-              ? 'border-indigo-500 bg-indigo-50'
-              : 'border-gray-300 bg-white hover:border-gray-400'
+          className={`relative overflow-hidden rounded-xl border-2 border-dashed p-12 text-center shadow-lg ring-1 ring-gray-900/5 transition-all duration-300 ${isDragging
+              ? 'border-indigo-500 bg-gradient-to-br from-indigo-50 to-purple-50 shadow-xl'
+              : 'border-gray-300 bg-white hover:border-indigo-400 hover:shadow-xl'
             }`}
         >
-          <svg
-            className="mx-auto h-16 w-16 text-gray-400"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+          <div className="flex flex-col items-center">
+            <div className={`rounded-xl p-4 transition-colors ${
+              isDragging
+                ? 'bg-gradient-to-br from-indigo-500 to-purple-600'
+                : 'bg-gradient-to-br from-indigo-100 to-purple-100'
+            }`}>
+              <svg
+                className={`h-16 w-16 transition-colors ${
+                  isDragging ? 'text-white' : 'text-indigo-600'
+                }`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                />
+              </svg>
+            </div>
+            <p className="mt-6 text-lg font-bold text-gray-900">
+              画像をドラッグ&ドロップ
+            </p>
+            <div className="mt-3 flex items-center gap-2">
+              <div className="h-px flex-1 bg-gray-300" />
+              <p className="text-sm text-gray-500">または</p>
+              <div className="h-px flex-1 bg-gray-300" />
+            </div>
+            <p className="mt-3 flex items-center gap-1.5 text-sm text-gray-600">
+              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+              </svg>
+              Ctrl+V で貼り付け
+            </p>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handleFileSelect}
+              className="hidden"
             />
-          </svg>
-          <p className="mt-4 text-lg font-medium text-gray-900">
-            画像をドラッグ&ドロップ
-          </p>
-          <p className="mt-1 text-sm text-gray-500">
-            または Ctrl+V で貼り付け
-          </p>
-          <p className="mt-1 text-sm text-gray-500">
-            または
-          </p>
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*"
-            onChange={handleFileSelect}
-            className="hidden"
-          />
-          <button
-            onClick={() => fileInputRef.current?.click()}
-            className="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          >
-            ファイルを選択
-          </button>
-          <p className="mt-4 text-xs text-gray-500">
-            PNG、JPG、GIF形式（最大10MB）
-          </p>
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              className="mt-6 inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-indigo-600 to-purple-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-500/30 transition-all hover:shadow-xl hover:shadow-indigo-500/40"
+            >
+              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              ファイルを選択
+            </button>
+            <p className="mt-4 flex items-center gap-1.5 text-xs text-gray-500">
+              <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              PNG、JPG、GIF形式（最大10MB）
+            </p>
+          </div>
         </div>
       ) : (
-        <div className="rounded-lg bg-white p-6 shadow">
+        <div className="overflow-hidden rounded-xl bg-white p-6 shadow-lg ring-1 ring-gray-900/5">
           <div className="relative">
             <img
               src={preview}
               alt="アップロードされた画像"
-              className="mx-auto max-h-96 rounded-lg object-contain"
+              className="mx-auto max-h-96 rounded-xl object-contain shadow-md"
             />
             <button
               onClick={handleRemove}
               disabled={isUploading}
-              className="absolute top-2 right-2 rounded-full bg-white p-2 shadow-md hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="absolute -right-2 -top-2 rounded-full bg-white p-2.5 shadow-lg ring-1 ring-gray-900/10 transition-all hover:bg-red-50 hover:ring-red-200 disabled:cursor-not-allowed disabled:opacity-50"
             >
               <svg
-                className="h-5 w-5 text-gray-600"
+                className="h-5 w-5 text-gray-600 hover:text-red-600"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -204,23 +225,26 @@ export default function ImageUpload({ onUpload, onUploadingChange }: Props) {
               </svg>
             </button>
           </div>
-          <div className="mt-6 flex justify-center space-x-4">
+          <div className="mt-6 flex justify-center gap-4">
             <button
               onClick={handleRemove}
               disabled={isUploading}
-              className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 shadow-sm transition-all hover:bg-gray-50 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-50"
             >
+              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
               別の画像を選択
             </button>
             <button
               onClick={handleUpload}
               disabled={isUploading}
-              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-indigo-600 to-purple-600 px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-500/30 transition-all hover:shadow-xl hover:shadow-indigo-500/40 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {isUploading ? (
                 <>
                   <svg
-                    className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                    className="h-4 w-4 animate-spin text-white"
                     fill="none"
                     viewBox="0 0 24 24"
                   >
@@ -241,7 +265,12 @@ export default function ImageUpload({ onUpload, onUploadingChange }: Props) {
                   処理中...
                 </>
               ) : (
-                'レシピを抽出'
+                <>
+                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                  レシピを抽出
+                </>
               )}
             </button>
           </div>
