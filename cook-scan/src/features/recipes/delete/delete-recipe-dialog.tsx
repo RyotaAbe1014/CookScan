@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { deleteRecipe } from './actions'
 
@@ -13,36 +13,28 @@ type Props = {
 
 export default function DeleteRecipeDialog({ recipeId, recipeTitle, isOpen, onClose }: Props) {
   const router = useRouter()
-  const [isDeleting, setIsDeleting] = useState(false)
-
-  console.log('DeleteRecipeDialog レンダリング:', { isOpen, recipeId, recipeTitle })
+  const [isPending, startTransition] = useTransition()
 
   if (!isOpen) {
-    console.log('ダイアログが閉じています')
     return null
   }
 
-  console.log('ダイアログを表示します')
-
   const handleDelete = async () => {
-    setIsDeleting(true)
-    
-    try {
-      const result = await deleteRecipe(recipeId)
-      
-      if (result.success) {
-        router.push('/recipes')
-      } else {
-        alert(result.error || 'レシピの削除に失敗しました')
-        setIsDeleting(false)
+    startTransition(async () => {
+      try {
+        const result = await deleteRecipe(recipeId)
+        if (result.success) {
+          router.push('/recipes')
+        } else {
+          alert(result.error || 'レシピの削除に失敗しました')
+        }
+      } catch (error) {
+        alert('エラーが発生しました')
+      }
+      finally {
         onClose()
       }
-    } catch (error) {
-      console.error('Error deleting recipe:', error)
-      alert('エラーが発生しました')
-      setIsDeleting(false)
-      onClose()
-    }
+    })
   }
 
   return (
@@ -108,7 +100,7 @@ export default function DeleteRecipeDialog({ recipeId, recipeTitle, isOpen, onCl
           <div className="flex gap-3 border-t border-gray-200 bg-gradient-to-r from-gray-50 to-white px-6 py-4">
             <button
               type="button"
-              disabled={isDeleting}
+              disabled={isPending}
               onClick={onClose}
               className="flex-1 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-semibold text-gray-700 shadow-sm transition-all hover:bg-gray-50 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-50"
             >
@@ -116,11 +108,11 @@ export default function DeleteRecipeDialog({ recipeId, recipeTitle, isOpen, onCl
             </button>
             <button
               type="button"
-              disabled={isDeleting}
+              disabled={isPending}
               onClick={handleDelete}
               className="flex-1 rounded-lg bg-gradient-to-r from-red-600 to-orange-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-red-500/30 transition-all hover:shadow-xl hover:shadow-red-500/40 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {isDeleting ? (
+              {isPending ? (
                 <span className="flex items-center justify-center gap-2">
                   <svg
                     className="h-4 w-4 animate-spin text-white"
