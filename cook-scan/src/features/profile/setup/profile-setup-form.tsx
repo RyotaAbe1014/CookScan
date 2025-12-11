@@ -18,7 +18,12 @@ export default function ProfileSetupForm({ userId, userEmail }: ProfileSetupForm
     setError(null)
 
     startTransition(async () => {
-      await createProfile(userId, userEmail, name)
+      try {
+        await createProfile(userId, userEmail, name)
+      } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : 'プロフィールの作成に失敗しました'
+        setError(errorMessage)
+      }
     })
   }
 

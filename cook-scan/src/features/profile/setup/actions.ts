@@ -2,8 +2,27 @@
 
 import { prisma } from '@/lib/prisma'
 import { redirect } from 'next/navigation'
+import { checkUserProfile } from '@/features/auth/auth-utils'
 
 export async function createProfile(authId: string, email: string, name: string) {
+  // 現在のセッションユーザーを取得
+  const { hasAuth, authUser, hasProfile } = await checkUserProfile()
+
+  // 認証チェック
+  if (!hasAuth || !authUser) {
+    redirect('/login')
+  }
+
+  // authIdが現在のユーザーと一致するか検証
+  if (authUser.id !== authId) {
+    throw new Error('認証エラー: ユーザーIDが一致しません')
+  }
+
+  // 既にプロフィールが存在する場合はエラー
+  if (hasProfile) {
+    throw new Error('プロフィールは既に作成されています')
+  }
+
   try {
     await prisma.user.create({
       data: {
