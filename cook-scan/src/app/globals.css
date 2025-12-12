@@ -19,7 +19,7 @@
 
 :root {
   /* -------------------------------------------------------------------------
-     Base Colors (Light Mode)
+     Base Colors
      ------------------------------------------------------------------------- */
   --background: #ffffff;
   --foreground: #171717;
@@ -234,83 +234,6 @@
   /* Fonts */
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-/* ===========================================================================
-   Dark Mode
-   =========================================================================== */
-@media (prefers-color-scheme: dark) {
-  :root {
-    /* Base */
-    --background: #0a0a0a;
-    --foreground: #ededed;
-
-    /* Primary (少し明るく) */
-    --primary: #6366f1;           /* indigo-500 */
-    --primary-hover: #818cf8;     /* indigo-400 */
-    --primary-light: #1e1b4b;     /* indigo-950 */
-
-    /* Secondary */
-    --secondary: #a855f7;         /* purple-500 */
-    --secondary-hover: #c084fc;   /* purple-400 */
-    --secondary-light: #3b0764;   /* purple-950 */
-
-    /* Accent - Steps */
-    --accent-steps: #3b82f6;      /* blue-500 */
-    --accent-steps-light: #172554; /* blue-950 */
-
-    /* Accent - Ingredients */
-    --accent-ingredients: #22c55e; /* green-500 */
-    --accent-ingredients-light: #052e16; /* green-950 */
-
-    /* Accent - Tags */
-    --accent-tags: #f59e0b;       /* amber-500 */
-    --accent-tags-light: #451a03; /* amber-950 */
-
-    /* Status */
-    --success: #22c55e;           /* green-500 */
-    --success-light: #052e16;     /* green-950 */
-
-    --warning: #f59e0b;           /* amber-500 */
-    --warning-light: #451a03;     /* amber-950 */
-
-    --danger: #ef4444;            /* red-500 */
-    --danger-hover: #f87171;      /* red-400 */
-    --danger-light: #450a0a;      /* red-950 */
-
-    /* Muted */
-    --muted: #171717;             /* neutral-900 */
-    --muted-foreground: #a3a3a3; /* neutral-400 */
-
-    /* Border */
-    --border: #262626;            /* neutral-800 */
-    --border-dark: #404040;       /* neutral-700 */
-
-    /* Input */
-    --input-border: #404040;      /* neutral-700 */
-    --input-focus: #6366f1;       /* indigo-500 */
-    --input-focus-ring: rgba(99, 102, 241, 0.3); /* indigo-500/30 */
-
-    /* Card */
-    --card: #171717;              /* neutral-900 */
-    --card-foreground: #ededed;
-    --card-border: rgba(255, 255, 255, 0.1);
-
-    /* Section */
-    --section-header: #1f1f1f;
-    --section-header-border: #262626;
-
-    /* Shadows (ダークモードでは控えめに) */
-    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
-    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
-    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
-    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
-    --shadow-primary: 0 10px 15px -3px rgba(99, 102, 241, 0.3);
-    --shadow-primary-hover: 0 20px 25px -5px rgba(99, 102, 241, 0.4);
-    --shadow-danger: 0 10px 15px -3px rgba(239, 68, 68, 0.3);
-    --shadow-danger-hover: 0 20px 25px -5px rgba(239, 68, 68, 0.4);
-    --shadow-card: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
-  }
 }
 
 /* ===========================================================================
