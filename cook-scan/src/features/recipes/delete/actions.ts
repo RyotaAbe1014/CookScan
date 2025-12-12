@@ -3,6 +3,7 @@
 import { redirect } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import { checkUserProfile } from '@/features/auth/auth-utils'
+import { Prisma } from '@prisma/client'
 
 export async function deleteRecipe(recipeId: string) {
   // Get current user
@@ -26,7 +27,7 @@ export async function deleteRecipe(recipeId: string) {
     }
 
     // Delete recipe and all related data (cascade delete)
-    await prisma.$transaction(async (tx) => {
+    await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       // Delete related data first (due to foreign key constraints)
       await tx.ingredient.deleteMany({
         where: { recipeId }
