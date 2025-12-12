@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { updateTagCategory, deleteTagCategory } from './actions'
 import { TagItem } from './tag-item'
+import { Button } from '@/components/ui/button'
 
 type Tag = {
   id: string
@@ -130,21 +131,22 @@ export function CategoryItem({ category, currentUserId }: CategoryItemProps) {
             )}
 
             <div className="flex gap-2">
-              <button
+              <Button
                 type="submit"
-                disabled={isSubmitting}
-                className="rounded bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 disabled:bg-gray-400"
+                isLoading={isSubmitting}
+                size="sm"
               >
                 {isSubmitting ? '保存中...' : '保存'}
-              </button>
-              <button
+              </Button>
+              <Button
                 type="button"
+                variant="secondary"
                 onClick={handleCancel}
                 disabled={isSubmitting}
-                className="rounded bg-gray-200 px-4 py-2 text-sm font-semibold text-gray-700 shadow-sm hover:bg-gray-300 disabled:bg-gray-100"
+                size="sm"
               >
                 キャンセル
-              </button>
+              </Button>
             </div>
           </form>
         ) : (

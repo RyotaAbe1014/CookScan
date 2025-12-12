@@ -2,6 +2,7 @@
 
 import { useTransition } from 'react'
 import { logout } from './actions'
+import { Button } from '@/components/ui/button'
 
 export default function LogoutButton() {
   const [isPending, startTransition] = useTransition()
@@ -13,10 +14,12 @@ export default function LogoutButton() {
   }
 
   return (
-    <button
+    <Button
+      variant="secondary"
+      size="md"
       onClick={handleLogout}
       disabled={isPending}
-      className="group flex items-center gap-2 rounded-lg border border-gray-200 bg-white p-3 sm:px-4 sm:py-2 text-sm font-medium text-gray-700 shadow-sm transition-all hover:border-red-300 hover:bg-red-50 hover:text-red-700 disabled:cursor-not-allowed disabled:opacity-50"
+      className="hover:border-red-300 hover:bg-red-50 hover:text-red-700"
       aria-label="ログアウト"
     >
       {isPending ? (
@@ -60,6 +63,6 @@ export default function LogoutButton() {
           <span className="hidden sm:inline">ログアウト</span>
         </>
       )}
-    </button>
+    </Button>
   )
 }
