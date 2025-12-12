@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import { checkUserProfile } from '@/features/auth/auth-utils'
 import { UpdateRecipeRequest, UpdateRecipeResponse } from '@/features/recipes/edit/types'
+import { Prisma } from '@prisma/client'
 
 export async function updateRecipe(request: UpdateRecipeRequest): Promise<UpdateRecipeResponse> {
   const { recipeId, title, sourceInfo, ingredients, steps, memo, tags } = request
@@ -29,7 +30,7 @@ export async function updateRecipe(request: UpdateRecipeRequest): Promise<Update
     }
 
     // Update recipe with all related data in a transaction
-    const updatedRecipe = await prisma.$transaction(async (tx) => {
+    const updatedRecipe = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       // Update the main recipe
       const recipe = await tx.recipe.update({
         where: { id: recipeId },

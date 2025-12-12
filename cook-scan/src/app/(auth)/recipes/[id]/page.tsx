@@ -144,7 +144,7 @@ export default async function RecipeDetailPage({ params }: RecipeDetailPageProps
 
             {/* タグ */}
             {recipe.recipeTags.length > 0 && (() => {
-              const tagsByCategory = recipe.recipeTags.reduce((acc, recipeTag) => {
+              const tagsByCategory = recipe.recipeTags.reduce((acc: Map<string, { name: string; tags: Array<{ id: string; name: string }> }>, recipeTag: typeof recipe.recipeTags[number]) => {
                 const categoryId = recipeTag.tag.category.id
                 const categoryName = recipeTag.tag.category.name
 
@@ -173,7 +173,7 @@ export default async function RecipeDetailPage({ params }: RecipeDetailPageProps
                   </div>
                   <div className="p-6">
                     <div className="space-y-4">
-                      {Array.from(tagsByCategory.entries()).map(([categoryId, category]) => (
+                      {[...tagsByCategory.entries()].map(([categoryId, category]) => (
                         <div key={categoryId}>
                           <div className="mb-2 flex items-center gap-2">
                             <div className="h-1 w-1 rounded-full bg-amber-600" />
@@ -182,7 +182,7 @@ export default async function RecipeDetailPage({ params }: RecipeDetailPageProps
                             </h4>
                           </div>
                           <div className="flex flex-wrap gap-2">
-                            {category.tags.map((tag) => (
+                            {category.tags.map((tag: { id: string; name: string }) => (
                               <span
                                 key={tag.id}
                                 className="inline-flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-indigo-600 to-purple-600 px-3 py-2 text-sm font-medium text-white shadow-lg shadow-indigo-500/30 ring-2 ring-indigo-600"
@@ -220,7 +220,7 @@ export default async function RecipeDetailPage({ params }: RecipeDetailPageProps
               <div className="p-6">
                 {recipe.ingredients.length > 0 ? (
                   <div className="space-y-2">
-                    {recipe.ingredients.map((ingredient) => (
+                    {recipe.ingredients.map((ingredient: typeof recipe.ingredients[number]) => (
                       <div key={ingredient.id} className="flex items-center justify-between rounded-lg bg-gradient-to-r from-gray-50 to-white p-3 ring-1 ring-gray-200 transition-all hover:shadow-md">
                         <div className="flex items-center gap-2">
                           <div className="h-2 w-2 rounded-full bg-green-500" />
@@ -258,7 +258,7 @@ export default async function RecipeDetailPage({ params }: RecipeDetailPageProps
               <div className="p-6">
                 {recipe.steps.length > 0 ? (
                   <div className="space-y-4">
-                    {recipe.steps.map((step) => (
+                    {recipe.steps.map((step: typeof recipe.steps[number]) => (
                       <div key={step.id} className="group flex gap-4 rounded-lg bg-gradient-to-r from-gray-50 to-white p-4 ring-1 ring-gray-200 transition-all hover:shadow-md">
                         <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 text-base font-bold text-white shadow-md">
                           {step.orderIndex}

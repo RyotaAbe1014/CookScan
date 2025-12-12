@@ -166,7 +166,7 @@ export default async function TagsPage() {
             </div>
           ) : (
             <div className="space-y-6">
-              {tagCategories.map((category) => (
+              {tagCategories.map((category: typeof tagCategories[number]) => (
                 <CategoryItem
                   key={category.id}
                   category={category}

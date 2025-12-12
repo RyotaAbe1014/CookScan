@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import { checkUserProfile } from '@/features/auth/auth-utils'
 import { CreateRecipeRequest } from '@/features/recipes/upload/types'
+import { Prisma } from '@prisma/client'
 
 export async function createRecipe(request: CreateRecipeRequest) {
   const { title, sourceInfo, ingredients, steps, memo, tags } = request
@@ -17,7 +18,7 @@ export async function createRecipe(request: CreateRecipeRequest) {
 
   try {
     // Create recipe with all related data in a transaction
-    const recipe = await prisma.$transaction(async (tx) => {
+    const recipe = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       // Create the main recipe
       const newRecipe = await tx.recipe.create({
         data: {
