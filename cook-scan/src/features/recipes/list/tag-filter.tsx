@@ -2,6 +2,7 @@
 
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useCallback } from 'react'
+import { Card, CardHeader, CardContent } from '@/components/ui/card'
 
 type Tag = {
   id: string
@@ -68,8 +69,8 @@ export function TagFilter({ tagCategories }: TagFilterProps) {
   }
 
   return (
-    <div className="mb-6 overflow-hidden rounded-xl bg-white shadow-lg ring-1 ring-gray-900/5">
-      <div className="border-b border-gray-200 bg-gradient-to-r from-gray-50 to-white px-6 py-4">
+    <Card className="mb-6">
+      <CardHeader>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <svg className="h-5 w-5 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -89,9 +90,9 @@ export function TagFilter({ tagCategories }: TagFilterProps) {
             </button>
           )}
         </div>
-      </div>
+      </CardHeader>
 
-      <div className="p-6">
+      <CardContent>
         <div className="space-y-4">
           {categoriesWithTags.map((category) => (
             <div key={category.id}>
@@ -142,7 +143,7 @@ export function TagFilter({ tagCategories }: TagFilterProps) {
             </p>
           </div>
         )}
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   )
 }

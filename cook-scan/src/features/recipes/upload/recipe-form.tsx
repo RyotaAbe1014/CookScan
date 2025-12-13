@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import type { ExtractedRecipeData } from './types'
 import { createRecipe } from './actions'
 import { getAllTagsForRecipe } from '@/features/tags/actions'
-import { Button, Input, Textarea } from '@/components/ui'
+import { Button, Input, Textarea, Card, CardHeader, CardContent } from '@/components/ui'
 
 type Props = {
   imageUrl: string | null
@@ -130,36 +130,37 @@ export default function RecipeForm({ imageUrl, extractedData }: Props) {
       <div className="space-y-6">
         {/* 画像プレビュー */}
         {imageUrl && (
-          <div className="overflow-hidden rounded-xl bg-white p-6 shadow-lg ring-1 ring-gray-900/5">
-            <div className="mb-4 flex items-center gap-2">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 shadow-md">
-                <svg className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
+          <Card>
+            <CardContent>
+              <div className="mb-4 flex items-center gap-2">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 shadow-md">
+                  <svg className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-bold text-gray-900">アップロードした画像</h3>
               </div>
-              <h3 className="text-lg font-bold text-gray-900">アップロードした画像</h3>
-            </div>
-            <img
-              src={imageUrl}
-              alt="レシピ画像"
-              className="mx-auto max-h-64 rounded-xl object-contain shadow-md"
-            />
-          </div>
+              <img
+                src={imageUrl}
+                alt="レシピ画像"
+                className="mx-auto max-h-64 rounded-xl object-contain shadow-md"
+              />
+            </CardContent>
+          </Card>
         )}
 
         {/* 基本情報 */}
-        <div className="overflow-hidden rounded-xl bg-white shadow-lg ring-1 ring-gray-900/5">
-          <div className="border-b border-gray-200 bg-gradient-to-r from-gray-50 to-white px-6 py-4">
-            <div className="flex items-center gap-2">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 shadow-md">
-                <svg className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <h3 className="text-lg font-bold text-gray-900">基本情報</h3>
-            </div>
-          </div>
-          <div className="p-6">
+        <Card>
+          <CardHeader
+            icon={
+              <svg className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            }
+            iconColor="indigo"
+            title="基本情報"
+          />
+          <CardContent>
             <div className="space-y-4">
               <div>
                 <label htmlFor="title" className="mb-2 flex items-center gap-1.5 text-sm font-medium text-gray-700">
@@ -241,23 +242,22 @@ export default function RecipeForm({ imageUrl, extractedData }: Props) {
                 />
               </div>
             </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
 
         {/* タグ */}
         {tagCategories.length > 0 && (
-          <div className="overflow-hidden rounded-xl bg-white shadow-lg ring-1 ring-gray-900/5">
-            <div className="border-b border-gray-200 bg-gradient-to-r from-gray-50 to-white px-6 py-4">
-              <div className="flex items-center gap-2">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-amber-500 to-orange-600 shadow-md">
-                  <svg className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
-                  </svg>
-                </div>
-                <h3 className="text-lg font-bold text-gray-900">タグ</h3>
-              </div>
-            </div>
-            <div className="p-6">
+          <Card>
+            <CardHeader
+              icon={
+                <svg className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                </svg>
+              }
+              iconColor="amber"
+              title="タグ"
+            />
+            <CardContent>
               <div className="space-y-4">
                 {tagCategories.map((category) => (
                   <div key={category.id}>
@@ -299,33 +299,34 @@ export default function RecipeForm({ imageUrl, extractedData }: Props) {
                   </div>
                 ))}
               </div>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
         )}
 
         {/* 材料 */}
-        <div className="overflow-hidden rounded-xl bg-white shadow-lg ring-1 ring-gray-900/5">
-          <div className="flex items-center justify-between border-b border-gray-200 bg-gradient-to-r from-gray-50 to-white px-6 py-4">
-            <div className="flex items-center gap-2">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-green-500 to-emerald-600 shadow-md">
-                <svg className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                </svg>
-              </div>
-              <h3 className="text-lg font-bold text-gray-900">材料</h3>
-            </div>
-            <button
-              type="button"
-              onClick={addIngredient}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-green-600 to-emerald-600 px-3 py-2 text-sm font-semibold text-white shadow-md shadow-green-500/30 transition-all hover:shadow-lg hover:shadow-green-500/40"
-            >
-              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+        <Card>
+          <CardHeader
+            icon={
+              <svg className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
               </svg>
-              材料を追加
-            </button>
-          </div>
-          <div className="p-6">
+            }
+            iconColor="green"
+            title="材料"
+            actions={
+              <button
+                type="button"
+                onClick={addIngredient}
+                className="inline-flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-green-600 to-emerald-600 px-3 py-2 text-sm font-semibold text-white shadow-md shadow-green-500/30 transition-all hover:shadow-lg hover:shadow-green-500/40"
+              >
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                </svg>
+                材料を追加
+              </button>
+            }
+          />
+          <CardContent>
             <div className="space-y-3">
               {ingredients.map((ingredient, index) => (
                 <div key={index} className="group flex gap-3 rounded-lg bg-gradient-to-r from-gray-50 to-white p-3 ring-1 ring-gray-200 transition-all hover:shadow-md">
@@ -372,32 +373,33 @@ export default function RecipeForm({ imageUrl, extractedData }: Props) {
                 </div>
               ))}
             </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
 
         {/* 調理手順 */}
-        <div className="overflow-hidden rounded-xl bg-white shadow-lg ring-1 ring-gray-900/5">
-          <div className="flex items-center justify-between border-b border-gray-200 bg-gradient-to-r from-gray-50 to-white px-6 py-4">
-            <div className="flex items-center gap-2">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 shadow-md">
-                <svg className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
-                </svg>
-              </div>
-              <h3 className="text-lg font-bold text-gray-900">調理手順</h3>
-            </div>
-            <button
-              type="button"
-              onClick={addStep}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-md shadow-blue-500/30 transition-all hover:shadow-lg hover:shadow-blue-500/40"
-            >
-              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+        <Card>
+          <CardHeader
+            icon={
+              <svg className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
               </svg>
-              手順を追加
-            </button>
-          </div>
-          <div className="p-6">
+            }
+            iconColor="blue"
+            title="調理手順"
+            actions={
+              <button
+                type="button"
+                onClick={addStep}
+                className="inline-flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-md shadow-blue-500/30 transition-all hover:shadow-lg hover:shadow-blue-500/40"
+              >
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                </svg>
+                手順を追加
+              </button>
+            }
+          />
+          <CardContent>
             <div className="space-y-4">
               {steps.map((step, index) => (
                 <div key={index} className="group flex gap-3 rounded-lg bg-gradient-to-r from-gray-50 to-white p-4 ring-1 ring-gray-200 transition-all hover:shadow-md">
@@ -440,11 +442,12 @@ export default function RecipeForm({ imageUrl, extractedData }: Props) {
                 </div>
               ))}
             </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
 
         {/* ボタン */}
-        <div className="flex justify-end gap-4 rounded-xl bg-gradient-to-r from-gray-50 to-white p-6 shadow-lg ring-1 ring-gray-900/5">
+        <Card>
+          <CardContent className="flex justify-end gap-4">
           <Button
             type="button"
             variant="secondary"
@@ -469,7 +472,8 @@ export default function RecipeForm({ imageUrl, extractedData }: Props) {
             )}
             {isSubmitting ? '保存中...' : 'レシピを保存'}
           </Button>
-        </div>
+          </CardContent>
+        </Card>
       </div>
     </form>
   )
