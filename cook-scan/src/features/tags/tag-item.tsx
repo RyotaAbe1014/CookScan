@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { updateTag, deleteTag } from './actions'
-import { Button } from '@/components/ui/button'
+import { Button, Input, Textarea } from '@/components/ui'
 
 type TagItemProps = {
   tag: {
@@ -89,12 +89,13 @@ export function TagItem({ tag, usageCount, isUserOwned }: TagItemProps) {
             <label htmlFor={`edit-tag-name-${tag.id}`} className="block text-xs font-medium text-gray-700">
               タグ名
             </label>
-            <input
+            <Input
               type="text"
               id={`edit-tag-name-${tag.id}`}
               value={editName}
               onChange={(e) => setEditName(e.target.value)}
-              className="mt-1 block w-full rounded-md border border-gray-300 px-2 py-1 text-sm shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
+              className="mt-1"
+              size="sm"
               disabled={isSubmitting}
             />
           </div>
@@ -103,12 +104,13 @@ export function TagItem({ tag, usageCount, isUserOwned }: TagItemProps) {
             <label htmlFor={`edit-tag-description-${tag.id}`} className="block text-xs font-medium text-gray-700">
               説明（任意）
             </label>
-            <textarea
+            <Textarea
               id={`edit-tag-description-${tag.id}`}
               value={editDescription}
               onChange={(e) => setEditDescription(e.target.value)}
               rows={2}
-              className="mt-1 block w-full rounded-md border border-gray-300 px-2 py-1 text-sm shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
+              className="mt-1"
+              size="sm"
               disabled={isSubmitting}
             />
           </div>

@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import type { ExtractedRecipeData } from './types'
 import { createRecipe } from './actions'
 import { getAllTagsForRecipe } from '@/features/tags/actions'
-import { Button } from '@/components/ui/button'
+import { Button, Input, Textarea } from '@/components/ui'
 
 type Props = {
   imageUrl: string | null
@@ -168,13 +168,12 @@ export default function RecipeForm({ imageUrl, extractedData }: Props) {
                   </svg>
                   レシピタイトル <span className="text-red-500">*</span>
                 </label>
-                <input
+                <Input
                   type="text"
                   id="title"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   required
-                  className="block w-full rounded-lg border border-gray-300 px-4 py-2.5 shadow-sm transition-all focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 sm:text-sm"
                   placeholder="美味しい料理の名前を入力"
                 />
               </div>
@@ -187,12 +186,11 @@ export default function RecipeForm({ imageUrl, extractedData }: Props) {
                     </svg>
                     本の名前
                   </label>
-                  <input
+                  <Input
                     type="text"
                     id="bookName"
                     value={sourceInfo.bookName}
                     onChange={(e) => setSourceInfo({ ...sourceInfo, bookName: e.target.value })}
-                    className="block w-full rounded-lg border border-gray-300 px-4 py-2.5 shadow-sm transition-all focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 sm:text-sm"
                     placeholder="料理本の名前"
                   />
                 </div>
@@ -203,12 +201,11 @@ export default function RecipeForm({ imageUrl, extractedData }: Props) {
                     </svg>
                     ページ番号
                   </label>
-                  <input
+                  <Input
                     type="text"
                     id="pageNumber"
                     value={sourceInfo.pageNumber}
                     onChange={(e) => setSourceInfo({ ...sourceInfo, pageNumber: e.target.value })}
-                    className="block w-full rounded-lg border border-gray-300 px-4 py-2.5 shadow-sm transition-all focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 sm:text-sm"
                     placeholder="P.123"
                   />
                 </div>
@@ -219,12 +216,11 @@ export default function RecipeForm({ imageUrl, extractedData }: Props) {
                     </svg>
                     参照URL
                   </label>
-                  <input
+                  <Input
                     type="url"
                     id="url"
                     value={sourceInfo.url}
                     onChange={(e) => setSourceInfo({ ...sourceInfo, url: e.target.value })}
-                    className="block w-full rounded-lg border border-gray-300 px-4 py-2.5 shadow-sm transition-all focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 sm:text-sm"
                     placeholder="https://..."
                   />
                 </div>
@@ -236,12 +232,11 @@ export default function RecipeForm({ imageUrl, extractedData }: Props) {
                   </svg>
                   メモ
                 </label>
-                <textarea
+                <Textarea
                   id="memo"
                   value={memo}
                   onChange={(e) => setMemo(e.target.value)}
                   rows={3}
-                  className="block w-full rounded-lg border border-gray-300 px-4 py-2.5 shadow-sm transition-all focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 sm:text-sm"
                   placeholder="このレシピについてのメモや感想..."
                 />
               </div>
@@ -335,30 +330,33 @@ export default function RecipeForm({ imageUrl, extractedData }: Props) {
               {ingredients.map((ingredient, index) => (
                 <div key={index} className="group flex gap-3 rounded-lg bg-gradient-to-r from-gray-50 to-white p-3 ring-1 ring-gray-200 transition-all hover:shadow-md">
                   <div className="flex-1">
-                    <input
+                    <Input
                       type="text"
                       placeholder="材料名"
                       value={ingredient.name}
                       onChange={(e) => updateIngredient(index, 'name', e.target.value)}
-                      className="block w-full rounded-lg border border-gray-300 px-4 py-2 shadow-sm transition-all focus:border-green-500 focus:ring-2 focus:ring-green-500/20 sm:text-sm"
+                      variant="green"
+                      size="md"
                     />
                   </div>
                   <div className="w-32">
-                    <input
+                    <Input
                       type="text"
                       placeholder="分量"
                       value={ingredient.unit}
                       onChange={(e) => updateIngredient(index, 'unit', e.target.value)}
-                      className="block w-full rounded-lg border border-gray-300 px-4 py-2 shadow-sm transition-all focus:border-green-500 focus:ring-2 focus:ring-green-500/20 sm:text-sm"
+                      variant="green"
+                      size="md"
                     />
                   </div>
                   <div className="flex-1">
-                    <input
+                    <Input
                       type="text"
                       placeholder="メモ"
                       value={ingredient.notes}
                       onChange={(e) => updateIngredient(index, 'notes', e.target.value)}
-                      className="block w-full rounded-lg border border-gray-300 px-4 py-2 shadow-sm transition-all focus:border-green-500 focus:ring-2 focus:ring-green-500/20 sm:text-sm"
+                      variant="green"
+                      size="md"
                     />
                   </div>
                   <button
@@ -407,23 +405,24 @@ export default function RecipeForm({ imageUrl, extractedData }: Props) {
                     {index + 1}
                   </div>
                   <div className="flex-1 space-y-3">
-                    <textarea
+                    <Textarea
                       placeholder="手順の説明"
                       value={step.instruction}
                       onChange={(e) => updateStep(index, 'instruction', e.target.value)}
                       rows={2}
-                      className="block w-full rounded-lg border border-gray-300 px-4 py-2.5 shadow-sm transition-all focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 sm:text-sm"
+                      variant="blue"
                     />
                     <div className="flex items-center gap-2 rounded-lg bg-white p-2 ring-1 ring-gray-200">
                       <svg className="h-4 w-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
-                      <input
+                      <Input
                         type="number"
                         placeholder="タイマー（秒）"
                         value={step.timerSeconds}
                         onChange={(e) => updateStep(index, 'timerSeconds', e.target.value)}
-                        className="w-28 rounded-lg border border-gray-300 px-3 py-1.5 shadow-sm transition-all focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 sm:text-sm"
+                        size="sm"
+                        className="w-28"
                       />
                       <span className="text-sm font-medium text-gray-600">秒</span>
                     </div>

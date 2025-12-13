@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { updateTagCategory, deleteTagCategory } from './actions'
 import { TagItem } from './tag-item'
-import { Button } from '@/components/ui/button'
+import { Button, Input, Textarea } from '@/components/ui'
 
 type Tag = {
   id: string
@@ -102,12 +102,13 @@ export function CategoryItem({ category, currentUserId }: CategoryItemProps) {
               <label htmlFor={`edit-category-name-${category.id}`} className="block text-sm font-medium text-gray-700">
                 カテゴリ名
               </label>
-              <input
+              <Input
                 type="text"
                 id={`edit-category-name-${category.id}`}
                 value={editName}
                 onChange={(e) => setEditName(e.target.value)}
-                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
+                className="mt-1"
+                size="md"
                 disabled={isSubmitting}
               />
             </div>
@@ -116,12 +117,13 @@ export function CategoryItem({ category, currentUserId }: CategoryItemProps) {
               <label htmlFor={`edit-category-description-${category.id}`} className="block text-sm font-medium text-gray-700">
                 説明（任意）
               </label>
-              <textarea
+              <Textarea
                 id={`edit-category-description-${category.id}`}
                 value={editDescription}
                 onChange={(e) => setEditDescription(e.target.value)}
                 rows={2}
-                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
+                className="mt-1"
+                size="md"
                 disabled={isSubmitting}
               />
             </div>

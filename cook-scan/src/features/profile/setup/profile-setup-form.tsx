@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from 'react'
 import { createProfile } from './actions'
-import { Button } from '@/components/ui/button'
+import { Button, Input } from '@/components/ui'
 
 interface ProfileSetupFormProps {
   userId: string
@@ -41,12 +41,14 @@ export default function ProfileSetupForm({ userId, userEmail }: ProfileSetupForm
           メールアドレス
         </label>
         <div className="relative">
-          <input
+          <Input
             type="email"
             id="email"
             value={userEmail}
             disabled
-            className="block w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 pl-10 text-gray-500 shadow-sm transition-all"
+            variant="disabled"
+            size="xl"
+            hasIcon
           />
           <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
             <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -68,14 +70,15 @@ export default function ProfileSetupForm({ userId, userEmail }: ProfileSetupForm
           <span className="text-red-500">*</span>
         </label>
         <div className="relative">
-          <input
+          <Input
             type="text"
             id="name"
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
             placeholder="山田 太郎"
-            className="block w-full rounded-lg border border-gray-300 px-4 py-3 pl-10 shadow-sm transition-all focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20"
+            size="xl"
+            hasIcon
           />
           <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
             <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
