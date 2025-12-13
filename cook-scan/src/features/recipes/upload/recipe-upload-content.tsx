@@ -6,6 +6,7 @@ import ImageUpload from '@/features/recipes/upload/image-upload'
 import RecipeForm from '@/features/recipes/upload/recipe-form'
 import type { ExtractedRecipeData } from '@/features/recipes/upload/types'
 import { Button } from '@/components/ui/button'
+import { TextInput } from './text-input'
 
 type Step = 'method-selection' | 'image-upload' | 'text-input' | 'form'
 
@@ -35,8 +36,13 @@ export default function RecipeUploadContent() {
     setCurrentStep('form')
   }
 
+  const handleTextInput = (extractedData: ExtractedRecipeData) => {
+    setExtractedData(extractedData)
+    setCurrentStep('form')
+  }
+
   const handleBack = () => {
-    if (currentStep === 'image-upload') {
+    if (currentStep === 'image-upload' || currentStep === 'text-input') {
       setCurrentStep('method-selection')
     } else if (currentStep === 'form') {
       if (uploadedImageUrl) {
@@ -82,6 +88,10 @@ export default function RecipeUploadContent() {
           onUpload={handleImageUpload}
           onUploadingChange={setIsUploading}
         />
+      )}
+
+      {currentStep === 'text-input' && (
+        <TextInput handleTextInput={handleTextInput} />
       )}
 
       {currentStep === 'form' && (

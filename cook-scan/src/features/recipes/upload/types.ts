@@ -37,3 +37,7 @@ export type CreateRecipeRequest = {
   memo?: string
   tags: string[]
 }
+
+export type ExtractResponse =
+  | { success: true; result: ExtractedRecipeData }
+  | { success: false; error: string }

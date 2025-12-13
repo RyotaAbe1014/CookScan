@@ -55,11 +55,13 @@ export default function MethodSelector({ onSelect }: Props) {
       <button
         onClick={() => onSelect('text-input')}
         className="group relative overflow-hidden rounded-xl bg-white p-8 text-left shadow-lg ring-1 ring-gray-900/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
-      >
+        >
+        {/* TODO: カラーを決める */}
         <div className="absolute right-0 top-0 h-32 w-32 translate-x-8 -translate-y-8 rounded-full bg-gradient-to-br from-indigo-100 to-purple-100 opacity-50 transition-transform group-hover:scale-110" />
         <div className="relative flex flex-col items-center text-center">
-          {/* TODO: カラーを決める */}
           <div className="rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 p-4 shadow-lg transition-transform group-hover:scale-110">
+
+            {/* TODO: アイコンを決める */}
             <svg
               className="h-12 w-12 text-white"
               fill="none"

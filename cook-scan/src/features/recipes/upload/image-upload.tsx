@@ -1,12 +1,8 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { ExtractedRecipeData } from './types'
+import type { ExtractedRecipeData, ExtractResponse } from './types'
 import { Button } from '@/components/ui/button'
-
-type ExtractResponse =
-  | { success: true; result: ExtractedRecipeData }
-  | { success: false; error: string }
 
 type Props = {
   onUpload: (imageUrl: string, extractedData: ExtractedRecipeData) => void
@@ -134,20 +130,18 @@ export default function ImageUpload({ onUpload, onUploadingChange }: Props) {
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
           className={`relative overflow-hidden rounded-xl border-2 border-dashed p-12 text-center shadow-lg ring-1 ring-gray-900/5 transition-all duration-300 ${isDragging
-              ? 'border-indigo-500 bg-gradient-to-br from-indigo-50 to-purple-50 shadow-xl'
-              : 'border-gray-300 bg-white hover:border-indigo-400 hover:shadow-xl'
+            ? 'border-indigo-500 bg-gradient-to-br from-indigo-50 to-purple-50 shadow-xl'
+            : 'border-gray-300 bg-white hover:border-indigo-400 hover:shadow-xl'
             }`}
         >
           <div className="flex flex-col items-center">
-            <div className={`rounded-xl p-4 transition-colors ${
-              isDragging
+            <div className={`rounded-xl p-4 transition-colors ${isDragging
                 ? 'bg-gradient-to-br from-indigo-500 to-purple-600'
                 : 'bg-gradient-to-br from-indigo-100 to-purple-100'
-            }`}>
+              }`}>
               <svg
-                className={`h-16 w-16 transition-colors ${
-                  isDragging ? 'text-white' : 'text-indigo-600'
-                }`}
+                className={`h-16 w-16 transition-colors ${isDragging ? 'text-white' : 'text-indigo-600'
+                  }`}
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
