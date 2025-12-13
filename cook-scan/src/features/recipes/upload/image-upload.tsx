@@ -94,7 +94,7 @@ export default function ImageUpload({ onUpload, onUploadingChange }: Props) {
       const formData = new FormData()
       formData.append('file', selectedFile)
 
-      const res = await fetch('/recipes/extract', {
+      const res = await fetch('/recipes/extract/file', {
         method: 'POST',
         body: formData,
       })
