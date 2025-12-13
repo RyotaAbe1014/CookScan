@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { getRecipeById } from '@/features/recipes/detail/actions'
 import RecipeDetailActions from '@/features/recipes/detail/recipe-detail-actions'
 import { Header } from '@/components/header'
+import { Card, CardHeader, CardContent } from '@/components/ui/card'
 
 interface RecipeDetailPageProps {
   params: Promise<{ id: string }>
@@ -46,37 +47,38 @@ export default async function RecipeDetailPage({ params }: RecipeDetailPageProps
           <div className="lg:col-span-1">
             {/* レシピ画像 */}
             {recipe.imageUrl && (
-              <div className="mb-6 overflow-hidden rounded-xl bg-white p-6 shadow-lg ring-1 ring-gray-900/5">
-                <div className="mb-4 flex items-center gap-2">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 shadow-md">
-                    <svg className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
+              <Card className="mb-6">
+                <CardContent>
+                  <div className="mb-4 flex items-center gap-2">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 shadow-md">
+                      <svg className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                    </div>
+                    <h3 className="text-lg font-bold text-gray-900">レシピ画像</h3>
                   </div>
-                  <h3 className="text-lg font-bold text-gray-900">レシピ画像</h3>
-                </div>
-                <img
-                  src={recipe.imageUrl}
-                  alt={recipe.title}
-                  className="w-full rounded-xl object-cover shadow-md"
-                />
-              </div>
+                  <img
+                    src={recipe.imageUrl}
+                    alt={recipe.title}
+                    className="w-full rounded-xl object-cover shadow-md"
+                  />
+                </CardContent>
+              </Card>
             )}
 
             {/* ソース情報 */}
             {sourceInfo && (
-              <div className="mb-6 overflow-hidden rounded-xl bg-white shadow-lg ring-1 ring-gray-900/5">
-                <div className="border-b border-gray-200 bg-gradient-to-r from-gray-50 to-white px-6 py-4">
-                  <div className="flex items-center gap-2">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-amber-500 to-orange-600 shadow-md">
-                      <svg className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                      </svg>
-                    </div>
-                    <h3 className="text-lg font-bold text-gray-900">ソース情報</h3>
-                  </div>
-                </div>
-                <div className="p-6">
+              <Card className="mb-6">
+                <CardHeader
+                  icon={
+                    <svg className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                  }
+                  iconColor="amber"
+                  title="ソース情報"
+                />
+                <CardContent>
                   <div className="space-y-3 text-sm">
                     {sourceInfo.sourceName && (
                       <div className="flex items-start gap-2 rounded-lg bg-gradient-to-r from-gray-50 to-white p-3 ring-1 ring-gray-200">
@@ -119,27 +121,26 @@ export default async function RecipeDetailPage({ params }: RecipeDetailPageProps
                       </div>
                     )}
                   </div>
-                </div>
-              </div>
+                </CardContent>
+              </Card>
             )}
 
             {/* メモ */}
             {memo && (
-              <div className="mb-6 overflow-hidden rounded-xl bg-white shadow-lg ring-1 ring-gray-900/5">
-                <div className="border-b border-gray-200 bg-gradient-to-r from-gray-50 to-white px-6 py-4">
-                  <div className="flex items-center gap-2">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-purple-500 to-pink-600 shadow-md">
-                      <svg className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                      </svg>
-                    </div>
-                    <h3 className="text-lg font-bold text-gray-900">メモ</h3>
-                  </div>
-                </div>
-                <div className="p-6">
+              <Card className="mb-6">
+                <CardHeader
+                  icon={
+                    <svg className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    </svg>
+                  }
+                  iconColor="purple"
+                  title="メモ"
+                />
+                <CardContent>
                   <p className="whitespace-pre-wrap text-sm leading-relaxed text-gray-600">{memo}</p>
-                </div>
-              </div>
+                </CardContent>
+              </Card>
             )}
 
             {/* タグ */}
@@ -160,18 +161,17 @@ export default async function RecipeDetailPage({ params }: RecipeDetailPageProps
               }, new Map<string, { name: string; tags: Array<{ id: string; name: string }> }>())
 
               return (
-                <div className="mb-6 overflow-hidden rounded-xl bg-white shadow-lg ring-1 ring-gray-900/5">
-                  <div className="border-b border-gray-200 bg-gradient-to-r from-gray-50 to-white px-6 py-4">
-                    <div className="flex items-center gap-2">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-amber-500 to-orange-600 shadow-md">
-                        <svg className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
-                        </svg>
-                      </div>
-                      <h3 className="text-lg font-bold text-gray-900">タグ</h3>
-                    </div>
-                  </div>
-                  <div className="p-6">
+                <Card className="mb-6">
+                  <CardHeader
+                    icon={
+                      <svg className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                      </svg>
+                    }
+                    iconColor="amber"
+                    title="タグ"
+                  />
+                  <CardContent>
                     <div className="space-y-4">
                       {[...tagsByCategory.entries()].map(([categoryId, category]) => (
                         <div key={categoryId}>
@@ -197,8 +197,8 @@ export default async function RecipeDetailPage({ params }: RecipeDetailPageProps
                         </div>
                       ))}
                     </div>
-                  </div>
-                </div>
+                  </CardContent>
+                </Card>
               )
             })()}
           </div>
@@ -206,18 +206,17 @@ export default async function RecipeDetailPage({ params }: RecipeDetailPageProps
           {/* 右側: 材料と調理手順 */}
           <div className="lg:col-span-2">
             {/* 材料 */}
-            <div className="mb-8 overflow-hidden rounded-xl bg-white shadow-lg ring-1 ring-gray-900/5">
-              <div className="border-b border-gray-200 bg-gradient-to-r from-gray-50 to-white px-6 py-4">
-                <div className="flex items-center gap-2">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-green-500 to-emerald-600 shadow-md">
-                    <svg className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                    </svg>
-                  </div>
-                  <h3 className="text-lg font-bold text-gray-900">材料</h3>
-                </div>
-              </div>
-              <div className="p-6">
+            <Card className="mb-8">
+              <CardHeader
+                icon={
+                  <svg className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                  </svg>
+                }
+                iconColor="green"
+                title="材料"
+              />
+              <CardContent>
                 {recipe.ingredients.length > 0 ? (
                   <div className="space-y-2">
                     {recipe.ingredients.map((ingredient: typeof recipe.ingredients[number]) => (
@@ -240,22 +239,21 @@ export default async function RecipeDetailPage({ params }: RecipeDetailPageProps
                 ) : (
                   <p className="text-gray-500">材料が登録されていません</p>
                 )}
-              </div>
-            </div>
+              </CardContent>
+            </Card>
 
             {/* 調理手順 */}
-            <div className="overflow-hidden rounded-xl bg-white shadow-lg ring-1 ring-gray-900/5">
-              <div className="border-b border-gray-200 bg-gradient-to-r from-gray-50 to-white px-6 py-4">
-                <div className="flex items-center gap-2">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 shadow-md">
-                    <svg className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
-                    </svg>
-                  </div>
-                  <h3 className="text-lg font-bold text-gray-900">調理手順</h3>
-                </div>
-              </div>
-              <div className="p-6">
+            <Card>
+              <CardHeader
+                icon={
+                  <svg className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                  </svg>
+                }
+                iconColor="blue"
+                title="調理手順"
+              />
+              <CardContent>
                 {recipe.steps.length > 0 ? (
                   <div className="space-y-4">
                     {recipe.steps.map((step: typeof recipe.steps[number]) => (
@@ -282,8 +280,8 @@ export default async function RecipeDetailPage({ params }: RecipeDetailPageProps
                 ) : (
                   <p className="text-gray-500">調理手順が登録されていません</p>
                 )}
-              </div>
-            </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
 
