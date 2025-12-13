@@ -12,18 +12,18 @@ export default function Error({
   reset: () => void
 }) {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 via-white to-purple-50 px-4 py-8">
-      <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 via-purple-500/5 to-pink-500/5 pointer-events-none" />
+    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-indigo-50 via-white to-purple-50 px-4 py-8">
+      <div className="absolute inset-0 bg-linear-to-br from-indigo-500/5 via-purple-500/5 to-pink-500/5 pointer-events-none" />
 
       <div className="relative max-w-2xl w-full">
         <Card className="overflow-hidden">
           {/* Header with gradient accent */}
-          <div className="h-2 bg-gradient-to-r from-red-500 via-rose-500 to-pink-600" />
+          <div className="h-2 bg-linear-to-r from-red-500 via-rose-500 to-pink-600" />
 
           <CardContent className="p-8 sm:p-12">
             {/* Error Icon */}
             <div className="flex justify-center mb-6">
-              <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-red-50 to-rose-100 ring-2 ring-red-500/20">
+              <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-linear-to-br from-red-50 to-rose-100 ring-2 ring-red-500/20">
                 <svg
                   className="w-10 h-10 text-red-600"
                   fill="none"
