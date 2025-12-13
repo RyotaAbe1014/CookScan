@@ -2,6 +2,35 @@
 
 このドキュメントは、CookScanアプリケーション全体で使用されている統一されたデザインシステムのガイドラインです。
 
+## 技術スタック
+
+このプロジェクトは**Tailwind CSS v4**を使用しています。
+
+### Tailwind CSS v4の主な変更点
+
+#### グラデーション文法
+Tailwind v4では、グラデーション関連のクラス名が変更されました：
+
+```tsx
+// ✅ Tailwind v4推奨（新しい文法）
+className="bg-linear-to-r from-indigo-600 to-purple-600"
+className="bg-linear-to-br from-green-500 to-emerald-600"
+
+// ⚠️ 従来の文法（動作するが非推奨）
+className="bg-gradient-to-r from-indigo-600 to-purple-600"
+className="bg-gradient-to-br from-green-500 to-emerald-600"
+```
+
+**注意**: このドキュメント内のコード例では、一部で従来の`bg-gradient-*`文法を使用していますが、新規コンポーネントでは`bg-linear-*`文法を推奨します。既存のコンポーネントは段階的に移行予定です。
+
+### マイグレーション方針
+
+- **新規コンポーネント**: `bg-linear-*`文法を使用
+- **既存コンポーネント**: 当面は`bg-gradient-*`のまま動作、将来的に段階的移行
+- **どちらも動作**: 両方の文法が現在動作しますが、v4推奨は`bg-linear-*`
+
+---
+
 ## 目次
 
 1. [カラーパレット](#カラーパレット)
@@ -11,10 +40,15 @@
 5. [シャドウとエフェクト](#シャドウとエフェクト)
 6. [ボタン](#ボタン)
 7. [インプットフィールド](#インプットフィールド)
-8. [カード](#カード)
-9. [アイコンバッジ](#アイコンバッジ)
-10. [アニメーション](#アニメーション)
-11. [セクション別カラーコーディング](#セクション別カラーコーディング)
+8. [バリデーション状態パターン](#バリデーション状態パターン)
+9. [文字数カウンターバッジ](#文字数カウンターバッジ)
+10. [ヘルプ/ヒント情報ボックス](#ヘルプヒント情報ボックス)
+11. [インラインバリデーションヘルパー](#インラインバリデーションヘルパー)
+12. [カード](#カード)
+13. [複数要素カードヘッダー](#複数要素カードヘッダー)
+14. [アイコンバッジ](#アイコンバッジ)
+15. [アニメーション](#アニメーション)
+16. [セクション別カラーコーディング](#セクション別カラーコーディング)
 
 ---
 
@@ -280,6 +314,223 @@ className="focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
 />
 ```
 
+### リッチTextareaプレースホルダー
+```tsx
+<textarea
+  className="block w-full min-h-[300px] resize-y rounded-lg border border-gray-300 px-4 py-2.5 shadow-sm transition-all focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20"
+  placeholder="レシピのテキストをここに貼り付けてください&#10;&#10;例：&#10;材料（2人分）&#10;- 鶏もも肉 300g&#10;- 玉ねぎ 1個&#10;&#10;作り方&#10;1. 鶏肉を一口大に切る&#10;2. フライパンで焼く..."
+  rows={12}
+/>
+```
+
+**ポイント**:
+- `&#10;` を使用してプレースホルダー内で改行
+- `min-h-[300px]` で最小高さを設定
+- `resize-y` で縦方向のリサイズを許可
+- 使用例を含めることでユーザーの入力を促進
+
+---
+
+## バリデーション状態パターン
+
+フォーム入力やステータス表示で使用するバリデーション状態のパターンです。
+
+### 成功状態（緑）
+```tsx
+// バッジスタイル
+<div className="inline-flex items-center gap-1.5 rounded-full bg-green-50 px-3 py-1 text-xs font-semibold text-green-700 ring-1 ring-green-200">
+  <svg className="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 20 20">
+    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+  </svg>
+  <span>成功</span>
+</div>
+
+// テキストスタイル
+<p className="text-sm text-green-600">成功メッセージ</p>
+```
+
+### 警告状態（アンバー）
+```tsx
+// バッジスタイル
+<div className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-700 ring-1 ring-amber-200">
+  <svg className="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 20 20">
+    <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+  </svg>
+  <span>警告</span>
+</div>
+
+// テキストスタイル
+<p className="text-sm text-amber-600">警告メッセージ</p>
+```
+
+### エラー状態（赤）
+```tsx
+// バッジスタイル
+<div className="inline-flex items-center gap-1.5 rounded-full bg-red-50 px-3 py-1 text-xs font-semibold text-red-700 ring-1 ring-red-200">
+  <svg className="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 20 20">
+    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+  </svg>
+  <span>エラー</span>
+</div>
+
+// テキストスタイル
+<p className="text-sm text-red-600">エラーメッセージ</p>
+```
+
+---
+
+## 文字数カウンターバッジ
+
+テキスト入力フィールドでバリデーション状態を表示する動的なバッジです。
+
+### 基本パターン
+```tsx
+const charCount = text.length
+const minChars = 20
+const isValid = charCount >= minChars
+
+<div className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold shadow-sm transition-all ${
+  isValid
+    ? 'bg-green-50 text-green-700 ring-1 ring-green-200'
+    : 'bg-amber-50 text-amber-700 ring-1 ring-amber-200'
+}`}>
+  <span>{charCount}文字</span>
+  {isValid ? (
+    <svg className="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 20 20">
+      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+    </svg>
+  ) : (
+    <svg className="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 20 20">
+      <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+    </svg>
+  )}
+</div>
+```
+
+### カードヘッダー内での使用
+```tsx
+<div className="border-b border-gray-200 bg-gradient-to-r from-gray-50 to-white px-6 py-4">
+  <div className="flex items-center justify-between">
+    <div className="flex items-center gap-2">
+      <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600">
+        <svg className="h-4 w-4 text-white">...</svg>
+      </div>
+      <span className="text-sm font-semibold text-gray-700">レシピテキスト</span>
+    </div>
+    {charCount > 0 && (
+      <div className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold shadow-sm transition-all ${
+        isValid
+          ? 'bg-green-50 text-green-700 ring-1 ring-green-200'
+          : 'bg-amber-50 text-amber-700 ring-1 ring-amber-200'
+      }`}>
+        <span>{charCount}文字</span>
+        {/* アイコン */}
+      </div>
+    )}
+  </div>
+</div>
+```
+
+**ポイント**:
+- 条件付きレンダリングで文字数が0の時は非表示
+- `transition-all` でスムーズな状態変化
+- アイコンで視覚的にバリデーション状態を明示
+
+---
+
+## ヘルプ/ヒント情報ボックス
+
+ユーザーに追加情報やヒントを提供するための情報ボックスです。
+
+### 基本パターン（Indigo-Purple）
+```tsx
+<div className="rounded-lg bg-gradient-to-r from-indigo-50 to-purple-50 p-4 ring-1 ring-indigo-100">
+  <div className="flex gap-3">
+    <div className="flex-shrink-0">
+      <svg className="h-5 w-5 text-indigo-600" fill="currentColor" viewBox="0 0 20 20">
+        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+      </svg>
+    </div>
+    <div className="flex-1">
+      <h4 className="text-sm font-semibold text-indigo-900">ヒント</h4>
+      <p className="mt-1 text-sm leading-relaxed text-indigo-700">
+        材料リストと調理手順が含まれたテキストを貼り付けてください。
+        書籍のレシピ、Webサイトからコピーしたテキスト、手書きメモの内容など、どんな形式でも構いません。
+      </p>
+    </div>
+  </div>
+</div>
+```
+
+### カラーバリエーション
+```tsx
+// 成功（Green）
+className="rounded-lg bg-gradient-to-r from-green-50 to-emerald-50 p-4 ring-1 ring-green-100"
+// テキスト: text-green-600, text-green-700, text-green-900
+
+// 警告（Amber）
+className="rounded-lg bg-gradient-to-r from-amber-50 to-orange-50 p-4 ring-1 ring-amber-100"
+// テキスト: text-amber-600, text-amber-700, text-amber-900
+
+// エラー（Red）
+className="rounded-lg bg-gradient-to-r from-red-50 to-orange-50 p-4 ring-1 ring-red-100"
+// テキスト: text-red-600, text-red-700, text-red-900
+```
+
+**ポイント**:
+- グラデーション背景で視覚的な深みを追加
+- アイコンは左側に固定（`flex-shrink-0`）
+- 見出しと本文を分離して構造化
+- `leading-relaxed` で読みやすい行間
+
+---
+
+## インラインバリデーションヘルパー
+
+入力フィールドの直下に表示される、バリデーション状態に応じたヘルパーテキストです。
+
+### 警告メッセージ
+```tsx
+{!isValid && charCount > 0 && (
+  <p className="mt-2 flex items-center gap-1.5 text-xs text-amber-600">
+    <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>
+    あと{minChars - charCount}文字入力してください
+  </p>
+)}
+```
+
+### エラーメッセージ
+```tsx
+{error && (
+  <p className="mt-2 flex items-center gap-1.5 text-xs text-red-600">
+    <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>
+    {error}
+  </p>
+)}
+```
+
+### 成功メッセージ
+```tsx
+{isValid && (
+  <p className="mt-2 flex items-center gap-1.5 text-xs text-green-600">
+    <svg className="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 20 20">
+      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+    </svg>
+    入力内容は正しいです
+  </p>
+)}
+```
+
+**ポイント**:
+- `mt-2` で入力フィールドから適切な間隔
+- アイコンとテキストを`flex`で水平配置
+- 条件付きレンダリングで必要な時のみ表示
+- 小さめのフォント（`text-xs`）で補助的な情報として表示
+
 ---
 
 ## カード
@@ -320,6 +571,86 @@ className="focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
   {/* コンテンツ */}
 </div>
 ```
+
+---
+
+## 複数要素カードヘッダー
+
+カードヘッダー内に複数の要素（アイコン、ラベル、バッジなど）を配置するパターンです。
+
+### 基本パターン（左右2カラム）
+```tsx
+<div className="overflow-hidden rounded-xl bg-white shadow-lg ring-1 ring-gray-900/5">
+  {/* ヘッダー */}
+  <div className="border-b border-gray-200 bg-gradient-to-r from-gray-50 to-white px-6 py-4">
+    <div className="flex items-center justify-between">
+      {/* 左側: アイコン + ラベル */}
+      <div className="flex items-center gap-2">
+        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600">
+          <svg className="h-4 w-4 text-white">...</svg>
+        </div>
+        <span className="text-sm font-semibold text-gray-700">レシピテキスト</span>
+      </div>
+
+      {/* 右側: ステータスバッジ */}
+      <div className="inline-flex items-center gap-1.5 rounded-full bg-green-50 px-3 py-1 text-xs font-semibold text-green-700 ring-1 ring-green-200">
+        <svg className="h-3.5 w-3.5">...</svg>
+        <span>100文字</span>
+      </div>
+    </div>
+  </div>
+
+  {/* カードボディ */}
+  <div className="p-6">
+    {/* コンテンツ */}
+  </div>
+</div>
+```
+
+### 条件付きバッジ表示
+```tsx
+<div className="border-b border-gray-200 bg-gradient-to-r from-gray-50 to-white px-6 py-4">
+  <div className="flex items-center justify-between">
+    <div className="flex items-center gap-2">
+      <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600">
+        <svg className="h-4 w-4 text-white">...</svg>
+      </div>
+      <span className="text-sm font-semibold text-gray-700">ラベル</span>
+    </div>
+
+    {/* 条件付きレンダリング */}
+    {showBadge && (
+      <div className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-700 ring-1 ring-amber-200">
+        <span>バッジ内容</span>
+      </div>
+    )}
+  </div>
+</div>
+```
+
+### カラーバリエーション
+
+ヘッダーアイコンバッジのカラーは、セクションの種類に応じて変更：
+
+```tsx
+// レシピ基本情報（Indigo-Purple）
+className="bg-gradient-to-br from-indigo-500 to-purple-600"
+
+// タグ・カテゴリ（Amber-Orange）
+className="bg-gradient-to-br from-amber-500 to-orange-600"
+
+// 材料（Green-Emerald）
+className="bg-gradient-to-br from-green-500 to-emerald-600"
+
+// 手順（Blue-Indigo）
+className="bg-gradient-to-br from-blue-500 to-indigo-600"
+```
+
+**ポイント**:
+- `justify-between` で左右に要素を配置
+- 小さめのアイコンバッジ（h-8 w-8）でコンパクトに
+- グラデーション背景で統一感を演出
+- 条件付きレンダリングで柔軟な表示制御
 
 ---
 
@@ -481,10 +812,27 @@ className="disabled:cursor-not-allowed disabled:opacity-50"
 このデザインシステムは、CookScanアプリケーション全体で一貫性のある美しいUIを実現するためのガイドラインです。新しいコンポーネントを作成する際は、このドキュメントを参照して、既存のパターンに従ってください。
 
 ### 重要なポイント
-1. **一貫性**: 同じ機能には同じカラースキームを使用
-2. **グラデーション**: 視覚的な深みを追加するために積極的に活用
-3. **アイコン**: すべてのセクションとアクションにアイコンを追加
-4. **アニメーション**: 適度なホバーエフェクトとトランジション
-5. **アクセシビリティ**: フォーカス状態とセマンティックHTMLを常に意識
+1. **Tailwind CSS v4**: 新規コンポーネントでは`bg-linear-*`文法を推奨（従来の`bg-gradient-*`も動作）
+2. **一貫性**: 同じ機能には同じカラースキームを使用
+3. **グラデーション**: 視覚的な深みを追加するために積極的に活用
+4. **アイコン**: すべてのセクションとアクションにアイコンを追加
+5. **バリデーション状態**: 成功（緑）、警告（アンバー）、エラー（赤）の3状態を統一的に使用
+6. **動的フィードバック**: 文字数カウンター、インラインヘルパーなどで即座にフィードバックを提供
+7. **情報提供**: ヘルプ/ヒントボックスでユーザーをガイド
+8. **アニメーション**: 適度なホバーエフェクトとトランジションで滑らかな体験を提供
+9. **アクセシビリティ**: フォーカス状態とセマンティックHTMLを常に意識
+
+### 新規追加パターン（2025年1月）
+
+このバージョンで以下の新しいパターンが追加されました：
+
+- **バリデーション状態パターン**: フォーム入力やステータス表示の統一的なバリデーションUI
+- **文字数カウンターバッジ**: テキスト入力フィールドでのリアルタイムバリデーション表示
+- **ヘルプ/ヒント情報ボックス**: グラデーション背景を使用した情報提供UI
+- **インラインバリデーションヘルパー**: 入力フィールド直下の状態別ヘルパーテキスト
+- **複数要素カードヘッダー**: 左右に異なる要素を配置した高度なカードヘッダーレイアウト
+- **リッチTextareaプレースホルダー**: 複数行の使用例を含むプレースホルダー
+
+これらのパターンは`src/features/recipes/upload/text-input.tsx`での実装を基に文書化されました。
 
 デザインシステムの更新や追加が必要な場合は、このドキュメントを更新してチーム全体で共有してください。
