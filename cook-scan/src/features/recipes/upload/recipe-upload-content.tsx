@@ -5,6 +5,7 @@ import MethodSelector from '@/features/recipes/upload/method-selector'
 import ImageUpload from '@/features/recipes/upload/image-upload'
 import RecipeForm from '@/features/recipes/upload/recipe-form'
 import type { ExtractedRecipeData } from '@/features/recipes/upload/types'
+import { Button } from '@/components/ui/button'
 
 type Step = 'method-selection' | 'image-upload' | 'form'
 
@@ -43,10 +44,11 @@ export default function RecipeUploadContent() {
   return (
     <>
       {currentStep !== 'method-selection' && (
-        <button
+        <Button
+          variant="secondary"
           onClick={handleBack}
           disabled={isUploading}
-          className="mb-6 inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm transition-all hover:bg-gray-50 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-50"
+          className="mb-6"
         >
           <svg
             className="h-4 w-4"
@@ -62,7 +64,7 @@ export default function RecipeUploadContent() {
             />
           </svg>
           戻る
-        </button>
+        </Button>
       )}
 
       {currentStep === 'method-selection' && (
