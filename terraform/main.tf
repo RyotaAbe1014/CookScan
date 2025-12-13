@@ -2,7 +2,7 @@ terraform {
   required_providers {
     vercel = {
       source  = "vercel/vercel"
-      version = "~> 4.0"
+      version = "~> 4.2.0"
     }
   }
 
@@ -33,6 +33,7 @@ resource "vercel_project" "cook-scan" {
   install_command  = "npm install"
   dev_command      = "npm run dev"
   root_directory   = "cook-scan"
+  node_version = "22.x"
   resource_config = {
     function_default_regions = ["hnd1"]
   }
