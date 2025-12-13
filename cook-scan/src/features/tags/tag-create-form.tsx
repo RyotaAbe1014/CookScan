@@ -1,8 +1,8 @@
 'use client'
 
-import { useState, useActionState } from 'react'
+import { useState } from 'react'
 import { createTagCategory, createTag } from './actions'
-import { Button } from '@/components/ui/button'
+import { Button, Input, Textarea, Select } from '@/components/ui'
 
 type TagCategory = {
   id: string
@@ -174,11 +174,11 @@ export function TagCreateForm({ categories }: TagCreateFormProps) {
               <label htmlFor="tag-category" className="block text-sm font-semibold text-gray-900">
                 カテゴリ <span className="text-red-500">*</span>
               </label>
-              <select
+              <Select
                 id="tag-category"
                 value={selectedCategoryId}
                 onChange={(e) => setSelectedCategoryId(e.target.value)}
-                className="mt-2 block w-full rounded-lg border border-gray-300 bg-white px-4 py-3 shadow-sm transition-all focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 disabled:cursor-not-allowed disabled:bg-gray-50"
+                className="mt-2"
                 disabled={isSubmittingTag}
               >
                 {availableCategories.length === 0 ? (
@@ -190,20 +190,21 @@ export function TagCreateForm({ categories }: TagCreateFormProps) {
                     </option>
                   ))
                 )}
-              </select>
+              </Select>
             </div>
 
             <div>
               <label htmlFor="tag-name" className="block text-sm font-semibold text-gray-900">
                 タグ名 <span className="text-red-500">*</span>
               </label>
-              <input
+              <Input
                 type="text"
                 id="tag-name"
                 value={tagName}
                 onChange={(e) => setTagName(e.target.value)}
                 placeholder="例: 和食、イタリアン、簡単"
-                className="mt-2 block w-full rounded-lg border border-gray-300 bg-white px-4 py-3 shadow-sm transition-all focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 disabled:cursor-not-allowed disabled:bg-gray-50"
+                className="mt-2"
+                size="xl"
                 disabled={isSubmittingTag}
               />
             </div>
@@ -212,13 +213,14 @@ export function TagCreateForm({ categories }: TagCreateFormProps) {
               <label htmlFor="tag-description" className="block text-sm font-semibold text-gray-900">
                 説明（任意）
               </label>
-              <textarea
+              <Textarea
                 id="tag-description"
                 value={tagDescription}
                 onChange={(e) => setTagDescription(e.target.value)}
                 rows={3}
                 placeholder="タグの説明を入力してください"
-                className="mt-2 block w-full rounded-lg border border-gray-300 bg-white px-4 py-3 shadow-sm transition-all focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 disabled:cursor-not-allowed disabled:bg-gray-50"
+                className="mt-2"
+                size="xl"
                 disabled={isSubmittingTag}
               />
             </div>
@@ -262,13 +264,14 @@ export function TagCreateForm({ categories }: TagCreateFormProps) {
               <label htmlFor="category-name" className="block text-sm font-semibold text-gray-900">
                 カテゴリ名 <span className="text-red-500">*</span>
               </label>
-              <input
+              <Input
                 type="text"
                 id="category-name"
                 value={categoryName}
                 onChange={(e) => setCategoryName(e.target.value)}
                 placeholder="例: 料理ジャンル、調理時間、難易度"
-                className="mt-2 block w-full rounded-lg border border-gray-300 bg-white px-4 py-3 shadow-sm transition-all focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 disabled:cursor-not-allowed disabled:bg-gray-50"
+                className="mt-2"
+                size="xl"
                 disabled={isSubmittingCategory}
               />
             </div>
@@ -277,13 +280,14 @@ export function TagCreateForm({ categories }: TagCreateFormProps) {
               <label htmlFor="category-description" className="block text-sm font-semibold text-gray-900">
                 説明（任意）
               </label>
-              <textarea
+              <Textarea
                 id="category-description"
                 value={categoryDescription}
                 onChange={(e) => setCategoryDescription(e.target.value)}
                 rows={3}
                 placeholder="カテゴリの説明を入力してください"
-                className="mt-2 block w-full rounded-lg border border-gray-300 bg-white px-4 py-3 shadow-sm transition-all focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 disabled:cursor-not-allowed disabled:bg-gray-50"
+                className="mt-2"
+                size="xl"
                 disabled={isSubmittingCategory}
               />
             </div>
