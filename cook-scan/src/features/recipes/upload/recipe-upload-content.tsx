@@ -7,7 +7,7 @@ import RecipeForm from '@/features/recipes/upload/recipe-form'
 import type { ExtractedRecipeData } from '@/features/recipes/upload/types'
 import { Button } from '@/components/ui/button'
 
-type Step = 'method-selection' | 'image-upload' | 'form'
+type Step = 'method-selection' | 'image-upload' | 'text-input' | 'form'
 
 export default function RecipeUploadContent() {
   const [currentStep, setCurrentStep] = useState<Step>('method-selection')
@@ -15,11 +15,17 @@ export default function RecipeUploadContent() {
   const [extractedData, setExtractedData] = useState<ExtractedRecipeData | null>(null)
   const [isUploading, setIsUploading] = useState(false)
 
-  const handleMethodSelect = (method: 'scan' | 'manual') => {
-    if (method === 'scan') {
-      setCurrentStep('image-upload')
-    } else {
-      setCurrentStep('form')
+  const handleMethodSelect = (method: 'scan' | 'manual' | 'text-input') => {
+    switch (method) {
+      case 'scan':
+        setCurrentStep('image-upload')
+        break
+      case 'text-input':
+        setCurrentStep('text-input')
+        break
+      default:
+        setCurrentStep('form')
+        break
     }
   }
 
