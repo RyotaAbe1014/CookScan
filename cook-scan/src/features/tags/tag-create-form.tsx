@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { createTagCategory, createTag } from './actions'
-import { Button, Input, Textarea, Select } from '@/components/ui'
+import { Button, Input, Textarea, Select, Alert } from '@/components/ui'
 
 type TagCategory = {
   id: string
@@ -226,21 +226,11 @@ export function TagCreateForm({ categories }: TagCreateFormProps) {
             </div>
 
             {tagError && (
-              <div className="flex items-start gap-3 rounded-lg bg-red-50 p-4 ring-1 ring-red-200">
-                <svg className="h-5 w-5 shrink-0 text-red-600" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-                </svg>
-                <p className="text-sm font-medium text-red-800">{tagError}</p>
-              </div>
+              <Alert variant="error">{tagError}</Alert>
             )}
 
             {tagSuccess && (
-              <div className="flex items-start gap-3 rounded-lg bg-green-50 p-4 ring-1 ring-green-200">
-                <svg className="h-5 w-5 shrink-0 text-green-600" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                </svg>
-                <p className="text-sm font-medium text-green-800">{tagSuccess}</p>
-              </div>
+              <Alert variant="success">{tagSuccess}</Alert>
             )}
 
             <Button
@@ -293,21 +283,11 @@ export function TagCreateForm({ categories }: TagCreateFormProps) {
             </div>
 
             {categoryError && (
-              <div className="flex items-start gap-3 rounded-lg bg-red-50 p-4 ring-1 ring-red-200">
-                <svg className="h-5 w-5 shrink-0 text-red-600" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-                </svg>
-                <p className="text-sm font-medium text-red-800">{categoryError}</p>
-              </div>
+              <Alert variant="error">{categoryError}</Alert>
             )}
 
             {categorySuccess && (
-              <div className="flex items-start gap-3 rounded-lg bg-green-50 p-4 ring-1 ring-green-200">
-                <svg className="h-5 w-5 shrink-0 text-green-600" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                </svg>
-                <p className="text-sm font-medium text-green-800">{categorySuccess}</p>
-              </div>
+              <Alert variant="success">{categorySuccess}</Alert>
             )}
 
             <Button
