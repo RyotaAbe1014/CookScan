@@ -1,29 +1,11 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
-import React from 'react'
 import LogoutButton from '../logout-button'
 
 // モック: Server Action (logout)
 vi.mock('../actions', () => ({
   logout: vi.fn(() => Promise.resolve()),
 }))
-
-// モック: React.useTransition（状態遷移を制御）
-vi.mock('react', async () => {
-  const actual = await vi.importActual<typeof React>('react')
-  return {
-    ...actual,
-    useTransition: () => {
-      const [isPending, setIsPending] = actual.useState(false)
-      const startTransition = actual.useCallback(async (callback: () => void) => {
-        setIsPending(true)
-        await callback()
-        setIsPending(false)
-      }, [])
-      return [isPending, startTransition]
-    },
-  }
-})
 
 import { logout } from '../actions'
 
