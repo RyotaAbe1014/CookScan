@@ -1,0 +1,21 @@
+{
+  "name": "cookscan-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7"
+  },
+  "lint-staged": {
+    "cook-scan/**/*.{ts,tsx}": [
+      "cd cook-scan && eslint --fix"
+    ],
+    "cook-scan/prisma/schema.prisma": [
+      "cd cook-scan && npm run db:format",
+      "cd cook-scan && npm run db:validate"
+    ]
+  }
+}
