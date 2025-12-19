@@ -1,6 +1,6 @@
 import { forwardRef, type TextareaHTMLAttributes } from 'react'
 import { cva, type VariantProps } from 'class-variance-authority'
-import { cn } from '@/lib/utils'
+import { cn } from '@/lib/tailwind'
 
 const textareaVariants = cva(
   // 共通スタイル
