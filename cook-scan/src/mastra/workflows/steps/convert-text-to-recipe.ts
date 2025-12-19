@@ -31,18 +31,20 @@ export const convertTextToRecipeStep = createStep({
         content: inputData.text,
       },
     ], {
-      output: z.object({
-        title: z.string(),
-        ingredients: z.array(z.object({
-          name: z.string(),
-          unit: z.string(),
-        })),
-        steps: z.array(z.object({
-          instruction: z.string(),
-          timerSeconds: z.number().nullable(),
-        })),
-        memo: z.string().nullable(),
-      })
+      structuredOutput: {
+        schema: z.object({
+          title: z.string(),
+          ingredients: z.array(z.object({
+            name: z.string(),
+            unit: z.string(),
+          })),
+          steps: z.array(z.object({
+            instruction: z.string(),
+            timerSeconds: z.number().nullable(),
+          })),
+          memo: z.string().nullable(),
+        })
+      }
     });
 
     return response.object;
