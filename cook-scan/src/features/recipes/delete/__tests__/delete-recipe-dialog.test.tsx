@@ -177,8 +177,11 @@ describe('DeleteRecipeDialog', () => {
         expect(deleteButton).toBeDisabled()
       })
 
-      // クリーンアップ: Promiseを解決
+      // クリーンアップ: Promiseを解決し、状態更新を待つ
       resolveDelete!({ success: true })
+      await waitFor(() => {
+        expect(defaultProps.onClose).toHaveBeenCalled()
+      })
     })
 
     it('削除中は削除ボタンにローディングテキストが表示される', async () => {
@@ -201,8 +204,11 @@ describe('DeleteRecipeDialog', () => {
         expect(screen.getByText('削除中...')).toBeInTheDocument()
       })
 
-      // クリーンアップ: Promiseを解決
+      // クリーンアップ: Promiseを解決し、状態更新を待つ
       resolveDelete!({ success: true })
+      await waitFor(() => {
+        expect(defaultProps.onClose).toHaveBeenCalled()
+      })
     })
   })
 })

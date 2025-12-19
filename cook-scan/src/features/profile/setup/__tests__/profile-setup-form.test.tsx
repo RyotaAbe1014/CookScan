@@ -192,8 +192,11 @@ describe('ProfileSetupForm', () => {
         expect(submitButton).toBeDisabled()
       })
 
-      // クリーンアップ: Promiseを解決
+      // クリーンアップ: Promiseを解決し、状態更新を待つ
       resolveCreate!()
+      await waitFor(() => {
+        expect(createProfile).toHaveBeenCalled()
+      })
     })
 
     it('送信中はローディングテキストが表示される', async () => {
@@ -218,8 +221,11 @@ describe('ProfileSetupForm', () => {
         expect(screen.getByText('作成中...')).toBeInTheDocument()
       })
 
-      // クリーンアップ: Promiseを解決
+      // クリーンアップ: Promiseを解決し、状態更新を待つ
       resolveCreate!()
+      await waitFor(() => {
+        expect(createProfile).toHaveBeenCalled()
+      })
     })
   })
 })
