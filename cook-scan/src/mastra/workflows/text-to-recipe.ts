@@ -1,4 +1,4 @@
-import { createWorkflow } from "@mastra/core";
+import { createWorkflow } from '@mastra/core/workflows';
 import { z } from "zod";
 import { convertTextToRecipeStep } from "./steps/convert-text-to-recipe";
 

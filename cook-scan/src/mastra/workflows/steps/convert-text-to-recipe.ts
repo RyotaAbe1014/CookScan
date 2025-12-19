@@ -1,4 +1,4 @@
-import { createStep } from "@mastra/core";
+import { createStep } from '@mastra/core/workflows';
 import { z } from "zod";
 
 export const convertTextToRecipeStep = createStep({
