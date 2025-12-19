@@ -9,9 +9,9 @@ export default function MethodSelector({ onSelect }: Props) {
         onClick={() => onSelect('scan')}
         className="group relative overflow-hidden rounded-xl bg-white p-8 text-left shadow-lg ring-1 ring-gray-900/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
       >
-        <div className="absolute right-0 top-0 h-32 w-32 translate-x-8 -translate-y-8 rounded-full bg-gradient-to-br from-indigo-100 to-purple-100 opacity-50 transition-transform group-hover:scale-110" />
+        <div className="absolute right-0 top-0 h-32 w-32 translate-x-8 -translate-y-8 rounded-full bg-linear-to-br from-indigo-100 to-purple-100 opacity-50 transition-transform group-hover:scale-110" />
         <div className="relative flex flex-col items-center text-center">
-          <div className="rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 p-4 shadow-lg transition-transform group-hover:scale-110">
+          <div className="rounded-xl bg-linear-to-br from-indigo-500 to-purple-600 p-4 shadow-lg transition-transform group-hover:scale-110">
             <svg
               className="h-12 w-12 text-white"
               fill="none"
@@ -39,7 +39,7 @@ export default function MethodSelector({ onSelect }: Props) {
             料理本やレシピカードの写真を撮影して、自動でレシピを抽出します
           </p>
           <div className="mt-4 flex items-center gap-2">
-            <span className="inline-flex items-center gap-1 rounded-lg bg-gradient-to-r from-indigo-600 to-purple-600 px-3 py-1.5 text-xs font-semibold text-white shadow-md shadow-indigo-500/30">
+            <span className="inline-flex items-center gap-1 rounded-lg bg-linear-to-r from-indigo-600 to-purple-600 px-3 py-1.5 text-xs font-semibold text-white shadow-md shadow-indigo-500/30">
               <svg className="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
               </svg>
@@ -57,9 +57,9 @@ export default function MethodSelector({ onSelect }: Props) {
         className="group relative overflow-hidden rounded-xl bg-white p-8 text-left shadow-lg ring-1 ring-gray-900/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
         >
         {/* TODO: カラーを決める */}
-        <div className="absolute right-0 top-0 h-32 w-32 translate-x-8 -translate-y-8 rounded-full bg-gradient-to-br from-indigo-100 to-purple-100 opacity-50 transition-transform group-hover:scale-110" />
+        <div className="absolute right-0 top-0 h-32 w-32 translate-x-8 -translate-y-8 rounded-full bg-linear-to-br from-indigo-100 to-purple-100 opacity-50 transition-transform group-hover:scale-110" />
         <div className="relative flex flex-col items-center text-center">
-          <div className="rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 p-4 shadow-lg transition-transform group-hover:scale-110">
+          <div className="rounded-xl bg-linear-to-br from-indigo-500 to-purple-600 p-4 shadow-lg transition-transform group-hover:scale-110">
 
             {/* TODO: アイコンを決める */}
             <svg
@@ -89,7 +89,7 @@ export default function MethodSelector({ onSelect }: Props) {
             テキストを入力することで、レシピを生成します
           </p>
           <div className="mt-4 flex items-center gap-2">
-            <span className="inline-flex items-center gap-1 rounded-lg bg-gradient-to-r from-indigo-600 to-purple-600 px-3 py-1.5 text-xs font-semibold text-white shadow-md shadow-indigo-500/30">
+            <span className="inline-flex items-center gap-1 rounded-lg bg-linear-to-r from-indigo-600 to-purple-600 px-3 py-1.5 text-xs font-semibold text-white shadow-md shadow-indigo-500/30">
               <svg className="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
               </svg>
@@ -106,9 +106,9 @@ export default function MethodSelector({ onSelect }: Props) {
         onClick={() => onSelect('manual')}
         className="group relative overflow-hidden rounded-xl bg-white p-8 text-left shadow-lg ring-1 ring-gray-900/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
       >
-        <div className="absolute right-0 top-0 h-32 w-32 translate-x-8 -translate-y-8 rounded-full bg-gradient-to-br from-gray-100 to-slate-100 opacity-50 transition-transform group-hover:scale-110" />
+        <div className="absolute right-0 top-0 h-32 w-32 translate-x-8 -translate-y-8 rounded-full bg-linear-to-br from-gray-100 to-slate-100 opacity-50 transition-transform group-hover:scale-110" />
         <div className="relative flex flex-col items-center text-center">
-          <div className="rounded-xl bg-gradient-to-br from-gray-500 to-slate-600 p-4 shadow-lg transition-transform group-hover:scale-110">
+          <div className="rounded-xl bg-linear-to-br from-gray-500 to-slate-600 p-4 shadow-lg transition-transform group-hover:scale-110">
             <svg
               className="h-12 w-12 text-white"
               fill="none"

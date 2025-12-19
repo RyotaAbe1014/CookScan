@@ -21,7 +21,7 @@ export default async function RecipeDetailPage({ params }: RecipeDetailPageProps
   const sourceInfo = recipe.sourceInfo[0]
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
+    <div className="min-h-screen bg-linear-to-br from-indigo-50 via-white to-purple-50">
       <Header
         title={recipe.title}
         subtitle={`作成日: ${recipe.createdAt.toLocaleDateString('ja-JP')}`}
@@ -50,7 +50,7 @@ export default async function RecipeDetailPage({ params }: RecipeDetailPageProps
               <Card className="mb-6">
                 <CardContent>
                   <div className="mb-4 flex items-center gap-2">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 shadow-md">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-linear-to-br from-indigo-500 to-purple-600 shadow-md">
                       <svg className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                       </svg>
@@ -81,7 +81,7 @@ export default async function RecipeDetailPage({ params }: RecipeDetailPageProps
                 <CardContent>
                   <div className="space-y-3 text-sm">
                     {sourceInfo.sourceName && (
-                      <div className="flex items-start gap-2 rounded-lg bg-gradient-to-r from-gray-50 to-white p-3 ring-1 ring-gray-200">
+                      <div className="flex items-start gap-2 rounded-lg bg-linear-to-r from-gray-50 to-white p-3 ring-1 ring-gray-200">
                         <svg className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                         </svg>
@@ -92,7 +92,7 @@ export default async function RecipeDetailPage({ params }: RecipeDetailPageProps
                       </div>
                     )}
                     {sourceInfo.pageNumber && (
-                      <div className="flex items-start gap-2 rounded-lg bg-gradient-to-r from-gray-50 to-white p-3 ring-1 ring-gray-200">
+                      <div className="flex items-start gap-2 rounded-lg bg-linear-to-r from-gray-50 to-white p-3 ring-1 ring-gray-200">
                         <svg className="mt-0.5 h-4 w-4 shrink-0 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
                         </svg>
@@ -103,7 +103,7 @@ export default async function RecipeDetailPage({ params }: RecipeDetailPageProps
                       </div>
                     )}
                     {sourceInfo.sourceUrl && (
-                      <div className="flex items-start gap-2 rounded-lg bg-gradient-to-r from-gray-50 to-white p-3 ring-1 ring-gray-200">
+                      <div className="flex items-start gap-2 rounded-lg bg-linear-to-r from-gray-50 to-white p-3 ring-1 ring-gray-200">
                         <svg className="mt-0.5 h-4 w-4 shrink-0 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
                         </svg>
@@ -185,7 +185,7 @@ export default async function RecipeDetailPage({ params }: RecipeDetailPageProps
                             {category.tags.map((tag: { id: string; name: string }) => (
                               <span
                                 key={tag.id}
-                                className="inline-flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-indigo-600 to-purple-600 px-3 py-2 text-sm font-medium text-white shadow-lg shadow-indigo-500/30 ring-2 ring-indigo-600"
+                                className="inline-flex items-center gap-1.5 rounded-lg bg-linear-to-r from-indigo-600 to-purple-600 px-3 py-2 text-sm font-medium text-white shadow-lg shadow-indigo-500/30 ring-2 ring-indigo-600"
                               >
                                 <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
@@ -220,7 +220,7 @@ export default async function RecipeDetailPage({ params }: RecipeDetailPageProps
                 {recipe.ingredients.length > 0 ? (
                   <div className="space-y-2">
                     {recipe.ingredients.map((ingredient: typeof recipe.ingredients[number]) => (
-                      <div key={ingredient.id} className="flex items-center justify-between rounded-lg bg-gradient-to-r from-gray-50 to-white p-3 ring-1 ring-gray-200 transition-all hover:shadow-md">
+                      <div key={ingredient.id} className="flex items-center justify-between rounded-lg bg-linear-to-r from-gray-50 to-white p-3 ring-1 ring-gray-200 transition-all hover:shadow-md">
                         <div className="flex items-center gap-2">
                           <div className="h-2 w-2 rounded-full bg-green-500" />
                           <span className="font-semibold text-gray-900">{ingredient.name}</span>
@@ -257,8 +257,8 @@ export default async function RecipeDetailPage({ params }: RecipeDetailPageProps
                 {recipe.steps.length > 0 ? (
                   <div className="space-y-4">
                     {recipe.steps.map((step: typeof recipe.steps[number]) => (
-                      <div key={step.id} className="group flex gap-4 rounded-lg bg-gradient-to-r from-gray-50 to-white p-4 ring-1 ring-gray-200 transition-all hover:shadow-md">
-                        <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 text-base font-bold text-white shadow-md">
+                      <div key={step.id} className="group flex gap-4 rounded-lg bg-linear-to-r from-gray-50 to-white p-4 ring-1 ring-gray-200 transition-all hover:shadow-md">
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-linear-to-br from-blue-500 to-indigo-600 text-base font-bold text-white shadow-md">
                           {step.orderIndex}
                         </div>
                         <div className="flex-1">

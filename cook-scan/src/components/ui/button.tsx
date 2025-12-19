@@ -10,7 +10,7 @@ const buttonVariants = cva(
       variant: {
         // プライマリ: グラデーション付きメインボタン
         primary:
-          'bg-gradient-to-r from-primary to-secondary text-primary-foreground shadow-primary hover:shadow-primary-hover',
+          'bg-linear-to-r from-primary to-secondary text-primary-foreground shadow-primary hover:shadow-primary-hover',
         // セカンダリ: 白背景のボタン
         secondary:
           'border border-border-dark bg-white text-foreground shadow-sm hover:bg-muted hover:text-primary',

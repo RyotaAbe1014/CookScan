@@ -95,7 +95,7 @@ export function CategoryItem({ category, currentUserId }: CategoryItemProps) {
 
   return (
     <Card hover>
-      <div className="border-b border-gray-200 bg-gradient-to-r from-gray-50 to-white px-6 py-5">
+      <div className="border-b border-gray-200 bg-linear-to-r from-gray-50 to-white px-6 py-5">
         {isEditing ? (
           <form onSubmit={handleEdit} className="space-y-3">
             <div>
@@ -154,7 +154,7 @@ export function CategoryItem({ category, currentUserId }: CategoryItemProps) {
         ) : (
           <div className="flex items-center justify-between">
             <div className="flex flex-1 items-center gap-4">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 shadow-md">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-linear-to-br from-indigo-500 to-purple-600 shadow-md">
                 <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
                 </svg>

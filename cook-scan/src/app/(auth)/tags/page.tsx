@@ -39,7 +39,7 @@ export default async function TagsPage() {
   })
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
+    <div className="min-h-screen bg-linear-to-br from-indigo-50 via-white to-purple-50">
       <Header
         title="タグ管理"
         subtitle="レシピを整理・分類するタグを管理"
@@ -68,7 +68,7 @@ export default async function TagsPage() {
 
       <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-8">
         {/* Info Banner */}
-        <div className="overflow-hidden rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 p-6 shadow-lg">
+        <div className="overflow-hidden rounded-xl bg-linear-to-r from-amber-500 to-orange-600 p-6 shadow-lg">
           <div className="flex items-start gap-4">
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-white/20 backdrop-blur-sm">
               <svg
@@ -130,7 +130,7 @@ export default async function TagsPage() {
 
           {tagCategories.length === 0 ? (
             <div className="overflow-hidden rounded-xl bg-white p-12 text-center shadow-lg">
-              <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-gray-100 to-gray-200">
+              <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-linear-to-br from-gray-100 to-gray-200">
                 <svg
                   className="h-10 w-10 text-gray-400"
                   fill="none"

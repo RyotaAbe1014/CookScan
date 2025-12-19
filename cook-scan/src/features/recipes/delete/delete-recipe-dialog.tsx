@@ -57,9 +57,9 @@ export default function DeleteRecipeDialog({ recipeId, recipeTitle, isOpen, onCl
           style={{ zIndex: 51 }}
         >
           {/* Header with gradient */}
-          <div className="border-b border-gray-200 bg-gradient-to-r from-red-50 to-orange-50 px-6 py-5">
+          <div className="border-b border-gray-200 bg-linear-to-r from-red-50 to-orange-50 px-6 py-5">
             <div className="flex items-start gap-4">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-red-500 to-orange-600 shadow-lg">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-red-500 to-orange-600 shadow-lg">
                 <svg
                   className="h-6 w-6 text-white"
                   fill="none"
@@ -93,7 +93,7 @@ export default function DeleteRecipeDialog({ recipeId, recipeTitle, isOpen, onCl
           </div>
 
           {/* Actions */}
-          <div className="flex gap-3 border-t border-gray-200 bg-gradient-to-r from-gray-50 to-white px-6 py-4">
+          <div className="flex gap-3 border-t border-gray-200 bg-linear-to-r from-gray-50 to-white px-6 py-4">
             <Button
               type="button"
               variant="secondary"

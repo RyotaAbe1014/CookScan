@@ -20,12 +20,12 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-gradient-to-br from-indigo-50 via-white to-purple-50 px-4 py-12 sm:px-6 lg:px-8">
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-linear-to-br from-indigo-50 via-white to-purple-50 px-4 py-12 sm:px-6 lg:px-8">
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -left-4 -top-4 h-72 w-72 animate-pulse rounded-full bg-gradient-to-br from-indigo-200 to-purple-200 opacity-30 blur-3xl" />
-        <div className="absolute -bottom-8 -right-8 h-96 w-96 animate-pulse rounded-full bg-gradient-to-br from-purple-200 to-pink-200 opacity-30 blur-3xl animation-delay-2000" />
-        <div className="absolute left-1/2 top-1/2 h-80 w-80 -translate-x-1/2 -translate-y-1/2 animate-pulse rounded-full bg-gradient-to-br from-blue-200 to-indigo-200 opacity-20 blur-3xl animation-delay-4000" />
+        <div className="absolute -left-4 -top-4 h-72 w-72 animate-pulse rounded-full bg-linear-to-br from-indigo-200 to-purple-200 opacity-30 blur-3xl" />
+        <div className="absolute -bottom-8 -right-8 h-96 w-96 animate-pulse rounded-full bg-linear-to-br from-purple-200 to-pink-200 opacity-30 blur-3xl animation-delay-2000" />
+        <div className="absolute left-1/2 top-1/2 h-80 w-80 -translate-x-1/2 -translate-y-1/2 animate-pulse rounded-full bg-linear-to-br from-blue-200 to-indigo-200 opacity-20 blur-3xl animation-delay-4000" />
       </div>
 
       <div className="relative w-full max-w-md">
@@ -34,7 +34,7 @@ export default function LoginPage() {
           <div className="px-8 pb-8 pt-10 sm:px-10 sm:pb-10 sm:pt-12">
             {/* Header with icon */}
             <div className="mb-8 text-center">
-              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 shadow-lg">
+              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-linear-to-br from-indigo-500 to-purple-600 shadow-lg">
                 <svg
                   className="h-8 w-8 text-white"
                   fill="none"
@@ -49,7 +49,7 @@ export default function LoginPage() {
                   />
                 </svg>
               </div>
-              <h2 className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-3xl font-bold tracking-tight text-transparent sm:text-4xl">
+              <h2 className="bg-linear-to-r from-indigo-600 to-purple-600 bg-clip-text text-3xl font-bold tracking-tight text-transparent sm:text-4xl">
                 CookScan
               </h2>
               <p className="mt-3 text-base text-gray-600">
@@ -184,7 +184,7 @@ export default function LoginPage() {
                   disabled={isPending}
                   isLoading={isPending}
                   variant="secondary"
-                  className="w-full hover:border-indigo-300 hover:bg-gradient-to-r hover:from-indigo-50 hover:to-purple-50 hover:text-indigo-700"
+                  className="w-full hover:border-indigo-300 hover:bg-linear-to-r hover:from-indigo-50 hover:to-purple-50 hover:text-indigo-700"
                 >
                   {isPending ? (
                     '登録中...'
@@ -212,7 +212,7 @@ export default function LoginPage() {
           </div>
 
           {/* Footer decoration */}
-          <div className="bg-gradient-to-r from-indigo-500 to-purple-600 px-8 py-4 sm:px-10">
+          <div className="bg-linear-to-r from-indigo-500 to-purple-600 px-8 py-4 sm:px-10">
             <p className="text-center text-xs text-white/80">
               安全に保存されるあなたのレシピコレクション
             </p>

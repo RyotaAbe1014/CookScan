@@ -111,7 +111,7 @@ export function TagCreateForm({ categories }: TagCreateFormProps) {
   return (
     <div className="overflow-hidden rounded-xl bg-white shadow-lg">
       {/* タブヘッダー */}
-      <div className="border-b border-gray-200 bg-gradient-to-r from-gray-50 to-white">
+      <div className="border-b border-gray-200 bg-linear-to-r from-gray-50 to-white">
         <nav className="-mb-px flex" aria-label="Tabs">
           <button
             onClick={() => setActiveTab('tag')}

@@ -65,7 +65,7 @@ export const TextInput = ({ handleTextInput }: Props) => {
       {/* ヘッダー */}
       <div className="mb-6 text-center">
         <div className="mb-3 flex items-center justify-center gap-2">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 shadow-md">
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-linear-to-br from-indigo-500 to-purple-600 shadow-md">
             <svg className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
@@ -80,10 +80,10 @@ export const TextInput = ({ handleTextInput }: Props) => {
       {/* メインカード */}
       <div className="overflow-hidden rounded-xl bg-white shadow-lg ring-1 ring-gray-900/5">
         {/* カードヘッダー（グラデーション背景） */}
-        <div className="border-b border-gray-200 bg-gradient-to-r from-gray-50 to-white px-6 py-4">
+        <div className="border-b border-gray-200 bg-linear-to-r from-gray-50 to-white px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-linear-to-br from-indigo-500 to-purple-600">
                 <svg className="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                 </svg>
@@ -135,7 +135,7 @@ export const TextInput = ({ handleTextInput }: Props) => {
             </div>
 
             {/* ヘルプテキスト */}
-            <div className="rounded-lg bg-gradient-to-r from-indigo-50 to-purple-50 p-4 ring-1 ring-indigo-100">
+            <div className="rounded-lg bg-linear-to-r from-indigo-50 to-purple-50 p-4 ring-1 ring-indigo-100">
               <div className="flex gap-3">
                 <div className="flex-shrink-0">
                   <svg className="h-5 w-5 text-indigo-600" fill="currentColor" viewBox="0 0 20 20">

@@ -12,12 +12,12 @@ export default async function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
+    <div className="min-h-screen bg-linear-to-br from-indigo-50 via-white to-purple-50">
       <Header title="ダッシュボード" rightAction={<LogoutButton />} />
 
       <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         {/* Welcome Section */}
-        <div className="mb-10 overflow-hidden rounded-2xl bg-gradient-to-r from-indigo-600 to-purple-600 p-8 shadow-xl">
+        <div className="mb-10 overflow-hidden rounded-2xl bg-linear-to-r from-indigo-600 to-purple-600 p-8 shadow-xl">
           <div className="flex items-center gap-4">
             <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm">
               <svg
@@ -62,9 +62,9 @@ export default async function DashboardPage() {
               href="/recipes/upload"
               className="group relative overflow-hidden rounded-xl border border-gray-200 bg-white p-6 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
             >
-              <div className="absolute right-0 top-0 h-32 w-32 translate-x-8 -translate-y-8 rounded-full bg-gradient-to-br from-indigo-100 to-purple-100 opacity-50 transition-transform group-hover:scale-110" />
+              <div className="absolute right-0 top-0 h-32 w-32 translate-x-8 -translate-y-8 rounded-full bg-linear-to-br from-indigo-100 to-purple-100 opacity-50 transition-transform group-hover:scale-110" />
               <div className="relative">
-                <div className="mb-4 inline-flex rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 p-3 text-white shadow-lg transition-transform group-hover:scale-110">
+                <div className="mb-4 inline-flex rounded-xl bg-linear-to-br from-indigo-500 to-purple-600 p-3 text-white shadow-lg transition-transform group-hover:scale-110">
                   <svg
                     className="h-7 w-7"
                     fill="none"
@@ -109,9 +109,9 @@ export default async function DashboardPage() {
               href="/recipes"
               className="group relative overflow-hidden rounded-xl border border-gray-200 bg-white p-6 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
             >
-              <div className="absolute right-0 top-0 h-32 w-32 translate-x-8 -translate-y-8 rounded-full bg-gradient-to-br from-green-100 to-emerald-100 opacity-50 transition-transform group-hover:scale-110" />
+              <div className="absolute right-0 top-0 h-32 w-32 translate-x-8 -translate-y-8 rounded-full bg-linear-to-br from-green-100 to-emerald-100 opacity-50 transition-transform group-hover:scale-110" />
               <div className="relative">
-                <div className="mb-4 inline-flex rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 p-3 text-white shadow-lg transition-transform group-hover:scale-110">
+                <div className="mb-4 inline-flex rounded-xl bg-linear-to-br from-green-500 to-emerald-600 p-3 text-white shadow-lg transition-transform group-hover:scale-110">
                   <svg
                     className="h-7 w-7"
                     fill="none"
@@ -156,9 +156,9 @@ export default async function DashboardPage() {
               href="/tags"
               className="group relative overflow-hidden rounded-xl border border-gray-200 bg-white p-6 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
             >
-              <div className="absolute right-0 top-0 h-32 w-32 translate-x-8 -translate-y-8 rounded-full bg-gradient-to-br from-amber-100 to-orange-100 opacity-50 transition-transform group-hover:scale-110" />
+              <div className="absolute right-0 top-0 h-32 w-32 translate-x-8 -translate-y-8 rounded-full bg-linear-to-br from-amber-100 to-orange-100 opacity-50 transition-transform group-hover:scale-110" />
               <div className="relative">
-                <div className="mb-4 inline-flex rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 p-3 text-white shadow-lg transition-transform group-hover:scale-110">
+                <div className="mb-4 inline-flex rounded-xl bg-linear-to-br from-amber-500 to-orange-600 p-3 text-white shadow-lg transition-transform group-hover:scale-110">
                   <svg
                     className="h-7 w-7"
                     fill="none"
