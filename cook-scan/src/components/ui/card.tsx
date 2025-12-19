@@ -79,7 +79,7 @@ const CardHeader = forwardRef<HTMLDivElement, CardHeaderProps>(
       <div
         ref={ref}
         className={cn(
-          'border-b border-gray-200 bg-gradient-to-r from-gray-50 to-white px-6 py-4',
+          'border-b border-gray-200 bg-linear-to-r from-gray-50 to-white px-6 py-4',
           className
         )}
         {...props}
@@ -90,7 +90,7 @@ const CardHeader = forwardRef<HTMLDivElement, CardHeaderProps>(
               {icon && (
                 <div
                   className={cn(
-                    'flex h-10 w-10 items-center justify-center rounded-lg shadow-md bg-gradient-to-br',
+                    'flex h-10 w-10 items-center justify-center rounded-lg shadow-md bg-linear-to-br',
                     iconGradientColors[iconColor]
                   )}
                 >
