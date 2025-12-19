@@ -104,6 +104,14 @@ npm run dev
 npm run build
 npm run start
 
+# リント
+npm run lint             # ESLintチェック
+
+# テスト
+npm run test             # 全テスト実行
+npm run test -- --watch  # ウォッチモード
+npm run test -- src/features/recipes  # 特定ディレクトリのテスト
+
 # データベース操作（ローカル開発は .env.migration を使用）
 npm run db:generate      # Prisma Clientを生成
 npm run db:migrate:dev   # マイグレーション実行（開発環境）
@@ -142,6 +150,73 @@ npm run build            # ビルド
 npm run start            # サーバー起動
 ```
 
+## テストとコード品質
+
+### テストフレームワーク
+
+メインアプリケーションはVitest + React Testing Libraryを使用:
+- **Vitest** - ユニット/コンポーネントテスト
+- **jsdom** - DOMシミュレーション環境
+- **React Testing Library** - Reactコンポーネントテスト
+
+**テスト実行:**
+```bash
+# 全テスト実行
+npm run test
+
+# ウォッチモード（ファイル変更時に自動再実行）
+npm run test -- --watch
+
+# 特定ファイル/ディレクトリのテスト
+npm run test -- src/features/recipes
+npm run test -- input.test.tsx
+
+# UI出力付きで実行
+npm run test -- --ui
+```
+
+**テスト設定:**
+- 設定ファイル: `/cook-scan/vitest.config.mts`
+- グローバルセットアップ: `/src/test/setup.ts`
+- テストファイルは`__tests__`ディレクトリまたは`.test.ts(x)`接尾辞で配置
+
+### テストコンポーネント
+
+テスト対象となるコンポーネントタイプ:
+1. **UI コンポーネント** - `/src/components/ui/` 内のButton、Input、Card等
+2. **フォーム** - ProfileSetupForm、RecipeEditForm等
+3. **ダイアログ** - DeleteRecipeDialog等
+4. **機能コンポーネント** - MethodSelector等
+
+### Pre-commit フック
+
+Huskyとlint-stagedで自動チェック:
+- **Husky** - Git hooksの管理
+- **lint-staged** - ステージ済みファイルのみをリント
+
+```bash
+# .git/hooksにセットアップ（npm installで自動実行）
+npx husky install
+
+# 手動でhookを追加する場合
+npx husky add .husky/pre-commit "npm run lint"
+```
+
+コミット時に自動的にESLintが実行され、エラーがあるとコミットがブロックされます。
+
+### コード品質チェック
+
+```bash
+# ESLintチェック（全src）
+npm run lint
+
+# TypeScript型チェック
+npm run db:validate    # Prismaスキーマ検証
+
+# Prismaスキーマフォーマット
+npm run db:format
+```
+
 ## アーキテクチャ
 
 ### AIワークフロー (Mastra)
@@ -170,198 +245,72 @@ cookScanWorkflow:
    - 場所: `src/mastra/agents/convert-text-to-recipe-agent.ts`
    - テキストを検証付きの構造化レシピフォーマットに解析
 
-### データベーススキーマ (PostgreSQL via Prisma)
+### データベーススキーマ
 
-**主要テーブル:**
+詳細はPrismaスキーマ（`/prisma/schema.prisma`）を参照。主な構造：
 
-1. **users** - ユーザー管理（Supabase Auth統合）
-   - `authId`経由でSupabaseに接続
-   - リレーション: recipes, tagCategories, ocrProcessingHistory, recipeVersions
+- **users** - Supabase Auth統合
+- **recipes** - メインレシピデータ（ingredients, steps, tags, sourceInfo を関連）
+- **tag_categories** / **tags** - カテゴリ付きタグシステム
+- **recipe_tags** - 多対多リレーション
+- **ocr_processing_history** - OCR結果とメタデータ
+- **recipe_versions** - バージョン履歴
 
-2. **recipes** - メインのレシピテーブル
-   - フィールド: title, userId, parentRecipeId, imageUrl, memo
-   - リレーション: ingredients, steps, recipeTags, sourceInfo, ocrProcessingHistory
+### ルートとAPI
 
-3. **ingredients** - レシピの材料
-   - フィールド: name, unit, notes
-   - recipeとの多対一関係
-
-4. **steps** - 調理手順
-   - フィールド: orderIndex, instruction, timerSeconds
-   - レシピごとに順序付きリスト
-
-5. **tag_categories** - タグの整理
-   - システムおよびユーザー定義のカテゴリ
-   - 任意のuserId（システムの場合はnull）
-
-6. **tags** - レシピタグ
-   - カテゴリに所属
-   - システムおよびユーザー定義
-
-7. **recipe_tags** - 多対多リレーション
-   - 複合キー: [recipeId, tagId]
-
-8. **ocr_processing_history** - OCR処理ログ
-   - 生のOCR結果と構造化データをJSONとして保存
-   - recipeと一対一関係
-
-9. **recipe_versions** - バージョン管理
-   - レシピのスナップショットをJSONで保存
-   - changeNoteで変更を追跡
-
-10. **source_infos** - レシピのソースメタデータ
-    - sourceType, sourceName, sourceUrl, pageNumber
-    - recipeとの一対多関係（1つのレシピに複数のソース情報）
-
-**データモデル:**
-
-```typescript
-interface Recipe {
-  id: string;
-  title: string;
-  userId: string;
-  parentRecipeId?: string;
-  imageUrl?: string;
-  memo?: string;
-  ingredients: Ingredient[];
-  steps: Step[];
-  recipeTags: RecipeTag[];
-  sourceInfo?: SourceInfo;
-  ocrProcessingHistory?: OcrProcessingHistory;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-interface Ingredient {
-  id: string;
-  recipeId: string;
-  name: string;
-  unit?: string;
-  notes?: string;
-}
-
-interface Step {
-  id: string;
-  recipeId: string;
-  orderIndex: number;
-  instruction: string;
-  timerSeconds?: number;
-}
-
-// タグ（カテゴリ情報を含む）
-interface TagWithCategory {
-  id: string;
-  name: string;
-  category: {
-    id: string;
-    name: string;
-  };
-}
-
-// レシピタグ（詳細画面で使用）
-interface RecipeTagWithDetails {
-  tag: TagWithCategory;
-}
-```
-
-**RecipeWithRelations型:**
-
-レシピ詳細取得時は `RecipeWithRelations` 型を使用し、すべてのリレーションを含む:
-- `ingredients` - 材料一覧
-- `steps` - 調理手順一覧（orderIndexでソート）
-- `recipeTags` - タグ一覧（タグ→カテゴリのネストを含む）
-- `sourceInfo` - ソース情報一覧
-
-### APIエンドポイント
-
-#### メインアプリケーション (cook-scan/)
-
-**APIルート:**
-- `POST /(auth)/recipes/extract` - 画像からレシピを抽出（Mastraワークフロー使用）
-- `GET /auth/confirm` - Supabase認証コールバック
-
-**保護されたページ:**
-- `GET /dashboard` - ユーザーダッシュボード
-- `GET /recipes` - レシピ一覧
-- `GET /recipes/[id]` - レシピ詳細
-- `GET /recipes/[id]/edit` - レシピ編集
-- `GET /recipes/upload` - アップロードインターフェース（クリップボード貼り付け対応）
-- `GET /tags` - タグ管理（カテゴリ・タグのCRUD操作）
-- `GET /profile/setup` - プロフィール設定
-
-**公開ページ:**
-- `GET /login` - ログインページ
-- `GET /` - ルートページ（リダイレクト）
-
-#### サンプルアプリケーション (backend/)
-
-**REST API:**
-```
-GET  /api/health              # ヘルスチェック
-POST /api/recipes/extract     # レシピ抽出（?save=trueで保存）
-GET  /api/recipes             # 全レシピ一覧
-GET  /api/recipes/:id         # 特定のレシピ取得
-POST /api/recipes             # レシピ作成
-PUT  /api/recipes/:id         # レシピ更新
-DELETE /api/recipes/:id       # レシピ削除
-```
-
-**リクエスト/レスポンス例:**
-```typescript
-// レシピ抽出
-POST /api/recipes/extract?save=true
-Content-Type: multipart/form-data
-Body: { image: File }
-
-Response: {
-  success: true,
-  recipe: {
-    title: string,
-    ingredients: [{ name: string, unit: string }],
-    steps: [{ instruction: string, timerSeconds: number | null }],
-    memo: string | null
-  }
-}
-```
+主要ルートはREADME参照。主な機能：
+- `POST /(auth)/recipes/extract` - 画像抽出（Mastraワークフロー）
+- `(auth)` ルート - 認証済みユーザー向け（ダッシュボード、レシピ、タグ）
+- `(public)` ルート - ログインページ
 
 ### 機能ベースアーキテクチャ
 
-コードは層ではなく機能で整理されています:
+コードは層ではなく機能で整理（`/src/features/`）：
+- **auth/** - 認証・ログアウト
+- **profile/setup/** - プロフィール設定フロー
+- **recipes/** - CRUD操作（upload, edit, detail, delete各フォルダ）
+- **tags/** - タグとカテゴリ管理（CRUD操作）
 
-```
-features/
-├── auth/           # 認証ロジック
-│   ├── actions.ts      # Server Actions
-│   ├── auth-utils.ts   # プロフィール確認ユーティリティ
-│   └── logout-button.tsx  # ログアウトボタン
-├── profile/        # ユーザープロフィール管理
-│   └── setup/
-│       ├── actions.ts           # プロフィール設定Actions
-│       └── profile-setup-form.tsx  # 設定フォーム
-├── recipes/        # レシピのCRUD操作
-│   ├── upload/     # アップロードと抽出
-│   │   ├── actions.ts           # タグ付きレシピ作成
-│   │   ├── types.ts             # リクエスト/レスポンス型
-│   │   ├── recipe-form.tsx      # フォームコンポーネント
-│   │   ├── recipe-upload-content.tsx  # アップロードUI
-│   │   ├── image-upload.tsx     # 画像ハンドリング
-│   │   └── method-selector.tsx  # 入力方法選択
-│   ├── edit/       # 編集機能
-│   │   ├── actions.ts           # タグ更新を含む編集
-│   │   ├── types.ts             # 更新リクエスト型
-│   │   └── recipe-edit-form.tsx # タグ選択付き編集フォーム
-│   ├── detail/     # 詳細表示
-│   │   ├── actions.ts              # レシピ詳細取得
-│   │   └── recipe-detail-actions.tsx  # 編集/削除ボタン
-│   └── delete/     # 削除機能
-│       ├── actions.ts              # レシピ削除
-│       └── delete-recipe-dialog.tsx  # 確認ダイアログ
-└── tags/           # タグ管理
-    ├── actions.ts           # タグ・カテゴリのCRUD（7関数）
-    ├── tag-item.tsx         # タグアイテムコンポーネント
-    ├── category-item.tsx    # カテゴリアイテムコンポーネント
-    └── tag-create-form.tsx  # タブ付きタグ/カテゴリ作成フォーム
-```
+各機能フォルダは `actions.ts`（Server Actions）とUIコンポーネントで構成。
+
+### UI コンポーネントライブラリ
+
+統一されたUIコンポーネントセットを提供（`/src/components/ui/`）:
+
+1. **Button** - ボタン要素
+   - バリアント: `primary` (indigo), `secondary` (gray), `destructive` (red)
+   - サイズ: `sm`, `md` (デフォルト), `lg`
+   - 無効状態、ローディング状態対応
+
+2. **Input** - テキスト入力フィールド
+   - エラー状態表示
+   - プレースホルダーサポート
+   - 読み取り専用モード
+
+3. **Select** - セレクトボックス
+   - オプショングループ対応
+   - デフォルト値設定
+   - 無効状態
+
+4. **Textarea** - 複数行テキスト入力
+   - リサイズ可能
+   - 行数指定
+   - キャラクター数制限表示可能
+
+5. **Card** - コンテナコンポーネント
+   - ヘッダー、ボディ、フッターセクション
+   - パディングとシャドウ自動適用
+
+6. **FormField** - フォーム用ラッパー
+   - ラベル、エラーメッセージ表示
+   - 入力要素と組み合わせて使用
+   - バリデーション状態管理
+
+7. **Alert** - 警告・情報メッセージ
+   - バリアント: `info` (青), `warning` (黄), `error` (赤), `success` (緑)
+   - アイコンとタイトル対応
+
+すべてのコンポーネントは100%テストカバレッジを目指します。
 
 ### Next.jsルートグループ
 
@@ -370,15 +319,9 @@ URLに影響を与えずにルートを整理するために括弧を使用:
 - `(auth-setup)` - プロフィール設定フロー
 - `(public)` - 公開ルート
 
-### Server Actionsパターン
+### Server Actions
 
-すべてのミューテーションはNext.js Server Actions (`'use server'`)を使用:
-- `/src/features/recipes/upload/actions.ts` - レシピアップロードと抽出
-- `/src/features/recipes/edit/actions.ts` - レシピ編集
-- `/src/features/recipes/detail/actions.ts` - レシピ詳細取得
-- `/src/features/recipes/delete/actions.ts` - レシピ削除
-- `/src/features/auth/actions.ts` - 認証関連
-- `/src/features/tags/actions.ts` - タグとカテゴリのCRUD操作
+すべてのミューテーションはNext.js Server Actions（`'use server'`）を使用。各機能フォルダに `actions.ts` で実装。
 
 ## 開発規約
 
@@ -396,11 +339,78 @@ URLに影響を与えずにルートを整理するために括弧を使用:
    - ユーティリティ/ヘルパー: camelCase (例: `createClient.ts`)
    - Server Actions: `actions.ts`
    - APIルート: `route.ts`
+   - テストファイル: `__tests__/`ディレクトリまたは`.test.ts(x)`接尾辞
 
 4. **コンポーネント構成**:
    - デフォルトでServer Componentsを優先
    - 必要な場合のみ`'use client'`を使用（フック、イベント）
    - Client Componentsは小さく焦点を絞る
+
+### Tailwind CSS v4 規約
+
+プロジェクトはTailwind CSS v4を使用:
+
+1. **線形勾配構文**: `bg-linear-to-r` を使用（v4推奨）
+   ```tsx
+   // ✅ 正しい (v4)
+   <div className="bg-linear-to-r from-blue-400 to-blue-600">
+
+   // ❌ 古い (v3)
+   // <div className="bg-gradient-to-r from-blue-400 to-blue-600">
+   ```
+
+2. **カラー変数**: `@apply`は最小限に、クラス直接使用を推奨
+   ```tsx
+   // ✅ 推奨
+   <button className="bg-indigo-500 hover:bg-indigo-600 text-white">
+
+   // ⚠️ 必要な場合のみ
+   @apply bg-indigo-500 hover:bg-indigo-600 text-white
+   ```
+
+3. **値の指定**: 標準カラーパレットを使用
+   - プライマリ: `indigo` (UI要素)
+   - デストラクティブ: `red` (削除等)
+   - グレー: `gray` (背景等)
+
+### コンポーネントテスト規約
+
+1. **テストの配置**: `__tests__`ディレクトリまたは`.test.tsx`ファイル
+   ```
+   src/components/ui/button.tsx
+   src/components/ui/button.test.tsx
+
+   または
+
+   src/features/recipes/delete/delete-recipe-dialog.tsx
+   src/features/recipes/delete/__tests__/delete-recipe-dialog.test.tsx
+   ```
+
+2. **テストの内容**: ユーザーインタラクション中心
+   ```typescript
+   import { render, screen } from '@testing-library/react'
+   import userEvent from '@testing-library/user-event'
+
+   describe('Button', () => {
+     it('handles click events', async () => {
+       const onClick = vi.fn()
+       render(<Button onClick={onClick}>Click me</Button>)
+       await userEvent.click(screen.getByText('Click me'))
+       expect(onClick).toHaveBeenCalled()
+     })
+   })
+   ```
+
+3. **何をテストするか**:
+   - ユーザーインタラクション（クリック、入力）
+   - エラー状態の表示
+   - 条件付きレンダリング
+   - フォーム検証
+
+4. **何をテストしないか**:
+   - 細かい実装詳細
+   - スタイリング（CSSクラス）
+   - 外部ライブラリの動作
 
 ### データベース規約
 
@@ -425,363 +435,82 @@ URLに影響を与えずにルートを整理するために括弧を使用:
 
 ### エラーハンドリング
 
-1. **APIルート**: 構造化されたエラーレスポンスを返す
-   ```typescript
-   return NextResponse.json(
-     { success: false, error: 'エラーメッセージ' },
-     { status: 400 }
-   )
-   ```
-
-2. **Server Actions**: エラーをスローするか結果オブジェクトを返す
-   ```typescript
-   if (!user) {
-     throw new Error('認証されていません')
-   }
-   ```
-
-3. **Client Components**: エラーバウンダリとtry-catchを使用
+- **APIルート**: 構造化JSONレスポンス（`{success, error}` 形式）
+- **Server Actions**: エラーをスロー
+- **Client Components**: エラーバウンダリとtry-catch
 
 ### セキュリティプラクティス
 
-1. **認証**: すべての保護されたルートでSupabaseセッションを確認
-2. **認可**: ミューテーション前にユーザー所有権を確認
-3. **入力検証**: すべての入力にZodスキーマを使用
-4. **SQLインジェクション**: Prismaを使用（パラメータ化クエリ）
-5. **XSS**: Reactはデフォルトでエスケープ、dangerouslySetInnerHTMLには注意
+- **認証**: 保護ルートでSupabaseセッション確認
+- **認可**: ミューテーション前にユーザー所有権確認
+- **入力検証**: Zodスキーマ使用
+- **SQLインジェクション**: Prismaで対策
+- **XSS**: Reactのデフォルトエスケープ活用
 
 ### AI/MLベストプラクティス
 
-1. **APIキー**: 環境変数に保存、コミットしない
-2. **エラーハンドリング**: AIサービスの障害を適切に処理
-3. **レート制限**: 本番デプロイメントに実装
-4. **コスト管理**: API使用量を監視
-5. **モデル選択**:
-   - OCRにはGemini 2.5 Flashを使用（コスト効果的）
-   - 構造化出力にはGPT-4oを使用（信頼性が高い）
+- **APIキー**: 環境変数保存、コミット禁止
+- **エラーハンドリング**: AIサービス障害対応
+- **レート制限**: 本番実装
+- **モデル**: OCR→Gemini Flash（コスト効率）、構造化→GPT-4o（信頼性）
 
 ## 環境変数
 
-### メインアプリケーション (.env)
+**メインアプリ (.env):** DB接続、Supabase認証、AI APIキー
+**ローカル開発 (.env.migration):** ローカルPostgreSQL接続用（localhost:5433）
+**詳細は`.env.example`等参照**
 
-```env
-# データベース
-DATABASE_URL="postgresql://user:pass@host:port/dbname"
+## よくあるタスク
 
-# Supabase
-NEXT_PUBLIC_SUPABASE_URL="https://your-project.supabase.co"
-NEXT_PUBLIC_SUPABASE_ANON_KEY="your-anon-key"
+**新機能追加:** `src/features/`に機能ディレクトリ、`actions.ts` でServer Actions実装、UIコンポーネントを作成
 
-# AI APIs
-GOOGLE_API_KEY="your-google-api-key"
-OPENAI_API_KEY="your-openai-api-key"
-```
+**スキーマ変更:** `prisma/schema.prisma`編集 → `npm run db:migrate:dev --name xxx` → `npm run db:generate`
 
-### ローカル開発 (.env.migration)
+**AIエージェント追加:** `src/mastra/agents/`で実装 → `src/mastra/index.ts`に登録
 
-```env
-# マイグレーション用のローカルPostgreSQL
-DATABASE_URL="postgresql://postgres:postgres@localhost:5433/cookscan_dev"
-```
+**デバッグ:**
+- DB: `npm run db:studio:dev`
+- ログ: ターミナル（サーバー）/ ブラウザコンソール（クライアント）
+- Docker: `docker-compose logs postgres`
 
-### サンプルアプリケーション (.env)
-
-```env
-# AI APIs
-OPENAI_API_KEY="your-openai-api-key"
-GOOGLE_GENERATIVE_AI_API_KEY="your-google-api-key"
-
-# AWS（デプロイ用）
-AWS_REGION="ap-northeast-1"
-AWS_ACCESS_KEY_ID="your-key"
-AWS_SECRET_ACCESS_KEY="your-secret"
-```
-
-## 一般的なタスク
-
-### 新機能の追加
-
-1. `src/features/`に機能ディレクトリを作成
-2. `src/types/`に型を追加
-3. 必要に応じてServer Actionsを作成
-4. 必要に応じてAPIルートを追加
-5. UIコンポーネントを作成
-6. 必要に応じてデータベーススキーマを更新（マイグレーションで）
-
-### データベーススキーマの変更
-
-1. `prisma/schema.prisma`を編集
-2. マイグレーションを作成:
-   ```bash
-   npm run db:migrate:dev -- --name your_migration_name
-   ```
-3. Prisma Clientを再生成:
-   ```bash
-   npm run db:generate
-   ```
-4. `src/types/`のTypeScript型を更新
-
-### 新しいAIエージェントの追加
-
-1. `src/mastra/agents/`にエージェントファイルを作成
-2. モデルと指示でエージェントを定義
-3. `src/mastra/index.ts`に登録
-4. 必要に応じてワークフローに追加
-
-### デバッグ
-
-**データベース:**
-```bash
-npm run db:studio:dev  # Prisma Studioを開く
-```
-
-**ログ:**
-- サーバー: ターミナル出力を確認
-- クライアント: ブラウザコンソールを確認
-- AI: Mastraログを確認（pinoロガー）
-
-**Docker:**
-```bash
-docker-compose logs postgres  # PostgreSQLログを表示
-docker-compose ps             # コンテナステータスを確認
-```
-
-## テスト
-
-### 手動テスト
-
-1. **レシピ抽出**:
-   - 様々な画像タイプをアップロード（手書き、印刷、スクリーンショット）
-   - OCR精度を確認
-   - 構造化データフォーマットを確認
-
-2. **データベース**:
-   - CRUD操作をテスト
-   - リレーション（外部キー）を確認
-   - バージョン履歴を確認
-
-3. **認証**:
-   - ログイン/ログアウトフローをテスト
-   - 保護されたルートを確認
-   - ユーザー分離を確認
-
-### 開発データ
-
-開発データベースを設定するためにシードスクリプトを使用:
-```bash
-npm run db:seed:dev
-```
+**テストデータ:** `npm run db:seed:dev`
 
 ## トラブルシューティング
 
-### データベース接続の問題
+**PostgreSQL接続エラー:**
+- `docker-compose ps` で実行確認、`.env.migration`の接続文字列を確認
+- ポート5433の可用性確認
 
-1. PostgreSQLが実行中か確認:
-   ```bash
-   docker-compose ps
-   ```
+**マイグレーションエラー:**
+- Prismaスキーマの構文確認
+- `npm run db:reset:dev` でリセット
 
-2. `.env.migration`の接続文字列を確認
+**ビルドエラー:**
+- `npm run db:generate` でPrisma Clientを再生成
+- `rm -rf .next node_modules && npm install` で再インストール
 
-3. ポートの可用性を確認（5433）
-
-### マイグレーションエラー
-
-1. Prismaスキーマの構文を確認
-2. データベースがアクセス可能か確認
-3. `prisma/migrations/`のマイグレーションファイルを確認
-4. 必要に応じてリセット:
-   ```bash
-   npm run db:reset:dev
-   ```
-
-### ビルドエラー
-
-1. Next.jsキャッシュをクリア:
-   ```bash
-   rm -rf .next
-   ```
-
-2. 依存関係を再インストール:
-   ```bash
-   rm -rf node_modules package-lock.json
-   npm install
-   ```
-
-3. Prisma Clientを再生成:
-   ```bash
-   npm run db:generate
-   ```
-
-### AIサービスエラー
-
-1. `.env`のAPIキーを確認
-2. APIのレート制限とクォータを確認
-3. Mastraログからエラーメッセージを確認
-4. よりシンプルな入力でテスト
+**AIサービスエラー:**
+- `.env`のAPIキー確認
+- Mastraログを確認
 
 ## デプロイ
 
-### メインアプリケーション
+**メインアプリケーション:**
+- Vercel（`/terraform/main.tf` で自動化設定、カスタムドメイン: `cookscan.aberyouta.jp`）
+- DB: Supabase等のマネージドPostgreSQL
+- マイグレーション: `npx prisma migrate deploy`
 
-**Vercel（Terraform経由）:**
+**サンプルアプリケーション:**
+- バックエンド: AWS Lambda（`cd sample/backend && npm run deploy`）
+- フロントエンド: 静的ホスティング（Vercel等）
 
-このプロジェクトはTerraformを使用してVercelデプロイを自動化しています。
+## 主要ファイル
 
-1. **Terraform設定** (`/terraform/main.tf`):
-   - Vercelプロバイダー v4.0
-   - プロジェクト設定（Next.js、ビルドコマンド等）
-   - カスタムドメイン設定: `cookscan.aberyouta.jp`
-   - 自動リダイレクト: `cook-scan.vercel.app` → `cookscan.aberyouta.jp`
-   - デプロイリージョン: `hnd1` (東京)
-   - ビルドコマンド: `npm run db:generate && next build`
-
-2. **手動デプロイ（Terraform不使用の場合）:**
-   - GitHubリポジトリを接続
-   - 環境変数を設定
-   - ビルド設定を構成:
-     - ビルドコマンド: `npm run db:generate && next build`
-     - 出力ディレクトリ: `.next`
-     - ルートディレクトリ: `cook-scan`
-   - デプロイ
-
-**データベース:**
-- マネージドPostgreSQLを使用（Supabase、Neon、Railway）
-- マイグレーションを実行: `npx prisma migrate deploy`
-
-**Terraformコマンド:**
-```bash
-cd terraform
-terraform init      # 初期化
-terraform plan      # 変更プレビュー
-terraform apply     # デプロイ実行
-```
-
-### サンプルアプリケーション
-
-**バックエンド（AWS Lambda）:**
-```bash
-cd sample/backend
-npm run build
-npm run deploy
-```
-
-**フロントエンド（静的ホスティング）:**
-```bash
-cd sample/frontend
-npm run build
-# dist/をS3、Netlify、またはVercelにデプロイ
-```
-
-## 主要ファイルリファレンス
-
-### 設定ファイル
-
-- `/cook-scan/prisma/schema.prisma` - データベーススキーマ
-- `/cook-scan/next.config.ts` - Next.js設定
-- `/cook-scan/tailwind.config.ts` - Tailwind CSS設定
-- `/cook-scan/tsconfig.json` - TypeScript設定
-- `/cook-scan/eslint.config.mjs` - ESLint設定
-- `/docker-compose.yml` - PostgreSQLセットアップ
-- `/terraform/main.tf` - Vercelデプロイ自動化設定
-- `/terraform/variable.tf` - Terraform変数定義
-
-### コアアプリケーションファイル
-
-- `/cook-scan/src/lib/prisma.ts` - Prismaクライアントインスタンス
-- `/cook-scan/src/utils/supabase/server.ts` - Supabaseサーバークライアント
-- `/cook-scan/src/utils/supabase/client.ts` - Supabaseクライアントサイドクライアント
-- `/cook-scan/src/mastra/index.ts` - Mastra設定
-- `/cook-scan/src/mastra/workflows/cook-scan-workflow.ts` - メインワークフロー
-
-### サンプルアプリケーションファイル
-
-- `/sample/backend/src/index.ts` - Hono APIサーバー
-- `/sample/backend/src/routes/recipes.ts` - レシピエンドポイント
-- `/sample/backend/mastra/src/mastra/index.ts` - Mastraセットアップ
-- `/sample/frontend/src/App.tsx` - Reactアプリルート
-
-## 最近追加された機能
-
-### レシピ詳細画面でのタグ表示（2025年11月）
-
-レシピ詳細ページでタグをカテゴリ別にグループ化して表示:
-- カテゴリ名をヘッダーとして表示
-- 各カテゴリ内でタグを視覚的に区別
-- タグはインディゴカラーのバッジスタイルで表示
-
-**実装場所:**
-- `/src/app/(auth)/recipes/[id]/page.tsx` - レシピ詳細ページ
-
-### タグ管理システム（2025年11月）
-
-完全なCRUD操作を持つタグ管理機能:
-
-**タグカテゴリ:**
-- カテゴリの作成・編集・削除
-- システムカテゴリとユーザーカテゴリの区別
-- カテゴリごとのタグ整理
-
-**システムタグカテゴリ（シードデータ）:**
-- `cuisine` - 料理のジャンル（和食、洋食、中華など）
-- `course` - 料理のコース（前菜、メイン、デザートなど）
-- `method` - 調理方法（焼く、煮る、揚げるなど）
-- `ingredient_category` - 主要食材カテゴリ（肉、魚、野菜など）
-- `free` - 自由タグ
-
-**タグ:**
-- タグの作成・編集・削除
-- カテゴリへの所属
-- レシピへのタグ付け（作成時・編集時）
-- レシピ詳細画面でのタグ表示
-
-**実装ファイル:**
-- `/src/features/tags/actions.ts` - Server Actions（7つの関数）
-- `/src/app/(auth)/tags/page.tsx` - タグ管理ページ
-- `/src/features/tags/*.tsx` - UIコンポーネント
-- `/prisma/seed.ts` - システムタグカテゴリのシードデータ
-
-**使用方法:**
-```typescript
-// タグカテゴリ作成
-await createTagCategory('料理ジャンル', '料理の種類を分類')
-
-// タグ作成
-await createTag(categoryId, '和食', '日本料理')
-
-// タグ編集
-await updateTag(tagId, '和食・日本料理', '伝統的な日本料理')
-
-// タグ削除
-await deleteTag(tagId)
-```
-
-### レシピへのタグ紐付け（2025年11月）
-
-レシピ作成・編集時にタグを選択して紐付け可能:
-- アップロード時のタグ選択UI
-- 編集画面でのタグ更新
-- 複数タグの同時紐付け
-
-**実装ファイル:**
-- `/src/features/recipes/upload/actions.ts` - タグ付きレシピ作成
-- `/src/features/recipes/edit/actions.ts` - タグ更新を含むレシピ編集
-- `/src/features/recipes/edit/recipe-edit-form.tsx` - タグ選択UI
-
-### クリップボード画像貼り付け（2025年11月）
-
-レシピアップロード画面でクリップボードから画像を直接貼り付け可能:
-- スクリーンショットの直接貼り付け
-- 画像ファイルのコピー＆ペースト
-- ドラッグ＆ドロップとの併用
-
-### Terraformインフラ自動化（2025年11月）
-
-Vercelデプロイの完全自動化:
-- プロジェクト設定の自動化
-- カスタムドメイン設定
-- ビルド設定の一元管理
-- Terraform Cloud連携
+設定ファイルはプロジェクトルート、コアロジックは `/src/features/` 参照。特に以下：
+- `/prisma/schema.prisma` - DBスキーマ
+- `/src/mastra/workflows/cook-scan-workflow.ts` - 画像抽出ワークフロー
+- `/src/features/recipes/upload/actions.ts` - レシピ作成ロジック
+- `/src/features/tags/actions.ts` - タグ管理ロジック
 
 ## 追加リソース
 
@@ -809,3 +538,8 @@ Vercelデプロイの完全自動化:
 13. **インフラ変更**: Terraformファイル変更時は慎重に、本番環境に影響
 14. **リレーション**: SourceInfoは一対多関係（1レシピ:複数ソース）に注意
 15. **Prismaインクルード**: タグ表示には `recipeTags: { include: { tag: { include: { category: true } } } }` のようなネストしたインクルードが必要
+16. **Tailwind CSS v4**: グラデーション等で`bg-linear-to-r`を使用（v3の`bg-gradient-to-r`ではない）
+17. **コンポーネントテスト**: UI要素を追加・変更した場合、対応するテストを追加する
+18. **ESLint**: コミット前に`npm run lint`を実行、pre-commit hookで自動チェック実行
+19. **テスト実行**: 機能変更時は`npm run test -- --watch`でテストを監視実行
+20. **FormField**: レシピフォーム用の標準フォーム要素（UIコンポーネントに含まれる）
