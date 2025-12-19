@@ -1,8 +1,8 @@
 import { Agent } from '@mastra/core/agent';
 import { openaiGpt } from '../models/openai';
 
-/* FIXME(mastra): Add a unique `id` parameter. See: https://mastra.ai/guides/v1/migrations/upgrade-to-v1/mastra#required-id-parameter-for-all-mastra-primitives */
 export const imageToTextAgent = new Agent({
+  id: 'image-to-text-agent',
   name: 'Image to Text Agent',
   instructions: `
 あなたは画像からテキストを抽出する専門のAIアシスタントです。

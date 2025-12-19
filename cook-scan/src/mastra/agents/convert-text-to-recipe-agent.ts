@@ -1,8 +1,8 @@
 import { Agent } from '@mastra/core/agent';
 import { openaiGpt } from '../models/openai';
 
-/* FIXME(mastra): Add a unique `id` parameter. See: https://mastra.ai/guides/v1/migrations/upgrade-to-v1/mastra#required-id-parameter-for-all-mastra-primitives */
 export const convertTextToRecipeAgent = new Agent({
+  id: 'convert-text-to-recipe-agent',
   name: 'Convert Text to Recipe Agent',
   instructions: `
 あなたはテキストからレシピを抽出する専門のAIアシスタントです。
