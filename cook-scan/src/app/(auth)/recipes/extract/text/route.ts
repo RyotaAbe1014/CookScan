@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
 
     const workflow = mastra.getWorkflow('textToRecipeWorkflow')
 
-    const run = await workflow.createRunAsync()
+    const run = await workflow.createRun()
     const response = await run.start({
       inputData: {
         text
@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    return NextResponse.json({ success: true, result: response.result }, { status: 200 })
+    return NextResponse.json({ success: true, result: response }, { status: 200 })
   } catch (error) {
     console.error(error)
     return NextResponse.json(

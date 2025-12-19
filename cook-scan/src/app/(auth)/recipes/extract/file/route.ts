@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
     }
     const workflow = mastra.getWorkflow('cookScanWorkflow')
 
-    const run = await workflow.createRunAsync()
+    const run = await workflow.createRun()
     const response = await run.start({
       inputData: {
         image: file
@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
         { status: 500 }
       )
     }
-    return NextResponse.json({ success: true, result: response.result }, { status: 200 })
+    return NextResponse.json({ success: true, result: response }, { status: 200 })
   } catch (error) {
     console.error(error)
     return NextResponse.json(
