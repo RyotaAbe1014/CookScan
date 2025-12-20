@@ -2,10 +2,11 @@ import { checkUserProfile } from '@/features/auth/auth-utils'
 import Link from 'next/link'
 import { prisma } from '@/lib/prisma'
 import { TagFilter } from '@/features/recipes/list/tag-filter'
+import { RecipeSearch } from '@/features/recipes/list/recipe-search'
 import { Suspense } from 'react'
 import { Header } from '@/components/header'
 
-type SearchParams = Promise<{ tag?: string | string[] }>
+type SearchParams = Promise<{ tag?: string | string[]; q?: string }>
 
 export default async function RecipesPage({
   searchParams,
@@ -21,6 +22,9 @@ export default async function RecipesPage({
       ? params.tag
       : [params.tag]
     : []
+
+  // Get search query from URL
+  const searchQuery = params.q?.trim() || ''
 
   // Build where clause for recipe filtering
   const tagFilters = selectedTagIds.length > 0
@@ -38,6 +42,12 @@ export default async function RecipesPage({
     prisma.recipe.findMany({
       where: {
         userId: profile?.id as string,
+        ...(searchQuery && {
+          title: {
+            contains: searchQuery,
+            mode: 'insensitive'
+          }
+        }),
         ...(tagFilters && { AND: tagFilters }),
       },
       include: {
@@ -120,6 +130,10 @@ export default async function RecipesPage({
         </div>
 
         <Suspense fallback={null}>
+          <RecipeSearch resultCount={recipes.length} />
+        </Suspense>
+
+        <Suspense fallback={null}>
           <TagFilter tagCategories={tagCategories} />
         </Suspense>
 
@@ -140,13 +154,18 @@ export default async function RecipesPage({
                 />
               </svg>
             </div>
-            {selectedTagIds.length > 0 ? (
+            {selectedTagIds.length > 0 || searchQuery ? (
               <>
                 <h3 className="mt-6 text-lg font-semibold text-gray-900">
                   該当するレシピがありません
                 </h3>
                 <p className="mt-2 text-sm text-gray-600">
-                  選択したタグに一致するレシピが見つかりませんでした
+                  {searchQuery && selectedTagIds.length > 0
+                    ? '検索条件とタグに一致するレシピが見つかりませんでした'
+                    : searchQuery
+                    ? '検索条件に一致するレシピが見つかりませんでした'
+                    : '選択したタグに一致するレシピが見つかりませんでした'
+                  }
                 </p>
                 <div className="mt-6">
                   <Link
@@ -156,7 +175,7 @@ export default async function RecipesPage({
                     <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                     </svg>
-                    フィルターをクリア
+                    すべてクリア
                   </Link>
                 </div>
               </>
