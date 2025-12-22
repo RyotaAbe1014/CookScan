@@ -180,8 +180,7 @@ export default function LoginPage() {
 
                 {/* Signup button */}
                 <Button
-                  formAction={handleSignup}
-                  disabled={isPending}
+                  disabled={true}
                   isLoading={isPending}
                   variant="secondary"
                   className="w-full hover:border-indigo-300 hover:bg-linear-to-r hover:from-indigo-50 hover:to-purple-50 hover:text-indigo-700"
