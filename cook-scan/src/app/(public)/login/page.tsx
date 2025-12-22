@@ -1,7 +1,7 @@
 'use client'
 
 import { useTransition } from 'react'
-import { login, signup } from '@/features/auth/actions'
+import { login } from '@/features/auth/actions'
 import { Button } from '@/components/ui/button'
 
 export default function LoginPage() {
@@ -10,12 +10,6 @@ export default function LoginPage() {
   const handleLogin = async (formData: FormData) => {
     startTransition(async () => {
       await login(formData)
-    })
-  }
-
-  const handleSignup = async (formData: FormData) => {
-    startTransition(async () => {
-      await signup(formData)
     })
   }
 
