@@ -5,6 +5,7 @@ import { prisma } from '@/lib/prisma'
 import { checkUserProfile } from '@/features/auth/auth-utils'
 import { UpdateRecipeRequest, UpdateRecipeResponse } from '@/features/recipes/edit/types'
 import { Prisma } from '@prisma/client'
+import { validateTagIdsForUser } from '@/features/tags/tag-utils'
 
 export async function updateRecipe(request: UpdateRecipeRequest): Promise<UpdateRecipeResponse> {
   const { recipeId, title, sourceInfo, ingredients, steps, memo, tags } = request
@@ -17,6 +18,15 @@ export async function updateRecipe(request: UpdateRecipeRequest): Promise<Update
   }
 
   try {
+    const { validTagIds, isValid } = await validateTagIdsForUser(
+      tags ?? [],
+      profile.id
+    )
+
+    if (!isValid) {
+      return { success: false, error: '無効なタグが含まれています' }
+    }
+
     // Verify that the recipe belongs to the current user
     const existingRecipe = await prisma.recipe.findFirst({
       where: {
@@ -94,9 +104,9 @@ export async function updateRecipe(request: UpdateRecipeRequest): Promise<Update
         where: { recipeId }
       })
 
-      if (tags && tags.length > 0) {
+      if (validTagIds.length > 0) {
         await tx.recipeTag.createMany({
-          data: tags.map(tagId => ({
+          data: validTagIds.map(tagId => ({
             recipeId,
             tagId
           }))

@@ -5,6 +5,7 @@ import { prisma } from '@/lib/prisma'
 import { checkUserProfile } from '@/features/auth/auth-utils'
 import { CreateRecipeRequest } from '@/features/recipes/upload/types'
 import { Prisma } from '@prisma/client'
+import { validateTagIdsForUser } from '@/features/tags/tag-utils'
 
 export async function createRecipe(request: CreateRecipeRequest) {
   const { title, sourceInfo, ingredients, steps, memo, tags } = request
@@ -17,6 +18,15 @@ export async function createRecipe(request: CreateRecipeRequest) {
   }
 
   try {
+    const { validTagIds, isValid } = await validateTagIdsForUser(
+      tags ?? [],
+      profile.id
+    )
+
+    if (!isValid) {
+      return { success: false, error: '無効なタグが含まれています' }
+    }
+
     // Create recipe with all related data in a transaction
     const recipe = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       // Create the main recipe
@@ -65,9 +75,9 @@ export async function createRecipe(request: CreateRecipeRequest) {
       }
 
       // Create recipe tags if provided
-      if (tags && tags.length > 0) {
+      if (validTagIds.length > 0) {
         await tx.recipeTag.createMany({
-          data: tags.map(tagId => ({
+          data: validTagIds.map(tagId => ({
             recipeId: newRecipe.id,
             tagId
           }))
