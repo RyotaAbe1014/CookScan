@@ -21,7 +21,10 @@ export default async function RecipeDetailPage({ params }: RecipeDetailPageProps
   const sourceInfo = recipe.sourceInfo[0]
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-indigo-50 via-white to-purple-50">
+    <div
+      id="recipe-detail-capture"
+      className="min-h-screen bg-linear-to-br from-indigo-50 via-white to-purple-50"
+    >
       <Header
         title={recipe.title}
         subtitle={`作成日: ${recipe.createdAt.toLocaleDateString('ja-JP')}`}
