@@ -1,7 +1,7 @@
 import { type ReactNode } from 'react'
 import { cn } from '@/lib/tailwind'
 
-export interface FormFieldProps {
+export type FormFieldProps = {
   /** フィールドのラベル */
   label: string
   /** 入力要素のID（label のfor属性用） */

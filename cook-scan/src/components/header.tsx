@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
 
-interface HeaderProps {
+type HeaderProps = {
   title: string
   subtitle?: string
   rightAction?: ReactNode

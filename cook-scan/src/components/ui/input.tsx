@@ -31,12 +31,11 @@ const inputVariants = cva(
   }
 )
 
-export interface InputProps
-  extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'>,
-    VariantProps<typeof inputVariants> {
-  /** アイコン用の左パディングを追加 */
-  hasIcon?: boolean
-}
+export type InputProps = Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> &
+  VariantProps<typeof inputVariants> & {
+    /** アイコン用の左パディングを追加 */
+    hasIcon?: boolean
+  }
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ className, variant, size, hasIcon, ...props }, ref) => {

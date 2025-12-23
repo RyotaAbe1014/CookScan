@@ -5,7 +5,7 @@ import RecipeDetailActions from '@/features/recipes/detail/recipe-detail-actions
 import { Header } from '@/components/header'
 import { Card, CardHeader, CardContent } from '@/components/ui/card'
 
-interface RecipeDetailPageProps {
+type RecipeDetailPageProps = {
   params: Promise<{ id: string }>
 }
 

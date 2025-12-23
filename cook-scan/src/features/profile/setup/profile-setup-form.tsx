@@ -4,7 +4,7 @@ import { useState, useTransition } from 'react'
 import { createProfile } from './actions'
 import { Button, Input, Alert } from '@/components/ui'
 
-interface ProfileSetupFormProps {
+type ProfileSetupFormProps = {
   userId: string
   userEmail: string
 }

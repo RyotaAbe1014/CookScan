@@ -93,12 +93,11 @@ const AlertIcons = {
   ),
 }
 
-export interface AlertProps
-  extends HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof alertVariants> {
-  /** アイコンを非表示にする */
-  hideIcon?: boolean
-}
+export type AlertProps = HTMLAttributes<HTMLDivElement> &
+  VariantProps<typeof alertVariants> & {
+    /** アイコンを非表示にする */
+    hideIcon?: boolean
+  }
 
 const Alert = forwardRef<HTMLDivElement, AlertProps>(
   ({ className, variant, hideIcon, children, ...props }, ref) => {

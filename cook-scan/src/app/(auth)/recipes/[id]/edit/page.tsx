@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation'
 import { getRecipeById } from '@/features/recipes/detail/actions'
 import RecipeEditForm from '@/features/recipes/edit/recipe-edit-form'
 
-interface RecipeEditPageProps {
+type RecipeEditPageProps = {
   params: Promise<{ id: string }>
 }
 

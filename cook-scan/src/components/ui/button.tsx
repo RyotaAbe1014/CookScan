@@ -41,12 +41,11 @@ const buttonVariants = cva(
   }
 )
 
-export interface ButtonProps
-  extends ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {
-  /** ローディング状態 */
-  isLoading?: boolean
-}
+export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> &
+  VariantProps<typeof buttonVariants> & {
+    /** ローディング状態 */
+    isLoading?: boolean
+  }
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, isLoading, disabled, children, ...props }, ref) => {

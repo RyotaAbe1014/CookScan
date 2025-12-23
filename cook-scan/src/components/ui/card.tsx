@@ -21,9 +21,8 @@ const cardVariants = cva(
   }
 )
 
-export interface CardProps
-  extends HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof cardVariants> {}
+export type CardProps = HTMLAttributes<HTMLDivElement> &
+  VariantProps<typeof cardVariants>
 
 const Card = forwardRef<HTMLDivElement, CardProps>(
   ({ className, hover, ...props }, ref) => {
@@ -62,7 +61,7 @@ const iconGradientColors: Record<CardHeaderColor, string> = {
   red: 'from-red-500 to-orange-600',
 }
 
-export interface CardHeaderProps extends HTMLAttributes<HTMLDivElement> {
+export type CardHeaderProps = HTMLAttributes<HTMLDivElement> & {
   /** アイコンバッジに表示するアイコン（SVG要素） */
   icon?: ReactNode
   /** アイコンバッジのグラデーションカラー */
@@ -126,9 +125,8 @@ const cardContentVariants = cva('', {
   },
 })
 
-export interface CardContentProps
-  extends HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof cardContentVariants> {}
+export type CardContentProps = HTMLAttributes<HTMLDivElement> &
+  VariantProps<typeof cardContentVariants>
 
 const CardContent = forwardRef<HTMLDivElement, CardContentProps>(
   ({ className, padding, ...props }, ref) => {
