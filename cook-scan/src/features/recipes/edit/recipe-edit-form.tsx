@@ -7,7 +7,6 @@ import Link from 'next/link'
 import { updateRecipe } from './actions'
 import type { UpdateRecipeRequest } from './types'
 import { getAllTagsForRecipe } from '@/features/tags/actions'
-import { Header } from '@/components/header'
 import { Button, Input, Textarea } from '@/components/ui'
 
 type RecipeData = {
@@ -203,24 +202,7 @@ export default function RecipeEditForm({ recipe }: Props) {
   }
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-indigo-50 via-white to-purple-50">
-      <Header
-        title="レシピを編集"
-        rightAction={
-          <Link
-            href={`/recipes/${recipe.id}`}
-            className="inline-flex items-center gap-1.5 text-sm text-gray-600 transition-colors hover:text-indigo-600"
-          >
-            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-            </svg>
-            詳細画面に戻る
-          </Link>
-        }
-      />
-
-      <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <form onSubmit={handleSubmit} className="mx-auto max-w-4xl">
+    <form onSubmit={handleSubmit} className="mx-auto max-w-4xl">
           <div className="space-y-6">
             {/* 画像プレビュー */}
             {recipe.imageUrl && (
@@ -564,7 +546,5 @@ export default function RecipeEditForm({ recipe }: Props) {
             </div>
           </div>
         </form>
-      </main>
-    </div>
   )
 }

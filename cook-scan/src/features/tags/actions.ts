@@ -22,7 +22,7 @@ export async function createTagCategory(name: string, description?: string) {
         name,
         description: description || null,
         isSystem: false,
-      }
+      },
     })
 
     revalidatePath('/tags')
@@ -46,7 +46,7 @@ export async function createTag(categoryId: string, name: string, description?: 
   try {
     // カテゴリの存在と権限を確認
     const category = await prisma.tagCategory.findUnique({
-      where: { id: categoryId }
+      where: { id: categoryId },
     })
 
     if (!category) {
@@ -64,7 +64,7 @@ export async function createTag(categoryId: string, name: string, description?: 
         name,
         description: description || null,
         isSystem: false,
-      }
+      },
     })
 
     revalidatePath('/tags')
@@ -89,7 +89,7 @@ export async function updateTag(tagId: string, name: string, description?: strin
     // タグの存在と権限を確認
     const tag = await prisma.tag.findUnique({
       where: { id: tagId },
-      include: { category: true }
+      include: { category: true },
     })
 
     if (!tag) {
@@ -111,7 +111,7 @@ export async function updateTag(tagId: string, name: string, description?: strin
       data: {
         name,
         description: description || null,
-      }
+      },
     })
 
     revalidatePath('/tags')
@@ -139,7 +139,7 @@ export async function deleteTag(tagId: string) {
       include: {
         category: true,
         recipeTags: true,
-      }
+      },
     })
 
     if (!tag) {
@@ -160,12 +160,12 @@ export async function deleteTag(tagId: string) {
     if (tag.recipeTags.length > 0) {
       return {
         success: false,
-        error: `このタグは${tag.recipeTags.length}件のレシピで使用されているため削除できません`
+        error: `このタグは${tag.recipeTags.length}件のレシピで使用されているため削除できません`,
       }
     }
 
     await prisma.tag.delete({
-      where: { id: tagId }
+      where: { id: tagId },
     })
 
     revalidatePath('/tags')
@@ -189,7 +189,7 @@ export async function updateTagCategory(categoryId: string, name: string, descri
   try {
     // カテゴリの存在と権限を確認
     const category = await prisma.tagCategory.findUnique({
-      where: { id: categoryId }
+      where: { id: categoryId },
     })
 
     if (!category) {
@@ -211,7 +211,7 @@ export async function updateTagCategory(categoryId: string, name: string, descri
       data: {
         name,
         description: description || null,
-      }
+      },
     })
 
     revalidatePath('/tags')
@@ -236,7 +236,7 @@ export async function deleteTagCategory(categoryId: string) {
     // カテゴリの存在と権限を確認
     const category = await prisma.tagCategory.findUnique({
       where: { id: categoryId },
-      include: { tags: true }
+      include: { tags: true },
     })
 
     if (!category) {
@@ -257,12 +257,12 @@ export async function deleteTagCategory(categoryId: string) {
     if (category.tags.length > 0) {
       return {
         success: false,
-        error: `このカテゴリには${category.tags.length}個のタグがあるため削除できません`
+        error: `このカテゴリには${category.tags.length}個のタグがあるため削除できません`,
       }
     }
 
     await prisma.tagCategory.delete({
-      where: { id: categoryId }
+      where: { id: categoryId },
     })
 
     revalidatePath('/tags')
@@ -286,22 +286,62 @@ export async function getAllTagsForRecipe() {
   try {
     const tagCategories = await prisma.tagCategory.findMany({
       where: {
-        OR: [
-          { isSystem: true },
-          { userId: profile.id }
-        ]
+        OR: [{ isSystem: true }, { userId: profile.id }],
       },
       include: {
         tags: {
-          orderBy: { name: 'asc' }
-        }
+          orderBy: { name: 'asc' },
+        },
       },
-      orderBy: { createdAt: 'asc' }
+      orderBy: { createdAt: 'asc' },
     })
 
     return tagCategories
   } catch (error) {
     console.error('Failed to fetch tags:', error)
     return []
+  }
+}
+
+/**
+ * タグカテゴリとタグ、レシピタグの関連を取得（タグページ用）
+ */
+export async function getTagCategoriesWithTags(userId: string) {
+  const { hasAuth, hasProfile } = await checkUserProfile()
+
+  if (!hasAuth || !hasProfile) {
+    redirect('/login')
+  }
+
+  try {
+    const tagCategories = await prisma.tagCategory.findMany({
+      where: {
+        OR: [{ isSystem: true }, { userId }],
+      },
+      include: {
+        tags: {
+          include: {
+            recipeTags: userId
+              ? {
+                  where: {
+                    recipe: {
+                      userId,
+                    },
+                  },
+                  select: { recipeId: true },
+                }
+              : {
+                  select: { recipeId: true },
+                },
+          },
+        },
+      },
+      orderBy: { createdAt: 'asc' },
+    })
+
+    return { tagCategories, error: null }
+  } catch (error) {
+    console.error('Failed to fetch tag categories:', error)
+    return { tagCategories: [], error: 'Failed to load tag categories' }
   }
 }

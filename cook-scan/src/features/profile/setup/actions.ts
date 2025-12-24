@@ -4,6 +4,22 @@ import { prisma } from '@/lib/prisma'
 import { redirect } from 'next/navigation'
 import { checkUserProfile } from '@/features/auth/auth-utils'
 
+/**
+ * 既存のプロフィールをチェック
+ */
+export async function checkExistingProfile(authId: string) {
+  try {
+    const existingProfile = await prisma.user.findUnique({
+      where: { authId },
+    })
+
+    return { exists: !!existingProfile, profile: existingProfile }
+  } catch (error) {
+    console.error('Failed to check existing profile:', error)
+    return { exists: false, profile: null }
+  }
+}
+
 export async function createProfile(authId: string, email: string, name: string) {
   // 現在のセッションユーザーを取得
   const { hasAuth, authUser, hasProfile } = await checkUserProfile()

@@ -793,18 +793,5 @@ describe('RecipeEditForm', () => {
       })
     })
 
-    it('詳細画面に戻るリンクが表示される', async () => {
-      // Given: RecipeEditFormが表示されている
-      render(<RecipeEditForm recipe={mockRecipe} />)
-
-      // When: 初期レンダリングされる
-      await waitFor(() => {
-        const backLink = screen.getByText(/詳細画面に戻る/)
-
-        // Then: 詳細画面に戻るリンクが表示される
-        expect(backLink).toBeInTheDocument()
-        expect(backLink.closest('a')).toHaveAttribute('href', `/recipes/${mockRecipe.id}`)
-      })
-    })
   })
 })
