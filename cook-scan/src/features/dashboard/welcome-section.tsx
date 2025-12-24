@@ -1,5 +1,5 @@
 type Profile = {
-  name: string
+  name: string | null
   email: string
 }
 
@@ -8,6 +8,8 @@ type WelcomeSectionProps = {
 }
 
 export function WelcomeSection({ profile }: WelcomeSectionProps) {
+  const displayName = profile.name || 'ゲスト'
+
   return (
     <div className="mb-10 overflow-hidden rounded-2xl bg-linear-to-r from-indigo-600 to-purple-600 p-8 shadow-xl">
       <div className="flex items-center gap-4">
@@ -22,7 +24,7 @@ export function WelcomeSection({ profile }: WelcomeSectionProps) {
           </svg>
         </div>
         <div className="flex-1">
-          <h2 className="text-2xl font-bold text-white sm:text-3xl">こんにちは、{profile.name}さん</h2>
+          <h2 className="text-2xl font-bold text-white sm:text-3xl">こんにちは、{displayName}さん</h2>
           <p className="mt-1 text-sm text-indigo-100 sm:text-base">{profile.email}</p>
         </div>
         <div className="hidden sm:block">

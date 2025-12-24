@@ -3,7 +3,7 @@ import { QuickActions } from './quick-actions'
 import { FeaturesOverview } from './features-overview'
 
 type Profile = {
-  name: string
+  name: string | null
   email: string
 }
 

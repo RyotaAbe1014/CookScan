@@ -6,9 +6,14 @@ import { TagEmptyState } from './tag-empty-state'
 type TagCategory = {
   id: string
   name: string
+  description: string | null
+  isSystem: boolean
+  userId: string | null
   tags: Array<{
     id: string
     name: string
+    description: string | null
+    isSystem: boolean
     recipeTags: Array<{ recipeId: string }>
   }>
 }
