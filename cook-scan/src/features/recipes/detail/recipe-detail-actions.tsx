@@ -15,7 +15,7 @@ type Props = {
   recipe: Recipe
 }
 
-export default function RecipeDetailActions({ recipe }: Props) {
+export function RecipeDetailActions({ recipe }: Props) {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [isDownloading, setIsDownloading] = useState(false)
   const [downloadError, setDownloadError] = useState(false)
