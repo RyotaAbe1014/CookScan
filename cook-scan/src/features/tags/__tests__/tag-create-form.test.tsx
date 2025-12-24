@@ -222,8 +222,8 @@ describe('TagCreateForm', () => {
   describe('タグ作成フォーム - ローディング状態', () => {
     it('送信中はローディングテキストが表示される', async () => {
       // Given: createTagが遅延する
-      let resolveCreate: (value: { success: boolean }) => void
-      const createPromise = new Promise<{ success: boolean }>((resolve) => {
+      let resolveCreate: (value: { success: true; tagId: string } | { success: false; error: string }) => void
+      const createPromise = new Promise<{ success: true; tagId: string } | { success: false; error: string }>((resolve) => {
         resolveCreate = resolve
       })
       vi.mocked(createTag).mockReturnValueOnce(createPromise)
@@ -242,7 +242,7 @@ describe('TagCreateForm', () => {
       })
 
       // クリーンアップ
-      resolveCreate!({ success: true })
+      resolveCreate!({ success: true, tagId: 'test-tag-id' })
       await waitFor(() => {
         expect(createTag).toHaveBeenCalled()
       })
@@ -348,8 +348,8 @@ describe('TagCreateForm', () => {
   describe('カテゴリ作成フォーム - ローディング状態', () => {
     it('送信中はローディングテキストが表示される', async () => {
       // Given: createTagCategoryが遅延する
-      let resolveCreate: (value: { success: boolean }) => void
-      const createPromise = new Promise<{ success: boolean }>((resolve) => {
+      let resolveCreate: (value: { success: true; categoryId: string } | { success: false; error: string }) => void
+      const createPromise = new Promise<{ success: true; categoryId: string } | { success: false; error: string }>((resolve) => {
         resolveCreate = resolve
       })
       vi.mocked(createTagCategory).mockReturnValueOnce(createPromise)
@@ -369,7 +369,7 @@ describe('TagCreateForm', () => {
       })
 
       // クリーンアップ
-      resolveCreate!({ success: true })
+      resolveCreate!({ success: true, categoryId: 'test-category-id' })
       await waitFor(() => {
         expect(createTagCategory).toHaveBeenCalled()
       })
