@@ -1,25 +1,29 @@
 import { describe, it, expect, vi } from 'vitest'
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import MethodSelector from '../method-selector'
 
 describe('MethodSelector', () => {
-  it('「画像からスキャン」ボタンが表示される', () => {
+  it('正常系：「画像からスキャン」ボタンが表示される', () => {
+    // Given: MethodSelectorコンポーネントが表示されている
     const onSelect = vi.fn()
     render(<MethodSelector onSelect={onSelect} />)
 
-    const scanText = screen.getAllByText(/画像からスキャン/)[0]
-    expect(scanText).toBeTruthy()
+    // Then: 「画像からスキャン」ボタンが表示される
+    expect(screen.getByRole('button', { name: /画像からスキャン/ })).toBeInTheDocument()
   })
 
-  it('スキャンボタンをクリックするとonSelectが呼ばれる', () => {
+  it('正常系：スキャンボタンをクリックするとonSelectが呼ばれる', async () => {
+    // Given: MethodSelectorコンポーネントが表示されている
     const onSelect = vi.fn()
+    const user = userEvent.setup()
     render(<MethodSelector onSelect={onSelect} />)
 
-    // ボタン要素を直接取得
+    // When: ユーザーが「画像からスキャン」ボタンをクリックする
     const scanButton = screen.getByRole('button', { name: /画像からスキャン/ })
+    await user.click(scanButton)
 
-    fireEvent.click(scanButton)
-
+    // Then: onSelectが'scan'で呼ばれる
     expect(onSelect).toHaveBeenCalledWith('scan')
   })
 })
