@@ -22,15 +22,11 @@ export function RecipeDetailActions({ recipe }: Props) {
   const errorTimeoutRef = useRef<number | null>(null)
 
   const handleDeleteClick = () => {
-    console.log('削除ボタンがクリックされました')
     setIsDeleteDialogOpen(true)
-    console.log('ダイアログ状態:', true)
   }
 
   const handleCloseDialog = () => {
-    console.log('ダイアログを閉じます')
     setIsDeleteDialogOpen(false)
-    console.log('ダイアログ状態:', false)
   }
 
   const showDownloadError = () => {
