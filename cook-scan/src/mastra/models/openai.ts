@@ -5,3 +5,4 @@ export const openai = createOpenAI({
 });
 
 export const openaiGpt = openai('gpt-5-mini-2025-08-07');
+export const openaiGpt4oMini = openai('gpt-4o-mini');
