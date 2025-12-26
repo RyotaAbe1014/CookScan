@@ -133,8 +133,17 @@ export function useCookingTimer({
     if (!startedAt) return
 
     const now = Date.now()
+    // 最新の残り時間を計算（stateではなく計算値を使用）
+    const currentRemaining = calculateRemainingSeconds(
+      initialSeconds,
+      startedAt,
+      pausedAt,
+      pausedRemainingSeconds
+    )
+
     setPausedAt(now)
-    setPausedRemainingSeconds(remainingSeconds)
+    setPausedRemainingSeconds(currentRemaining)
+    setRemainingSeconds(currentRemaining)
     setIsRunning(false)
     setIsPaused(true)
 
@@ -146,7 +155,7 @@ export function useCookingTimer({
       totalSeconds: initialSeconds,
       startedAt,
       pausedAt: now,
-      pausedRemainingSeconds: remainingSeconds,
+      pausedRemainingSeconds: currentRemaining,
       isRunning: false,
       isPaused: true,
     })
