@@ -56,9 +56,9 @@ export function RecipeSteps({ recipeId, steps, onActiveTimerChange }: RecipeStep
             {steps.map((step) => (
               <div
                 key={step.id}
-                className="group flex gap-4 rounded-lg bg-linear-to-r from-gray-50 to-white p-4 ring-1 ring-gray-200 transition-all hover:shadow-md"
+                className="group flex gap-4 rounded-lg bg-gradient-to-r from-gray-50 to-white p-4 ring-1 ring-gray-200 transition-all hover:shadow-md"
               >
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-linear-to-br from-blue-500 to-indigo-600 text-base font-bold text-white shadow-md">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 text-base font-bold text-white shadow-md">
                   {step.orderIndex}
                 </div>
                 <div className="flex-1">
