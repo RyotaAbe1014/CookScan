@@ -1,4 +1,8 @@
+'use client'
+
+import { useCallback, useRef } from 'react'
 import { Card, CardHeader, CardContent } from '@/components/ui/card'
+import { StepTimer } from './step-timer'
 
 type Step = {
   id: string
@@ -8,10 +12,28 @@ type Step = {
 }
 
 type RecipeStepsProps = {
+  recipeId: string
   steps: Step[]
+  onActiveTimerChange?: (activeTimerIds: Set<string>) => void
 }
 
-export function RecipeSteps({ steps }: RecipeStepsProps) {
+export function RecipeSteps({ recipeId, steps, onActiveTimerChange }: RecipeStepsProps) {
+  const activeTimerIdsRef = useRef<Set<string>>(new Set())
+
+  const handleActiveChange = useCallback(
+    (stepId: string, isActive: boolean) => {
+      const updated = new Set(activeTimerIdsRef.current)
+      if (isActive) {
+        updated.add(stepId)
+      } else {
+        updated.delete(stepId)
+      }
+      activeTimerIdsRef.current = updated
+      onActiveTimerChange?.(updated)
+    },
+    [onActiveTimerChange]
+  )
+
   return (
     <Card>
       <CardHeader
@@ -42,19 +64,14 @@ export function RecipeSteps({ steps }: RecipeStepsProps) {
                 <div className="flex-1">
                   <p className="leading-relaxed text-gray-900">{step.instruction}</p>
                   {step.timerSeconds && (
-                    <div className="mt-3 inline-flex items-center gap-2 rounded-lg bg-white px-3 py-2 ring-1 ring-gray-200">
-                      <svg className="h-4 w-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                        />
-                      </svg>
-                      <span className="text-sm font-medium text-gray-700">
-                        タイマー: {Math.floor(step.timerSeconds / 60)}分{step.timerSeconds % 60}秒
-                      </span>
-                    </div>
+                    <StepTimer
+                      stepId={step.id}
+                      recipeId={recipeId}
+                      stepNumber={step.orderIndex}
+                      instruction={step.instruction}
+                      timerSeconds={step.timerSeconds}
+                      onActiveChange={handleActiveChange}
+                    />
                   )}
                 </div>
               </div>

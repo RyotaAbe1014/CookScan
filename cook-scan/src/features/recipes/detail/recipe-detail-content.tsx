@@ -1,3 +1,6 @@
+'use client'
+
+import { useState, useEffect } from 'react'
 import { RecipeImageSection } from './recipe-image-section'
 import { RecipeSourceInfo } from './recipe-source-info'
 import { RecipeMemo } from './recipe-memo'
@@ -5,7 +8,9 @@ import { RecipeTagsSection } from './recipe-tags-section'
 import { RecipeIngredients } from './recipe-ingredients'
 import { RecipeSteps } from './recipe-steps'
 import { RecipeDetailActions } from './recipe-detail-actions'
+import { CookingTimerManager } from './cooking-timer-manager'
 import { formatMemo, getSourceInfo } from './utils'
+import { cleanupOldTimerStates } from '@/utils/timer-persistence'
 
 type Recipe = {
   id: string
@@ -50,9 +55,33 @@ type RecipeDetailContentProps = {
 export function RecipeDetailContent({ recipe }: RecipeDetailContentProps) {
   const memo = formatMemo(recipe.memo)
   const sourceInfo = getSourceInfo(recipe.sourceInfo)
+  const [activeTimerIds, setActiveTimerIds] = useState<Set<string>>(new Set())
+
+  // ページマウント時に古いタイマー状態をクリーンアップ
+  useEffect(() => {
+    cleanupOldTimerStates()
+  }, [])
+
+  const handleActiveTimerChange = (updatedTimerIds: Set<string>) => {
+    setActiveTimerIds(updatedTimerIds)
+  }
+
+  const handleStopAll = () => {
+    setActiveTimerIds(new Set())
+  }
 
   return (
     <div className="space-y-8">
+      {/* アクティブタイマー一覧（ページ上部） */}
+      {activeTimerIds.size > 0 && (
+        <CookingTimerManager
+          recipeId={recipe.id}
+          activeTimerIds={activeTimerIds}
+          steps={recipe.steps}
+          onStopAll={handleStopAll}
+        />
+      )}
+
       {/* キャプチャ対象: 料理名と登録日、レシピ画像とソース情報、材料と調理手順 */}
       <div id="recipe-detail-capture" className="space-y-8">
         {/* 料理名と登録日 */}
@@ -80,7 +109,11 @@ export function RecipeDetailContent({ recipe }: RecipeDetailContentProps) {
           {/* 右側: 材料と調理手順 */}
           <div className="lg:col-span-2">
             <RecipeIngredients ingredients={recipe.ingredients} />
-            <RecipeSteps steps={recipe.steps} />
+            <RecipeSteps
+              recipeId={recipe.id}
+              steps={recipe.steps}
+              onActiveTimerChange={handleActiveTimerChange}
+            />
           </div>
         </div>
       </div>
