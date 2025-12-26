@@ -1,20 +1,11 @@
-import { describe, test, expect, beforeEach } from 'vitest'
+import { describe, test, expect } from 'vitest'
 import {
-  saveTimerState,
-  getTimerStates,
-  removeTimerState,
-  clearAllTimerStates,
   calculateRemainingSeconds,
   cleanupOldTimerStates,
   type PersistedTimerState,
 } from '../timer-persistence'
 
 describe('timer-persistence', () => {
-  beforeEach(() => {
-    // 各テスト前にlocalStorageをクリア
-    localStorage.clear()
-  })
-
   describe('calculateRemainingSeconds', () => {
     test('正常系：実行中のタイマーの残り時間を計算できる', () => {
       // Given: 開始時刻から5秒経過したタイマー
@@ -59,228 +50,12 @@ describe('timer-persistence', () => {
     })
   })
 
-  describe('saveTimerState', () => {
-    test('正常系：タイマー状態を保存できる', () => {
-      // Given: タイマー状態が用意されている
-      const recipeId = 'recipe-1'
-      const timerState: PersistedTimerState = {
-        stepId: 'step-1',
-        stepNumber: 1,
-        instruction: '5分間煮込む',
-        totalSeconds: 300,
-        recipeId: 'recipe-1',
-        startedAt: Date.now(),
-        pausedAt: null,
-        pausedRemainingSeconds: null,
-        isRunning: true,
-        isPaused: false,
-      }
-
-      // When: タイマー状態を保存する
-      const result = saveTimerState(recipeId, timerState)
-
-      // Then: 保存が成功する
-      expect(result).toBe(true)
-
-      // Then: localStorageに保存されている
-      const saved = getTimerStates(recipeId)
-      expect(saved.size).toBe(1)
-      expect(saved.get('step-1')).toEqual(timerState)
-    })
-
-    test('正常系：複数のタイマー状態を保存できる', () => {
-      // Given: 複数のタイマー状態が用意されている
-      const recipeId = 'recipe-1'
-      const timerState1: PersistedTimerState = {
-        stepId: 'step-1',
-        stepNumber: 1,
-        instruction: '5分間煮込む',
-        totalSeconds: 300,
-        recipeId: 'recipe-1',
-        startedAt: Date.now(),
-        pausedAt: null,
-        pausedRemainingSeconds: null,
-        isRunning: true,
-        isPaused: false,
-      }
-      const timerState2: PersistedTimerState = {
-        stepId: 'step-2',
-        stepNumber: 2,
-        instruction: '10分間焼く',
-        totalSeconds: 600,
-        recipeId: 'recipe-1',
-        startedAt: Date.now(),
-        pausedAt: null,
-        pausedRemainingSeconds: null,
-        isRunning: true,
-        isPaused: false,
-      }
-
-      // When: 複数のタイマー状態を保存する
-      saveTimerState(recipeId, timerState1)
-      saveTimerState(recipeId, timerState2)
-
-      // Then: 両方のタイマーが保存されている
-      const saved = getTimerStates(recipeId)
-      expect(saved.size).toBe(2)
-      expect(saved.get('step-1')).toEqual(timerState1)
-      expect(saved.get('step-2')).toEqual(timerState2)
-    })
-  })
-
-  describe('getTimerStates', () => {
-    test('正常系：保存されたタイマー状態を取得できる', () => {
-      // Given: タイマー状態が保存されている
-      const recipeId = 'recipe-1'
-      const timerState: PersistedTimerState = {
-        stepId: 'step-1',
-        stepNumber: 1,
-        instruction: '5分間煮込む',
-        totalSeconds: 300,
-        recipeId: 'recipe-1',
-        startedAt: Date.now(),
-        pausedAt: null,
-        pausedRemainingSeconds: null,
-        isRunning: true,
-        isPaused: false,
-      }
-      saveTimerState(recipeId, timerState)
-
-      // When: タイマー状態を取得する
-      const saved = getTimerStates(recipeId)
-
-      // Then: 保存されたタイマー状態が取得できる
-      expect(saved.size).toBe(1)
-      expect(saved.get('step-1')).toEqual(timerState)
-    })
-
-    test('正常系：存在しないレシピIDの場合は空のMapを返す', () => {
-      // Given: タイマー状態が保存されていない
-      const recipeId = 'recipe-nonexistent'
-
-      // When: タイマー状態を取得する
-      const saved = getTimerStates(recipeId)
-
-      // Then: 空のMapが返される
-      expect(saved.size).toBe(0)
-    })
-
-    test('正常系：破損したデータの場合は空のMapを返す', () => {
-      // Given: 破損したデータがlocalStorageに保存されている
-      const recipeId = 'recipe-1'
-      const key = `cookscan-active-timers-${recipeId}`
-      localStorage.setItem(key, 'invalid-json')
-
-      // When: タイマー状態を取得する
-      const saved = getTimerStates(recipeId)
-
-      // Then: 空のMapが返される
-      expect(saved.size).toBe(0)
-
-      // Then: 破損したデータが削除されている
-      expect(localStorage.getItem(key)).toBeNull()
-    })
-  })
-
-  describe('removeTimerState', () => {
-    test('正常系：タイマー状態を削除できる', () => {
-      // Given: タイマー状態が保存されている
-      const recipeId = 'recipe-1'
-      const timerState: PersistedTimerState = {
-        stepId: 'step-1',
-        stepNumber: 1,
-        instruction: '5分間煮込む',
-        totalSeconds: 300,
-        recipeId: 'recipe-1',
-        startedAt: Date.now(),
-        pausedAt: null,
-        pausedRemainingSeconds: null,
-        isRunning: true,
-        isPaused: false,
-      }
-      saveTimerState(recipeId, timerState)
-
-      // When: タイマー状態を削除する
-      const result = removeTimerState(recipeId, 'step-1')
-
-      // Then: 削除が成功する
-      expect(result).toBe(true)
-
-      // Then: localStorageから削除されている
-      const saved = getTimerStates(recipeId)
-      expect(saved.size).toBe(0)
-    })
-
-    test('正常系：最後のタイマーを削除するとlocalStorageのキーも削除される', () => {
-      // Given: 1つのタイマー状態が保存されている
-      const recipeId = 'recipe-1'
-      const timerState: PersistedTimerState = {
-        stepId: 'step-1',
-        stepNumber: 1,
-        instruction: '5分間煮込む',
-        totalSeconds: 300,
-        recipeId: 'recipe-1',
-        startedAt: Date.now(),
-        pausedAt: null,
-        pausedRemainingSeconds: null,
-        isRunning: true,
-        isPaused: false,
-      }
-      saveTimerState(recipeId, timerState)
-      const key = `cookscan-active-timers-${recipeId}`
-
-      // When: 最後のタイマーを削除する
-      removeTimerState(recipeId, 'step-1')
-
-      // Then: localStorageのキーも削除されている
-      expect(localStorage.getItem(key)).toBeNull()
-    })
-  })
-
-  describe('clearAllTimerStates', () => {
-    test('正常系：すべてのタイマー状態をクリアできる', () => {
-      // Given: 複数のタイマー状態が保存されている
-      const recipeId = 'recipe-1'
-      const timerState1: PersistedTimerState = {
-        stepId: 'step-1',
-        stepNumber: 1,
-        instruction: '5分間煮込む',
-        totalSeconds: 300,
-        recipeId: 'recipe-1',
-        startedAt: Date.now(),
-        pausedAt: null,
-        pausedRemainingSeconds: null,
-        isRunning: true,
-        isPaused: false,
-      }
-      const timerState2: PersistedTimerState = {
-        stepId: 'step-2',
-        stepNumber: 2,
-        instruction: '10分間焼く',
-        totalSeconds: 600,
-        recipeId: 'recipe-1',
-        startedAt: Date.now(),
-        pausedAt: null,
-        pausedRemainingSeconds: null,
-        isRunning: true,
-        isPaused: false,
-      }
-      saveTimerState(recipeId, timerState1)
-      saveTimerState(recipeId, timerState2)
-
-      // When: すべてのタイマー状態をクリアする
-      const result = clearAllTimerStates(recipeId)
-
-      // Then: クリアが成功する
-      expect(result).toBe(true)
-
-      // Then: localStorageからすべて削除されている
-      const saved = getTimerStates(recipeId)
-      expect(saved.size).toBe(0)
-    })
-  })
-
   describe('cleanupOldTimerStates', () => {
+    beforeEach(() => {
+      // 各テスト前にlocalStorageをクリア
+      localStorage.clear()
+    })
+
     test('正常系：24時間以上経過したタイマー状態を削除する', () => {
       // Given: 古いタイマー状態と新しいタイマー状態が保存されている
       const recipeId = 'recipe-1'
@@ -308,17 +83,21 @@ describe('timer-persistence', () => {
         isRunning: true,
         isPaused: false,
       }
-      saveTimerState(recipeId, oldTimerState)
-      saveTimerState(recipeId, newTimerState)
+      // localStorageに直接保存（Jotaiを使わずにテスト）
+      const key = `cookscan-active-timers-${recipeId}`
+      const states = new Map<string, PersistedTimerState>()
+      states.set('step-1', oldTimerState)
+      states.set('step-2', newTimerState)
+      localStorage.setItem(key, JSON.stringify(Array.from(states.entries())))
 
       // When: 古いタイマー状態をクリーンアップする
       cleanupOldTimerStates()
 
       // Then: 古いタイマーが削除され、新しいタイマーが残る
-      const saved = getTimerStates(recipeId)
-      expect(saved.size).toBe(1)
-      expect(saved.get('step-2')).toEqual(newTimerState)
-      expect(saved.get('step-1')).toBeUndefined()
+      const saved = JSON.parse(localStorage.getItem(key) || '[]') as Array<[string, PersistedTimerState]>
+      expect(saved.length).toBe(1)
+      expect(saved[0][0]).toBe('step-2')
+      expect(saved[0][1]).toEqual(newTimerState)
     })
 
     test('正常系：すべてのタイマーが古い場合はキーごと削除される', () => {
@@ -336,8 +115,10 @@ describe('timer-persistence', () => {
         isRunning: true,
         isPaused: false,
       }
-      saveTimerState(recipeId, oldTimerState)
       const key = `cookscan-active-timers-${recipeId}`
+      const states = new Map<string, PersistedTimerState>()
+      states.set('step-1', oldTimerState)
+      localStorage.setItem(key, JSON.stringify(Array.from(states.entries())))
 
       // When: 古いタイマー状態をクリーンアップする
       cleanupOldTimerStates()

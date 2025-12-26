@@ -1,9 +1,11 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useAtomValue, useSetAtom } from 'jotai'
 import { Card, CardHeader, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { getTimerStates, clearAllTimerStates, calculateRemainingSeconds } from '@/utils/timer-persistence'
+import { createRecipeTimerStatesAtom, createStopAllTimersAtom } from './atoms/timer-atoms'
+import { calculateRemainingSeconds } from '@/utils/timer-persistence'
 
 type ActiveTimer = {
   stepId: string
@@ -38,6 +40,8 @@ export function CookingTimerManager({
   onStopAll,
 }: CookingTimerManagerProps) {
   const [activeTimers, setActiveTimers] = useState<ActiveTimer[]>([])
+  const timerStates = useAtomValue(createRecipeTimerStatesAtom(recipeId))
+  const stopAllTimers = useSetAtom(createStopAllTimersAtom(recipeId))
 
   // アクティブタイマーの情報を更新
   useEffect(() => {
@@ -46,7 +50,6 @@ export function CookingTimerManager({
       return
     }
 
-    const timerStates = getTimerStates(recipeId)
     const timers: ActiveTimer[] = []
 
     activeTimerIds.forEach(stepId => {
@@ -72,7 +75,7 @@ export function CookingTimerManager({
     // ステップ番号順にソート
     timers.sort((a, b) => a.stepNumber - b.stepNumber)
     setActiveTimers(timers)
-  }, [recipeId, activeTimerIds])
+  }, [recipeId, activeTimerIds, timerStates])
 
   // 1秒ごとに残り時間を更新
   useEffect(() => {
@@ -82,7 +85,6 @@ export function CookingTimerManager({
     }
 
     const interval = setInterval(() => {
-      const timerStates = getTimerStates(recipeId)
       const timers: ActiveTimer[] = []
 
       activeTimerIds.forEach(stepId => {
@@ -110,10 +112,10 @@ export function CookingTimerManager({
     }, 1000)
 
     return () => clearInterval(interval)
-  }, [recipeId, activeTimerIds])
+  }, [recipeId, activeTimerIds, timerStates])
 
   const handleStopAll = () => {
-    clearAllTimerStates(recipeId)
+    stopAllTimers()
     onStopAll?.()
   }
 
