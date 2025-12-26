@@ -60,11 +60,9 @@ export function useCookingTimer({
     setPausedAt(persisted.pausedAt)
     setPausedRemainingSeconds(persisted.pausedRemainingSeconds)
 
-    // タイマーが終了していたらクリーンアップ
+    // タイマーが終了していたら通知を表示（atomには保持）
     if (remaining <= 0 && persisted.isRunning) {
-      const updated = new Map<string, PersistedTimerState>(timerStates)
-      updated.delete(stepId)
-      setTimerStates(updated)
+      setIsRunning(false)
       showTimerNotification(persisted.stepNumber, persisted.instruction)
     }
   }, [timerStates, stepId, initialSeconds, setTimerStates])
@@ -86,8 +84,20 @@ export function useCookingTimer({
       // タイマー終了時の処理
       if (remaining <= 0) {
         setIsRunning(false)
+        // タイマー終了後もatomに保持（完了状態を表示するため）
         const updated = new Map<string, PersistedTimerState>(timerStates)
-        updated.delete(stepId)
+        updated.set(stepId, {
+          stepId,
+          recipeId,
+          stepNumber,
+          instruction,
+          totalSeconds: initialSeconds,
+          startedAt,
+          pausedAt: null,
+          pausedRemainingSeconds: 0, // 完了状態
+          isRunning: false,
+          isPaused: false,
+        })
         setTimerStates(updated)
         showTimerNotification(stepNumber, instruction)
       } else {

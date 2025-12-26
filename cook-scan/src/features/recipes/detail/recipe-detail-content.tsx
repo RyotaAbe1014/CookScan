@@ -55,32 +55,20 @@ type RecipeDetailContentProps = {
 export function RecipeDetailContent({ recipe }: RecipeDetailContentProps) {
   const memo = formatMemo(recipe.memo)
   const sourceInfo = getSourceInfo(recipe.sourceInfo)
-  const [activeTimerIds, setActiveTimerIds] = useState<Set<string>>(new Set())
 
   // ページマウント時に古いタイマー状態をクリーンアップ
   useEffect(() => {
     cleanupOldTimerStates()
   }, [])
 
-  const handleActiveTimerChange = (updatedTimerIds: Set<string>) => {
-    setActiveTimerIds(updatedTimerIds)
-  }
-
   const handleStopAll = () => {
-    setActiveTimerIds(new Set())
+    // タイマーの停止はatomで管理されるため、ここでは何もしない
   }
 
   return (
     <div className="space-y-8">
       {/* アクティブタイマー一覧（ページ上部） */}
-      {activeTimerIds.size > 0 && (
-        <CookingTimerManager
-          recipeId={recipe.id}
-          activeTimerIds={activeTimerIds}
-          steps={recipe.steps}
-          onStopAll={handleStopAll}
-        />
-      )}
+      <CookingTimerManager recipeId={recipe.id} onStopAll={handleStopAll} />
 
       {/* キャプチャ対象: 料理名と登録日、レシピ画像とソース情報、材料と調理手順 */}
       <div id="recipe-detail-capture" className="space-y-8">
@@ -109,11 +97,7 @@ export function RecipeDetailContent({ recipe }: RecipeDetailContentProps) {
           {/* 右側: 材料と調理手順 */}
           <div className="lg:col-span-2">
             <RecipeIngredients ingredients={recipe.ingredients} />
-            <RecipeSteps
-              recipeId={recipe.id}
-              steps={recipe.steps}
-              onActiveTimerChange={handleActiveTimerChange}
-            />
+            <RecipeSteps recipeId={recipe.id} steps={recipe.steps} />
           </div>
         </div>
       </div>

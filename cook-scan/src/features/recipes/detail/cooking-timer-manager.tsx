@@ -17,13 +17,6 @@ type ActiveTimer = {
 
 type CookingTimerManagerProps = {
   recipeId: string
-  activeTimerIds: Set<string>
-  steps: Array<{
-    id: string
-    orderIndex: number
-    instruction: string
-    timerSeconds: number | null
-  }>
   onStopAll?: () => void
 }
 
@@ -36,26 +29,22 @@ function formatTime(seconds: number): string {
 
 export function CookingTimerManager({
   recipeId,
-  activeTimerIds,
   onStopAll,
 }: CookingTimerManagerProps) {
   const [activeTimers, setActiveTimers] = useState<ActiveTimer[]>([])
   const timerStates = useAtomValue(createRecipeTimerStatesAtom(recipeId))
   const stopAllTimers = useSetAtom(createStopAllTimersAtom(recipeId))
 
-  // アクティブタイマーの情報を更新
+  // アクティブタイマーの情報を更新（atomから直接取得）
   useEffect(() => {
-    if (activeTimerIds.size === 0) {
+    if (timerStates.size === 0) {
       setActiveTimers([])
       return
     }
 
     const timers: ActiveTimer[] = []
 
-    activeTimerIds.forEach(stepId => {
-      const persisted = timerStates.get(stepId)
-      if (!persisted) return
-
+    timerStates.forEach((persisted, stepId) => {
       const remaining = calculateRemainingSeconds(
         persisted.totalSeconds,
         persisted.startedAt,
@@ -75,11 +64,11 @@ export function CookingTimerManager({
     // ステップ番号順にソート
     timers.sort((a, b) => a.stepNumber - b.stepNumber)
     setActiveTimers(timers)
-  }, [recipeId, activeTimerIds, timerStates])
+  }, [recipeId, timerStates])
 
-  // 1秒ごとに残り時間を更新
+  // 1秒ごとに残り時間を更新（atomから直接取得）
   useEffect(() => {
-    if (activeTimerIds.size === 0) {
+    if (timerStates.size === 0) {
       setActiveTimers([])
       return
     }
@@ -87,10 +76,7 @@ export function CookingTimerManager({
     const interval = setInterval(() => {
       const timers: ActiveTimer[] = []
 
-      activeTimerIds.forEach(stepId => {
-        const persisted = timerStates.get(stepId)
-        if (!persisted) return
-
+      timerStates.forEach((persisted, stepId) => {
         const remaining = calculateRemainingSeconds(
           persisted.totalSeconds,
           persisted.startedAt,
@@ -112,7 +98,7 @@ export function CookingTimerManager({
     }, 1000)
 
     return () => clearInterval(interval)
-  }, [recipeId, activeTimerIds, timerStates])
+  }, [recipeId, timerStates])
 
   const handleStopAll = () => {
     stopAllTimers()

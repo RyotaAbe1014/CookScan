@@ -1,6 +1,5 @@
 'use client'
 
-import { useCallback, useRef } from 'react'
 import { Card, CardHeader, CardContent } from '@/components/ui/card'
 import { StepTimer } from './step-timer'
 
@@ -14,25 +13,9 @@ type Step = {
 type RecipeStepsProps = {
   recipeId: string
   steps: Step[]
-  onActiveTimerChange?: (activeTimerIds: Set<string>) => void
 }
 
-export function RecipeSteps({ recipeId, steps, onActiveTimerChange }: RecipeStepsProps) {
-  const activeTimerIdsRef = useRef<Set<string>>(new Set())
-
-  const handleActiveChange = useCallback(
-    (stepId: string, isActive: boolean) => {
-      const updated = new Set(activeTimerIdsRef.current)
-      if (isActive) {
-        updated.add(stepId)
-      } else {
-        updated.delete(stepId)
-      }
-      activeTimerIdsRef.current = updated
-      onActiveTimerChange?.(updated)
-    },
-    [onActiveTimerChange]
-  )
+export function RecipeSteps({ recipeId, steps }: RecipeStepsProps) {
 
   return (
     <Card>
@@ -70,7 +53,6 @@ export function RecipeSteps({ recipeId, steps, onActiveTimerChange }: RecipeStep
                       stepNumber={step.orderIndex}
                       instruction={step.instruction}
                       timerSeconds={step.timerSeconds}
-                      onActiveChange={handleActiveChange}
                     />
                   )}
                 </div>
