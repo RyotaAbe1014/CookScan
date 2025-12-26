@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 
 import { updateRecipe } from './actions'
 import type { UpdateRecipeRequest } from './types'
@@ -215,9 +216,11 @@ export default function RecipeEditForm({ recipe }: Props) {
                   </div>
                   <h3 className="text-lg font-bold text-gray-900">レシピ画像</h3>
                 </div>
-                <img
+                <Image
                   src={recipe.imageUrl}
                   alt="レシピ画像"
+                  width={800}
+                  height={256}
                   className="mx-auto max-h-64 rounded-xl object-contain shadow-md"
                 />
               </div>

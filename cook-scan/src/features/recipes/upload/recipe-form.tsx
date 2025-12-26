@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import Image from 'next/image'
 
 import type { ExtractedRecipeData } from './types'
 import { createRecipe } from './actions'
@@ -140,9 +141,11 @@ export default function RecipeForm({ imageUrl, extractedData }: Props) {
                 </div>
                 <h3 className="text-lg font-bold text-gray-900">アップロードした画像</h3>
               </div>
-              <img
+              <Image
                 src={imageUrl}
                 alt="レシピ画像"
+                width={800}
+                height={256}
                 className="mx-auto max-h-64 rounded-xl object-contain shadow-md"
               />
             </CardContent>

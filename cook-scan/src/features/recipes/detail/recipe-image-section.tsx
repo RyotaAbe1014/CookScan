@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import { Card, CardContent } from '@/components/ui/card'
 
 type RecipeImageSectionProps = {
@@ -22,7 +23,13 @@ export function RecipeImageSection({ imageUrl, title }: RecipeImageSectionProps)
           </div>
           <h3 className="text-lg font-bold text-gray-900">レシピ画像</h3>
         </div>
-        <img src={imageUrl} alt={title} className="w-full rounded-xl object-cover shadow-md" />
+        <Image
+          src={imageUrl}
+          alt={title}
+          width={800}
+          height={600}
+          className="w-full rounded-xl object-cover shadow-md"
+        />
       </CardContent>
     </Card>
   )

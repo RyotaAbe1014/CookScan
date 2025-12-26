@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 
 type Recipe = {
   id: string
@@ -27,9 +28,11 @@ export function RecipeGrid({ recipes }: RecipeGridProps) {
           <div className="relative overflow-hidden rounded-xl bg-white shadow-md ring-1 ring-gray-900/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
             {recipe.imageUrl && (
               <div className="relative h-48 overflow-hidden bg-gray-200">
-                <img
+                <Image
                   src={recipe.imageUrl}
                   alt={recipe.title}
+                  width={400}
+                  height={192}
                   className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-linear-to-t from-black/20 to-transparent" />

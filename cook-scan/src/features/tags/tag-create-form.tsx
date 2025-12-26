@@ -66,7 +66,7 @@ export function TagCreateForm({ categories }: TagCreateFormProps) {
       } else {
         setTagError(result.error || 'タグの作成に失敗しました')
       }
-    } catch (error) {
+    } catch (_error) {
       setTagError('タグの作成中にエラーが発生しました')
     } finally {
       setIsSubmittingTag(false)
@@ -98,7 +98,7 @@ export function TagCreateForm({ categories }: TagCreateFormProps) {
       } else {
         setCategoryError(result.error || 'カテゴリの作成に失敗しました')
       }
-    } catch (error) {
+    } catch (_error) {
       setCategoryError('カテゴリの作成中にエラーが発生しました')
     } finally {
       setIsSubmittingCategory(false)

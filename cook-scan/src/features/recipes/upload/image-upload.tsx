@@ -1,6 +1,7 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
+import Image from 'next/image'
 import type { ExtractedRecipeData, ExtractResponse } from './types'
 import { Button } from '@/components/ui/button'
 
@@ -43,7 +44,7 @@ export default function ImageUpload({ onUpload, onUploadingChange }: Props) {
     }
   }
 
-  const handleFile = (file: File) => {
+  const handleFile = useCallback((file: File) => {
     if (!file.type.startsWith('image/')) {
       alert('画像ファイルを選択してください')
       return
@@ -55,9 +56,9 @@ export default function ImageUpload({ onUpload, onUploadingChange }: Props) {
       setPreview(e.target?.result as string)
     }
     reader.readAsDataURL(file)
-  }
+  }, [])
 
-  const handlePaste = (e: ClipboardEvent) => {
+  const handlePaste = useCallback((e: ClipboardEvent) => {
     const items = e.clipboardData?.items
     if (!items) return
 
@@ -72,14 +73,14 @@ export default function ImageUpload({ onUpload, onUploadingChange }: Props) {
         break
       }
     }
-  }
+  }, [handleFile])
 
   useEffect(() => {
     document.addEventListener('paste', handlePaste)
     return () => {
       document.removeEventListener('paste', handlePaste)
     }
-  }, [])
+  }, [handlePaste])
 
   const handleUpload = async () => {
     if (!selectedFile || !preview) return
@@ -196,9 +197,12 @@ export default function ImageUpload({ onUpload, onUploadingChange }: Props) {
       ) : (
         <div className="overflow-hidden rounded-xl bg-white p-6 shadow-lg ring-1 ring-gray-900/5">
           <div className="relative">
-            <img
+            <Image
               src={preview}
               alt="アップロードされた画像"
+              width={800}
+              height={384}
+              unoptimized
               className="mx-auto max-h-96 rounded-xl object-contain shadow-md"
             />
             <button

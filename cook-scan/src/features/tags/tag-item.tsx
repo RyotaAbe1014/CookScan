@@ -45,7 +45,7 @@ export function TagItem({ tag, usageCount, isUserOwned }: TagItemProps) {
       } else {
         setError(result.error || 'タグの更新に失敗しました')
       }
-    } catch (error) {
+    } catch (_error) {
       setError('タグの更新中にエラーが発生しました')
     } finally {
       setIsSubmitting(false)
@@ -68,7 +68,7 @@ export function TagItem({ tag, usageCount, isUserOwned }: TagItemProps) {
         setIsSubmitting(false)
       }
       // 成功時はページがリロードされるのでローディング状態を維持
-    } catch (error) {
+    } catch (_error) {
       setError('タグの削除中にエラーが発生しました')
       setIsSubmitting(false)
     }

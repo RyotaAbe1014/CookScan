@@ -57,7 +57,7 @@ export function CategoryItem({ category, currentUserId }: CategoryItemProps) {
       } else {
         setError(result.error || 'カテゴリの更新に失敗しました')
       }
-    } catch (error) {
+    } catch (_error) {
       setError('カテゴリの更新中にエラーが発生しました')
     } finally {
       setIsSubmitting(false)
@@ -80,7 +80,7 @@ export function CategoryItem({ category, currentUserId }: CategoryItemProps) {
         setIsSubmitting(false)
       }
       // 成功時はページがリロードされるのでローディング状態を維持
-    } catch (error) {
+    } catch (_error) {
       setError('カテゴリの削除中にエラーが発生しました')
       setIsSubmitting(false)
     }

@@ -9,7 +9,7 @@ type ErrorPageContentProps = {
   reset: () => void
 }
 
-export function ErrorPageContent({ error, reset }: ErrorPageContentProps) {
+export function ErrorPageContent({ error: _error, reset: _reset }: ErrorPageContentProps) {
   return (
     <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-indigo-50 via-white to-purple-50 px-4 py-8">
       <div className="absolute inset-0 bg-linear-to-br from-indigo-500/5 via-purple-500/5 to-pink-500/5 pointer-events-none" />

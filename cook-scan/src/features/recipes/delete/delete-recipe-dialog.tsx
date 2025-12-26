@@ -29,7 +29,7 @@ export default function DeleteRecipeDialog({ recipeId, recipeTitle, isOpen, onCl
         } else {
           alert(result.error || 'レシピの削除に失敗しました')
         }
-      } catch (error) {
+      } catch (_error) {
         alert('エラーが発生しました')
       }
       finally {

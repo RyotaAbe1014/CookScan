@@ -41,7 +41,7 @@ export async function createRecipe(request: CreateRecipeRequest) {
       // Create ingredients
       if (ingredients.length > 0) {
         await tx.ingredient.createMany({
-          data: ingredients.map((ingredient, index) => ({
+          data: ingredients.map((ingredient) => ({
             recipeId: newRecipe.id,
             name: ingredient.name,
             unit: ingredient.unit || null,
