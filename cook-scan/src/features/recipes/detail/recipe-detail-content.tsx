@@ -1,3 +1,6 @@
+'use client'
+
+import { useState, useEffect } from 'react'
 import { RecipeImageSection } from './recipe-image-section'
 import { RecipeSourceInfo } from './recipe-source-info'
 import { RecipeMemo } from './recipe-memo'
@@ -5,7 +8,9 @@ import { RecipeTagsSection } from './recipe-tags-section'
 import { RecipeIngredients } from './recipe-ingredients'
 import { RecipeSteps } from './recipe-steps'
 import { RecipeDetailActions } from './recipe-detail-actions'
+import { CookingTimerManager } from './cooking-timer-manager'
 import { formatMemo, getSourceInfo } from './utils'
+import { cleanupOldTimerStates } from '@/utils/timer-persistence'
 
 type Recipe = {
   id: string
@@ -51,13 +56,25 @@ export function RecipeDetailContent({ recipe }: RecipeDetailContentProps) {
   const memo = formatMemo(recipe.memo)
   const sourceInfo = getSourceInfo(recipe.sourceInfo)
 
+  // ページマウント時に古いタイマー状態をクリーンアップ
+  useEffect(() => {
+    cleanupOldTimerStates()
+  }, [])
+
+  const handleStopAll = () => {
+    // タイマーの停止はatomで管理されるため、ここでは何もしない
+  }
+
   return (
     <div className="space-y-8">
+      {/* アクティブタイマー一覧（ページ上部） */}
+      <CookingTimerManager recipeId={recipe.id} onStopAll={handleStopAll} />
+
       {/* キャプチャ対象: 料理名と登録日、レシピ画像とソース情報、材料と調理手順 */}
       <div id="recipe-detail-capture" className="space-y-8">
         {/* 料理名と登録日 */}
         <div className="mb-8">
-          <h1 className="bg-linear-to-r from-indigo-600 to-purple-600 bg-clip-text text-2xl font-bold tracking-tight text-transparent sm:text-3xl">
+          <h1 className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-2xl font-bold tracking-tight text-transparent sm:text-3xl">
             {recipe.title}
           </h1>
           <p className="mt-2 flex items-center gap-1.5 text-sm text-gray-600">
@@ -68,7 +85,7 @@ export function RecipeDetailContent({ recipe }: RecipeDetailContentProps) {
           </p>
         </div>
 
-        <div className="grid gap-8 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
           {/* 左側: レシピ画像とソース情報 */}
           <div className="lg:col-span-1">
             {recipe.imageUrl && <RecipeImageSection imageUrl={recipe.imageUrl} title={recipe.title} />}
@@ -80,7 +97,7 @@ export function RecipeDetailContent({ recipe }: RecipeDetailContentProps) {
           {/* 右側: 材料と調理手順 */}
           <div className="lg:col-span-2">
             <RecipeIngredients ingredients={recipe.ingredients} />
-            <RecipeSteps steps={recipe.steps} />
+            <RecipeSteps recipeId={recipe.id} steps={recipe.steps} />
           </div>
         </div>
       </div>

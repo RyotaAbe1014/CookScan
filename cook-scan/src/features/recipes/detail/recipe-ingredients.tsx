@@ -34,7 +34,7 @@ export function RecipeIngredients({ ingredients }: RecipeIngredientsProps) {
             {ingredients.map((ingredient) => (
               <div
                 key={ingredient.id}
-                className="flex items-center justify-between rounded-lg bg-linear-to-r from-gray-50 to-white p-3 ring-1 ring-gray-200 transition-all hover:shadow-md"
+                className="flex items-center justify-between rounded-lg bg-gradient-to-r from-gray-50 to-white p-3 ring-1 ring-gray-200 transition-all hover:shadow-md"
               >
                 <div className="flex items-center gap-2">
                   <div className="h-2 w-2 rounded-full bg-green-500" />

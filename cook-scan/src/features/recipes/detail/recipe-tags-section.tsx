@@ -52,7 +52,7 @@ export function RecipeTagsSection({ recipeTags }: RecipeTagsSectionProps) {
                 {category.tags.map((tag) => (
                   <span
                     key={tag.id}
-                    className="inline-flex items-center gap-1.5 rounded-lg bg-linear-to-r from-indigo-600 to-purple-600 px-3 py-2 text-sm font-medium text-white shadow-lg shadow-indigo-500/30 ring-2 ring-indigo-600"
+                    className="inline-flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-indigo-600 to-purple-600 px-3 py-2 text-sm font-medium text-white shadow-lg shadow-indigo-500/30 ring-2 ring-indigo-600"
                   >
                     <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path
