@@ -1,7 +1,7 @@
 import { createStep, createWorkflow } from '@mastra/core/workflows';
 import { z } from "zod";
 import { generateText } from "ai";
-import { openaiGpt4o } from "../models/openai";
+import { openaiGpt4oMini } from "../models/openai";
 import { convertTextToRecipeStep } from "./steps/convert-text-to-recipe";
 
 const imageToTextStep = createStep({
@@ -18,7 +18,7 @@ const imageToTextStep = createStep({
       const arrayBuffer = await inputData.image.arrayBuffer();
       const buffer = Buffer.from(arrayBuffer);
       const response = await generateText({
-        model: openaiGpt4o,
+        model: openaiGpt4oMini,
         messages: [
           {
             role: 'user',
