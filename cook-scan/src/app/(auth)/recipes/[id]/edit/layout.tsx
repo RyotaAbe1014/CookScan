@@ -1,9 +1,7 @@
 import { ReactNode } from 'react'
 import { AuthLayoutWrapper } from '@/components/layouts/auth-layout-wrapper'
 import { PageContainer } from '@/components/layouts/page-container'
-import { getRecipeById } from '@/features/recipes/detail/actions'
 import Link from 'next/link'
-import { notFound } from 'next/navigation'
 
 type RecipeEditLayoutProps = {
   children: ReactNode
@@ -12,19 +10,13 @@ type RecipeEditLayoutProps = {
 
 export default async function RecipeEditLayout({ children, params }: RecipeEditLayoutProps) {
   const { id } = await params
-  const { recipe, error } = await getRecipeById(id)
-
-  if (error || !recipe) {
-    notFound()
-  }
 
   return (
     <AuthLayoutWrapper
       title="レシピを編集"
-      subtitle={recipe.title}
       rightAction={
         <Link
-          href={`/recipes/${recipe.id}`}
+          href={`/recipes/${id}`}
           className="inline-flex items-center gap-1.5 text-sm text-gray-600 transition-colors hover:text-indigo-600"
         >
           <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
