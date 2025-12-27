@@ -1,5 +1,5 @@
 import { ReactNode } from 'react'
-import { Header } from '@/components/header'
+import { Header } from '@/components/layouts/header'
 
 type AuthLayoutWrapperProps = {
   children: ReactNode
