@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation'
-import { createClient } from '@/utils/supabase/server'
+import { createClient } from '@/lib/supabase/server'
 import { checkExistingProfile } from '@/features/profile/setup/actions'
 import { ProfileSetupPageContent } from '@/features/profile/setup/profile-setup-page-content'
 

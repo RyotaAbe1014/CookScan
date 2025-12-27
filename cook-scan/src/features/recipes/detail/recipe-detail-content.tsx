@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import { RecipeImageSection } from './recipe-image-section'
 import { RecipeSourceInfo } from './recipe-source-info'
 import { RecipeMemo } from './recipe-memo'
@@ -74,7 +74,7 @@ export function RecipeDetailContent({ recipe }: RecipeDetailContentProps) {
       <div id="recipe-detail-capture" className="space-y-8">
         {/* 料理名と登録日 */}
         <div className="mb-8">
-          <h1 className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-2xl font-bold tracking-tight text-transparent sm:text-3xl">
+          <h1 className="bg-linear-to-r from-indigo-600 to-purple-600 bg-clip-text text-2xl font-bold tracking-tight text-transparent sm:text-3xl">
             {recipe.title}
           </h1>
           <p className="mt-2 flex items-center gap-1.5 text-sm text-gray-600">

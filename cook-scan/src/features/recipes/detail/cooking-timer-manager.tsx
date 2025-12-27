@@ -133,10 +133,10 @@ export function CookingTimerManager({
             return (
               <div
                 key={timer.stepId}
-                className="overflow-hidden rounded-xl bg-gradient-to-r from-slate-50 to-white p-3 shadow-sm ring-1 ring-slate-200 transition-all duration-300 hover:shadow-md"
+                className="overflow-hidden rounded-xl bg-linear-to-r from-slate-50 to-white p-3 shadow-sm ring-1 ring-slate-200 transition-all duration-300 hover:shadow-md"
               >
                 <div className="flex items-start gap-3">
-                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-violet-600 text-xs font-bold text-white shadow-sm">
+                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-linear-to-br from-indigo-500 to-violet-600 text-xs font-bold text-white shadow-sm">
                     {timer.stepNumber}
                   </span>
                   <div className="min-w-0 flex-1">
@@ -148,7 +148,7 @@ export function CookingTimerManager({
                     <div className="mt-2 flex items-center gap-2">
                       <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-slate-200">
                         <div
-                          className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-violet-500 transition-all duration-1000"
+                          className="h-full rounded-full bg-linear-to-r from-indigo-500 to-violet-500 transition-all duration-1000"
                           style={{ width: `${progress}%` }}
                         />
                       </div>
