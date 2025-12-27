@@ -4,19 +4,19 @@ A web application that extracts recipe information from food images.
 
 ## Tech Stack
 
-- **Framework**: Next.js 15.4 (App Router)
+- **Framework**: Next.js 15.6 (App Router)
 - **Language**: TypeScript
 - **Database**: PostgreSQL
 - **ORM**: Prisma
-- **Styling**: Tailwind CSS
+- **Styling**: Tailwind CSS v4
 
 ## Setup
 
 ### Prerequisites
 
-- Node.js 18+
+- Node.js 22+
 - Docker Desktop
-- npm or yarn
+- npm
 
 ### Environment Setup
 
