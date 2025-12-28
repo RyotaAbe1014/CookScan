@@ -138,7 +138,7 @@ export function useCookingTimer({
 
     setElapsedSeconds(newElapsedSeconds)
     setRunningSinceSeconds(null)
-    
+
     const remaining = calculateRemainingSeconds(
       initialSeconds,
       newElapsedSeconds,
