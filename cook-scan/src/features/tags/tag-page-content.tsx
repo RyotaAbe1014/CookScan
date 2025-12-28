@@ -30,8 +30,7 @@ export function TagPageContent({ tagCategories, currentUserId }: TagPageContentP
       <TagCreateForm categories={tagCategories} />
 
       {/* タグ一覧セクション */}
-      <div>
-        <div className="mb-6 flex items-center justify-between">
+      <div className="mb-6 flex items-center justify-between">
           <div>
             <h2 className="text-2xl font-bold text-gray-900">登録済みのタグ</h2>
             <p className="mt-1 text-sm text-gray-600">カテゴリごとに整理されたタグ一覧</p>
@@ -60,7 +59,6 @@ export function TagPageContent({ tagCategories, currentUserId }: TagPageContentP
             ))}
           </div>
         )}
-      </div>
     </div>
   )
 }
