@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useAtom } from 'jotai'
-import { createRecipeTimerStatesAtom } from '../atoms/timer-atoms'
+import { recipeTimerStatesAtomFamily } from '../atoms/timer-atoms'
 import { calculateRemainingSeconds, PersistedTimerState } from '@/utils/timer-persistence'
 import { showTimerNotification } from '@/utils/timer-notifications'
 
@@ -26,8 +26,7 @@ export function useCookingTimer({
   const [runningSinceSeconds, setRunningSinceSeconds] = useState<number | null>(null)
   const [startedAt, setStartedAt] = useState<number | null>(null)
 
-  // Jotai atomを使用
-  const [timerStates, setTimerStates] = useAtom(createRecipeTimerStatesAtom(recipeId))
+  const [timerStates, setTimerStates] = useAtom(recipeTimerStatesAtomFamily(recipeId))
 
   // atomの変更を監視して状態を同期
   useEffect(() => {

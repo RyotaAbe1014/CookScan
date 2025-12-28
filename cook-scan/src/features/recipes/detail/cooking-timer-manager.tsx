@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { useAtomValue, useSetAtom } from 'jotai'
 import { Card, CardHeader, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { createRecipeTimerStatesAtom, createStopAllTimersAtom } from './atoms/timer-atoms'
+import { recipeTimerStatesAtomFamily, stopAllTimersAtomFamily } from './atoms/timer-atoms'
 import { calculateRemainingSeconds } from '@/utils/timer-persistence'
 
 type ActiveTimer = {
@@ -28,8 +28,8 @@ function formatTime(seconds: number): string {
 
 export function CookingTimerManager({ recipeId }: CookingTimerManagerProps) {
   const [activeTimers, setActiveTimers] = useState<ActiveTimer[]>([])
-  const timerStates = useAtomValue(createRecipeTimerStatesAtom(recipeId))
-  const stopAllTimers = useSetAtom(createStopAllTimersAtom(recipeId))
+  const timerStates = useAtomValue(recipeTimerStatesAtomFamily(recipeId))
+  const stopAllTimers = useSetAtom(stopAllTimersAtomFamily(recipeId))
 
   // アクティブタイマーの情報を更新（atomから直接取得）
   useEffect(() => {

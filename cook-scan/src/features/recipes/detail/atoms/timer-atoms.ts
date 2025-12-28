@@ -1,5 +1,6 @@
 import { atom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
+import { atomFamily } from 'jotai-family'
 import type { PersistedTimerState } from '@/utils/timer-persistence'
 
 // localStorageのキー
@@ -120,7 +121,7 @@ const timerStatesAtom = atomWithStorage<TimerStatesMap>(
 )
 
 // 特定のレシピのタイマー状態を取得・更新するatom
-export const createRecipeTimerStatesAtom = (recipeId: string) => {
+export const recipeTimerStatesAtomFamily = atomFamily((recipeId: string) => {
   return atom(
     (get) => {
       const allStates = get(timerStatesAtom)
@@ -137,12 +138,12 @@ export const createRecipeTimerStatesAtom = (recipeId: string) => {
       set(timerStatesAtom, allStates)
     }
   )
-}
+})
 
 // 全停止用のatom（レシピIDを渡すとそのレシピのタイマーをクリア）
-export const createStopAllTimersAtom = (recipeId: string) => {
-  const recipeTimerStatesAtom = createRecipeTimerStatesAtom(recipeId)
+export const stopAllTimersAtomFamily = atomFamily((recipeId: string) => {
+  const recipeTimerStatesAtom = recipeTimerStatesAtomFamily(recipeId)
   return atom(null, (get, set) => {
     set(recipeTimerStatesAtom, null)
   })
-}
+})
