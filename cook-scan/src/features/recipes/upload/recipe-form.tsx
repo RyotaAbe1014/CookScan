@@ -84,9 +84,16 @@ export default function RecipeForm({ imageUrl, extractedData }: Props) {
   }
 
   const updateStep = (index: number, field: keyof ExtractedRecipeData['steps'][number], value: string) => {
-    setSteps(steps.map((step, i) =>
-      i === index ? { ...step, [field]: value } : step
-    ))
+    setSteps(steps.map((step, i) => {
+      if (i === index) {
+        if (field === 'timerSeconds') {
+          const numValue = value === '' ? undefined : Number(value)
+          return { ...step, [field]: isNaN(numValue as number) ? undefined : numValue }
+        }
+        return { ...step, [field]: value }
+      }
+      return step
+    }))
   }
 
   const toggleTag = (tagId: string) => {
@@ -424,8 +431,11 @@ export default function RecipeForm({ imageUrl, extractedData }: Props) {
                       <Input
                         type="number"
                         placeholder="タイマー（秒）"
-                        value={step.timerSeconds}
-                        onChange={(e) => updateStep(index, 'timerSeconds', e.target.value)}
+                        value={step.timerSeconds ?? ''}
+                        onChange={(e) => {
+                          const value = e.target.value
+                          updateStep(index, 'timerSeconds', value === '' ? '' : value)
+                        }}
                         size="sm"
                         className="w-28"
                       />
