@@ -3,13 +3,15 @@ export type PersistedTimerState = {
   stepId: string
   stepNumber: number
   instruction: string
-  totalSeconds: number
   recipeId: string
-  startedAt: number // タイマー開始時刻（Unix timestamp）
-  pausedAt: number | null // 一時停止時刻（Unix timestamp）
-  pausedRemainingSeconds: number | null // 一時停止時の残り秒数
-  isRunning: boolean
-  isPaused: boolean
+  // タイマー開始時刻（Unix timestamp）
+  // 開始から24時間以上経ったゴミを削除するための値
+  startedAt: number
+  totalSeconds: number
+  // pause時に確定する累積消費秒
+  elapsedSeconds: number
+  // 動作中なら epoch秒 / 停止中なら null
+  runningSinceSeconds: number | null
 }
 
 // localStorageのキー
@@ -33,21 +35,20 @@ function isLocalStorageAvailable(): boolean {
 // 実行中のタイマーの残り時間を計算
 export function calculateRemainingSeconds(
   totalSeconds: number,
-  startedAt: number,
-  pausedAt: number | null,
-  pausedRemainingSeconds: number | null
+  elapsedSeconds: number,
+  runningSinceSeconds: number | null
 ): number {
-  // 一時停止中の場合: pausedAtとpausedRemainingSecondsの両方が存在する必要がある
-  if (pausedAt !== null && pausedRemainingSeconds !== null) {
-    return pausedRemainingSeconds
+  if (runningSinceSeconds === null) {
+    // 停止中: 確定した累積消費秒から計算
+    return Math.max(0, totalSeconds - elapsedSeconds)
   }
 
-  // 実行中の場合、開始時刻から経過時間を計算
+  // 動作中: 確定した累積消費秒 + 現在の経過時間
   const now = Date.now()
-  const elapsedSeconds = Math.floor((now - startedAt) / 1000)
-  const remaining = totalSeconds - elapsedSeconds
+  const currentElapsed = Math.floor((now - runningSinceSeconds) / 1000)
+  const totalElapsed = elapsedSeconds + currentElapsed
 
-  return Math.max(0, remaining)
+  return Math.max(0, totalSeconds - totalElapsed)
 }
 
 // 古いタイマー状態をクリーンアップ（24時間以上経過）

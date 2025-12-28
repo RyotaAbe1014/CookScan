@@ -22,11 +22,9 @@ export function useCookingTimer({
   initialSeconds,
 }: UseCookingTimerParams) {
   const [remainingSeconds, setRemainingSeconds] = useState(initialSeconds)
-  const [isRunning, setIsRunning] = useState(false)
-  const [isPaused, setIsPaused] = useState(false)
+  const [elapsedSeconds, setElapsedSeconds] = useState(0)
+  const [runningSinceSeconds, setRunningSinceSeconds] = useState<number | null>(null)
   const [startedAt, setStartedAt] = useState<number | null>(null)
-  const [pausedAt, setPausedAt] = useState<number | null>(null)
-  const [pausedRemainingSeconds, setPausedRemainingSeconds] = useState<number | null>(null)
 
   // Jotai atomを使用
   const [timerStates, setTimerStates] = useAtom(createRecipeTimerStatesAtom(recipeId))
@@ -37,53 +35,47 @@ export function useCookingTimer({
 
     if (!persisted) {
       // atomから削除された場合、状態をリセット
-      setIsRunning(false)
-      setIsPaused(false)
+      setElapsedSeconds(0)
+      setRunningSinceSeconds(null)
       setStartedAt(null)
-      setPausedAt(null)
-      setPausedRemainingSeconds(null)
       setRemainingSeconds(initialSeconds)
       return
     }
 
     const remaining = calculateRemainingSeconds(
       persisted.totalSeconds,
-      persisted.startedAt,
-      persisted.pausedAt,
-      persisted.pausedRemainingSeconds
+      persisted.elapsedSeconds,
+      persisted.runningSinceSeconds
     )
 
     setRemainingSeconds(remaining)
-    setIsRunning(persisted.isRunning)
-    setIsPaused(persisted.isPaused)
+    setElapsedSeconds(persisted.elapsedSeconds)
+    setRunningSinceSeconds(persisted.runningSinceSeconds)
     setStartedAt(persisted.startedAt)
-    setPausedAt(persisted.pausedAt)
-    setPausedRemainingSeconds(persisted.pausedRemainingSeconds)
 
     // タイマーが終了していたら通知を表示（atomには保持）
-    if (remaining <= 0 && persisted.isRunning) {
-      setIsRunning(false)
+    if (remaining <= 0 && persisted.runningSinceSeconds !== null) {
+      setRunningSinceSeconds(null)
       showTimerNotification(persisted.stepNumber, persisted.instruction)
     }
   }, [timerStates, stepId, initialSeconds, setTimerStates])
 
   // タイマーのカウントダウン（開始時刻ベース）
   useEffect(() => {
-    if (!isRunning || !startedAt || isPaused) return
+    if (runningSinceSeconds === null || !startedAt) return
 
     const interval = setInterval(() => {
       const remaining = calculateRemainingSeconds(
         initialSeconds,
-        startedAt,
-        pausedAt,
-        pausedRemainingSeconds
+        elapsedSeconds,
+        runningSinceSeconds
       )
 
       setRemainingSeconds(remaining)
 
       // タイマー終了時の処理
       if (remaining <= 0) {
-        setIsRunning(false)
+        setRunningSinceSeconds(null)
         // タイマー終了後もatomに保持（完了状態を表示するため）
         const updated = new Map<string, PersistedTimerState>(timerStates)
         updated.set(stepId, {
@@ -93,39 +85,20 @@ export function useCookingTimer({
           instruction,
           totalSeconds: initialSeconds,
           startedAt,
-          pausedAt: null,
-          pausedRemainingSeconds: 0, // 完了状態
-          isRunning: false,
-          isPaused: false,
+          elapsedSeconds: initialSeconds, // 完了状態
+          runningSinceSeconds: null,
         })
         setTimerStates(updated)
         showTimerNotification(stepNumber, instruction)
-      } else {
-        // 状態を保存（1秒ごと）
-        const updated = new Map<string, PersistedTimerState>(timerStates)
-        updated.set(stepId, {
-          stepId,
-          recipeId,
-          stepNumber,
-          instruction,
-          totalSeconds: initialSeconds,
-          startedAt,
-          pausedAt,
-          pausedRemainingSeconds,
-          isRunning: true,
-          isPaused: false,
-        })
-        setTimerStates(updated)
       }
+      // 動作中はatomを更新しない（グローバルステートの値を1秒単位で更新したくないため）
     }, 1000)
 
     return () => clearInterval(interval)
   }, [
-    isRunning,
+    runningSinceSeconds,
     startedAt,
-    pausedAt,
-    pausedRemainingSeconds,
-    isPaused,
+    elapsedSeconds,
     recipeId,
     stepId,
     initialSeconds,
@@ -138,10 +111,8 @@ export function useCookingTimer({
   const start = () => {
     const now = Date.now()
     setStartedAt(now)
-    setIsRunning(true)
-    setIsPaused(false)
-    setPausedAt(null)
-    setPausedRemainingSeconds(null)
+    setElapsedSeconds(0)
+    setRunningSinceSeconds(now)
 
     const updated = new Map<string, PersistedTimerState>(timerStates)
     updated.set(stepId, {
@@ -151,31 +122,29 @@ export function useCookingTimer({
       instruction,
       totalSeconds: initialSeconds,
       startedAt: now,
-      pausedAt: null,
-      pausedRemainingSeconds: null,
-      isRunning: true,
-      isPaused: false,
+      elapsedSeconds: 0,
+      runningSinceSeconds: now,
     })
     setTimerStates(updated)
   }
 
   const pause = () => {
-    if (!startedAt) return
+    if (runningSinceSeconds === null || !startedAt) return
 
     const now = Date.now()
-    // 最新の残り時間を計算（stateではなく計算値を使用）
-    const currentRemaining = calculateRemainingSeconds(
-      initialSeconds,
-      startedAt,
-      pausedAt,
-      pausedRemainingSeconds
-    )
+    // 現在の累積消費秒を計算
+    const currentElapsed = Math.floor((now - runningSinceSeconds) / 1000)
+    const newElapsedSeconds = elapsedSeconds + currentElapsed
 
-    setPausedAt(now)
-    setPausedRemainingSeconds(currentRemaining)
-    setRemainingSeconds(currentRemaining)
-    setIsRunning(false)
-    setIsPaused(true)
+    setElapsedSeconds(newElapsedSeconds)
+    setRunningSinceSeconds(null)
+    
+    const remaining = calculateRemainingSeconds(
+      initialSeconds,
+      newElapsedSeconds,
+      null
+    )
+    setRemainingSeconds(remaining)
 
     const updated = new Map<string, PersistedTimerState>(timerStates)
     updated.set(stepId, {
@@ -185,26 +154,18 @@ export function useCookingTimer({
       instruction,
       totalSeconds: initialSeconds,
       startedAt,
-      pausedAt: now,
-      pausedRemainingSeconds: currentRemaining,
-      isRunning: false,
-      isPaused: true,
+      elapsedSeconds: newElapsedSeconds,
+      runningSinceSeconds: null,
     })
     setTimerStates(updated)
   }
 
   const resume = () => {
-    if (!pausedAt || pausedRemainingSeconds === null || !startedAt) return
+    if (runningSinceSeconds !== null || !startedAt) return
 
-    // 一時停止時間を考慮して新しい開始時刻を計算
-    const pauseDuration = Date.now() - pausedAt
-    const newStartedAt = startedAt + pauseDuration
-
-    setStartedAt(newStartedAt)
-    setPausedAt(null)
-    setPausedRemainingSeconds(null)
-    setIsRunning(true)
-    setIsPaused(false)
+    const now = Date.now()
+    setRunningSinceSeconds(now)
+    // elapsedSecondsはそのまま保持
 
     const updated = new Map<string, PersistedTimerState>(timerStates)
     updated.set(stepId, {
@@ -213,26 +174,25 @@ export function useCookingTimer({
       stepNumber,
       instruction,
       totalSeconds: initialSeconds,
-      startedAt: newStartedAt,
-      pausedAt: null,
-      pausedRemainingSeconds: null,
-      isRunning: true,
-      isPaused: false,
+      startedAt,
+      elapsedSeconds,
+      runningSinceSeconds: now,
     })
     setTimerStates(updated)
   }
 
   const reset = () => {
-    setIsRunning(false)
-    setIsPaused(false)
+    setElapsedSeconds(0)
+    setRunningSinceSeconds(null)
     setStartedAt(null)
-    setPausedAt(null)
-    setPausedRemainingSeconds(null)
     setRemainingSeconds(initialSeconds)
     const updated = new Map<string, PersistedTimerState>(timerStates)
     updated.delete(stepId)
     setTimerStates(updated)
   }
+
+  const isRunning = runningSinceSeconds !== null
+  const isPaused = runningSinceSeconds === null && elapsedSeconds > 0
 
   return { remainingSeconds, isRunning, isPaused, start, pause, resume, reset }
 }

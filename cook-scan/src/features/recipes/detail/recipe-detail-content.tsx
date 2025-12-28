@@ -55,20 +55,18 @@ type RecipeDetailContentProps = {
 export function RecipeDetailContent({ recipe }: RecipeDetailContentProps) {
   const memo = formatMemo(recipe.memo)
   const sourceInfo = getSourceInfo(recipe.sourceInfo)
+  console.log('recipeDetailContent recipe', recipe)
 
   // ページマウント時に古いタイマー状態をクリーンアップ
   useEffect(() => {
     cleanupOldTimerStates()
   }, [])
 
-  const handleStopAll = () => {
-    // タイマーの停止はatomで管理されるため、ここでは何もしない
-  }
 
   return (
     <div className="space-y-8">
       {/* アクティブタイマー一覧（ページ上部） */}
-      <CookingTimerManager recipeId={recipe.id} onStopAll={handleStopAll} />
+      <CookingTimerManager recipeId={recipe.id} />
 
       {/* キャプチャ対象: 料理名と登録日、レシピ画像とソース情報、材料と調理手順 */}
       <div id="recipe-detail-capture" className="space-y-8">
