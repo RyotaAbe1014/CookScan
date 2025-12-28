@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { useAtomValue, useSetAtom } from 'jotai'
 import { Card, CardHeader, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { createRecipeTimerStatesAtom, createStopAllTimersAtom } from './atoms/timer-atoms'
+import { recipeTimerStatesAtomFamily, stopAllTimersAtomFamily } from './atoms/timer-atoms'
 import { calculateRemainingSeconds } from '@/utils/timer-persistence'
 
 type ActiveTimer = {
@@ -17,7 +17,6 @@ type ActiveTimer = {
 
 type CookingTimerManagerProps = {
   recipeId: string
-  onStopAll?: () => void
 }
 
 // 秒数を分:秒形式にフォーマット
@@ -27,13 +26,10 @@ function formatTime(seconds: number): string {
   return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`
 }
 
-export function CookingTimerManager({
-  recipeId,
-  onStopAll,
-}: CookingTimerManagerProps) {
+export function CookingTimerManager({ recipeId }: CookingTimerManagerProps) {
   const [activeTimers, setActiveTimers] = useState<ActiveTimer[]>([])
-  const timerStates = useAtomValue(createRecipeTimerStatesAtom(recipeId))
-  const stopAllTimers = useSetAtom(createStopAllTimersAtom(recipeId))
+  const timerStates = useAtomValue(recipeTimerStatesAtomFamily(recipeId))
+  const stopAllTimers = useSetAtom(stopAllTimersAtomFamily(recipeId))
 
   // アクティブタイマーの情報を更新（atomから直接取得）
   useEffect(() => {
@@ -47,9 +43,8 @@ export function CookingTimerManager({
     timerStates.forEach((persisted, stepId) => {
       const remaining = calculateRemainingSeconds(
         persisted.totalSeconds,
-        persisted.startedAt,
-        persisted.pausedAt,
-        persisted.pausedRemainingSeconds
+        persisted.elapsedSeconds,
+        persisted.runningSinceSeconds
       )
 
       timers.push({
@@ -79,9 +74,8 @@ export function CookingTimerManager({
       timerStates.forEach((persisted, stepId) => {
         const remaining = calculateRemainingSeconds(
           persisted.totalSeconds,
-          persisted.startedAt,
-          persisted.pausedAt,
-          persisted.pausedRemainingSeconds
+          persisted.elapsedSeconds,
+          persisted.runningSinceSeconds
         )
 
         timers.push({
@@ -102,7 +96,6 @@ export function CookingTimerManager({
 
   const handleStopAll = () => {
     stopAllTimers()
-    onStopAll?.()
   }
 
   if (activeTimers.length === 0) {

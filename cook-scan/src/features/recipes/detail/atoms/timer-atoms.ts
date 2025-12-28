@@ -1,5 +1,6 @@
 import { atom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
+import { atomFamily } from 'jotai-family'
 import type { PersistedTimerState } from '@/utils/timer-persistence'
 
 // localStorageのキー
@@ -120,7 +121,7 @@ const timerStatesAtom = atomWithStorage<TimerStatesMap>(
 )
 
 // 特定のレシピのタイマー状態を取得・更新するatom
-export const createRecipeTimerStatesAtom = (recipeId: string) => {
+export const recipeTimerStatesAtomFamily = atomFamily((recipeId: string) => {
   return atom(
     (get) => {
       const allStates = get(timerStatesAtom)
@@ -137,12 +138,45 @@ export const createRecipeTimerStatesAtom = (recipeId: string) => {
       set(timerStatesAtom, allStates)
     }
   )
-}
+})
 
 // 全停止用のatom（レシピIDを渡すとそのレシピのタイマーをクリア）
-export const createStopAllTimersAtom = (recipeId: string) => {
-  const recipeTimerStatesAtom = createRecipeTimerStatesAtom(recipeId)
+export const stopAllTimersAtomFamily = atomFamily((recipeId: string) => {
+  const recipeTimerStatesAtom = recipeTimerStatesAtomFamily(recipeId)
   return atom(null, (get, set) => {
     set(recipeTimerStatesAtom, null)
   })
-}
+})
+
+// 古いタイマー状態をクリーンアップするatom（24時間以上経過したタイマーを削除）
+export const cleanupOldTimerStatesAtom = atom(null, (get, set) => {
+  const allStates = get(timerStatesAtom)
+  const now = Date.now()
+  const maxAge = 24 * 60 * 60 * 1000 // 24時間
+  const recipeIdsToRemove: string[] = []
+
+  // 各レシピIDのタイマー状態をチェック
+  allStates.forEach((states, recipeId) => {
+    const filtered = new Map<string, PersistedTimerState>()
+
+    states.forEach((state, stepId) => {
+      const age = now - state.startedAt
+      if (age < maxAge) {
+        filtered.set(stepId, state)
+      }
+    })
+
+    if (filtered.size === 0) {
+      // すべてのタイマーが古い場合、レシピIDを削除対象に追加
+      recipeIdsToRemove.push(recipeId)
+    } else if (filtered.size !== states.size) {
+      // 一部のタイマーが古い場合、フィルタリング後の状態で更新
+      set(recipeTimerStatesAtomFamily(recipeId), filtered)
+    }
+  })
+
+  // 空になったレシピIDのatomを削除（nullを設定することでatomFamilyから削除される）
+  recipeIdsToRemove.forEach(recipeId => {
+    set(recipeTimerStatesAtomFamily(recipeId), null)
+  })
+})

@@ -29,7 +29,7 @@ export function StepTimer({
   timerSeconds,
   onActiveChange,
 }: StepTimerProps) {
-  const { remainingSeconds, isRunning, isPaused, start, pause, resume, reset } = useCookingTimer({
+  const { remainingSeconds, isRunning, isPaused, isFinished, start, pause, resume, reset } = useCookingTimer({
     stepId,
     recipeId,
     stepNumber,
@@ -58,7 +58,6 @@ export function StepTimer({
   }
 
   const progress = ((timerSeconds - remainingSeconds) / timerSeconds) * 100
-  const isFinished = remainingSeconds === 0 && !isRunning && !isPaused
 
   // 状態に応じたスタイルクラス
   const getContainerClass = () => {
