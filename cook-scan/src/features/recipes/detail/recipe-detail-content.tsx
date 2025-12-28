@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
+import { useSetAtom } from 'jotai'
 import { RecipeImageSection } from './recipe-image-section'
 import { RecipeSourceInfo } from './recipe-source-info'
 import { RecipeMemo } from './recipe-memo'
@@ -10,7 +11,7 @@ import { RecipeSteps } from './recipe-steps'
 import { RecipeDetailActions } from './recipe-detail-actions'
 import { CookingTimerManager } from './cooking-timer-manager'
 import { formatMemo, getSourceInfo } from './utils'
-import { cleanupOldTimerStates } from '@/utils/timer-persistence'
+import { cleanupOldTimerStatesAtom } from './atoms/timer-atoms'
 
 type Recipe = {
   id: string
@@ -55,12 +56,13 @@ type RecipeDetailContentProps = {
 export function RecipeDetailContent({ recipe }: RecipeDetailContentProps) {
   const memo = formatMemo(recipe.memo)
   const sourceInfo = getSourceInfo(recipe.sourceInfo)
+  const cleanupOldTimerStates = useSetAtom(cleanupOldTimerStatesAtom)
   console.log('recipeDetailContent recipe', recipe)
 
   // ページマウント時に古いタイマー状態をクリーンアップ
   useEffect(() => {
     cleanupOldTimerStates()
-  }, [])
+  }, [cleanupOldTimerStates])
 
 
   return (

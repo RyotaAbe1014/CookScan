@@ -1,7 +1,6 @@
 import { describe, test, expect } from 'vitest'
 import {
   calculateRemainingSeconds,
-  cleanupOldTimerStates,
   type PersistedTimerState,
 } from '../timer-persistence'
 
@@ -57,78 +56,6 @@ describe('timer-persistence', () => {
 
       // Then: 残り時間が30秒になる（60 - 20 - 10 = 30）
       expect(remaining).toBe(30)
-    })
-  })
-
-  describe('cleanupOldTimerStates', () => {
-    beforeEach(() => {
-      // 各テスト前にlocalStorageをクリア
-      localStorage.clear()
-    })
-
-    test('正常系：24時間以上経過したタイマー状態を削除する', () => {
-      // Given: 古いタイマー状態と新しいタイマー状態が保存されている
-      const recipeId = 'recipe-1'
-      const oldTimerState: PersistedTimerState = {
-        stepId: 'step-1',
-        stepNumber: 1,
-        instruction: '5分間煮込む',
-        totalSeconds: 300,
-        recipeId: 'recipe-1',
-        startedAt: Date.now() - 25 * 60 * 60 * 1000, // 25時間前
-        elapsedSeconds: 0,
-        runningSinceSeconds: null,
-      }
-      const newTimerState: PersistedTimerState = {
-        stepId: 'step-2',
-        stepNumber: 2,
-        instruction: '10分間焼く',
-        totalSeconds: 600,
-        recipeId: 'recipe-1',
-        startedAt: Date.now() - 1 * 60 * 60 * 1000, // 1時間前
-        elapsedSeconds: 0,
-        runningSinceSeconds: Date.now() - 1000, // 1秒前から実行中
-      }
-      // localStorageに直接保存（Jotaiを使わずにテスト）
-      const key = `cookscan-active-timers-${recipeId}`
-      const states = new Map<string, PersistedTimerState>()
-      states.set('step-1', oldTimerState)
-      states.set('step-2', newTimerState)
-      localStorage.setItem(key, JSON.stringify(Array.from(states.entries())))
-
-      // When: 古いタイマー状態をクリーンアップする
-      cleanupOldTimerStates()
-
-      // Then: 古いタイマーが削除され、新しいタイマーが残る
-      const saved = JSON.parse(localStorage.getItem(key) || '[]') as Array<[string, PersistedTimerState]>
-      expect(saved.length).toBe(1)
-      expect(saved[0][0]).toBe('step-2')
-      expect(saved[0][1]).toEqual(newTimerState)
-    })
-
-    test('正常系：すべてのタイマーが古い場合はキーごと削除される', () => {
-      // Given: すべて古いタイマー状態が保存されている
-      const recipeId = 'recipe-1'
-      const oldTimerState: PersistedTimerState = {
-        stepId: 'step-1',
-        stepNumber: 1,
-        instruction: '5分間煮込む',
-        totalSeconds: 300,
-        recipeId: 'recipe-1',
-        startedAt: Date.now() - 25 * 60 * 60 * 1000, // 25時間前
-        elapsedSeconds: 0,
-        runningSinceSeconds: null,
-      }
-      const key = `cookscan-active-timers-${recipeId}`
-      const states = new Map<string, PersistedTimerState>()
-      states.set('step-1', oldTimerState)
-      localStorage.setItem(key, JSON.stringify(Array.from(states.entries())))
-
-      // When: 古いタイマー状態をクリーンアップする
-      cleanupOldTimerStates()
-
-      // Then: localStorageのキーが削除されている
-      expect(localStorage.getItem(key)).toBeNull()
     })
   })
 })

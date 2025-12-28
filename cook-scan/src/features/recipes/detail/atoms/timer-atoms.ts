@@ -147,3 +147,36 @@ export const stopAllTimersAtomFamily = atomFamily((recipeId: string) => {
     set(recipeTimerStatesAtom, null)
   })
 })
+
+// 古いタイマー状態をクリーンアップするatom（24時間以上経過したタイマーを削除）
+export const cleanupOldTimerStatesAtom = atom(null, (get, set) => {
+  const allStates = get(timerStatesAtom)
+  const now = Date.now()
+  const maxAge = 24 * 60 * 60 * 1000 // 24時間
+  const recipeIdsToRemove: string[] = []
+
+  // 各レシピIDのタイマー状態をチェック
+  allStates.forEach((states, recipeId) => {
+    const filtered = new Map<string, PersistedTimerState>()
+
+    states.forEach((state, stepId) => {
+      const age = now - state.startedAt
+      if (age < maxAge) {
+        filtered.set(stepId, state)
+      }
+    })
+
+    if (filtered.size === 0) {
+      // すべてのタイマーが古い場合、レシピIDを削除対象に追加
+      recipeIdsToRemove.push(recipeId)
+    } else if (filtered.size !== states.size) {
+      // 一部のタイマーが古い場合、フィルタリング後の状態で更新
+      set(recipeTimerStatesAtomFamily(recipeId), filtered)
+    }
+  })
+
+  // 空になったレシピIDのatomを削除（nullを設定することでatomFamilyから削除される）
+  recipeIdsToRemove.forEach(recipeId => {
+    set(recipeTimerStatesAtomFamily(recipeId), null)
+  })
+})
