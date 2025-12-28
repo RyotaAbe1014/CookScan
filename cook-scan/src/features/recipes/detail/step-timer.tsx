@@ -39,7 +39,7 @@ export function StepTimer({
 
   // 前回のisRunningの値を保持
   const prevIsRunningRef = useRef(isRunning)
-  // onActiveChangeをrefで保持して、依存配列から除外
+  // onActiveChangeをrefで保持
   const onActiveChangeRef = useRef(onActiveChange)
   onActiveChangeRef.current = onActiveChange
 
