@@ -57,7 +57,6 @@ export function RecipeDetailContent({ recipe }: RecipeDetailContentProps) {
   const memo = formatMemo(recipe.memo)
   const sourceInfo = getSourceInfo(recipe.sourceInfo)
   const cleanupOldTimerStates = useSetAtom(cleanupOldTimerStatesAtom)
-  console.log('recipeDetailContent recipe', recipe)
 
   // ページマウント時に古いタイマー状態をクリーンアップ
   useEffect(() => {
