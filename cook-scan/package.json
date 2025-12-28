@@ -22,7 +22,6 @@
     "db:studio:prod": "dotenv -e .env -- prisma studio"
   },
   "dependencies": {
-    "@ai-sdk/google": "^2.0.29",
     "@ai-sdk/openai": "^2.0.64",
     "@mastra/core": "^1.0.0-beta.14",
     "@mastra/libsql": "^1.0.0-beta.8",
