@@ -1,13 +1,8 @@
 import { Card, CardHeader, CardContent } from '@/components/ui/card'
-
-type SourceInfo = {
-  sourceName: string | null
-  pageNumber: string | null
-  sourceUrl: string | null
-}
+import type { SourceInfoDisplay } from '@/types/sourceInfo'
 
 type RecipeSourceInfoProps = {
-  sourceInfo: SourceInfo
+  sourceInfo: SourceInfoDisplay
 }
 
 export function RecipeSourceInfo({ sourceInfo }: RecipeSourceInfoProps) {

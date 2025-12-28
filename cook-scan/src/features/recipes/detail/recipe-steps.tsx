@@ -1,14 +1,8 @@
 'use client'
 
 import { Card, CardHeader, CardContent } from '@/components/ui/card'
+import type { Step } from '@/types/step'
 import { StepTimer } from './step-timer'
-
-type Step = {
-  id: string
-  orderIndex: number
-  instruction: string
-  timerSeconds: number | null
-}
 
 type RecipeStepsProps = {
   recipeId: string

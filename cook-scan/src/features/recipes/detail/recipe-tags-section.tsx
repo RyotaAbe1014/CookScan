@@ -1,17 +1,6 @@
 import { Card, CardHeader, CardContent } from '@/components/ui/card'
+import type { RecipeTag } from '@/types/recipe'
 import { groupTagsByCategory } from './utils'
-
-type RecipeTag = {
-  tagId: string
-  tag: {
-    id: string
-    name: string
-    category: {
-      id: string
-      name: string
-    }
-  }
-}
 
 type RecipeTagsSectionProps = {
   recipeTags: RecipeTag[]

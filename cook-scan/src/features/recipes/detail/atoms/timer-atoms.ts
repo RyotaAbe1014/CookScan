@@ -27,7 +27,7 @@ type TimerStatesMap = Map<string, Map<string, PersistedTimerState>>
 // カスタムストレージアダプター: 既存のlocalStorageキー形式を維持
 const createStorageAdapter = () => {
   return {
-    getItem: (key: string): TimerStatesMap => {
+    getItem: (_key: string): TimerStatesMap => {
       if (!isLocalStorageAvailable()) return new Map()
 
       try {
@@ -93,7 +93,7 @@ const createStorageAdapter = () => {
         console.error('Failed to set timer states:', error)
       }
     },
-    removeItem: (key: string): void => {
+    removeItem: (_key: string): void => {
       if (!isLocalStorageAvailable()) return
 
       try {

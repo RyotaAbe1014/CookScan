@@ -1,11 +1,5 @@
 import { Card, CardHeader, CardContent } from '@/components/ui/card'
-
-type Ingredient = {
-  id: string
-  name: string
-  unit: string | null
-  notes: string | null
-}
+import type { Ingredient } from '@/types/ingredient'
 
 type RecipeIngredientsProps = {
   ingredients: Ingredient[]

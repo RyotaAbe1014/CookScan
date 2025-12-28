@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react'
 import { useSetAtom } from 'jotai'
+import type { RecipeWithRelations } from '@/types/recipe'
 import { RecipeImageSection } from './recipe-image-section'
 import { RecipeSourceInfo } from './recipe-source-info'
 import { RecipeMemo } from './recipe-memo'
@@ -13,44 +14,8 @@ import { CookingTimerManager } from './cooking-timer-manager'
 import { formatMemo, getSourceInfo } from './utils'
 import { cleanupOldTimerStatesAtom } from './atoms/timer-atoms'
 
-type Recipe = {
-  id: string
-  title: string
-  imageUrl: string | null
-  memo: string | null
-  createdAt: Date
-  sourceInfo: Array<{
-    sourceName: string | null
-    pageNumber: string | null
-    sourceUrl: string | null
-  }>
-  ingredients: Array<{
-    id: string
-    name: string
-    unit: string | null
-    notes: string | null
-  }>
-  steps: Array<{
-    id: string
-    orderIndex: number
-    instruction: string
-    timerSeconds: number | null
-  }>
-  recipeTags: Array<{
-    tagId: string
-    tag: {
-      id: string
-      name: string
-      category: {
-        id: string
-        name: string
-      }
-    }
-  }>
-}
-
 type RecipeDetailContentProps = {
-  recipe: Recipe
+  recipe: RecipeWithRelations
 }
 
 export function RecipeDetailContent({ recipe }: RecipeDetailContentProps) {

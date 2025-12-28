@@ -1,24 +1,10 @@
 import { Suspense } from 'react'
+import type { RecipeBasic } from '@/types/recipe'
 import { RecipeSearch } from './recipe-search'
 import { TagFilter } from './tag-filter'
 import { RecipeStatsBar } from './recipe-stats-bar'
 import { RecipeEmptyState } from './recipe-empty-state'
 import { RecipeGrid } from './recipe-grid'
-
-type Recipe = {
-  id: string
-  title: string
-  imageUrl: string | null
-  createdAt: Date
-  ingredients: Array<{ id: string }>
-  recipeTags: Array<{
-    tagId: string
-    tag: {
-      id: string
-      name: string
-    }
-  }>
-}
 
 type TagCategory = {
   id: string
@@ -30,7 +16,7 @@ type TagCategory = {
 }
 
 type RecipeListContentProps = {
-  recipes: Recipe[]
+  recipes: RecipeBasic[]
   tagCategories: TagCategory[]
   selectedTagIds: string[]
   searchQuery: string

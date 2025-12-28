@@ -3,16 +3,12 @@
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { domToJpeg } from 'modern-screenshot'
+import type { RecipeMinimal } from '@/types/recipe'
 import DeleteRecipeDialog from '@/features/recipes/delete/delete-recipe-dialog'
 import { Button } from '@/components/ui/button'
 
-type Recipe = {
-  id: string
-  title: string
-}
-
 type Props = {
-  recipe: Recipe
+  recipe: RecipeMinimal
 }
 
 export function RecipeDetailActions({ recipe }: Props) {

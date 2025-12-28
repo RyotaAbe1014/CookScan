@@ -1,8 +1,5 @@
 import { describe, test, expect } from 'vitest'
-import {
-  calculateRemainingSeconds,
-  type PersistedTimerState,
-} from '../timer-persistence'
+import { calculateRemainingSeconds } from '../timer-persistence'
 
 describe('timer-persistence', () => {
   describe('calculateRemainingSeconds', () => {

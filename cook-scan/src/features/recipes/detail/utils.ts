@@ -1,27 +1,20 @@
-type RecipeTag = {
-  tagId: string
-  tag: {
-    id: string
-    name: string
-    category: {
-      id: string
-      name: string
-    }
-  }
-}
+import type { RecipeTag } from '@/types/recipe'
+import type { SourceInfo, SourceInfoDisplay } from '@/types/sourceInfo'
 
-type SourceInfo = {
-  sourceName: string | null
-  pageNumber: string | null
-  sourceUrl: string | null
-}
-
-export function formatMemo(memo: string | null): string {
+export function formatMemo(memo: string | null | undefined): string {
   return memo || ''
 }
 
-export function getSourceInfo(sourceInfoArray: SourceInfo[]): SourceInfo | null {
-  return sourceInfoArray[0] || null
+export function getSourceInfo(sourceInfoArray: SourceInfo[]): SourceInfoDisplay | null {
+  if (!sourceInfoArray || sourceInfoArray.length === 0) {
+    return null
+  }
+  const first = sourceInfoArray[0]
+  return {
+    sourceName: first.sourceName ?? null,
+    pageNumber: first.pageNumber ?? null,
+    sourceUrl: first.sourceUrl ?? null,
+  }
 }
 
 export function groupTagsByCategory(recipeTags: RecipeTag[]) {

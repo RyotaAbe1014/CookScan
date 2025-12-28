@@ -1,23 +1,9 @@
 import Link from 'next/link'
 import Image from 'next/image'
-
-type Recipe = {
-  id: string
-  title: string
-  imageUrl: string | null
-  createdAt: Date
-  ingredients: Array<{ id: string }>
-  recipeTags: Array<{
-    tagId: string
-    tag: {
-      id: string
-      name: string
-    }
-  }>
-}
+import type { RecipeBasic } from '@/types/recipe'
 
 type RecipeGridProps = {
-  recipes: Recipe[]
+  recipes: RecipeBasic[]
 }
 
 export function RecipeGrid({ recipes }: RecipeGridProps) {

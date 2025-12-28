@@ -40,7 +40,7 @@ export function CookingTimerManager({ recipeId }: CookingTimerManagerProps) {
 
     const timers: ActiveTimer[] = []
 
-    timerStates.forEach((persisted, stepId) => {
+    timerStates.forEach((persisted) => {
       const remaining = calculateRemainingSeconds(
         persisted.totalSeconds,
         persisted.elapsedSeconds,
@@ -71,7 +71,7 @@ export function CookingTimerManager({ recipeId }: CookingTimerManagerProps) {
     const interval = setInterval(() => {
       const timers: ActiveTimer[] = []
 
-      timerStates.forEach((persisted, stepId) => {
+      timerStates.forEach((persisted) => {
         const remaining = calculateRemainingSeconds(
           persisted.totalSeconds,
           persisted.elapsedSeconds,
