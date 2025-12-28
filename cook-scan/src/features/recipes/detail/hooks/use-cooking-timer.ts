@@ -197,7 +197,8 @@ export function useCookingTimer({
   }, [stepId, initialSeconds, setTimerStates])
 
   const isRunning = runningSinceSeconds !== null
-  const isPaused = runningSinceSeconds === null && elapsedSeconds > 0
+  const isPaused = runningSinceSeconds === null && elapsedSeconds > 0 && elapsedSeconds < initialSeconds
+  const isFinished = remainingSeconds === 0 && elapsedSeconds >= initialSeconds
 
-  return { remainingSeconds, isRunning, isPaused, start, pause, resume, reset }
+  return { remainingSeconds, isRunning, isPaused, isFinished, start, pause, resume, reset }
 }
