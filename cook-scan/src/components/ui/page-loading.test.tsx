@@ -1,28 +1,31 @@
 import { render, screen } from '@testing-library/react'
-import { describe, it, expect } from 'vitest'
+import { describe, test, expect } from 'vitest'
 import { PageLoading } from './page-loading'
 
 describe('PageLoading', () => {
-  it('renders loading spinner', () => {
+  test('正常系：ローディングスピナーが表示される', () => {
+    // Given: ページローディングコンポーネントが描画される
     const { container } = render(<PageLoading />)
 
-    // スピナーのSVG要素が存在することを確認
+    // Then: アニメーション付きのスピナーが表示される
     const spinner = container.querySelector('svg')
     expect(spinner).toBeTruthy()
     expect(spinner?.classList.contains('animate-spin')).toBe(true)
   })
 
-  it('displays loading text', () => {
+  test('正常系：読み込み中のテキストが表示される', () => {
+    // Given: ページローディングコンポーネントが描画される
     render(<PageLoading />)
 
-    // "読み込み中..."というテキストが表示されることを確認
+    // Then: "読み込み中..."というテキストが表示される
     expect(screen.getByText('読み込み中...')).toBeDefined()
   })
 
-  it('has correct styling classes', () => {
+  test('正常系：フルスクリーンの中央配置レイアウトで表示される', () => {
+    // Given: ページローディングコンポーネントが描画される
     const { container } = render(<PageLoading />)
 
-    // 最外のdivがmin-h-screenとflex centeringを持つことを確認
+    // Then: 最外のdivがフルスクリーンで中央配置のスタイルを持つ
     const wrapper = container.firstChild as HTMLElement
     expect(wrapper.className).toContain('min-h-screen')
     expect(wrapper.className).toContain('items-center')
