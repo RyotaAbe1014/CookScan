@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { render, screen, waitFor, fireEvent } from '@testing-library/react'
+import { render, screen, waitFor, fireEvent, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import ImageUpload from '../image-upload'
 
@@ -138,7 +138,9 @@ describe('ImageUpload', () => {
       value: mockClipboardData
     })
 
-    document.dispatchEvent(pasteEvent)
+    await act(async () => {
+      document.dispatchEvent(pasteEvent)
+    })
 
     await waitFor(() => {
       expect(screen.getByAltText('アップロードされた画像')).toBeInTheDocument()
