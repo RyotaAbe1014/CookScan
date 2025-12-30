@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useAtomValue, useSetAtom } from 'jotai'
 import { Card, CardHeader, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -27,16 +27,23 @@ function formatTime(seconds: number): string {
 }
 
 export function CookingTimerManager({ recipeId }: CookingTimerManagerProps) {
-  const [activeTimers, setActiveTimers] = useState<ActiveTimer[]>([])
+  const [tick, setTick] = useState(0)
   const timerStates = useAtomValue(recipeTimerStatesAtomFamily(recipeId))
   const stopAllTimers = useSetAtom(stopAllTimersAtomFamily(recipeId))
 
-  // アクティブタイマーの情報を更新（atomから直接取得）
+  // 1秒ごとに再描画して残り時間を更新（atomから直接取得）
   useEffect(() => {
-    if (timerStates.size === 0) {
-      setActiveTimers([])
-      return
-    }
+    if (timerStates.size === 0) return
+
+    const interval = setInterval(() => {
+      setTick((current) => current + 1)
+    }, 1000)
+
+    return () => clearInterval(interval)
+  }, [timerStates])
+
+  const activeTimers = useMemo(() => {
+    if (timerStates.size === 0) return []
 
     const timers: ActiveTimer[] = []
 
@@ -58,41 +65,8 @@ export function CookingTimerManager({ recipeId }: CookingTimerManagerProps) {
 
     // ステップ番号順にソート
     timers.sort((a, b) => a.stepNumber - b.stepNumber)
-    setActiveTimers(timers)
-  }, [recipeId, timerStates])
-
-  // 1秒ごとに残り時間を更新（atomから直接取得）
-  useEffect(() => {
-    if (timerStates.size === 0) {
-      setActiveTimers([])
-      return
-    }
-
-    const interval = setInterval(() => {
-      const timers: ActiveTimer[] = []
-
-      timerStates.forEach((persisted) => {
-        const remaining = calculateRemainingSeconds(
-          persisted.totalSeconds,
-          persisted.elapsedSeconds,
-          persisted.runningSinceSeconds
-        )
-
-        timers.push({
-          stepId: persisted.stepId,
-          stepNumber: persisted.stepNumber,
-          instruction: persisted.instruction,
-          remainingSeconds: remaining,
-          totalSeconds: persisted.totalSeconds,
-        })
-      })
-
-      timers.sort((a, b) => a.stepNumber - b.stepNumber)
-      setActiveTimers(timers)
-    }, 1000)
-
-    return () => clearInterval(interval)
-  }, [recipeId, timerStates])
+    return timers
+  }, [timerStates, tick])
 
   const handleStopAll = () => {
     stopAllTimers()
