@@ -6,10 +6,11 @@ import { StepTimer } from './step-timer'
 
 type RecipeStepsProps = {
   recipeId: string
+  recipeTitle: string
   steps: Step[]
 }
 
-export function RecipeSteps({ recipeId, steps }: RecipeStepsProps) {
+export function RecipeSteps({ recipeId, recipeTitle, steps }: RecipeStepsProps) {
 
   return (
     <Card>
@@ -44,6 +45,7 @@ export function RecipeSteps({ recipeId, steps }: RecipeStepsProps) {
                     <StepTimer
                       stepId={step.id}
                       recipeId={recipeId}
+                      recipeTitle={recipeTitle}
                       stepNumber={step.orderIndex}
                       instruction={step.instruction}
                       timerSeconds={step.timerSeconds}

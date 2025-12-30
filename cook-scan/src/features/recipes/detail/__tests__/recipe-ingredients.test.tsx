@@ -12,7 +12,8 @@ describe('RecipeIngredients', () => {
         name: 'にんじん',
         unit: '1本',
         notes: '皮をむく',
-        orderIndex: 1,
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
       {
         id: '2',
@@ -20,7 +21,8 @@ describe('RecipeIngredients', () => {
         name: 'たまねぎ',
         unit: '2個',
         notes: null,
-        orderIndex: 2,
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
       {
         id: '3',
@@ -28,7 +30,8 @@ describe('RecipeIngredients', () => {
         name: '塩',
         unit: null,
         notes: '適量',
-        orderIndex: 3,
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
     ]
 

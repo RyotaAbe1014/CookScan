@@ -9,6 +9,7 @@ import { showTimerNotification } from '@/utils/timer-notifications'
 type UseCookingTimerParams = {
   stepId: string
   recipeId: string
+  recipeTitle: string
   stepNumber: number
   instruction: string
   initialSeconds: number
@@ -17,6 +18,7 @@ type UseCookingTimerParams = {
 export function useCookingTimer({
   stepId,
   recipeId,
+  recipeTitle,
   stepNumber,
   instruction,
   initialSeconds,
@@ -79,6 +81,7 @@ export function useCookingTimer({
     updated.set(stepId, {
       stepId,
       recipeId,
+      recipeTitle,
       stepNumber,
       instruction,
       totalSeconds: initialSeconds,
@@ -88,7 +91,7 @@ export function useCookingTimer({
     })
     setTimerStates(updated)
     showTimerNotification(stepNumber, instruction)
-  }, [stepId, recipeId, stepNumber, instruction, initialSeconds, startedAt, setTimerStates])
+  }, [stepId, recipeId, recipeTitle, stepNumber, instruction, initialSeconds, startedAt, setTimerStates])
 
   // タイマーのカウントダウン（開始時刻ベース）
   useEffect(() => {
@@ -123,6 +126,7 @@ export function useCookingTimer({
     updated.set(stepId, {
       stepId,
       recipeId,
+      recipeTitle,
       stepNumber,
       instruction,
       totalSeconds: initialSeconds,
@@ -131,7 +135,7 @@ export function useCookingTimer({
       runningSinceSeconds: now,
     })
     setTimerStates(updated)
-  }, [stepId, recipeId, stepNumber, instruction, initialSeconds, setTimerStates])
+  }, [stepId, recipeId, recipeTitle, stepNumber, instruction, initialSeconds, setTimerStates])
 
   const pause = useCallback(() => {
     if (runningSinceSeconds === null || !startedAt) return
@@ -155,6 +159,7 @@ export function useCookingTimer({
     updated.set(stepId, {
       stepId,
       recipeId,
+      recipeTitle,
       stepNumber,
       instruction,
       totalSeconds: initialSeconds,
@@ -163,7 +168,7 @@ export function useCookingTimer({
       runningSinceSeconds: null,
     })
     setTimerStates(updated)
-  }, [runningSinceSeconds, startedAt, elapsedSeconds, stepId, recipeId, stepNumber, instruction, initialSeconds, setTimerStates])
+  }, [runningSinceSeconds, startedAt, elapsedSeconds, stepId, recipeId, recipeTitle, stepNumber, instruction, initialSeconds, setTimerStates])
 
   const resume = useCallback(() => {
     if (runningSinceSeconds !== null || !startedAt) return
@@ -176,6 +181,7 @@ export function useCookingTimer({
     updated.set(stepId, {
       stepId,
       recipeId,
+      recipeTitle,
       stepNumber,
       instruction,
       totalSeconds: initialSeconds,
@@ -184,7 +190,7 @@ export function useCookingTimer({
       runningSinceSeconds: now,
     })
     setTimerStates(updated)
-  }, [runningSinceSeconds, startedAt, elapsedSeconds, stepId, recipeId, stepNumber, instruction, initialSeconds, setTimerStates])
+  }, [runningSinceSeconds, startedAt, elapsedSeconds, stepId, recipeId, recipeTitle, stepNumber, instruction, initialSeconds, setTimerStates])
 
   const reset = useCallback(() => {
     setElapsedSeconds(0)

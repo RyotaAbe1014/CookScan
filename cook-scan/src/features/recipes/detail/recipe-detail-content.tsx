@@ -61,7 +61,7 @@ export function RecipeDetailContent({ recipe }: RecipeDetailContentProps) {
           {/* 右側: 材料と調理手順 */}
           <div className="lg:col-span-2">
             <RecipeIngredients ingredients={recipe.ingredients} />
-            <RecipeSteps recipeId={recipe.id} steps={recipe.steps} />
+            <RecipeSteps recipeId={recipe.id} recipeTitle={recipe.title} steps={recipe.steps} />
           </div>
         </div>
       </div>
