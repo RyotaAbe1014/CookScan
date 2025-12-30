@@ -4,6 +4,7 @@ export type PersistedTimerState = {
   stepNumber: number
   instruction: string
   recipeId: string
+  recipeTitle: string
   // タイマー開始時刻（Unix timestamp）
   // 開始から24時間以上経ったゴミを削除するための値
   startedAt: number

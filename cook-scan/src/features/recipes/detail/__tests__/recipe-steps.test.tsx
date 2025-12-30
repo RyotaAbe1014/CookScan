@@ -14,6 +14,7 @@ vi.mock('../step-timer', () => ({
 
 describe('RecipeSteps', () => {
   const recipeId = 'recipe-1'
+  const recipeTitle = 'テストレシピ'
 
   describe('Given 調理手順が存在する場合', () => {
     const mockSteps: Step[] = [
@@ -23,6 +24,8 @@ describe('RecipeSteps', () => {
         orderIndex: 1,
         instruction: '野菜を切る',
         timerSeconds: null,
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
       {
         id: 'step-2',
@@ -30,6 +33,8 @@ describe('RecipeSteps', () => {
         orderIndex: 2,
         instruction: 'フライパンで炒める',
         timerSeconds: 300,
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
       {
         id: 'step-3',
@@ -37,11 +42,13 @@ describe('RecipeSteps', () => {
         orderIndex: 3,
         instruction: '調味料を加える',
         timerSeconds: null,
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
     ]
 
     it('When コンポーネントをレンダリングする Then 調理手順が表示される', () => {
-      render(<RecipeSteps recipeId={recipeId} steps={mockSteps} />)
+      render(<RecipeSteps recipeId={recipeId} recipeTitle={recipeTitle} steps={mockSteps} />)
 
       expect(screen.getByText('調理手順')).toBeInTheDocument()
       expect(screen.getByText('野菜を切る')).toBeInTheDocument()
@@ -50,7 +57,7 @@ describe('RecipeSteps', () => {
     })
 
     it('When コンポーネントをレンダリングする Then ステップ番号が表示される', () => {
-      render(<RecipeSteps recipeId={recipeId} steps={mockSteps} />)
+      render(<RecipeSteps recipeId={recipeId} recipeTitle={recipeTitle} steps={mockSteps} />)
 
       expect(screen.getByText('1')).toBeInTheDocument()
       expect(screen.getByText('2')).toBeInTheDocument()
@@ -58,7 +65,7 @@ describe('RecipeSteps', () => {
     })
 
     it('When タイマー付きステップをレンダリングする Then StepTimerが表示される', () => {
-      render(<RecipeSteps recipeId={recipeId} steps={mockSteps} />)
+      render(<RecipeSteps recipeId={recipeId} recipeTitle={recipeTitle} steps={mockSteps} />)
 
       // ステップ2にはタイマーがあるのでStepTimerが表示される
       expect(screen.getByTestId('step-timer-2')).toBeInTheDocument()
@@ -66,7 +73,7 @@ describe('RecipeSteps', () => {
     })
 
     it('When タイマーなしステップをレンダリングする Then StepTimerが表示されない', () => {
-      render(<RecipeSteps recipeId={recipeId} steps={mockSteps} />)
+      render(<RecipeSteps recipeId={recipeId} recipeTitle={recipeTitle} steps={mockSteps} />)
 
       // ステップ1と3にはタイマーがないのでStepTimerが表示されない
       expect(screen.queryByTestId('step-timer-1')).not.toBeInTheDocument()
@@ -76,7 +83,7 @@ describe('RecipeSteps', () => {
 
   describe('Given 調理手順が存在しない場合', () => {
     it('When コンポーネントをレンダリングする Then 空の状態メッセージが表示される', () => {
-      render(<RecipeSteps recipeId={recipeId} steps={[]} />)
+      render(<RecipeSteps recipeId={recipeId} recipeTitle={recipeTitle} steps={[]} />)
 
       expect(screen.getByText('調理手順')).toBeInTheDocument()
       expect(screen.getByText('調理手順が登録されていません')).toBeInTheDocument()

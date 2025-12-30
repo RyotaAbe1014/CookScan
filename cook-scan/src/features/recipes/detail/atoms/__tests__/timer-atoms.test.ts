@@ -61,6 +61,7 @@ describe('timer-atoms', () => {
         stepNumber: 1,
         instruction: '古いタイマー',
         recipeId,
+        recipeTitle: 'テストレシピ',
         startedAt: now - maxAge - 60 * 60 * 1000, // 25時間前
         totalSeconds: 60,
         elapsedSeconds: 0,
@@ -73,6 +74,7 @@ describe('timer-atoms', () => {
         stepNumber: 2,
         instruction: '新しいタイマー',
         recipeId,
+        recipeTitle: 'テストレシピ',
         startedAt: now - 60 * 60 * 1000, // 1時間前
         totalSeconds: 60,
         elapsedSeconds: 0,
@@ -109,6 +111,7 @@ describe('timer-atoms', () => {
         stepNumber: 1,
         instruction: '古いタイマー1',
         recipeId: recipe1Id,
+        recipeTitle: 'テストレシピ1',
         startedAt: now - maxAge - 60 * 60 * 1000, // 25時間前
         totalSeconds: 60,
         elapsedSeconds: 0,
@@ -125,6 +128,7 @@ describe('timer-atoms', () => {
         stepNumber: 1,
         instruction: '古いタイマー2',
         recipeId: recipe2Id,
+        recipeTitle: 'テストレシピ2',
         startedAt: now - maxAge - 60 * 60 * 1000, // 25時間前
         totalSeconds: 60,
         elapsedSeconds: 0,
@@ -135,6 +139,7 @@ describe('timer-atoms', () => {
         stepNumber: 2,
         instruction: '新しいタイマー2',
         recipeId: recipe2Id,
+        recipeTitle: 'テストレシピ2',
         startedAt: now - 60 * 60 * 1000, // 1時間前
         totalSeconds: 60,
         elapsedSeconds: 0,
@@ -152,6 +157,7 @@ describe('timer-atoms', () => {
         stepNumber: 1,
         instruction: '新しいタイマー3',
         recipeId: recipe3Id,
+        recipeTitle: 'テストレシピ3',
         startedAt: now - 60 * 60 * 1000, // 1時間前
         totalSeconds: 60,
         elapsedSeconds: 0,
@@ -194,6 +200,7 @@ describe('timer-atoms', () => {
         stepNumber: 1,
         instruction: '古いタイマー1',
         recipeId,
+        recipeTitle: 'テストレシピ',
         startedAt: now - maxAge - 60 * 60 * 1000, // 25時間前
         totalSeconds: 60,
         elapsedSeconds: 0,
@@ -205,6 +212,7 @@ describe('timer-atoms', () => {
         stepNumber: 2,
         instruction: '古いタイマー2',
         recipeId,
+        recipeTitle: 'テストレシピ',
         startedAt: now - maxAge - 2 * 60 * 60 * 1000, // 26時間前
         totalSeconds: 60,
         elapsedSeconds: 0,
@@ -240,6 +248,7 @@ describe('timer-atoms', () => {
         stepNumber: 1,
         instruction: '24時間ちょうどのタイマー',
         recipeId,
+        recipeTitle: 'テストレシピ',
         startedAt: now - maxAge, // 24時間前（ちょうど）
         totalSeconds: 60,
         elapsedSeconds: 0,

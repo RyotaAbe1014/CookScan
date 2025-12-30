@@ -8,6 +8,7 @@ import { requestNotificationPermission } from '@/utils/timer-notifications'
 type StepTimerProps = {
   stepId: string
   recipeId: string
+  recipeTitle: string
   stepNumber: number
   instruction: string
   timerSeconds: number
@@ -24,6 +25,7 @@ function formatTime(seconds: number): string {
 export function StepTimer({
   stepId,
   recipeId,
+  recipeTitle,
   stepNumber,
   instruction,
   timerSeconds,
@@ -32,6 +34,7 @@ export function StepTimer({
   const { remainingSeconds, isRunning, isPaused, isFinished, start, pause, resume, reset } = useCookingTimer({
     stepId,
     recipeId,
+    recipeTitle,
     stepNumber,
     instruction,
     initialSeconds: timerSeconds,

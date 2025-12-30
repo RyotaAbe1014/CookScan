@@ -33,6 +33,7 @@ describe('StepTimer', () => {
   const defaultProps = {
     stepId: 'step-1',
     recipeId: 'recipe-1',
+    recipeTitle: 'テストレシピ',
     stepNumber: 1,
     instruction: 'フライパンで炒める',
     timerSeconds: 300,
