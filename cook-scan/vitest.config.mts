@@ -18,5 +18,22 @@ export default defineConfig({
       'coverage',
       '.claude/**', // .claudeディレクトリを除外
     ],
+    coverage: {
+      provider: 'v8', // V8エンジンベースのカバレッジ（高速・正確）
+      reporter: ['text', 'html', 'json-summary'], // レポート形式
+      exclude: [
+        'node_modules/**',
+        'src/test/**',
+        '**/*.d.ts',
+        '**/*.config.*',
+        '**/*.test.{ts,tsx}',
+        '**/__tests__/**',
+        '.next/**',
+        'dist/**',
+        'coverage/**',
+        '.claude/**',
+      ],
+      all: true, // テストされていないファイルも含める
+    },
   },
 })
