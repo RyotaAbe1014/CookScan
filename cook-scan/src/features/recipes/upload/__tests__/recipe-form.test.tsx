@@ -73,9 +73,12 @@ describe('RecipeForm', () => {
     mockGetAllTagsForRecipe.mockResolvedValue(mockTagCategories)
   })
 
-  it('renders form with extracted data', async () => {
+  it('正常系：抽出されたデータでフォームが表示される', async () => {
+    // Given: 抽出されたデータが準備されている
     render(<RecipeForm imageUrl={null} extractedData={mockExtractedData} />)
 
+    // When: フォームが表示される
+    // Then: 抽出されたデータがフォームに反映されている
     await waitFor(() => {
       expect(screen.getByDisplayValue('テストレシピ')).toBeInTheDocument()
     })
@@ -86,17 +89,25 @@ describe('RecipeForm', () => {
     expect(screen.getByDisplayValue('テストメモ')).toBeInTheDocument()
   })
 
-  it('renders image preview when imageUrl is provided', () => {
+  it('正常系：imageUrlが提供された場合に画像プレビューが表示される', async () => {
+    // Given: imageUrlが提供されている
     render(<RecipeForm imageUrl="test-image.jpg" extractedData={null} />)
 
-    const image = screen.getByAltText('レシピ画像')
-    expect(image).toBeInTheDocument()
-    expect(image).toHaveAttribute('src', 'test-image.jpg')
+    // When: フォームが表示される
+    // Then: 画像プレビューが表示される
+    await waitFor(() => {
+      const image = screen.getByAltText('レシピ画像')
+      expect(image).toBeInTheDocument()
+      expect(image).toHaveAttribute('src', 'test-image.jpg')
+    })
   })
 
-  it('renders ingredients from extracted data', async () => {
+  it('正常系：抽出されたデータから材料が表示される', async () => {
+    // Given: 材料データが含まれた抽出データが準備されている
     render(<RecipeForm imageUrl={null} extractedData={mockExtractedData} />)
 
+    // When: フォームが表示される
+    // Then: 材料が正しく表示される
     await waitFor(() => {
       expect(screen.getByDisplayValue('材料1')).toBeInTheDocument()
     })
@@ -107,9 +118,12 @@ describe('RecipeForm', () => {
     expect(screen.getByDisplayValue('200ml')).toBeInTheDocument()
   })
 
-  it('renders steps from extracted data', async () => {
+  it('正常系：抽出されたデータから手順が表示される', async () => {
+    // Given: 手順データが含まれた抽出データが準備されている
     render(<RecipeForm imageUrl={null} extractedData={mockExtractedData} />)
 
+    // When: フォームが表示される
+    // Then: 手順が正しく表示される
     await waitFor(() => {
       expect(screen.getByDisplayValue('手順1の説明')).toBeInTheDocument()
     })
@@ -118,9 +132,12 @@ describe('RecipeForm', () => {
     expect(screen.getByDisplayValue('60')).toBeInTheDocument()
   })
 
-  it('loads and displays tag categories', async () => {
+  it('正常系：タグカテゴリが読み込まれ表示される', async () => {
+    // Given: タグカテゴリデータがモックされている
     render(<RecipeForm imageUrl={null} extractedData={null} />)
 
+    // When: フォームが表示される
+    // Then: タグカテゴリとタグが表示される
     await waitFor(() => {
       expect(screen.getByText('カテゴリ1')).toBeInTheDocument()
     })
@@ -131,7 +148,8 @@ describe('RecipeForm', () => {
     expect(screen.getByText('タグ3')).toBeInTheDocument()
   })
 
-  it('allows selecting and deselecting tags', async () => {
+  it('正常系：タグを選択・解除できる', async () => {
+    // Given: フォームが表示され、タグが読み込まれている
     const user = userEvent.setup()
     render(<RecipeForm imageUrl={null} extractedData={null} />)
 
@@ -142,16 +160,21 @@ describe('RecipeForm', () => {
     const tag1Label = screen.getByText('タグ1').closest('label')!
     const tag1Checkbox = tag1Label.querySelector('input[type="checkbox"]') as HTMLInputElement
 
-    // Select tag
+    // When: ユーザーがタグをクリックする
     await user.click(tag1Label)
+
+    // Then: タグが選択される
     expect(tag1Checkbox).toBeChecked()
 
-    // Deselect tag
+    // When: ユーザーが再度タグをクリックする
     await user.click(tag1Label)
+
+    // Then: タグが解除される
     expect(tag1Checkbox).not.toBeChecked()
   })
 
-  it('allows adding new ingredient', async () => {
+  it('正常系：新しい材料を追加できる', async () => {
+    // Given: フォームが表示され、既存の材料がある
     const user = userEvent.setup()
     render(<RecipeForm imageUrl={null} extractedData={mockExtractedData} />)
 
@@ -159,14 +182,17 @@ describe('RecipeForm', () => {
       expect(screen.getByDisplayValue('材料1')).toBeInTheDocument()
     })
 
+    // When: ユーザーが「材料を追加」ボタンをクリックする
     const addButton = screen.getByRole('button', { name: /材料を追加/ })
     await user.click(addButton)
 
+    // Then: 材料の入力欄が1つ増える
     const ingredientInputs = screen.getAllByPlaceholderText('材料名')
     expect(ingredientInputs).toHaveLength(3)
   })
 
-  it('allows removing ingredient when more than one exists', async () => {
+  it('正常系：材料が2つ以上ある場合に材料を削除できる', async () => {
+    // Given: フォームが表示され、材料が2つ以上ある
     const user = userEvent.setup()
     render(<RecipeForm imageUrl={null} extractedData={mockExtractedData} />)
 
@@ -178,13 +204,16 @@ describe('RecipeForm', () => {
       btn.querySelector('svg path[d*="M19 7l"]')
     )
 
+    // When: ユーザーが材料の削除ボタンをクリックする
     await user.click(deleteButtons[0])
 
+    // Then: 材料が削除される
     expect(screen.queryByDisplayValue('材料1')).not.toBeInTheDocument()
     expect(screen.getByDisplayValue('材料2')).toBeInTheDocument()
   })
 
-  it('disables ingredient remove button when only one ingredient exists', async () => {
+  it('異常系：材料が1つしかない場合、削除ボタンが無効化される', async () => {
+    // Given: 材料が1つしかないデータが準備されている
     const singleIngredientData = {
       ...mockExtractedData,
       ingredients: [{ name: '材料1', unit: '100g', notes: '' }]
@@ -196,15 +225,20 @@ describe('RecipeForm', () => {
       expect(screen.getByDisplayValue('材料1')).toBeInTheDocument()
     })
 
+    // When: フォームが表示される
+    // Then: 材料の削除ボタンが無効化されている
     const deleteButtons = screen.getAllByRole('button', { name: '' }).filter(btn =>
       btn.querySelector('svg path[d*="M19 7l"]')
     )
 
-    const ingredientDeleteButton = deleteButtons.find(btn => !btn.disabled)
-    expect(deleteButtons.some(btn => btn.disabled)).toBe(true)
+    // 材料が1つしかない場合、材料の削除ボタンは1つだけ存在し、disabledになっている
+    const ingredientDeleteButton = deleteButtons.find(btn => btn.hasAttribute('disabled'))
+    expect(ingredientDeleteButton).toBeDefined()
+    expect(ingredientDeleteButton).toBeDisabled()
   })
 
-  it('allows adding new step', async () => {
+  it('正常系：新しい手順を追加できる', async () => {
+    // Given: フォームが表示され、既存の手順がある
     const user = userEvent.setup()
     render(<RecipeForm imageUrl={null} extractedData={mockExtractedData} />)
 
@@ -212,14 +246,17 @@ describe('RecipeForm', () => {
       expect(screen.getByDisplayValue('手順1の説明')).toBeInTheDocument()
     })
 
+    // When: ユーザーが「手順を追加」ボタンをクリックする
     const addButton = screen.getByRole('button', { name: /手順を追加/ })
     await user.click(addButton)
 
+    // Then: 手順の入力欄が1つ増える
     const stepInputs = screen.getAllByPlaceholderText('手順の説明')
     expect(stepInputs).toHaveLength(3)
   })
 
-  it('allows removing step when more than one exists', async () => {
+  it('正常系：手順が2つ以上ある場合に手順を削除できる', async () => {
+    // Given: フォームが表示され、手順が2つ以上ある
     const user = userEvent.setup()
     render(<RecipeForm imageUrl={null} extractedData={mockExtractedData} />)
 
@@ -231,15 +268,17 @@ describe('RecipeForm', () => {
       btn.querySelector('svg path[d*="M19 7l"]')
     )
 
-    // Find step delete buttons (there should be more delete buttons for both ingredients and steps)
+    // When: ユーザーが手順の削除ボタンをクリックする
     const stepDeleteButton = deleteButtons[deleteButtons.length - 2]
     await user.click(stepDeleteButton)
 
+    // Then: 手順が削除される
     expect(screen.queryByDisplayValue('手順1の説明')).not.toBeInTheDocument()
     expect(screen.getByDisplayValue('手順2の説明')).toBeInTheDocument()
   })
 
-  it('updates ingredient field on user input', async () => {
+  it('正常系：ユーザー入力で材料フィールドが更新される', async () => {
+    // Given: フォームが表示され、材料が入力されている
     const user = userEvent.setup()
     render(<RecipeForm imageUrl={null} extractedData={mockExtractedData} />)
 
@@ -247,14 +286,17 @@ describe('RecipeForm', () => {
       expect(screen.getByDisplayValue('材料1')).toBeInTheDocument()
     })
 
+    // When: ユーザーが材料名を変更する
     const ingredientInput = screen.getByDisplayValue('材料1')
     await user.clear(ingredientInput)
     await user.type(ingredientInput, '新しい材料')
 
+    // Then: 材料名が更新される
     expect(screen.getByDisplayValue('新しい材料')).toBeInTheDocument()
   })
 
-  it('updates step field on user input', async () => {
+  it('正常系：ユーザー入力で手順フィールドが更新される', async () => {
+    // Given: フォームが表示され、手順が入力されている
     const user = userEvent.setup()
     render(<RecipeForm imageUrl={null} extractedData={mockExtractedData} />)
 
@@ -262,14 +304,17 @@ describe('RecipeForm', () => {
       expect(screen.getByDisplayValue('手順1の説明')).toBeInTheDocument()
     })
 
+    // When: ユーザーが手順の説明を変更する
     const stepInput = screen.getByDisplayValue('手順1の説明')
     await user.clear(stepInput)
     await user.type(stepInput, '新しい手順')
 
+    // Then: 手順の説明が更新される
     expect(screen.getByDisplayValue('新しい手順')).toBeInTheDocument()
   })
 
-  it('submits form with correct data and navigates on success', async () => {
+  it('正常系：正しいデータでフォームを送信し、成功時にナビゲートする', async () => {
+    // Given: フォームが表示され、Server Actionが成功を返すようにモックされている
     const user = userEvent.setup()
     mockCreateRecipe.mockResolvedValue({ success: true, recipeId: 'recipe-123' })
 
@@ -279,9 +324,11 @@ describe('RecipeForm', () => {
       expect(screen.getByDisplayValue('テストレシピ')).toBeInTheDocument()
     })
 
+    // When: ユーザーが送信ボタンをクリックする
     const submitButton = screen.getByRole('button', { name: /レシピを保存/ })
     await user.click(submitButton)
 
+    // Then: Server Actionが正しいデータで呼ばれ、ナビゲートする
     await waitFor(() => {
       expect(mockCreateRecipe).toHaveBeenCalledWith({
         title: 'テストレシピ',
@@ -300,7 +347,8 @@ describe('RecipeForm', () => {
     expect(mockPush).toHaveBeenCalledWith('/recipes/recipe-123')
   })
 
-  it('shows alert on submission error', async () => {
+  it('異常系：送信エラー時にアラートが表示される', async () => {
+    // Given: フォームが表示され、Server Actionがエラーを返すようにモックされている
     const user = userEvent.setup()
     const mockAlert = vi.spyOn(window, 'alert').mockImplementation(() => {})
     mockCreateRecipe.mockResolvedValue({ success: false, error: '保存に失敗しました' })
@@ -311,9 +359,11 @@ describe('RecipeForm', () => {
       expect(screen.getByDisplayValue('テストレシピ')).toBeInTheDocument()
     })
 
+    // When: ユーザーが送信ボタンをクリックする
     const submitButton = screen.getByRole('button', { name: /レシピを保存/ })
     await user.click(submitButton)
 
+    // Then: エラーメッセージがアラートで表示される
     await waitFor(() => {
       expect(mockAlert).toHaveBeenCalledWith('保存に失敗しました')
     })
@@ -321,7 +371,8 @@ describe('RecipeForm', () => {
     mockAlert.mockRestore()
   })
 
-  it('disables submit button when title is empty', async () => {
+  it('異常系：タイトルが空の場合、送信ボタンが無効化される', async () => {
+    // Given: フォームが表示され、タイトルが入力されている
     const user = userEvent.setup()
     render(<RecipeForm imageUrl={null} extractedData={mockExtractedData} />)
 
@@ -329,24 +380,30 @@ describe('RecipeForm', () => {
       expect(screen.getByDisplayValue('テストレシピ')).toBeInTheDocument()
     })
 
+    // When: ユーザーがタイトルをクリアする
     const titleInput = screen.getByDisplayValue('テストレシピ')
     await user.clear(titleInput)
 
+    // Then: 送信ボタンが無効化される
     const submitButton = screen.getByRole('button', { name: /レシピを保存/ })
     expect(submitButton).toBeDisabled()
   })
 
-  it('navigates to recipes page when cancel button is clicked', async () => {
+  it('正常系：キャンセルボタンをクリックするとレシピ一覧ページにナビゲートする', async () => {
+    // Given: フォームが表示されている
     const user = userEvent.setup()
     render(<RecipeForm imageUrl={null} extractedData={null} />)
 
+    // When: ユーザーがキャンセルボタンをクリックする
     const cancelButton = screen.getByRole('button', { name: /キャンセル/ })
     await user.click(cancelButton)
 
+    // Then: レシピ一覧ページにナビゲートする
     expect(mockPush).toHaveBeenCalledWith('/recipes')
   })
 
-  it('submits form with null sourceInfo when all source fields are empty', async () => {
+  it('正常系：すべての出典フィールドが空の場合、sourceInfoがnullで送信される', async () => {
+    // Given: フォームが表示され、出典情報がnullのデータが準備されている
     const user = userEvent.setup()
     mockCreateRecipe.mockResolvedValue({ success: true, recipeId: 'recipe-123' })
 
@@ -357,9 +414,11 @@ describe('RecipeForm', () => {
       expect(screen.getByDisplayValue('テストレシピ')).toBeInTheDocument()
     })
 
+    // When: ユーザーが送信ボタンをクリックする
     const submitButton = screen.getByRole('button', { name: /レシピを保存/ })
     await user.click(submitButton)
 
+    // Then: sourceInfoがnullで送信される
     await waitFor(() => {
       expect(mockCreateRecipe).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -369,7 +428,8 @@ describe('RecipeForm', () => {
     })
   })
 
-  it('submits form with selected tags', async () => {
+  it('正常系：選択されたタグとともにフォームを送信する', async () => {
+    // Given: フォームが表示され、タグが読み込まれている
     const user = userEvent.setup()
     mockCreateRecipe.mockResolvedValue({ success: true, recipeId: 'recipe-123' })
 
@@ -379,13 +439,14 @@ describe('RecipeForm', () => {
       expect(screen.getByText('タグ1')).toBeInTheDocument()
     })
 
-    // Select tags
+    // When: ユーザーがタグを選択して送信する
     await user.click(screen.getByText('タグ1').closest('label')!)
     await user.click(screen.getByText('タグ3').closest('label')!)
 
     const submitButton = screen.getByRole('button', { name: /レシピを保存/ })
     await user.click(submitButton)
 
+    // Then: 選択されたタグとともに送信される
     await waitFor(() => {
       expect(mockCreateRecipe).toHaveBeenCalledWith(
         expect.objectContaining({

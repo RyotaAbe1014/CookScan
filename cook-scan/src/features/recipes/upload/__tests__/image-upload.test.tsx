@@ -274,9 +274,13 @@ describe('ImageUpload', () => {
     expect(secondaryButton).toBeDisabled()
 
     // Resolve the upload
-    resolveUpload!({
-      ok: true,
-      json: async () => ({ success: true, result: { title: 'Test', sourceInfo: null, ingredients: [], steps: [], tags: [] } })
+    await act(async () => {
+      resolveUpload!({
+        ok: true,
+        json: async () => ({ success: true, result: { title: 'Test', sourceInfo: null, ingredients: [], steps: [], tags: [] } })
+      })
+      // Wait for promise to resolve
+      await uploadPromise
     })
   })
 
