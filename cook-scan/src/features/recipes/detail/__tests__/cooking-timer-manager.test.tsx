@@ -62,7 +62,8 @@ describe('CookingTimerManager', () => {
     it('When コンポーネントをレンダリングする Then タイマーマネージャーが表示される', () => {
       render(<CookingTimerManager recipeId={recipeId} />)
 
-      expect(screen.getByText('調理タイマー (1件実行中)')).toBeInTheDocument()
+      expect(screen.getByText('調理タイマー')).toBeInTheDocument()
+      expect(screen.getByText('1件実行中')).toBeInTheDocument()
     })
 
     it('When コンポーネントをレンダリングする Then タイマー情報が表示される', () => {
@@ -122,7 +123,8 @@ describe('CookingTimerManager', () => {
     it('When コンポーネントをレンダリングする Then 正しいタイマー数が表示される', () => {
       render(<CookingTimerManager recipeId={recipeId} />)
 
-      expect(screen.getByText('調理タイマー (3件実行中)')).toBeInTheDocument()
+      expect(screen.getByText('調理タイマー')).toBeInTheDocument()
+      expect(screen.getByText('3件実行中')).toBeInTheDocument()
     })
 
     it('When コンポーネントをレンダリングする Then タイマーがステップ番号順に表示される', () => {
@@ -152,12 +154,11 @@ describe('CookingTimerManager', () => {
       vi.mocked(useAtomValue).mockReturnValue(timerStates)
     })
 
-    it('When コンポーネントをレンダリングする Then テキストが省略される', () => {
+    it('When コンポーネントをレンダリングする Then テキストが全文表示される', () => {
       render(<CookingTimerManager recipeId={recipeId} />)
 
-      // 35文字 + "..." で省略される
-      const expectedText = 'これは非常に長い手順のテキストで、35文字を超えるため省略されるべきで...'
-      expect(screen.getByText(expectedText)).toBeInTheDocument()
+      // 新しいデザインでは全文表示される
+      expect(screen.getByText('これは非常に長い手順のテキストで、35文字を超えるため省略されるべきです。これは非常に長い手順のテキストです。')).toBeInTheDocument()
     })
   })
 })

@@ -77,80 +77,158 @@ export function CookingTimerManager({ recipeId }: CookingTimerManagerProps) {
   }
 
   return (
-    <Card className="sticky top-4 z-10 shadow-xl backdrop-blur-sm">
+    <Card className="sticky top-4 z-10 overflow-hidden border-2 border-orange-300/60 shadow-xl shadow-orange-200/20 backdrop-blur-sm">
+      {/* Decorative header background */}
+      <div className="absolute left-0 right-0 top-0 h-24 bg-linear-to-br from-orange-400/10 via-amber-400/5 to-transparent" />
+
       <CardHeader
         icon={
-          <svg className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
-          </svg>
+          <div className="relative">
+            <div className="absolute inset-0 animate-ping rounded-full bg-orange-300/50" />
+            <svg
+              className="relative h-5 w-5 animate-spin text-white"
+              style={{ animationDuration: '3s' }}
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2.5}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+          </div>
         }
-        iconColor="blue"
-        title={`調理タイマー (${activeTimers.length}件実行中)`}
+        iconColor="amber"
+        title="調理タイマー"
+        actions={
+          <span className="animate-pulse rounded-full bg-orange-600 px-2.5 py-0.5 text-xs font-bold text-white shadow-sm">
+            {activeTimers.length}件実行中
+          </span>
+        }
       />
       <CardContent>
-        <div className="space-y-3">
+        <div className="space-y-4">
           {activeTimers.map((timer) => {
             const progress = ((timer.totalSeconds - timer.remainingSeconds) / timer.totalSeconds) * 100
+            const isNearlyDone = timer.remainingSeconds <= 60
+            const isUrgent = timer.remainingSeconds <= 10
 
             return (
               <div
                 key={timer.stepId}
-                className="overflow-hidden rounded-xl bg-linear-to-r from-slate-50 to-white p-3 shadow-sm ring-1 ring-slate-200 transition-all duration-300 hover:shadow-md"
+                className={`group relative overflow-hidden rounded-2xl border-2 p-4 shadow-lg transition-all duration-300 hover:scale-[1.02] hover:shadow-xl ${
+                  isUrgent
+                    ? 'animate-pulse border-red-400 bg-linear-to-r from-red-50 to-orange-50 shadow-red-200/40'
+                    : isNearlyDone
+                      ? 'border-orange-400 bg-linear-to-r from-orange-50 to-amber-50 shadow-orange-200/30'
+                      : 'border-orange-200/60 bg-linear-to-r from-amber-50/50 to-white shadow-orange-100/20'
+                }`}
               >
-                <div className="flex items-start gap-3">
-                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-linear-to-br from-indigo-500 to-violet-600 text-xs font-bold text-white shadow-sm">
-                    {timer.stepNumber}
-                  </span>
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-medium text-slate-800">
-                      {timer.instruction.length > 35
-                        ? `${timer.instruction.substring(0, 35)}...`
-                        : timer.instruction}
+                {/* Decorative gradient overlay */}
+                <div className="absolute inset-0 bg-linear-to-br from-orange-400/5 via-transparent to-amber-400/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+
+                <div className="relative flex items-start gap-4">
+                  {/* Step number badge */}
+                  <div className="relative shrink-0">
+                    <div className="absolute inset-0 animate-pulse rounded-xl bg-orange-400/20 blur-sm" />
+                    <div className="relative flex h-12 w-12 items-center justify-center rounded-xl bg-linear-to-br from-orange-500 to-orange-600 shadow-lg shadow-orange-600/30">
+                      <span className="text-lg font-bold text-white">{timer.stepNumber}</span>
+                    </div>
+                  </div>
+
+                  <div className="min-w-0 flex-1 space-y-3">
+                    {/* Instruction text */}
+                    <p className="text-sm font-semibold leading-snug text-slate-800">
+                      {timer.instruction}
                     </p>
-                    <div className="mt-2 flex items-center gap-2">
-                      <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-slate-200">
-                        <div
-                          className="h-full rounded-full bg-linear-to-r from-indigo-500 to-violet-500 transition-all duration-1000"
-                          style={{ width: `${progress}%` }}
-                        />
+
+                    {/* Timer display with progress */}
+                    <div className="space-y-2">
+                      {/* Large countdown display */}
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-baseline gap-2">
+                          <span
+                            className={`font-mono text-3xl font-bold tabular-nums tracking-tight transition-colors ${
+                              isUrgent
+                                ? 'text-red-600'
+                                : isNearlyDone
+                                  ? 'text-orange-700'
+                                  : 'text-orange-600'
+                            }`}
+                          >
+                            {formatTime(timer.remainingSeconds)}
+                          </span>
+                          <span className="text-xs font-medium text-orange-600/70">
+                            残り
+                          </span>
+                        </div>
+
+                        {/* Status indicator */}
+                        <div className="flex items-center gap-1.5">
+                          <div
+                            className={`h-2 w-2 animate-pulse rounded-full shadow-sm ${
+                              isUrgent
+                                ? 'bg-red-500 shadow-red-300'
+                                : 'bg-orange-500 shadow-orange-300'
+                            }`}
+                          />
+                          <span className="text-xs font-medium text-orange-700">
+                            {isUrgent ? '完了間近' : '調理中'}
+                          </span>
+                        </div>
                       </div>
-                      <span className="shrink-0 font-mono text-xs font-semibold text-indigo-600">
-                        {formatTime(timer.remainingSeconds)}
-                      </span>
+
+                      {/* Enhanced progress bar */}
+                      <div className="relative">
+                        <div className="h-3 overflow-hidden rounded-full bg-orange-100 shadow-inner">
+                          <div
+                            className={`h-full rounded-full shadow-sm transition-all duration-1000 ease-linear ${
+                              isUrgent
+                                ? 'bg-linear-to-r from-red-500 to-orange-600'
+                                : 'bg-linear-to-r from-orange-500 to-amber-500'
+                            }`}
+                            style={{ width: `${progress}%` }}
+                          />
+                        </div>
+                        {/* Progress percentage */}
+                        <div className="mt-1 flex justify-between text-xs font-medium text-orange-600/60">
+                          <span>0:00</span>
+                          <span>{Math.round(progress)}%</span>
+                          <span>{formatTime(timer.totalSeconds)}</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             )
           })}
+
+          {/* Stop all button */}
           <div className="pt-2">
             <Button
-              variant="danger-ghost"
-              size="sm"
+              variant="danger"
+              size="md"
               onClick={handleStopAll}
-              className="w-full transition-transform hover:scale-[1.02]"
+              className="w-full bg-linear-to-r from-red-600 to-orange-600 font-semibold shadow-lg shadow-red-600/20 transition-all hover:scale-[1.02] hover:shadow-xl hover:shadow-red-600/30"
               aria-label="すべてのタイマーを停止"
             >
-              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  strokeWidth={2}
                   d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                 />
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  strokeWidth={2}
                   d="M9 10a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z"
                 />
               </svg>
-              全停止
+              すべてのタイマーを停止
             </Button>
           </div>
         </div>
