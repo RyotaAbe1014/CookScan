@@ -44,7 +44,9 @@ export function StepTimer({
   const prevIsRunningRef = useRef(isRunning)
   // onActiveChangeをrefで保持
   const onActiveChangeRef = useRef(onActiveChange)
-  onActiveChangeRef.current = onActiveChange
+  useEffect(() => {
+    onActiveChangeRef.current = onActiveChange
+  }, [onActiveChange])
 
   // アクティブ状態の変更を親に通知（isRunningが実際に変わった時のみ）
   useEffect(() => {
