@@ -780,7 +780,7 @@ describe('RecipeEditForm', () => {
 
       // Then: ローディングテキストが表示される
       await waitFor(() => {
-        expect(screen.getByText('更新中...')).toBeInTheDocument()
+        expect(screen.getByText('保存中...')).toBeInTheDocument()
       })
 
       // クリーンアップ
@@ -792,18 +792,25 @@ describe('RecipeEditForm', () => {
   })
 
   describe('キャンセル操作', () => {
-    it('キャンセルリンクが表示される', async () => {
+    it('キャンセルボタンが表示される', async () => {
       // Given: RecipeEditFormが表示されている
+      const user = userEvent.setup()
       render(<RecipeEditForm recipe={mockRecipe} />)
 
       // When: 初期レンダリングされる
       await waitFor(() => {
-        const cancelLink = screen.getByText(/キャンセル/)
+        const cancelButton = screen.getByRole('button', { name: /キャンセル/ })
 
-        // Then: キャンセルリンクが表示される
-        expect(cancelLink).toBeInTheDocument()
-        expect(cancelLink.closest('a')).toHaveAttribute('href', '/recipes/recipe-123')
+        // Then: キャンセルボタンが表示される
+        expect(cancelButton).toBeInTheDocument()
       })
+
+      // When: キャンセルボタンをクリックする
+      const cancelButton = screen.getByRole('button', { name: /キャンセル/ })
+      await user.click(cancelButton)
+
+      // Then: レシピ詳細ページに遷移する
+      expect(mockPush).toHaveBeenCalledWith('/recipes/recipe-123')
     })
 
   })

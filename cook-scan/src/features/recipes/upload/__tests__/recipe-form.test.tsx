@@ -200,9 +200,7 @@ describe('RecipeForm', () => {
       expect(screen.getByDisplayValue('材料1')).toBeInTheDocument()
     })
 
-    const deleteButtons = screen.getAllByRole('button', { name: '' }).filter(btn =>
-      btn.querySelector('svg path[d*="M19 7l"]')
-    )
+    const deleteButtons = screen.getAllByRole('button', { name: '材料を削除' })
 
     // When: ユーザーが材料の削除ボタンをクリックする
     await user.click(deleteButtons[0])
@@ -227,14 +225,8 @@ describe('RecipeForm', () => {
 
     // When: フォームが表示される
     // Then: 材料の削除ボタンが無効化されている
-    const deleteButtons = screen.getAllByRole('button', { name: '' }).filter(btn =>
-      btn.querySelector('svg path[d*="M19 7l"]')
-    )
-
-    // 材料が1つしかない場合、材料の削除ボタンは1つだけ存在し、disabledになっている
-    const ingredientDeleteButton = deleteButtons.find(btn => btn.hasAttribute('disabled'))
-    expect(ingredientDeleteButton).toBeDefined()
-    expect(ingredientDeleteButton).toBeDisabled()
+    const deleteButton = screen.getByRole('button', { name: '材料を削除' })
+    expect(deleteButton).toBeDisabled()
   })
 
   it('正常系：新しい手順を追加できる', async () => {
@@ -264,13 +256,10 @@ describe('RecipeForm', () => {
       expect(screen.getByDisplayValue('手順1の説明')).toBeInTheDocument()
     })
 
-    const deleteButtons = screen.getAllByRole('button', { name: '' }).filter(btn =>
-      btn.querySelector('svg path[d*="M19 7l"]')
-    )
+    const deleteButtons = screen.getAllByRole('button', { name: '手順を削除' })
 
-    // When: ユーザーが手順の削除ボタンをクリックする
-    const stepDeleteButton = deleteButtons[deleteButtons.length - 2]
-    await user.click(stepDeleteButton)
+    // When: ユーザーが最初の手順の削除ボタンをクリックする
+    await user.click(deleteButtons[0])
 
     // Then: 手順が削除される
     expect(screen.queryByDisplayValue('手順1の説明')).not.toBeInTheDocument()

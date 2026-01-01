@@ -7,7 +7,8 @@ import Image from 'next/image'
 import type { ExtractedRecipeData } from './types'
 import { createRecipe } from './actions'
 import { getAllTagsForRecipe } from '@/features/tags/actions'
-import { Button, Input, Textarea, Card, CardHeader, CardContent } from '@/components/ui'
+import { Input, Textarea, Card, CardHeader, CardContent } from '@/components/ui'
+import { IngredientInput, StepInput, FormActions } from '@/features/recipes/components'
 
 type Props = {
   imageUrl: string | null
@@ -339,48 +340,14 @@ export default function RecipeForm({ imageUrl, extractedData }: Props) {
           <CardContent>
             <div className="space-y-3">
               {ingredients.map((ingredient, index) => (
-                <div key={index} className="group flex gap-3 rounded-lg bg-linear-to-r from-gray-50 to-white p-3 ring-1 ring-gray-200 transition-all hover:shadow-md">
-                  <div className="flex-1">
-                    <Input
-                      type="text"
-                      placeholder="材料名"
-                      value={ingredient.name}
-                      onChange={(e) => updateIngredient(index, 'name', e.target.value)}
-                      variant="green"
-                      size="md"
-                    />
-                  </div>
-                  <div className="w-32">
-                    <Input
-                      type="text"
-                      placeholder="分量"
-                      value={ingredient.unit}
-                      onChange={(e) => updateIngredient(index, 'unit', e.target.value)}
-                      variant="green"
-                      size="md"
-                    />
-                  </div>
-                  <div className="flex-1">
-                    <Input
-                      type="text"
-                      placeholder="メモ"
-                      value={ingredient.notes}
-                      onChange={(e) => updateIngredient(index, 'notes', e.target.value)}
-                      variant="green"
-                      size="md"
-                    />
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => removeIngredient(index)}
-                    disabled={ingredients.length === 1}
-                    className="rounded-lg p-2 text-gray-400 transition-all hover:bg-red-50 hover:text-red-500 disabled:cursor-not-allowed disabled:opacity-50"
-                  >
-                    <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                    </svg>
-                  </button>
-                </div>
+                <IngredientInput
+                  key={index}
+                  ingredient={ingredient}
+                  index={index}
+                  canDelete={ingredients.length > 1}
+                  onUpdate={updateIngredient}
+                  onRemove={removeIngredient}
+                />
               ))}
             </div>
           </CardContent>
@@ -412,47 +379,14 @@ export default function RecipeForm({ imageUrl, extractedData }: Props) {
           <CardContent>
             <div className="space-y-4">
               {steps.map((step, index) => (
-                <div key={index} className="group flex gap-3 rounded-lg bg-linear-to-r from-gray-50 to-white p-4 ring-1 ring-gray-200 transition-all hover:shadow-md">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-linear-to-br from-blue-500 to-indigo-600 text-base font-bold text-white shadow-md">
-                    {index + 1}
-                  </div>
-                  <div className="flex-1 space-y-3">
-                    <Textarea
-                      placeholder="手順の説明"
-                      value={step.instruction}
-                      onChange={(e) => updateStep(index, 'instruction', e.target.value)}
-                      rows={2}
-                      variant="blue"
-                    />
-                    <div className="flex items-center gap-2 rounded-lg bg-white p-2 ring-1 ring-gray-200">
-                      <svg className="h-4 w-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                      <Input
-                        type="number"
-                        placeholder="タイマー（秒）"
-                        value={step.timerSeconds ?? ''}
-                        onChange={(e) => {
-                          const value = e.target.value
-                          updateStep(index, 'timerSeconds', value === '' ? '' : value)
-                        }}
-                        size="sm"
-                        className="w-28"
-                      />
-                      <span className="text-sm font-medium text-gray-600">秒</span>
-                    </div>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => removeStep(index)}
-                    disabled={steps.length === 1}
-                    className="rounded-lg p-2 text-gray-400 transition-all hover:bg-red-50 hover:text-red-500 disabled:cursor-not-allowed disabled:opacity-50"
-                  >
-                    <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                    </svg>
-                  </button>
-                </div>
+                <StepInput
+                  key={index}
+                  step={step}
+                  index={index}
+                  canDelete={steps.length > 1}
+                  onUpdate={updateStep}
+                  onRemove={removeStep}
+                />
               ))}
             </div>
           </CardContent>
@@ -460,31 +394,13 @@ export default function RecipeForm({ imageUrl, extractedData }: Props) {
 
         {/* ボタン */}
         <Card>
-          <CardContent className="flex justify-end gap-4">
-          <Button
-            type="button"
-            variant="secondary"
-            onClick={() => router.push('/recipes')}
-            size="lg"
-          >
-            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-            キャンセル
-          </Button>
-          <Button
-            type="submit"
-            disabled={!title}
-            isLoading={isSubmitting}
-            size="lg"
-          >
-            {!isSubmitting && (
-              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
-            )}
-            {isSubmitting ? '保存中...' : 'レシピを保存'}
-          </Button>
+          <CardContent>
+            <FormActions
+              isSubmitting={isSubmitting}
+              disabled={!title}
+              submitLabel="レシピを保存"
+              onCancel={() => router.push('/recipes')}
+            />
           </CardContent>
         </Card>
       </div>
