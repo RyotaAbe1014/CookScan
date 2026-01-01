@@ -1,6 +1,7 @@
 'use server'
 
 import { redirect } from 'next/navigation'
+import { revalidatePath } from 'next/cache'
 import { prisma } from '@/lib/prisma'
 import { checkUserProfile } from '@/features/auth/auth-utils'
 import { Prisma } from '@prisma/client'
@@ -32,15 +33,15 @@ export async function deleteRecipe(recipeId: string) {
       await tx.ingredient.deleteMany({
         where: { recipeId }
       })
-      
+
       await tx.step.deleteMany({
         where: { recipeId }
       })
-      
+
       await tx.sourceInfo.deleteMany({
         where: { recipeId }
       })
-      
+
       await tx.recipeTag.deleteMany({
         where: { recipeId }
       })
@@ -60,12 +61,16 @@ export async function deleteRecipe(recipeId: string) {
         where: { parentRecipeId: recipeId },
         data: { parentRecipeId: null }
       })
-      
+
       // Finally delete the recipe itself
       await tx.recipe.delete({
         where: { id: recipeId }
       })
     })
+
+    // Revalidate recipe list and detail pages
+    revalidatePath('/recipes')
+    revalidatePath(`/recipes/${recipeId}`)
 
     return { success: true }
   } catch (error) {

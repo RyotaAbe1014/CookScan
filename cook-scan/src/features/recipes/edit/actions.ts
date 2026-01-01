@@ -1,6 +1,7 @@
 'use server'
 
 import { redirect } from 'next/navigation'
+import { revalidatePath } from 'next/cache'
 import { prisma } from '@/lib/prisma'
 import { checkUserProfile } from '@/features/auth/auth-utils'
 import { UpdateRecipeRequest, UpdateRecipeResponse } from '@/features/recipes/edit/types'
@@ -115,6 +116,10 @@ export async function updateRecipe(request: UpdateRecipeRequest): Promise<Update
 
       return recipe
     })
+
+    // Revalidate recipe list and detail pages
+    revalidatePath('/recipes')
+    revalidatePath(`/recipes/${recipeId}`)
 
     return { success: true, recipeId: updatedRecipe.id }
   } catch (error) {
