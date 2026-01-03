@@ -12,7 +12,7 @@ describe('timer-notifications', () => {
     global.Notification = {
       permission: 'default',
       requestPermission: vi.fn().mockResolvedValue('granted'),
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+       
     } as any
   })
 
@@ -40,7 +40,7 @@ describe('timer-notifications', () => {
         writable: true,
         value: 'default',
       })
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+       
       ;(global.Notification.requestPermission as any).mockResolvedValue('granted')
 
       // When: 通知許可をリクエストする
@@ -59,7 +59,7 @@ describe('timer-notifications', () => {
         writable: true,
         value: 'default',
       })
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+       
       ;(global.Notification.requestPermission as any).mockResolvedValue('denied')
 
       // When: 通知許可をリクエストする
@@ -90,7 +90,7 @@ describe('timer-notifications', () => {
     test('正常系：通知許可がある場合は通知を表示する', () => {
       // Given: 通知許可が取得されている
       const NotificationConstructor = vi.fn()
-      global.Notification = NotificationConstructor as any // eslint-disable-line @typescript-eslint/no-explicit-any
+      global.Notification = NotificationConstructor as any  
       Object.defineProperty(global.Notification, 'permission', {
         writable: true,
         value: 'granted',
@@ -111,7 +111,7 @@ describe('timer-notifications', () => {
     test('正常系：通知許可がない場合は通知を表示しない', () => {
       // Given: 通知許可が取得されていない
       const NotificationConstructor = vi.fn()
-      global.Notification = NotificationConstructor as any // eslint-disable-line @typescript-eslint/no-explicit-any
+      global.Notification = NotificationConstructor as any  
       Object.defineProperty(global.Notification, 'permission', {
         writable: true,
         value: 'denied',

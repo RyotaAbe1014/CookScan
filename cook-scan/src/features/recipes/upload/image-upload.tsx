@@ -12,10 +12,10 @@ type Props = {
 
 export default function ImageUpload({ onUpload, onUploadingChange }: Props) {
   const [isDragging, setIsDragging] = useState(false)
-  const [preview, setPreview] = useState<string | null>(null)
   const [isUploading, setIsUploading] = useState(false)
-  const [selectedFile, setSelectedFile] = useState<File | null>(null)
+  const [selectedImages, setSelectedImages] = useState<Array<{ file: File; preview: string }>>([])
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const preview = selectedImages[0]?.preview ?? null
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault()
@@ -33,42 +33,73 @@ export default function ImageUpload({ onUpload, onUploadingChange }: Props) {
 
     const files = e.dataTransfer.files
     if (files.length > 0) {
-      handleFile(files[0])
+      void handleFiles(files)
     }
   }
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files
     if (files && files.length > 0) {
-      handleFile(files[0])
+      void handleFiles(files)
     }
   }
 
-  const handleFile = useCallback((file: File) => {
-    if (!file.type.startsWith('image/')) {
+  const readFileAsDataUrl = useCallback((file: File) => new Promise<string>((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = () => resolve(reader.result as string)
+    reader.onerror = () => reject(reader.error ?? new Error('Failed to read file'))
+    reader.readAsDataURL(file)
+  }), [])
+
+  const handleFiles = useCallback(async (
+    files: FileList | File[],
+    options?: { append?: boolean }
+  ) => {
+    const fileList = Array.from(files)
+    if (fileList.length === 0) return
+
+    const invalidFile = fileList.find((file) => !file.type.startsWith('image/'))
+    if (invalidFile) {
       alert('画像ファイルを選択してください')
       return
     }
 
     // HEIC/HEIF形式を除外
-    const lowerFileName = file.name.toLowerCase()
-    const isHeic = file.type === 'image/heic' ||
-                   file.type === 'image/heif' ||
-                   lowerFileName.endsWith('.heic') ||
-                   lowerFileName.endsWith('.heif')
+    const isHeic = fileList.some((file) => {
+      const lowerFileName = file.name.toLowerCase()
+      return file.type === 'image/heic' ||
+        file.type === 'image/heif' ||
+        lowerFileName.endsWith('.heic') ||
+        lowerFileName.endsWith('.heif')
+    })
 
     if (isHeic) {
       alert('HEIC形式のファイルは対応していません。PNG、JPG、GIF形式の画像を選択してください')
       return
     }
 
-    setSelectedFile(file)
-    const reader = new FileReader()
-    reader.onload = (e) => {
-      setPreview(e.target?.result as string)
+    // ファイル数制限チェック
+    const MAX_FILES = 5
+    const currentCount = options?.append ? selectedImages.length : 0
+    const totalCount = currentCount + fileList.length
+
+    if (totalCount > MAX_FILES) {
+      alert(`画像は最大${MAX_FILES}枚までです`)
+      return
     }
-    reader.readAsDataURL(file)
-  }, [])
+
+    try {
+      const previews = await Promise.all(fileList.map(readFileAsDataUrl))
+      const nextImages = fileList.map((file, index) => ({
+        file,
+        preview: previews[index],
+      }))
+      setSelectedImages((current) => options?.append ? [...current, ...nextImages] : nextImages)
+    } catch (error) {
+      console.error(error)
+      alert('画像の読み込みに失敗しました')
+    }
+  }, [readFileAsDataUrl, selectedImages.length])
 
   const handlePaste = useCallback((e: ClipboardEvent) => {
     const items = e.clipboardData?.items
@@ -80,12 +111,12 @@ export default function ImageUpload({ onUpload, onUploadingChange }: Props) {
         e.preventDefault()
         const file = item.getAsFile()
         if (file) {
-          handleFile(file)
+          void handleFiles([file], { append: true })
         }
         break
       }
     }
-  }, [handleFile])
+  }, [handleFiles])
 
   useEffect(() => {
     document.addEventListener('paste', handlePaste)
@@ -95,13 +126,15 @@ export default function ImageUpload({ onUpload, onUploadingChange }: Props) {
   }, [handlePaste])
 
   const handleUpload = async () => {
-    if (!selectedFile || !preview) return
+    if (selectedImages.length === 0 || !preview) return
 
     setIsUploading(true)
     onUploadingChange(true)
     try {
       const formData = new FormData()
-      formData.append('file', selectedFile)
+      selectedImages.forEach(({ file }) => {
+        formData.append('file', file)
+      })
 
       const res = await fetch('/recipes/extract/file', {
         method: 'POST',
@@ -128,8 +161,7 @@ export default function ImageUpload({ onUpload, onUploadingChange }: Props) {
   }
 
   const handleRemove = () => {
-    setPreview(null)
-    setSelectedFile(null)
+    setSelectedImages([])
     if (fileInputRef.current) {
       fileInputRef.current.value = ''
     }
@@ -185,6 +217,7 @@ export default function ImageUpload({ onUpload, onUploadingChange }: Props) {
               ref={fileInputRef}
               type="file"
               accept="image/png,image/jpeg,image/jpg,image/gif,image/webp"
+              multiple
               onChange={handleFileSelect}
               className="hidden"
             />
@@ -237,6 +270,25 @@ export default function ImageUpload({ onUpload, onUploadingChange }: Props) {
               </svg>
             </button>
           </div>
+          {selectedImages.length > 1 && (
+            <div className="mt-4 grid gap-3 sm:grid-cols-2">
+              {selectedImages.slice(1).map((image, index) => (
+                <div
+                  key={`${image.file.name}-${index}`}
+                  className="overflow-hidden rounded-lg ring-1 ring-gray-900/5"
+                >
+                  <Image
+                    src={image.preview}
+                    alt={`追加画像 ${index + 2}`}
+                    width={400}
+                    height={240}
+                    unoptimized
+                    className="h-40 w-full object-cover"
+                  />
+                </div>
+              ))}
+            </div>
+          )}
           <div className="mt-6 flex justify-center gap-4">
             <Button
               variant="secondary"

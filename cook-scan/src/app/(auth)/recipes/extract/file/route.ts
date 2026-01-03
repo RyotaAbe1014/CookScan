@@ -1,24 +1,33 @@
 import { mastra } from '@/mastra'
 import { NextRequest, NextResponse } from 'next/server'
 
+const MAX_FILES = 5
+
 export async function POST(request: NextRequest) {
   try {
     // multipart/form-data からファイルを取得
     const formData = await request.formData()
-    const file = formData.get('file')
+    const files = formData.getAll('file')
 
-    if (!(file instanceof File)) {
+    if (files.length === 0) {
       return NextResponse.json(
-        { success: false, error: 'file が見つかりません。multipart/form-data で file を送信してください。' },
+        { success: false, error: 'files が見つかりません。multipart/form-data で file を送信してください。' },
         { status: 400 }
       )
     }
+    if (files.length > MAX_FILES) {
+      return NextResponse.json(
+        { success: false, error: `アップロードできる画像は最大${MAX_FILES}枚です。` },
+        { status: 400 }
+      )
+    }
+
     const workflow = mastra.getWorkflow('cookScanWorkflow')
 
     const run = await workflow.createRun()
     const response = await run.start({
       inputData: {
-        image: file
+        images: files.map((file) => file as File)
       }
     })
 

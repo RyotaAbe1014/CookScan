@@ -8,38 +8,24 @@ const imageToTextStep = createStep({
   id: 'image-to-text',
   description: 'Convert image to text',
   inputSchema: z.object({
-    image: z.custom<File>(),
+    images: z.array(z.custom<File>()),
   }),
   outputSchema: z.object({
     text: z.string(),
   }),
   execute: async ({ inputData }) => {
     try {
-      const arrayBuffer = await inputData.image.arrayBuffer();
-      const buffer = Buffer.from(arrayBuffer);
-      const response = await generateText({
-        model: openaiGpt4oMini,
-        messages: [
-          {
-            role: 'user',
-            content: [
-              {
-                type: 'text',
-                text: 'この画像からすべてのテキストを抽出してください。',
-              },
-              {
-                type: 'image',
-                image: buffer,
-                mediaType: inputData.image.type,
-              }
-            ]
-          }
-        ],
-        temperature: 0.0,
-      });
-
+      const texts = await Promise.all(inputData.images.map(async (image) => {
+        const arrayBuffer = await image.arrayBuffer();
+        const buffer = Buffer.from(arrayBuffer);
+        const response = await generateText({
+          model: openaiGpt4oMini,
+          messages: [{ role: 'user', content: [{ type: 'image', image: buffer, mediaType: image.type }] }],
+        });
+        return response.text;
+      }));
       return {
-        text: response.text,
+        text: texts.join('\n'),
       };
     } catch (error) {
       console.error('Error in image-to-text step:', error);
@@ -50,7 +36,7 @@ const imageToTextStep = createStep({
 const cookScanWorkflow = createWorkflow({
   id: 'cook-scan-workflow',
   inputSchema: z.object({
-    image: z.custom<File>(),
+    images: z.array(z.custom<File>()),
   }),
   outputSchema: z.object({
     title: z.string(),
