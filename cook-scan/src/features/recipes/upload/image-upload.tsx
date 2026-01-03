@@ -50,6 +50,18 @@ export default function ImageUpload({ onUpload, onUploadingChange }: Props) {
       return
     }
 
+    // HEIC/HEIF形式を除外
+    const lowerFileName = file.name.toLowerCase()
+    const isHeic = file.type === 'image/heic' ||
+                   file.type === 'image/heif' ||
+                   lowerFileName.endsWith('.heic') ||
+                   lowerFileName.endsWith('.heif')
+
+    if (isHeic) {
+      alert('HEIC形式のファイルは対応していません。PNG、JPG、GIF形式の画像を選択してください')
+      return
+    }
+
     setSelectedFile(file)
     const reader = new FileReader()
     reader.onload = (e) => {
@@ -172,7 +184,7 @@ export default function ImageUpload({ onUpload, onUploadingChange }: Props) {
             <input
               ref={fileInputRef}
               type="file"
-              accept="image/*"
+              accept="image/png,image/jpeg,image/jpg,image/gif,image/webp"
               onChange={handleFileSelect}
               className="hidden"
             />
