@@ -68,13 +68,13 @@ export function StepTimer({
   const getContainerClass = () => {
     const baseClass = 'transition-all duration-300'
     if (isFinished) {
-      return `${baseClass} bg-gradient-to-br from-emerald-500 to-teal-600 shadow-lg`
+      return `${baseClass} bg-linear-to-br from-emerald-500 to-teal-600 shadow-lg`
     }
     if (isPaused) {
-      return `${baseClass} bg-gradient-to-br from-amber-500 to-orange-500 shadow-md`
+      return `${baseClass} bg-linear-to-br from-amber-500 to-orange-500 shadow-md`
     }
     if (isRunning) {
-      return `${baseClass} bg-gradient-to-br from-indigo-600 to-violet-600 shadow-xl animate-pulse`
+      return `${baseClass} bg-linear-to-br from-indigo-600 to-violet-600 shadow-xl animate-pulse`
     }
     return `${baseClass} bg-slate-100 ring-1 ring-slate-200`
   }

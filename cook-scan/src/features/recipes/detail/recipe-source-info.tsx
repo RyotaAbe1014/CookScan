@@ -25,7 +25,7 @@ export function RecipeSourceInfo({ sourceInfo }: RecipeSourceInfoProps) {
       <CardContent>
         <div className="space-y-3 text-sm">
           {sourceInfo.sourceName && (
-            <div className="flex items-start gap-2 rounded-lg bg-gradient-to-r from-gray-50 to-white p-3 ring-1 ring-gray-200">
+            <div className="flex items-start gap-2 rounded-lg bg-linear-to-r from-gray-50 to-white p-3 ring-1 ring-gray-200">
               <svg className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path
                   strokeLinecap="round"
@@ -41,7 +41,7 @@ export function RecipeSourceInfo({ sourceInfo }: RecipeSourceInfoProps) {
             </div>
           )}
           {sourceInfo.pageNumber && (
-            <div className="flex items-start gap-2 rounded-lg bg-gradient-to-r from-gray-50 to-white p-3 ring-1 ring-gray-200">
+            <div className="flex items-start gap-2 rounded-lg bg-linear-to-r from-gray-50 to-white p-3 ring-1 ring-gray-200">
               <svg className="mt-0.5 h-4 w-4 shrink-0 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path
                   strokeLinecap="round"
@@ -57,7 +57,7 @@ export function RecipeSourceInfo({ sourceInfo }: RecipeSourceInfoProps) {
             </div>
           )}
           {sourceInfo.sourceUrl && (
-            <div className="flex items-start gap-2 rounded-lg bg-gradient-to-r from-gray-50 to-white p-3 ring-1 ring-gray-200">
+            <div className="flex items-start gap-2 rounded-lg bg-linear-to-r from-gray-50 to-white p-3 ring-1 ring-gray-200">
               <svg className="mt-0.5 h-4 w-4 shrink-0 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path
                   strokeLinecap="round"
