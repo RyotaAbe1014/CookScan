@@ -1,5 +1,6 @@
 import { Card, CardHeader, CardContent } from '@/components/ui/card'
 import type { SourceInfoDisplay } from '@/types/sourceInfo'
+import { isValidHttpUrl } from '@/utils/url-validation'
 
 type RecipeSourceInfoProps = {
   sourceInfo: SourceInfoDisplay
@@ -68,14 +69,18 @@ export function RecipeSourceInfo({ sourceInfo }: RecipeSourceInfoProps) {
               </svg>
               <div className="flex-1 overflow-hidden">
                 <span className="font-semibold text-gray-900">参照URL</span>
-                <a
-                  href={sourceInfo.sourceUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-1 block truncate text-indigo-600 transition-colors hover:text-indigo-700 hover:underline"
-                >
-                  {sourceInfo.sourceUrl}
-                </a>
+                {isValidHttpUrl(sourceInfo.sourceUrl) ? (
+                  <a
+                    href={sourceInfo.sourceUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-1 block truncate text-indigo-600 transition-colors hover:text-indigo-700 hover:underline"
+                  >
+                    {sourceInfo.sourceUrl}
+                  </a>
+                ) : (
+                  <p className="mt-1 truncate text-gray-600">{sourceInfo.sourceUrl}</p>
+                )}
               </div>
             </div>
           )}

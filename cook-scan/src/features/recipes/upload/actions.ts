@@ -7,6 +7,7 @@ import { checkUserProfile } from '@/features/auth/auth-utils'
 import { CreateRecipeRequest } from '@/features/recipes/upload/types'
 import { Prisma } from '@prisma/client'
 import { validateTagIdsForUser } from '@/features/tags/tag-utils'
+import { sanitizeUrl } from '@/utils/url-validation'
 
 export async function createRecipe(request: CreateRecipeRequest) {
   const { title, sourceInfo, ingredients, steps, memo, tags } = request
@@ -65,12 +66,13 @@ export async function createRecipe(request: CreateRecipeRequest) {
 
       // Create source info if provided
       if (sourceInfo && (sourceInfo.bookName || sourceInfo.pageNumber || sourceInfo.url)) {
+        const sanitizedUrl = sanitizeUrl(sourceInfo.url)
         await tx.sourceInfo.create({
           data: {
             recipeId: newRecipe.id,
             sourceName: sourceInfo.bookName || null,
             pageNumber: sourceInfo.pageNumber || null,
-            sourceUrl: sourceInfo.url || null,
+            sourceUrl: sanitizedUrl,
           }
         })
       }
