@@ -5,6 +5,7 @@ import ImageUpload from '../image-upload'
 
 // Mock Next.js Image
 vi.mock('next/image', () => ({
+  // eslint-disable-next-line @next/next/no-img-element
   default: ({ src, alt }: { src: string; alt: string }) => <img src={src} alt={alt} />
 }))
 
@@ -16,7 +17,7 @@ class MockFileReader {
   result: string | ArrayBuffer | null = null
   onload: ((this: FileReader, ev: ProgressEvent<FileReader>) => any) | null = null
 
-  readAsDataURL(file: Blob) {
+  readAsDataURL(_file: Blob) {
     setTimeout(() => {
       this.result = 'data:image/png;base64,mockbase64data'
       if (this.onload) {
