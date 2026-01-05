@@ -83,4 +83,58 @@ describe('RecipeSourceInfo', () => {
       expect(screen.queryByText('ページ番号')).not.toBeInTheDocument()
     })
   })
+
+  describe('Given 不正なURLスキーム（javascript:）が存在する場合', () => {
+    const mockSourceInfo: SourceInfoDisplay = {
+      sourceName: null,
+      pageNumber: null,
+      sourceUrl: 'javascript:alert("XSS")',
+    }
+
+    it('When コンポーネントをレンダリングする Then URLは通常のテキストとして表示される', () => {
+      render(<RecipeSourceInfo sourceInfo={mockSourceInfo} />)
+
+      expect(screen.getByText('参照URL')).toBeInTheDocument()
+      expect(screen.getByText('javascript:alert("XSS")')).toBeInTheDocument()
+      expect(screen.queryByRole('link')).not.toBeInTheDocument()
+      expect(screen.queryByText('本の名前')).not.toBeInTheDocument()
+      expect(screen.queryByText('ページ番号')).not.toBeInTheDocument()
+    })
+  })
+
+  describe('Given 不正なURLスキーム（data:）が存在する場合', () => {
+    const mockSourceInfo: SourceInfoDisplay = {
+      sourceName: null,
+      pageNumber: null,
+      sourceUrl: 'data:text/html,<script>alert("XSS")</script>',
+    }
+
+    it('When コンポーネントをレンダリングする Then URLは通常のテキストとして表示される', () => {
+      render(<RecipeSourceInfo sourceInfo={mockSourceInfo} />)
+
+      expect(screen.getByText('参照URL')).toBeInTheDocument()
+      expect(screen.getByText('data:text/html,<script>alert("XSS")</script>')).toBeInTheDocument()
+      expect(screen.queryByRole('link')).not.toBeInTheDocument()
+    })
+  })
+
+  describe('Given 本の名前とページ番号と不正なURLが存在する場合', () => {
+    const mockSourceInfo: SourceInfoDisplay = {
+      sourceName: '料理本',
+      pageNumber: '100',
+      sourceUrl: 'javascript:void(0)',
+    }
+
+    it('When コンポーネントをレンダリングする Then 本の名前とページ番号は表示され、URLは通常のテキストとして表示される', () => {
+      render(<RecipeSourceInfo sourceInfo={mockSourceInfo} />)
+
+      expect(screen.getByText('本の名前')).toBeInTheDocument()
+      expect(screen.getByText('料理本')).toBeInTheDocument()
+      expect(screen.getByText('ページ番号')).toBeInTheDocument()
+      expect(screen.getByText('100')).toBeInTheDocument()
+      expect(screen.getByText('参照URL')).toBeInTheDocument()
+      expect(screen.getByText('javascript:void(0)')).toBeInTheDocument()
+      expect(screen.queryByRole('link')).not.toBeInTheDocument()
+    })
+  })
 })
