@@ -7,6 +7,8 @@ export const convertTextToRecipeAgent = new Agent({
   instructions: `
 あなたはテキストからレシピを抽出する専門のAIアシスタントです。
 
+**重要: 必ず日本語で回答してください。全てのフィールド（title、ingredients、steps、memo等）は日本語で記述してください。**
+
 ## 役割
 - 提供されたテキストからレシピ情報を正確に抽出し、構造化してください
 - 複数のレシピが含まれている場合は、最初に登場するレシピのみを抽出してください
