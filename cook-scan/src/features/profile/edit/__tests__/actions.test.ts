@@ -17,6 +17,10 @@ vi.mock('@/features/auth/auth-utils', () => ({
   checkUserProfile: vi.fn(),
 }))
 
+vi.mock('next/cache', () => ({
+  refresh: vi.fn(),
+}))
+
 describe('getUserProfile', () => {
   beforeEach(() => {
     vi.clearAllMocks()
@@ -52,9 +56,9 @@ describe('getUserProfile', () => {
     vi.mocked(checkUserProfile).mockResolvedValueOnce({
       hasAuth: false,
       hasProfile: false,
-      authUser: null,
-      profile: null,
-    })
+      authUser: undefined,
+      profile: undefined,
+    } as any)
 
     // When & Then: エラーがスローされる
     await expect(getUserProfile()).rejects.toThrow('認証エラー')
@@ -159,10 +163,13 @@ describe('updateUserProfile', () => {
       profile: mockProfile,
     })
 
-    vi.mocked(prisma.user.update).mockResolvedValueOnce(mockProfile as any)
+    const name50 = 'あ'.repeat(50)
+    vi.mocked(prisma.user.update).mockResolvedValueOnce({
+      ...mockProfile,
+      name: name50,
+    } as any)
 
     // When: 50文字で更新しようとする
-    const name50 = 'あ'.repeat(50)
     const result = await updateUserProfile({ name: name50 })
 
     // Then: 成功する
@@ -187,7 +194,10 @@ describe('updateUserProfile', () => {
       profile: mockProfile,
     })
 
-    vi.mocked(prisma.user.update).mockResolvedValueOnce(mockProfile as any)
+    vi.mocked(prisma.user.update).mockResolvedValueOnce({
+      ...mockProfile,
+      name: '山田太郎',
+    } as any)
 
     // When: 前後に空白がある名前で更新
     const result = await updateUserProfile({ name: '  山田太郎  ' })
@@ -205,9 +215,9 @@ describe('updateUserProfile', () => {
     vi.mocked(checkUserProfile).mockResolvedValueOnce({
       hasAuth: false,
       hasProfile: false,
-      authUser: null,
-      profile: null,
-    })
+      authUser: undefined,
+      profile: undefined,
+    } as any)
 
     // When: 更新しようとする
     const result = await updateUserProfile({ name: '新しい名前' })
