@@ -1,3 +1,5 @@
+import Link from 'next/link'
+
 type Profile = {
   name: string | null
   email: string
@@ -24,7 +26,18 @@ export function WelcomeSection({ profile }: WelcomeSectionProps) {
           </svg>
         </div>
         <div className="flex-1">
-          <h2 className="text-2xl font-bold text-white sm:text-3xl">こんにちは、{displayName}さん</h2>
+          <div className="flex items-center gap-3">
+            <h2 className="text-2xl font-bold text-white sm:text-3xl">こんにちは、{displayName}さん</h2>
+            <Link
+              href="/settings/profile"
+              className="flex items-center gap-1 rounded-lg bg-white/20 px-3 py-1 text-sm font-medium text-white transition-colors hover:bg-white/30"
+            >
+              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+              </svg>
+              編集
+            </Link>
+          </div>
           <p className="mt-1 text-sm text-indigo-100 sm:text-base">{profile.email}</p>
         </div>
         <div className="hidden sm:block">
