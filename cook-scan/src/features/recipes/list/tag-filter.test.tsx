@@ -130,7 +130,7 @@ describe('TagFilter', () => {
     // Given: タグが選択済みの状態
     mockSearchParams.append('tag', 'tag1')
 
-    const { container } = render(<TagFilter tagCategories={mockTagCategories} />)
+    render(<TagFilter tagCategories={mockTagCategories} />)
 
     // Then: 選択済みタグにチェックマークのSVGが表示される
     const tagButton = screen.getByRole('button', { name: 'タグ1' })

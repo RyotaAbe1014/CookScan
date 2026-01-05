@@ -10,7 +10,9 @@ export function IngredientInput(props: IngredientInputProps) {
   const [mounted, setMounted] = useState(false)
   const isMobile = useIsMobile()
 
+  // ハイドレーションミスマッチを防ぐため、マウント後にのみ状態を更新
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true)
   }, [])
 

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import RecipeUploadContent from '../recipe-upload-content'
 
@@ -15,7 +15,7 @@ vi.mock('@/features/recipes/upload/method-selector', () => ({
 }))
 
 vi.mock('@/features/recipes/upload/image-upload', () => ({
-  default: ({ onUpload, onUploadingChange }: any) => (
+  default: ({ onUpload }: any) => (
     <div data-testid="image-upload">
       <button onClick={() => {
         const mockData = {
