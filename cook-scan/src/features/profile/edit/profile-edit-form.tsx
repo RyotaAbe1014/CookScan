@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useTransition, FormEvent } from 'react'
+import { useState, useTransition, FormEvent, useEffect, useRef } from 'react'
 import { updateUserProfile } from './actions'
 import { Button, Input, Alert } from '@/components/ui'
 
@@ -20,6 +20,16 @@ export function ProfileEditForm({ initialData }: ProfileEditFormProps) {
   const [error, setError] = useState<string | null>(null)
   const [isSuccess, setIsSuccess] = useState(false)
   const [isPending, startTransition] = useTransition()
+  const timeoutRef = useRef<NodeJS.Timeout | undefined>(undefined)
+
+  // コンポーネントのアンマウント時にタイマーをクリーンアップ
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current)
+      }
+    }
+  }, [])
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
@@ -33,8 +43,12 @@ export function ProfileEditForm({ initialData }: ProfileEditFormProps) {
         setError(result.error || 'プロフィールの更新に失敗しました')
       } else {
         setIsSuccess(true)
+        // 既存のタイマーをクリア
+        if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current)
+        }
         // 3秒後に成功メッセージを非表示
-        setTimeout(() => setIsSuccess(false), 3000)
+        timeoutRef.current = setTimeout(() => setIsSuccess(false), 3000)
       }
     })
   }

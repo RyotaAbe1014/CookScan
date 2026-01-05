@@ -364,34 +364,27 @@ describe('ProfileEditForm', () => {
   })
 
   describe('成功メッセージの自動非表示', () => {
-    it.skip('成功メッセージは3秒後に自動的に消える', async () => {
+    it('成功メッセージは3秒後に自動的に消える', async () => {
       // Given: updateUserProfileが成功を返す
       vi.mocked(updateUserProfile).mockResolvedValueOnce({ success: true })
-      vi.useFakeTimers()
 
-      try {
-        const user = userEvent.setup({ delay: null }) // タイマー使用時はdelayをnullに
-        render(<ProfileEditForm initialData={mockUser} />)
-        const submitButton = screen.getByRole('button', { name: /更新する/i })
+      const user = userEvent.setup()
+      render(<ProfileEditForm initialData={mockUser} />)
+      const submitButton = screen.getByRole('button', { name: /更新する/i })
 
-        // When: フォームを送信する
-        await user.click(submitButton)
+      // When: フォームを送信する
+      await user.click(submitButton)
 
-        // Then: 成功メッセージが表示される
-        await waitFor(() => {
-          expect(screen.getByText('プロフィールを更新しました')).toBeInTheDocument()
-        })
+      // Then: 成功メッセージが表示される
+      await waitFor(() => {
+        expect(screen.getByText('プロフィールを更新しました')).toBeInTheDocument()
+      })
 
-        // When: 3秒経過させる
-        await vi.advanceTimersByTimeAsync(3000)
+      // When: 3秒待機する（実際の時間を使用）
+      await new Promise((resolve) => setTimeout(resolve, 3100))
 
-        // Then: 成功メッセージが消える
-        await waitFor(() => {
-          expect(screen.queryByText('プロフィールを更新しました')).not.toBeInTheDocument()
-        })
-      } finally {
-        vi.useRealTimers()
-      }
+      // Then: 成功メッセージが消える
+      expect(screen.queryByText('プロフィールを更新しました')).not.toBeInTheDocument()
     })
   })
 })
