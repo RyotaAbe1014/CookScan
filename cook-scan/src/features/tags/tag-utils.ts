@@ -20,7 +20,7 @@ export async function validateTagIdsForUser(
       id: { in: uniqueTagIds },
       OR: [
         { isSystem: true },
-        { category: { userId } },
+        { user: { id: userId } },
       ],
     },
     select: { id: true },
