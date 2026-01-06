@@ -26,6 +26,7 @@ model User {
   // Relations
   recipes              Recipe[]
   tagCategories        TagCategory[]
+  tags                 Tag[]
   ocrProcessingHistory OcrProcessingHistory[]
   recipeVersions       RecipeVersion[]
 
@@ -110,6 +111,7 @@ model TagCategory {
 model Tag {
   id          String   @id @default(uuid())
   categoryId  String   @map("category_id")
+  userId      String?  @map("user_id")
   name        String
   description String?
   isSystem    Boolean  @default(false) @map("is_system")
@@ -119,6 +121,7 @@ model Tag {
   // Relations
   category   TagCategory @relation(fields: [categoryId], references: [id])
   recipeTags RecipeTag[]
+  user       User?     @relation(fields: [userId], references: [id])
 
   @@map("tags")
 }
