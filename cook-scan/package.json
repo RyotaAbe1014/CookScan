@@ -16,7 +16,8 @@
     "db:format": "prisma format",
     "db:validate": "prisma validate",
     "db:status": "prisma migrate status",
-    "db:migrate": "prisma migrate deploy",
+    "db:migrate": "prisma migrate --create-only",
+    "db:deploy": "prisma migrate deploy",
     "db:seed": "prisma db seed",
     "db:studio": "prisma studio"
   },

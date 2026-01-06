@@ -1,124 +1,111 @@
 # CookScan
 
-A web application that extracts recipe information from food images.
+料理画像からレシピ情報を抽出するWebアプリケーションです。
 
-## Tech Stack
+## 技術スタック
 
-- **Framework**: Next.js 15.6 (App Router)
-- **Language**: TypeScript
-- **Database**: PostgreSQL
+- **フレームワーク**: Next.js 16.1.1 (App Router)
+- **言語**: TypeScript
+- **データベース**: PostgreSQL
 - **ORM**: Prisma
-- **Styling**: Tailwind CSS v4
+- **スタイリング**: Tailwind CSS v4
+- **テスト**: Vitest
 
-## Setup
+## セットアップ
 
-### Prerequisites
+### 前提条件
 
 - Node.js 22+
-- Docker Desktop
 - npm
 
-### Environment Setup
+### 環境設定
 
-1. **Clone the repository**
+1. **リポジトリをクローン**
 ```bash
 git clone [repository-url]
 cd cook-scan
 ```
 
-2. **Install dependencies**
+2. **依存関係をインストール**
 ```bash
 npm install
 ```
 
-3. **Start PostgreSQL**
+3. **環境変数を設定**
+`.env` ファイルを作成して以下を設定:
+```
+DATABASE_URL=postgresql://USER:PASSWORD@HOST:PORT/DB
+DIRECT_URL=postgresql://USER:PASSWORD@HOST:PORT/DB
+NEXT_PUBLIC_SUPABASE_URL=https://YOUR_PROJECT.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=YOUR_ANON_KEY
+OPENAI_API_KEY=YOUR_OPENAI_KEY
+GOOGLE_API_KEY=YOUR_GOOGLE_KEY
+```
+
+4. **Prisma Clientを生成**
 ```bash
-docker compose up -d
+npm run db:generate
 ```
 
-4. **Set environment variables**
-Create `.env.local` file with:
-```
-DATABASE_URL=postgresql://postgres:postgres@localhost:5433/cookscan_dev
-```
-
-5. **Setup database**
+5. **マイグレーションを適用**
 ```bash
-npm run db:migrate:dev
+npm run db:migrate -- --create-only
 ```
 
-6. **Start development server**
+6. **マイグレーションをデプロイ**
+```bash
+npm run db:deploy
+```
+
+6. **開発サーバーを起動**
 ```bash
 npm run dev
 ```
 
-Application will be available at http://localhost:3000
+アプリケーションは http://localhost:3000 で利用できます。
 
-## Development Commands
+## 開発用コマンド
 
-### Application
-- `npm run dev` - Start development server (Turbopack)
-- `npm run build` - Production build
-- `npm run start` - Start production server
-- `npm run lint` - Run lint check
+### アプリケーション
+- `npm run dev` - 開発サーバー起動（.envを読み込み）
+- `npm run build` - 本番ビルド（.envを読み込み）
+- `npm run start` - 本番サーバー起動
+- `npm run lint` - Lintチェック実行（src）
 
-### Database (Development)
-- `npm run db:migrate:dev` - Run migrations
-- `npm run db:push:dev` - Push schema changes directly
-- `npm run db:reset:dev` - Reset database
-- `npm run db:studio:dev` - Open Prisma Studio
-- `npm run db:seed:dev` - Seed database
-- `npm run db:migrate:status` - Check migration status
+### テスト
+- `npm run test` - Vitest起動
+- `npm run test:run` - テストを1回実行
+- `npm run test:coverage` - カバレッジ取得
+- `npm run test:watch` - Watchモード
+- `npm run test:ui` - Vitest UI
 
-### Database (Production)
-- `npm run db:migrate:prod` - Production migration
-- `npm run db:migrate:deploy` - Safe deploy
-- `npm run db:studio:prod` - Production Prisma Studio
+### データベース
+- `npm run db:generate` - Prisma Client生成
+- `npm run db:format` - スキーマ整形
+- `npm run db:validate` - スキーマ検証
+- `npm run db:status` - マイグレーション状態確認
+- `npm run db:migrate` - マイグレーション適用
+- `npm run db:seed` - シード投入
+- `npm run db:studio` - Prisma Studioを開く
 
-### Common Commands
-- `npm run db:generate` - Generate Prisma Client
-- `npm run db:format` - Format schema
-- `npm run db:validate` - Validate schema
-
-## Project Structure
+## プロジェクト構成
 
 ```
 cook-scan/
-├── prisma/           # Prisma schema
-├── public/           # Static files
+├── prisma/           # Prismaスキーマ/マイグレーション
+├── public/           # 静的ファイル
 ├── src/
 │   └── app/         # Next.js App Router
-├── docker-compose.yml # PostgreSQL configuration
 └── package.json
 ```
 
-## Docker Environment
+## トラブルシューティング
 
-PostgreSQL is managed with Docker:
-- Port: 5433 (host) → 5432 (container)
-- Database: cookscan_dev
-- User: postgres
-- Password: postgres
+### マイグレーションが失敗する
+1. `.env` の接続情報が正しいか確認
+2. `npm run db:status` で状態を確認
+3. `npm run db:generate` でClientを再生成
 
-### Docker Operations
-```bash
-# Start
-docker compose up -d
-
-# Stop
-docker compose down
-
-# Check logs
-docker compose logs -f postgres
-```
-
-## Troubleshooting
-
-### Migration fails
-1. Check if PostgreSQL is running
-2. Verify .env.local file is correctly configured
-3. Check container status with `docker ps`
-
-### Build errors
-1. Regenerate Prisma Client with `npm run db:generate`
-2. Delete node_modules and reinstall
+### ビルドエラー
+1. `npm run db:generate` でPrisma Clientを再生成
+2. node_modulesを削除して再インストール
