@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useTransition, useEffect, useRef } from 'react'
+import { useState, useTransition } from 'react'
 import { updatePassword, type PasswordChangeFormData } from './actions'
 import { Button, Input, Alert } from '@/components/ui'
 
@@ -12,16 +12,6 @@ export function PasswordChangeForm() {
     confirmPassword: '',
   })
   const [error, setError] = useState<string | null>(null)
-  const timeoutRef = useRef<NodeJS.Timeout | undefined>(undefined)
-
-  // コンポーネントのアンマウント時にタイマーをクリーンアップ
-  useEffect(() => {
-    return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current)
-      }
-    }
-  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
