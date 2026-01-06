@@ -15,15 +15,10 @@
     "db:generate": "prisma generate",
     "db:format": "prisma format",
     "db:validate": "prisma validate",
-    "db:migrate:dev": "dotenv -e .env.migration -- prisma migrate dev --name ${npm_config_name}",
-    "db:push:dev": "dotenv -e .env.migration -- prisma db push",
-    "db:seed:dev": "dotenv -e .env.migration -- prisma db seed",
-    "db:reset:dev": "dotenv -e .env.migration -- prisma migrate reset",
-    "db:studio:dev": "dotenv -e .env.migration -- prisma studio",
-    "db:migrate:status": "dotenv -e .env -- prisma migrate status",
-    "db:migrate:deploy": "dotenv -e .env -- prisma migrate deploy",
-    "db:seed:prod": "dotenv -e .env -- prisma db seed",
-    "db:studio:prod": "dotenv -e .env -- prisma studio"
+    "db:status": "prisma migrate status",
+    "db:migrate": "prisma migrate deploy",
+    "db:seed": "prisma db seed",
+    "db:studio": "prisma studio"
   },
   "dependencies": {
     "@ai-sdk/openai": "^2.0.64",
