@@ -630,7 +630,6 @@ describe('RecipeEditForm', () => {
     it('更新失敗時、アラートが表示される', async () => {
       // Given: updateRecipeが失敗を返す
       const user = userEvent.setup()
-      const mockAlert = vi.spyOn(window, 'alert').mockImplementation(() => {})
       vi.mocked(updateRecipe).mockResolvedValueOnce({
         success: false,
         error: '更新に失敗しました',
@@ -646,18 +645,17 @@ describe('RecipeEditForm', () => {
       const submitButton = screen.getByRole('button', { name: /レシピを更新/ })
       await user.click(submitButton)
 
-      // Then: アラートが表示され、リダイレクトされない
+      // Then: エラーメッセージが表示され、リダイレクトされない
       await waitFor(() => {
-        expect(mockAlert).toHaveBeenCalledWith('更新に失敗しました')
+        expect(screen.getByText('更新に失敗しました')).toBeInTheDocument()
         expect(mockPush).not.toHaveBeenCalled()
       })
-
-      mockAlert.mockRestore()
     })
 
     it('例外発生時、アラートが表示される', async () => {
       // Given: updateRecipeが例外をスロー
       const user = userEvent.setup()
+      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
       vi.mocked(updateRecipe).mockRejectedValueOnce(new Error('Network error'))
 
       render(<RecipeEditForm recipe={mockRecipe} />)
@@ -675,6 +673,8 @@ describe('RecipeEditForm', () => {
         expect(screen.getByText('エラーが発生しました')).toBeInTheDocument()
         expect(mockPush).not.toHaveBeenCalled()
       })
+
+      consoleErrorSpy.mockRestore()
     })
 
     it('タイトルが空の場合、送信ボタンが無効', async () => {

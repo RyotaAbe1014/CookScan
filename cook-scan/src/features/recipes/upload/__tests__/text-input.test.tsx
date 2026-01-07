@@ -135,6 +135,7 @@ describe('TextInput', () => {
 
   it('displays network error message on fetch failure', async () => {
     const user = userEvent.setup()
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
 
     ;(global.fetch as ReturnType<typeof vi.fn>).mockRejectedValueOnce(new Error('Network error'))
 
@@ -149,6 +150,8 @@ describe('TextInput', () => {
     await waitFor(() => {
       expect(screen.getByText('ネットワークエラーが発生しました。もう一度お試しください。')).toBeInTheDocument()
     })
+
+    consoleErrorSpy.mockRestore()
   })
 
   it('clears textarea after successful submission', async () => {

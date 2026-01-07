@@ -88,6 +88,7 @@ describe('RecipeDetailActions', () => {
 
   it('異常系：画像化に失敗した場合はエラートーストが表示される', async () => {
     // Given: domToJpegがエラーを返す
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
     vi.mocked(domToJpeg).mockRejectedValueOnce(new Error('capture failed'))
     const user = userEvent.setup()
     render(<RecipeDetailActions recipe={recipe} />)
@@ -97,5 +98,7 @@ describe('RecipeDetailActions', () => {
 
     // Then: エラートーストが表示される
     expect(await screen.findByText('保存できませんでした')).toBeInTheDocument()
+
+    consoleErrorSpy.mockRestore()
   })
 })

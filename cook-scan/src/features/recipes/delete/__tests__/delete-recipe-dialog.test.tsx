@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import DeleteRecipeDialog from '../delete-recipe-dialog'
@@ -26,15 +26,8 @@ describe('DeleteRecipeDialog', () => {
     onClose: vi.fn(),
   }
 
-  let mockAlert: ReturnType<typeof vi.spyOn>
-
   beforeEach(() => {
     vi.clearAllMocks()
-    mockAlert = vi.spyOn(window, 'alert').mockImplementation(() => {})
-  })
-
-  afterEach(() => {
-    mockAlert.mockRestore()
   })
 
   describe('表示制御', () => {
@@ -95,11 +88,11 @@ describe('DeleteRecipeDialog', () => {
       const deleteButton = screen.getByRole('button', { name: /削除/ })
       await user.click(deleteButton)
 
-      // Then: alert(errorMessage)が呼ばれ、onClose()が呼ばれる
+      // Then: エラーメッセージが表示され、ダイアログは閉じない
       await waitFor(() => {
-        expect(mockAlert).toHaveBeenCalledWith(errorMessage)
+        expect(screen.getByText(errorMessage)).toBeInTheDocument()
         expect(mockPush).not.toHaveBeenCalled()
-        expect(defaultProps.onClose).toHaveBeenCalled()
+        expect(defaultProps.onClose).not.toHaveBeenCalled()
       })
     })
 
@@ -114,11 +107,11 @@ describe('DeleteRecipeDialog', () => {
       const deleteButton = screen.getByRole('button', { name: /削除/ })
       await user.click(deleteButton)
 
-      // Then: alert('エラーが発生しました')が呼ばれ、onClose()が呼ばれる
+      // Then: エラーメッセージが表示され、ダイアログは閉じない
       await waitFor(() => {
-        expect(mockAlert).toHaveBeenCalledWith('エラーが発生しました')
+        expect(screen.getByText('エラーが発生しました')).toBeInTheDocument()
         expect(mockPush).not.toHaveBeenCalled()
-        expect(defaultProps.onClose).toHaveBeenCalled()
+        expect(defaultProps.onClose).not.toHaveBeenCalled()
       })
     })
   })

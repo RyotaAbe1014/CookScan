@@ -213,6 +213,7 @@ describe('ImageUpload', () => {
 
   it('shows alert on network error', async () => {
     const user = userEvent.setup()
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
 
     ;(global.fetch as ReturnType<typeof vi.fn>).mockRejectedValueOnce(new Error('Network error'))
 
@@ -233,6 +234,8 @@ describe('ImageUpload', () => {
     await waitFor(() => {
       expect(screen.getByText('ネットワークエラーが発生しました')).toBeInTheDocument()
     })
+
+    consoleErrorSpy.mockRestore()
   })
 
   it('disables buttons during upload', async () => {

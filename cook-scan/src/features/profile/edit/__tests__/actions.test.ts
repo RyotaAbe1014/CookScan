@@ -246,6 +246,7 @@ describe('updateUserProfile', () => {
 
   it('エラー: データベースエラー時は汎用エラーメッセージを返す', async () => {
     // Given: 認証済みユーザー
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
     const mockProfile = {
       id: 'user-123',
       authId: 'auth-123',
@@ -271,5 +272,7 @@ describe('updateUserProfile', () => {
     // Then: 汎用エラーメッセージが返される
     expect(result.success).toBe(false)
     expect(result.error).toBe('プロフィールの更新に失敗しました')
+
+    consoleErrorSpy.mockRestore()
   })
 })

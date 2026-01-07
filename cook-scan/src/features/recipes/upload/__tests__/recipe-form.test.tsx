@@ -340,7 +340,6 @@ describe('RecipeForm', () => {
   it('異常系：送信エラー時にアラートが表示される', async () => {
     // Given: フォームが表示され、Server Actionがエラーを返すようにモックされている
     const user = userEvent.setup()
-    const mockAlert = vi.spyOn(window, 'alert').mockImplementation(() => {})
     mockCreateRecipe.mockResolvedValue({ success: false, error: '保存に失敗しました' })
 
     render(<RecipeForm imageUrl={null} extractedData={mockExtractedData} />)
@@ -353,12 +352,10 @@ describe('RecipeForm', () => {
     const submitButton = screen.getByRole('button', { name: /レシピを保存/ })
     await user.click(submitButton)
 
-    // Then: エラーメッセージがアラートで表示される
+    // Then: エラーメッセージが表示される
     await waitFor(() => {
-      expect(mockAlert).toHaveBeenCalledWith('保存に失敗しました')
+      expect(screen.getByText('保存に失敗しました')).toBeInTheDocument()
     })
-
-    mockAlert.mockRestore()
   })
 
   it('異常系：タイトルが空の場合、送信ボタンが無効化される', async () => {

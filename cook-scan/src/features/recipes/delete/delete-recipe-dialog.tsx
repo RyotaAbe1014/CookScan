@@ -33,14 +33,12 @@ export default function DeleteRecipeDialog({ recipeId, recipeTitle, isOpen, onCl
         const result = await deleteRecipe(recipeId)
         if (result.success) {
           router.push('/recipes')
+          onClose()
         } else {
           setError(result.error || 'レシピの削除に失敗しました')
         }
       } catch (_error) {
         setError('エラーが発生しました')
-      }
-      finally {
-        onClose()
       }
     })
   }

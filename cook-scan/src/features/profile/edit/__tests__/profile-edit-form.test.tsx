@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { ProfileEditForm } from '../profile-edit-form'
 
@@ -381,7 +381,9 @@ describe('ProfileEditForm', () => {
       })
 
       // When: 3秒待機する（実際の時間を使用）
-      await new Promise((resolve) => setTimeout(resolve, 3100))
+      await act(async () => {
+        await new Promise((resolve) => setTimeout(resolve, 3100))
+      })
 
       // Then: 成功メッセージが消える
       expect(screen.queryByText('プロフィールを更新しました')).not.toBeInTheDocument()
