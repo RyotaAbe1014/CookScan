@@ -51,7 +51,7 @@ describe('validateTagIdsForUser', () => {
         id: { in: ['tag-1', 'tag-2'] },
         OR: [
           { isSystem: true },
-          { category: { userId: mockUserId } },
+          { user: { id: mockUserId } },
         ],
       },
       select: { id: true },
@@ -79,7 +79,7 @@ describe('validateTagIdsForUser', () => {
         id: { in: ['tag-1', 'tag-2'] },
         OR: [
           { isSystem: true },
-          { category: { userId: mockUserId } },
+          { user: { id: mockUserId } },
         ],
       },
       select: { id: true },
@@ -129,7 +129,7 @@ describe('validateTagIdsForUser', () => {
         id: { in: tagIds },
         OR: [
           { isSystem: true },
-          { category: { userId: mockUserId } },
+          { user: { id: mockUserId } },
         ],
       },
       select: { id: true },
@@ -239,7 +239,7 @@ describe('validateTagIdsForUser', () => {
         id: { in: ['tag-1', 'tag-2'] },
         OR: [
           { isSystem: true },
-          { category: { userId: mockUserId } },
+          { user: { id: mockUserId } },
         ],
       },
       select: { id: true },
