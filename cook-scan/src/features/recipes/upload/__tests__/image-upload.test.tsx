@@ -186,7 +186,6 @@ describe('ImageUpload', () => {
 
   it('shows alert on upload error', async () => {
     const user = userEvent.setup()
-    const mockAlert = vi.spyOn(window, 'alert').mockImplementation(() => {})
 
     ;(global.fetch as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
       ok: false,
@@ -208,15 +207,12 @@ describe('ImageUpload', () => {
     await user.click(uploadButton)
 
     await waitFor(() => {
-      expect(mockAlert).toHaveBeenCalledWith('アップロードエラー')
+      expect(screen.getByText('アップロードエラー')).toBeInTheDocument()
     })
-
-    mockAlert.mockRestore()
   })
 
   it('shows alert on network error', async () => {
     const user = userEvent.setup()
-    const mockAlert = vi.spyOn(window, 'alert').mockImplementation(() => {})
 
     ;(global.fetch as ReturnType<typeof vi.fn>).mockRejectedValueOnce(new Error('Network error'))
 
@@ -235,10 +231,8 @@ describe('ImageUpload', () => {
     await user.click(uploadButton)
 
     await waitFor(() => {
-      expect(mockAlert).toHaveBeenCalledWith('ネットワークエラーが発生しました')
+      expect(screen.getByText('ネットワークエラーが発生しました')).toBeInTheDocument()
     })
-
-    mockAlert.mockRestore()
   })
 
   it('disables buttons during upload', async () => {
@@ -342,7 +336,6 @@ describe('ImageUpload', () => {
   it('ファイル数制限：6つのファイルを選択するとエラーメッセージが表示される', async () => {
     // Given: アップロードフォームが表示されている
     const user = userEvent.setup()
-    const mockAlert = vi.spyOn(window, 'alert').mockImplementation(() => {})
     render(<ImageUpload onUpload={mockOnUpload} onUploadingChange={mockOnUploadingChange} />)
 
     // When: ユーザーが6つのファイルを選択する
@@ -355,13 +348,11 @@ describe('ImageUpload', () => {
 
     // Then: エラーメッセージが表示される
     await waitFor(() => {
-      expect(mockAlert).toHaveBeenCalledWith('画像は最大5枚までです')
+      expect(screen.getByText('画像は最大5枚までです')).toBeInTheDocument()
     })
 
     // Then: プレビューが表示されない
     expect(screen.queryByAltText('アップロードされた画像')).not.toBeInTheDocument()
-
-    mockAlert.mockRestore()
   })
 
   it('正常系：ちょうど5つのファイルを選択すると全てのプレビューが表示される', async () => {
@@ -390,7 +381,6 @@ describe('ImageUpload', () => {
   it('追加モード制限：4つ選択後に2つ貼り付けると制限エラーが表示される', async () => {
     // Given: 4つのファイルが既に選択されている
     const user = userEvent.setup()
-    const mockAlert = vi.spyOn(window, 'alert').mockImplementation(() => {})
     render(<ImageUpload onUpload={mockOnUpload} onUploadingChange={mockOnUploadingChange} />)
 
     const initialFiles = Array.from({ length: 4 }, (_, i) =>
@@ -453,13 +443,11 @@ describe('ImageUpload', () => {
 
     // Then: エラーメッセージが表示される
     await waitFor(() => {
-      expect(mockAlert).toHaveBeenCalledWith('画像は最大5枚までです')
+      expect(screen.getByText('画像は最大5枚までです')).toBeInTheDocument()
     })
 
     // Then: 6枚目は追加されていない
     expect(screen.queryByAltText('追加画像 6')).not.toBeInTheDocument()
-
-    mockAlert.mockRestore()
   })
 
   it('複数ファイルドラッグ&ドロップ：3つのファイルをドロップすると全てのプレビューが表示される', async () => {

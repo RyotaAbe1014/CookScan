@@ -7,7 +7,7 @@ import Image from 'next/image'
 import type { ExtractedRecipeData } from './types'
 import { createRecipe } from './actions'
 import { getAllTagsForRecipe } from '@/features/tags/actions'
-import { Input, Textarea, Card, CardHeader, CardContent } from '@/components/ui'
+import { Input, Textarea, Card, CardHeader, CardContent, Alert } from '@/components/ui'
 import { IngredientInput, StepInput, FormActions } from '@/features/recipes/components'
 
 type Props = {
@@ -18,6 +18,7 @@ type Props = {
 export default function RecipeForm({ imageUrl, extractedData }: Props) {
   const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const [title, setTitle] = useState(extractedData?.title || '')
   const [sourceInfo, setSourceInfo] = useState({
     bookName: extractedData?.sourceInfo?.bookName || '',
@@ -107,6 +108,7 @@ export default function RecipeForm({ imageUrl, extractedData }: Props) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setError(null)
     setIsSubmitting(true)
 
     try {
@@ -124,12 +126,12 @@ export default function RecipeForm({ imageUrl, extractedData }: Props) {
       if (result.success) {
         router.push(`/recipes/${result.recipeId}`)
       } else {
-        alert(result.error || 'レシピの保存に失敗しました')
+        setError(result.error || 'レシピの保存に失敗しました')
         setIsSubmitting(false)
       }
     } catch (error) {
       console.error('Error creating recipe:', error)
-      alert('エラーが発生しました')
+      setError('エラーが発生しました')
       setIsSubmitting(false)
     }
   }
@@ -137,6 +139,11 @@ export default function RecipeForm({ imageUrl, extractedData }: Props) {
   return (
     <form onSubmit={handleSubmit} className="mx-auto max-w-4xl">
       <div className="space-y-6">
+        {error && (
+          <Alert variant="error" className="mb-6">
+            {error}
+          </Alert>
+        )}
         {/* 画像プレビュー */}
         {imageUrl && (
           <Card>

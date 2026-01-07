@@ -658,7 +658,6 @@ describe('RecipeEditForm', () => {
     it('例外発生時、アラートが表示される', async () => {
       // Given: updateRecipeが例外をスロー
       const user = userEvent.setup()
-      const mockAlert = vi.spyOn(window, 'alert').mockImplementation(() => {})
       vi.mocked(updateRecipe).mockRejectedValueOnce(new Error('Network error'))
 
       render(<RecipeEditForm recipe={mockRecipe} />)
@@ -673,11 +672,9 @@ describe('RecipeEditForm', () => {
 
       // Then: エラーアラートが表示される
       await waitFor(() => {
-        expect(mockAlert).toHaveBeenCalledWith('エラーが発生しました')
+        expect(screen.getByText('エラーが発生しました')).toBeInTheDocument()
         expect(mockPush).not.toHaveBeenCalled()
       })
-
-      mockAlert.mockRestore()
     })
 
     it('タイトルが空の場合、送信ボタンが無効', async () => {

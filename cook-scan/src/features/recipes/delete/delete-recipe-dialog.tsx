@@ -1,6 +1,6 @@
 'use client'
 
-import { useTransition } from 'react'
+import { useState, useTransition, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { deleteRecipe } from './actions'
 import { Button, Alert } from '@/components/ui'
@@ -15,6 +15,13 @@ type Props = {
 export default function DeleteRecipeDialog({ recipeId, recipeTitle, isOpen, onClose }: Props) {
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (isOpen) {
+      setError(null)
+    }
+  }, [isOpen])
 
   if (!isOpen) {
     return null
@@ -27,10 +34,10 @@ export default function DeleteRecipeDialog({ recipeId, recipeTitle, isOpen, onCl
         if (result.success) {
           router.push('/recipes')
         } else {
-          alert(result.error || 'レシピの削除に失敗しました')
+          setError(result.error || 'レシピの削除に失敗しました')
         }
       } catch (_error) {
-        alert('エラーが発生しました')
+        setError('エラーが発生しました')
       }
       finally {
         onClose()
@@ -87,6 +94,11 @@ export default function DeleteRecipeDialog({ recipeId, recipeTitle, isOpen, onCl
 
           {/* Warning message */}
           <div className="bg-white px-6 py-4">
+            {error && (
+              <Alert variant="error" className="mb-4">
+                {error}
+              </Alert>
+            )}
             <Alert variant="error">
               この操作は取り消すことができません
             </Alert>

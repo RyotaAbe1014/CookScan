@@ -7,7 +7,7 @@ import Image from 'next/image'
 import { updateRecipe } from './actions'
 import type { UpdateRecipeRequest } from './types'
 import { getAllTagsForRecipe } from '@/features/tags/actions'
-import { Input, Textarea } from '@/components/ui'
+import { Input, Textarea, Alert } from '@/components/ui'
 import { IngredientInput, StepInput, FormActions } from '@/features/recipes/components'
 
 type RecipeData = {
@@ -49,6 +49,7 @@ type Props = {
 export default function RecipeEditForm({ recipe }: Props) {
   const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const [title, setTitle] = useState(recipe.title)
   const [sourceInfo, setSourceInfo] = useState({
     bookName: recipe.sourceInfo[0]?.sourceName || '',
@@ -162,6 +163,7 @@ export default function RecipeEditForm({ recipe }: Props) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setError(null)
     setIsSubmitting(true)
 
     try {
@@ -192,12 +194,12 @@ export default function RecipeEditForm({ recipe }: Props) {
       if (result.success) {
         router.push(`/recipes/${recipe.id}`)
       } else {
-        alert(result.error || 'レシピの更新に失敗しました')
+        setError(result.error || 'レシピの更新に失敗しました')
         setIsSubmitting(false)
       }
     } catch (error) {
       console.error('Error updating recipe:', error)
-      alert('エラーが発生しました')
+      setError('エラーが発生しました')
       setIsSubmitting(false)
     }
   }
@@ -205,6 +207,11 @@ export default function RecipeEditForm({ recipe }: Props) {
   return (
     <form onSubmit={handleSubmit} className="mx-auto max-w-4xl">
           <div className="space-y-6">
+            {error && (
+              <Alert variant="error" className="mb-6">
+                {error}
+              </Alert>
+            )}
             {/* 画像プレビュー */}
             {recipe.imageUrl && (
               <div className="overflow-hidden rounded-xl bg-white p-6 shadow-lg ring-1 ring-gray-900/5">

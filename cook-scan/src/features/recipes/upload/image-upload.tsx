@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
 import Image from 'next/image'
 import type { ExtractedRecipeData, ExtractResponse } from './types'
-import { Button } from '@/components/ui/button'
+import { Button, Alert } from '@/components/ui'
 
 type Props = {
   onUpload: (imageUrl: string, extractedData: ExtractedRecipeData) => void
@@ -14,6 +14,7 @@ export default function ImageUpload({ onUpload, onUploadingChange }: Props) {
   const [isDragging, setIsDragging] = useState(false)
   const [isUploading, setIsUploading] = useState(false)
   const [selectedImages, setSelectedImages] = useState<Array<{ file: File; preview: string }>>([])
+  const [error, setError] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const preview = selectedImages[0]?.preview ?? null
 
@@ -55,12 +56,13 @@ export default function ImageUpload({ onUpload, onUploadingChange }: Props) {
     files: FileList | File[],
     options?: { append?: boolean }
   ) => {
+    setError(null)
     const fileList = Array.from(files)
     if (fileList.length === 0) return
 
     const invalidFile = fileList.find((file) => !file.type.startsWith('image/'))
     if (invalidFile) {
-      alert('画像ファイルを選択してください')
+      setError('画像ファイルを選択してください')
       return
     }
 
@@ -74,7 +76,7 @@ export default function ImageUpload({ onUpload, onUploadingChange }: Props) {
     })
 
     if (isHeic) {
-      alert('HEIC形式のファイルは対応していません。PNG、JPG、GIF形式の画像を選択してください')
+      setError('HEIC形式のファイルは対応していません。PNG、JPG、GIF形式の画像を選択してください')
       return
     }
 
@@ -84,7 +86,7 @@ export default function ImageUpload({ onUpload, onUploadingChange }: Props) {
     const totalCount = currentCount + fileList.length
 
     if (totalCount > MAX_FILES) {
-      alert(`画像は最大${MAX_FILES}枚までです`)
+      setError(`画像は最大${MAX_FILES}枚までです`)
       return
     }
 
@@ -97,7 +99,7 @@ export default function ImageUpload({ onUpload, onUploadingChange }: Props) {
       setSelectedImages((current) => options?.append ? [...current, ...nextImages] : nextImages)
     } catch (error) {
       console.error(error)
-      alert('画像の読み込みに失敗しました')
+      setError('画像の読み込みに失敗しました')
     }
   }, [readFileAsDataUrl, selectedImages.length])
 
@@ -145,7 +147,7 @@ export default function ImageUpload({ onUpload, onUploadingChange }: Props) {
 
       if (!res.ok || data.success === false) {
         const msg = data.success === false ? data.error : 'アップロードに失敗しました'
-        alert(msg)
+        setError(msg)
         setIsUploading(false)
         onUploadingChange(false)
         return
@@ -153,7 +155,7 @@ export default function ImageUpload({ onUpload, onUploadingChange }: Props) {
       onUpload(preview, data.result)
     } catch (e) {
       console.error(e)
-      alert('ネットワークエラーが発生しました')
+      setError('ネットワークエラーが発生しました')
     } finally {
       setIsUploading(false)
       onUploadingChange(false)
@@ -161,6 +163,7 @@ export default function ImageUpload({ onUpload, onUploadingChange }: Props) {
   }
 
   const handleRemove = () => {
+    setError(null)
     setSelectedImages([])
     if (fileInputRef.current) {
       fileInputRef.current.value = ''
@@ -169,6 +172,11 @@ export default function ImageUpload({ onUpload, onUploadingChange }: Props) {
 
   return (
     <div className="mx-auto max-w-2xl">
+      {error && (
+        <Alert variant="error" className="mb-6">
+          {error}
+        </Alert>
+      )}
       {!preview ? (
         <div
           onDragOver={handleDragOver}
