@@ -2,24 +2,10 @@ import { TagCreateForm } from './tag-create-form'
 import { CategoryItem } from './category-item'
 import { TagInfoBanner } from './tag-info-banner'
 import { TagEmptyState } from './tag-empty-state'
-
-type TagCategory = {
-  id: string
-  name: string
-  description: string | null
-  isSystem: boolean
-  userId: string | null
-  tags: Array<{
-    id: string
-    name: string
-    description: string | null
-    isSystem: boolean
-    recipeTags: Array<{ recipeId: string }>
-  }>
-}
+import type { TagCategoryWithTags } from '@/types/tag'
 
 type TagPageContentProps = {
-  tagCategories: TagCategory[]
+  tagCategories: TagCategoryWithTags[]
   currentUserId: string
 }
 

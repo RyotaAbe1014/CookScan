@@ -170,18 +170,6 @@ describe('RecipeUploadContent', () => {
   it('disables back button while uploading', async () => {
     const user = userEvent.setup()
 
-    // Create a mock that allows us to control onUploadingChange
-    vi.mock('@/features/recipes/upload/image-upload', () => ({
-      default: ({ onUploadingChange }: any) => {
-        // Simulate uploading state
-        return (
-          <div data-testid="image-upload">
-            <button onClick={() => onUploadingChange(true)}>開始アップロード</button>
-          </div>
-        )
-      }
-    }), { virtual: true })
-
     render(<RecipeUploadContent />)
 
     await user.click(screen.getByText('スキャン'))

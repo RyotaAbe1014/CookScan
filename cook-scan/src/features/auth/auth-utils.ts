@@ -1,5 +1,7 @@
+import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { prisma } from '@/lib/prisma'
+import type { User } from '@prisma/client'
 
 export async function checkUserProfile() {
   const supabase = await createClient()
@@ -20,4 +22,20 @@ export async function checkUserProfile() {
     authUser: user,
     profile
   }
+}
+
+/**
+ * 認証済みユーザーのプロフィールを取得する
+ * 未認証またはプロフィール未設定の場合はログインページにリダイレクト
+ *
+ * @returns ユーザープロフィール（認証済み保証）
+ */
+export async function requireUserProfile(): Promise<User> {
+  const { hasAuth, hasProfile, profile } = await checkUserProfile()
+
+  if (!hasAuth || !hasProfile || !profile) {
+    redirect('/login')
+  }
+
+  return profile
 }

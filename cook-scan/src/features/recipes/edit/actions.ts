@@ -1,9 +1,8 @@
 'use server'
 
-import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
 import { prisma } from '@/lib/prisma'
-import { checkUserProfile } from '@/features/auth/auth-utils'
+import { requireUserProfile } from '@/features/auth/auth-utils'
 import { UpdateRecipeRequest, UpdateRecipeResponse } from '@/features/recipes/edit/types'
 import { Prisma } from '@prisma/client'
 import { validateTagIdsForUser } from '@/features/tags/tag-utils'
@@ -12,12 +11,7 @@ import { sanitizeUrl } from '@/utils/url-validation'
 export async function updateRecipe(request: UpdateRecipeRequest): Promise<UpdateRecipeResponse> {
   const { recipeId, title, sourceInfo, ingredients, steps, memo, tags } = request
 
-  // Get current user
-  const { hasAuth, hasProfile, profile } = await checkUserProfile()
-
-  if (!hasAuth || !hasProfile || !profile) {
-    redirect('/login')
-  }
+  const profile = await requireUserProfile()
 
   try {
     const { validTagIds, isValid } = await validateTagIdsForUser(

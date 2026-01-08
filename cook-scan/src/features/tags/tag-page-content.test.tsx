@@ -38,7 +38,8 @@ describe('TagPageContent', () => {
         name: `Tag 1 for ${name}`,
         description: null,
         isSystem: false,
-        recipeTags: [],
+        categoryId: id,
+        recipeTags: [] as { recipeId: string }[],
       },
     ],
   })

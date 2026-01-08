@@ -1,18 +1,12 @@
 'use server'
 
-import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
 import { prisma } from '@/lib/prisma'
-import { checkUserProfile } from '@/features/auth/auth-utils'
+import { requireUserProfile } from '@/features/auth/auth-utils'
 import { Prisma } from '@prisma/client'
 
 export async function deleteRecipe(recipeId: string) {
-  // Get current user
-  const { hasAuth, hasProfile, profile } = await checkUserProfile()
-
-  if (!hasAuth || !hasProfile || !profile) {
-    redirect('/login')
-  }
+  const profile = await requireUserProfile()
 
   try {
     // Verify that the recipe belongs to the current user

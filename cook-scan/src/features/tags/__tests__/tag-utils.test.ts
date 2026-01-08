@@ -40,7 +40,7 @@ describe('validateTagIdsForUser', () => {
     vi.mocked(prisma.tag.findMany).mockResolvedValue([
       { id: 'tag-1' },
       { id: 'tag-2' },
-    ])
+    ] as any)
 
     // When: validateTagIdsForUserを呼ぶ
     const result = await validateTagIdsForUser(tagIds, mockUserId)
@@ -68,7 +68,7 @@ describe('validateTagIdsForUser', () => {
     vi.mocked(prisma.tag.findMany).mockResolvedValue([
       { id: 'tag-1' },
       { id: 'tag-2' },
-    ])
+    ] as any)
 
     // When: validateTagIdsForUserを呼ぶ
     const result = await validateTagIdsForUser(tagIds, mockUserId)
@@ -96,7 +96,7 @@ describe('validateTagIdsForUser', () => {
     vi.mocked(prisma.tag.findMany).mockResolvedValue([
       { id: 'system-tag-1' },
       { id: 'system-tag-2' },
-    ])
+    ] as any)
 
     // When: validateTagIdsForUserを呼ぶ
     const result = await validateTagIdsForUser(tagIds, mockUserId)
@@ -114,7 +114,7 @@ describe('validateTagIdsForUser', () => {
     vi.mocked(prisma.tag.findMany).mockResolvedValue([
       { id: 'user-tag-1' },
       { id: 'user-tag-2' },
-    ])
+    ] as any)
 
     // When: validateTagIdsForUserを呼ぶ
     const result = await validateTagIdsForUser(tagIds, mockUserId)
@@ -142,7 +142,7 @@ describe('validateTagIdsForUser', () => {
     vi.mocked(prisma.tag.findMany).mockResolvedValue([
       { id: 'tag-1' },
       { id: 'tag-2' },
-    ])
+    ] as any)
 
     // When: validateTagIdsForUserを呼ぶ
     const result = await validateTagIdsForUser(tagIds, mockUserId)
@@ -160,7 +160,7 @@ describe('validateTagIdsForUser', () => {
     // my-tagのみが返される（other-user-tagは他のユーザーのもの）
     vi.mocked(prisma.tag.findMany).mockResolvedValue([
       { id: 'my-tag' },
-    ])
+    ] as any)
 
     // When: validateTagIdsForUserを呼ぶ
     const result = await validateTagIdsForUser(tagIds, mockUserId)
@@ -193,7 +193,7 @@ describe('validateTagIdsForUser', () => {
     vi.mocked(prisma.tag.findMany).mockResolvedValue([
       { id: 'system-tag' },
       { id: 'user-tag' },
-    ])
+    ] as any)
 
     // When: validateTagIdsForUserを呼ぶ
     const result = await validateTagIdsForUser(tagIds, mockUserId)
@@ -213,7 +213,7 @@ describe('validateTagIdsForUser', () => {
       { id: 'tag-1' },
       { id: 'tag-2' },
       { id: 'tag-3' },
-    ])
+    ] as any)
 
     // When: validateTagIdsForUserを呼ぶ
     const result = await validateTagIdsForUser(tagIds, mockUserId)
@@ -228,7 +228,7 @@ describe('validateTagIdsForUser', () => {
     vi.mocked(prisma.tag.findMany).mockResolvedValue([
       { id: 'tag-1' },
       { id: 'tag-2' },
-    ])
+    ] as any)
 
     // When: validateTagIdsForUserを呼ぶ
     const result = await validateTagIdsForUser(tagIds, mockUserId)
@@ -254,7 +254,7 @@ describe('validateTagIdsForUser', () => {
     // Given: 大量のtagIds
     const tagIds = Array.from({ length: 100 }, (_, i) => `tag-${i}`)
     const mockTags = Array.from({ length: 100 }, (_, i) => ({ id: `tag-${i}` }))
-    vi.mocked(prisma.tag.findMany).mockResolvedValue(mockTags)
+    vi.mocked(prisma.tag.findMany).mockResolvedValue(mockTags as any)
 
     // When: validateTagIdsForUserを呼ぶ
     const result = await validateTagIdsForUser(tagIds, mockUserId)

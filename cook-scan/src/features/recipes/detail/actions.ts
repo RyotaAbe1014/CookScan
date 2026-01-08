@@ -1,15 +1,10 @@
 'use server'
 
-import { redirect } from 'next/navigation'
-import { checkUserProfile } from '@/features/auth/auth-utils'
+import { requireUserProfile } from '@/features/auth/auth-utils'
 import { prisma } from '@/lib/prisma'
 
 export async function getRecipeById(recipeId: string) {
-  const { hasAuth, hasProfile, profile } = await checkUserProfile()
-
-  if (!hasAuth || !hasProfile || !profile) {
-    redirect('/login')
-  }
+  const profile = await requireUserProfile()
 
   try {
     const recipe = await prisma.recipe.findFirst({

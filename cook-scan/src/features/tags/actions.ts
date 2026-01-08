@@ -1,19 +1,14 @@
 'use server'
 
-import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
 import { prisma } from '@/lib/prisma'
-import { checkUserProfile } from '@/features/auth/auth-utils'
+import { requireUserProfile } from '@/features/auth/auth-utils'
 
 /**
  * タグカテゴリを作成
  */
 export async function createTagCategory(name: string, description?: string) {
-  const { hasAuth, hasProfile, profile } = await checkUserProfile()
-
-  if (!hasAuth || !hasProfile || !profile) {
-    redirect('/login')
-  }
+  const profile = await requireUserProfile()
 
   try {
     const category = await prisma.tagCategory.create({
@@ -37,11 +32,7 @@ export async function createTagCategory(name: string, description?: string) {
  * タグを作成
  */
 export async function createTag(categoryId: string, name: string, description?: string) {
-  const { hasAuth, hasProfile, profile } = await checkUserProfile()
-
-  if (!hasAuth || !hasProfile || !profile) {
-    redirect('/login')
-  }
+  const profile = await requireUserProfile()
 
   try {
     // カテゴリの存在と権限を確認
@@ -79,11 +70,7 @@ export async function createTag(categoryId: string, name: string, description?: 
  * タグを更新
  */
 export async function updateTag(tagId: string, name: string, description?: string) {
-  const { hasAuth, hasProfile, profile } = await checkUserProfile()
-
-  if (!hasAuth || !hasProfile || !profile) {
-    redirect('/login')
-  }
+  const profile = await requireUserProfile()
 
   try {
     // タグの存在と権限を確認
@@ -126,11 +113,7 @@ export async function updateTag(tagId: string, name: string, description?: strin
  * タグを削除
  */
 export async function deleteTag(tagId: string) {
-  const { hasAuth, hasProfile, profile } = await checkUserProfile()
-
-  if (!hasAuth || !hasProfile || !profile) {
-    redirect('/login')
-  }
+  const profile = await requireUserProfile()
 
   try {
     // タグの存在と権限を確認
@@ -180,11 +163,7 @@ export async function deleteTag(tagId: string) {
  * タグカテゴリを更新
  */
 export async function updateTagCategory(categoryId: string, name: string, description?: string) {
-  const { hasAuth, hasProfile, profile } = await checkUserProfile()
-
-  if (!hasAuth || !hasProfile || !profile) {
-    redirect('/login')
-  }
+  const profile = await requireUserProfile()
 
   try {
     // カテゴリの存在と権限を確認
@@ -226,11 +205,7 @@ export async function updateTagCategory(categoryId: string, name: string, descri
  * タグカテゴリを削除
  */
 export async function deleteTagCategory(categoryId: string) {
-  const { hasAuth, hasProfile, profile } = await checkUserProfile()
-
-  if (!hasAuth || !hasProfile || !profile) {
-    redirect('/login')
-  }
+  const profile = await requireUserProfile()
 
   try {
     // カテゴリの存在と権限を確認
@@ -276,11 +251,7 @@ export async function deleteTagCategory(categoryId: string) {
  * すべてのタグカテゴリとタグを取得（レシピ作成・編集時のタグ選択用）
  */
 export async function getAllTagsForRecipe() {
-  const { hasAuth, hasProfile, profile } = await checkUserProfile()
-
-  if (!hasAuth || !hasProfile || !profile) {
-    redirect('/login')
-  }
+  const profile = await requireUserProfile()
 
   try {
     const tagCategories = await prisma.tagCategory.findMany({
@@ -306,11 +277,7 @@ export async function getAllTagsForRecipe() {
  * タグカテゴリとタグ、レシピタグの関連を取得（タグページ用）
  */
 export async function getTagCategoriesWithTags(userId: string) {
-  const { hasAuth, hasProfile } = await checkUserProfile()
-
-  if (!hasAuth || !hasProfile) {
-    redirect('/login')
-  }
+  await requireUserProfile()
 
   try {
     const tagCategories = await prisma.tagCategory.findMany({

@@ -7,50 +7,35 @@ describe('RecipeTagsSection', () => {
   describe('Given タグが存在する場合', () => {
     const mockRecipeTags: RecipeTag[] = [
       {
-        id: '1',
-        recipeId: 'recipe-1',
         tagId: 'tag-1',
         tag: {
           id: 'tag-1',
           name: '和食',
-          userId: 'user-1',
-          categoryId: 'category-1',
           category: {
             id: 'category-1',
             name: 'ジャンル',
-            userId: 'user-1',
           },
         },
       },
       {
-        id: '2',
-        recipeId: 'recipe-1',
         tagId: 'tag-2',
         tag: {
           id: 'tag-2',
           name: '中華',
-          userId: 'user-1',
-          categoryId: 'category-1',
           category: {
             id: 'category-1',
             name: 'ジャンル',
-            userId: 'user-1',
           },
         },
       },
       {
-        id: '3',
-        recipeId: 'recipe-1',
         tagId: 'tag-3',
         tag: {
           id: 'tag-3',
           name: '簡単',
-          userId: 'user-1',
-          categoryId: 'category-2',
           category: {
             id: 'category-2',
             name: '難易度',
-            userId: 'user-1',
           },
         },
       },

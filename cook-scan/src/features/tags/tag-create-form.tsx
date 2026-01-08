@@ -3,16 +3,10 @@
 import { useState } from 'react'
 import { createTagCategory, createTag } from './actions'
 import { Button, Input, Textarea, Select, Alert } from '@/components/ui'
-
-type TagCategory = {
-  id: string
-  name: string
-  description: string | null
-  isSystem: boolean
-}
+import type { TagCategoryBasic } from '@/types/tag'
 
 type TagCreateFormProps = {
-  categories: TagCategory[]
+  categories: TagCategoryBasic[]
 }
 
 export function TagCreateForm({ categories }: TagCreateFormProps) {
