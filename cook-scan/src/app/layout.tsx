@@ -18,7 +18,6 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <head>
-        <link rel="icon" href="/favicon.ico" />
         <meta name="apple-mobile-web-app-title" content="CookScan" />
       </head>
       <body>{children}</body>
