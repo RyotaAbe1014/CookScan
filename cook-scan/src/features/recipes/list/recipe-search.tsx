@@ -117,7 +117,7 @@ export function RecipeSearch({ resultCount }: Props) {
             <button
               type="submit"
               disabled={query.trim().length === 0}
-              className="group/btn relative flex h-11 items-center gap-2 overflow-hidden rounded-xl bg-linear-to-r from-indigo-600 to-purple-600 px-6 font-semibold text-white shadow-lg shadow-indigo-500/30 transition-all hover:shadow-xl hover:shadow-indigo-500/40 disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none"
+              className="group/btn relative flex h-11 w-11 sm:w-auto items-center justify-center gap-2 overflow-hidden rounded-xl bg-linear-to-r from-indigo-600 to-purple-600 px-3 sm:px-6 font-semibold text-white shadow-lg shadow-indigo-500/30 transition-all hover:shadow-xl hover:shadow-indigo-500/40 disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none"
             >
               {/* Shine effect on hover */}
               <div className="absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-white/20 to-transparent transition-transform duration-500 group-hover/btn:translate-x-full" />
@@ -130,7 +130,7 @@ export function RecipeSearch({ resultCount }: Props) {
               >
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
-              <span className="relative">検索</span>
+              <span className="relative hidden sm:inline">検索</span>
             </button>
           </div>
         </div>
