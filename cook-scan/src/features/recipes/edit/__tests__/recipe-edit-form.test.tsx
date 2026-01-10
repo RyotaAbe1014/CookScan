@@ -123,7 +123,7 @@ describe('RecipeEditForm', () => {
   describe('初期表示', () => {
     it('レシピのタイトルが表示される', async () => {
       // Given: RecipeEditFormがマウントされている
-      render(<RecipeEditForm recipe={mockRecipe} />)
+      render(<RecipeEditForm tagCategories={mockTagCategories} recipe={mockRecipe} />)
 
       // When: 初期レンダリングされる
       await waitFor(() => {
@@ -136,7 +136,7 @@ describe('RecipeEditForm', () => {
 
     it('材料が表示される', async () => {
       // Given: RecipeEditFormがマウントされている
-      render(<RecipeEditForm recipe={mockRecipe} />)
+      render(<RecipeEditForm tagCategories={mockTagCategories} recipe={mockRecipe} />)
 
       // When: 初期レンダリングされる
       await waitFor(() => {
@@ -149,7 +149,7 @@ describe('RecipeEditForm', () => {
 
     it('手順が表示される', async () => {
       // Given: RecipeEditFormがマウントされている
-      render(<RecipeEditForm recipe={mockRecipe} />)
+      render(<RecipeEditForm tagCategories={mockTagCategories} recipe={mockRecipe} />)
 
       // When: 初期レンダリングされる
       await waitFor(() => {
@@ -161,7 +161,7 @@ describe('RecipeEditForm', () => {
 
     it('メモが表示される', async () => {
       // Given: RecipeEditFormがマウントされている
-      render(<RecipeEditForm recipe={mockRecipe} />)
+      render(<RecipeEditForm tagCategories={mockTagCategories} recipe={mockRecipe} />)
 
       // When: 初期レンダリングされる
       await waitFor(() => {
@@ -174,7 +174,7 @@ describe('RecipeEditForm', () => {
 
     it('ソース情報が表示される', async () => {
       // Given: RecipeEditFormがマウントされている
-      render(<RecipeEditForm recipe={mockRecipe} />)
+      render(<RecipeEditForm tagCategories={mockTagCategories} recipe={mockRecipe} />)
 
       // When: 初期レンダリングされる
       await waitFor(() => {
@@ -187,7 +187,7 @@ describe('RecipeEditForm', () => {
 
     it('タグが読み込まれて選択状態が反映される', async () => {
       // Given: RecipeEditFormがマウントされている
-      render(<RecipeEditForm recipe={mockRecipe} />)
+      render(<RecipeEditForm tagCategories={mockTagCategories} recipe={mockRecipe} />)
 
       // When: タグデータが読み込まれる
       await waitFor(() => {
@@ -201,7 +201,7 @@ describe('RecipeEditForm', () => {
 
     it('画像が表示される', async () => {
       // Given: RecipeEditFormがマウントされている
-      render(<RecipeEditForm recipe={mockRecipe} />)
+      render(<RecipeEditForm tagCategories={mockTagCategories} recipe={mockRecipe} />)
 
       // When: 初期レンダリングされる
       await waitFor(() => {
@@ -219,7 +219,7 @@ describe('RecipeEditForm', () => {
     it('タイトルを変更できる', async () => {
       // Given: RecipeEditFormが表示されている
       const user = userEvent.setup()
-      render(<RecipeEditForm recipe={mockRecipe} />)
+      render(<RecipeEditForm tagCategories={mockTagCategories} recipe={mockRecipe} />)
 
       await waitFor(() => {
         expect(screen.getByLabelText(/レシピタイトル/i)).toBeInTheDocument()
@@ -238,7 +238,7 @@ describe('RecipeEditForm', () => {
     it('本の名前を変更できる', async () => {
       // Given: RecipeEditFormが表示されている
       const user = userEvent.setup()
-      render(<RecipeEditForm recipe={mockRecipe} />)
+      render(<RecipeEditForm tagCategories={mockTagCategories} recipe={mockRecipe} />)
 
       await waitFor(() => {
         expect(screen.getByLabelText(/本の名前/i)).toBeInTheDocument()
@@ -257,7 +257,7 @@ describe('RecipeEditForm', () => {
     it('ページ番号を変更できる', async () => {
       // Given: RecipeEditFormが表示されている
       const user = userEvent.setup()
-      render(<RecipeEditForm recipe={mockRecipe} />)
+      render(<RecipeEditForm tagCategories={mockTagCategories} recipe={mockRecipe} />)
 
       await waitFor(() => {
         expect(screen.getByLabelText(/ページ番号/i)).toBeInTheDocument()
@@ -276,7 +276,7 @@ describe('RecipeEditForm', () => {
     it('URLを変更できる', async () => {
       // Given: RecipeEditFormが表示されている
       const user = userEvent.setup()
-      render(<RecipeEditForm recipe={mockRecipe} />)
+      render(<RecipeEditForm tagCategories={mockTagCategories} recipe={mockRecipe} />)
 
       await waitFor(() => {
         expect(screen.getByLabelText(/参照URL/i)).toBeInTheDocument()
@@ -295,7 +295,7 @@ describe('RecipeEditForm', () => {
     it('メモを変更できる', async () => {
       // Given: RecipeEditFormが表示されている
       const user = userEvent.setup()
-      render(<RecipeEditForm recipe={mockRecipe} />)
+      render(<RecipeEditForm tagCategories={mockTagCategories} recipe={mockRecipe} />)
 
       await waitFor(() => {
         expect(screen.getByLabelText(/メモ/i)).toBeInTheDocument()
@@ -316,7 +316,7 @@ describe('RecipeEditForm', () => {
     it('材料を追加できる', async () => {
       // Given: RecipeEditFormが表示されている
       const user = userEvent.setup()
-      render(<RecipeEditForm recipe={mockRecipe} />)
+      render(<RecipeEditForm tagCategories={mockTagCategories} recipe={mockRecipe} />)
 
       await waitFor(() => {
         expect(screen.getByText(/材料を追加/)).toBeInTheDocument()
@@ -334,7 +334,7 @@ describe('RecipeEditForm', () => {
     it('材料の名前を編集できる', async () => {
       // Given: RecipeEditFormが表示されている
       const user = userEvent.setup()
-      render(<RecipeEditForm recipe={mockRecipe} />)
+      render(<RecipeEditForm tagCategories={mockTagCategories} recipe={mockRecipe} />)
 
       await waitFor(() => {
         expect(screen.getByDisplayValue('玉ねぎ')).toBeInTheDocument()
@@ -365,7 +365,7 @@ describe('RecipeEditForm', () => {
           },
         ],
       }
-      render(<RecipeEditForm recipe={recipeWithMultipleIngredients} />)
+      render(<RecipeEditForm tagCategories={mockTagCategories} recipe={recipeWithMultipleIngredients} />)
 
       await waitFor(() => {
         expect(screen.getByDisplayValue('人参')).toBeInTheDocument()
@@ -387,7 +387,7 @@ describe('RecipeEditForm', () => {
 
     it('材料が1個の場合は削除ボタンが無効', async () => {
       // Given: 材料が1個だけの状態
-      render(<RecipeEditForm recipe={mockRecipe} />)
+      render(<RecipeEditForm tagCategories={mockTagCategories} recipe={mockRecipe} />)
 
       await waitFor(() => {
         expect(screen.getByDisplayValue('玉ねぎ')).toBeInTheDocument()
@@ -406,7 +406,7 @@ describe('RecipeEditForm', () => {
     it('手順を追加できる', async () => {
       // Given: RecipeEditFormが表示されている
       const user = userEvent.setup()
-      render(<RecipeEditForm recipe={mockRecipe} />)
+      render(<RecipeEditForm tagCategories={mockTagCategories} recipe={mockRecipe} />)
 
       await waitFor(() => {
         expect(screen.getByText(/手順を追加/)).toBeInTheDocument()
@@ -424,7 +424,7 @@ describe('RecipeEditForm', () => {
     it('手順の説明を編集できる', async () => {
       // Given: RecipeEditFormが表示されている
       const user = userEvent.setup()
-      render(<RecipeEditForm recipe={mockRecipe} />)
+      render(<RecipeEditForm tagCategories={mockTagCategories} recipe={mockRecipe} />)
 
       await waitFor(() => {
         expect(screen.getByDisplayValue('玉ねぎを切る')).toBeInTheDocument()
@@ -443,7 +443,7 @@ describe('RecipeEditForm', () => {
     it('手順のタイマーを編集できる', async () => {
       // Given: RecipeEditFormが表示されている
       const user = userEvent.setup()
-      render(<RecipeEditForm recipe={mockRecipe} />)
+      render(<RecipeEditForm tagCategories={mockTagCategories} recipe={mockRecipe} />)
 
       await waitFor(() => {
         expect(screen.getByDisplayValue('60')).toBeInTheDocument()
@@ -474,7 +474,7 @@ describe('RecipeEditForm', () => {
           },
         ],
       }
-      render(<RecipeEditForm recipe={recipeWithMultipleSteps} />)
+      render(<RecipeEditForm tagCategories={mockTagCategories} recipe={recipeWithMultipleSteps} />)
 
       await waitFor(() => {
         expect(screen.getByDisplayValue('炒める')).toBeInTheDocument()
@@ -496,7 +496,7 @@ describe('RecipeEditForm', () => {
 
     it('手順が1個の場合は削除ボタンが無効', async () => {
       // Given: 手順が1個だけの状態
-      render(<RecipeEditForm recipe={mockRecipe} />)
+      render(<RecipeEditForm tagCategories={mockTagCategories} recipe={mockRecipe} />)
 
       await waitFor(() => {
         expect(screen.getByDisplayValue('玉ねぎを切る')).toBeInTheDocument()
@@ -519,7 +519,7 @@ describe('RecipeEditForm', () => {
         ...mockRecipe,
         recipeTags: [],
       }
-      render(<RecipeEditForm recipe={recipeWithoutTags} />)
+      render(<RecipeEditForm tagCategories={mockTagCategories} recipe={recipeWithoutTags} />)
 
       await waitFor(() => {
         expect(screen.getByText('和食')).toBeInTheDocument()
@@ -538,7 +538,7 @@ describe('RecipeEditForm', () => {
     it('タグの選択を解除できる', async () => {
       // Given: タグが選択されている状態
       const user = userEvent.setup()
-      render(<RecipeEditForm recipe={mockRecipe} />)
+      render(<RecipeEditForm tagCategories={mockTagCategories} recipe={mockRecipe} />)
 
       await waitFor(() => {
         expect(screen.getByText('和食')).toBeInTheDocument()
@@ -561,7 +561,7 @@ describe('RecipeEditForm', () => {
         ...mockRecipe,
         recipeTags: [],
       }
-      render(<RecipeEditForm recipe={recipeWithoutTags} />)
+      render(<RecipeEditForm tagCategories={mockTagCategories} recipe={recipeWithoutTags} />)
 
       await waitFor(() => {
         expect(screen.getByText('和食')).toBeInTheDocument()
@@ -586,7 +586,7 @@ describe('RecipeEditForm', () => {
       const user = userEvent.setup()
       vi.mocked(updateRecipe).mockResolvedValueOnce({ success: true })
 
-      render(<RecipeEditForm recipe={mockRecipe} />)
+      render(<RecipeEditForm tagCategories={mockTagCategories} recipe={mockRecipe} />)
 
       await waitFor(() => {
         expect(screen.getByText(/レシピを更新/)).toBeInTheDocument()
@@ -637,7 +637,7 @@ describe('RecipeEditForm', () => {
         error: '更新に失敗しました',
       })
 
-      render(<RecipeEditForm recipe={mockRecipe} />)
+      render(<RecipeEditForm tagCategories={mockTagCategories} recipe={mockRecipe} />)
 
       await waitFor(() => {
         expect(screen.getByText(/レシピを更新/)).toBeInTheDocument()
@@ -660,7 +660,7 @@ describe('RecipeEditForm', () => {
       const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
       vi.mocked(updateRecipe).mockRejectedValueOnce(new Error('Network error'))
 
-      render(<RecipeEditForm recipe={mockRecipe} />)
+      render(<RecipeEditForm tagCategories={mockTagCategories} recipe={mockRecipe} />)
 
       await waitFor(() => {
         expect(screen.getByText(/レシピを更新/)).toBeInTheDocument()
@@ -685,7 +685,7 @@ describe('RecipeEditForm', () => {
         ...mockRecipe,
         title: '',
       }
-      render(<RecipeEditForm recipe={recipeWithoutTitle} />)
+      render(<RecipeEditForm tagCategories={mockTagCategories} recipe={recipeWithoutTitle} />)
 
       // When: 初期レンダリングされる
       await waitFor(() => {
@@ -705,7 +705,7 @@ describe('RecipeEditForm', () => {
       }
       vi.mocked(updateRecipe).mockResolvedValueOnce({ success: true })
 
-      render(<RecipeEditForm recipe={recipeWithoutSource} />)
+      render(<RecipeEditForm tagCategories={mockTagCategories} recipe={recipeWithoutSource} />)
 
       await waitFor(() => {
         expect(screen.getByText(/レシピを更新/)).toBeInTheDocument()
@@ -736,7 +736,7 @@ describe('RecipeEditForm', () => {
       })
       vi.mocked(updateRecipe).mockReturnValueOnce(updatePromise)
 
-      render(<RecipeEditForm recipe={mockRecipe} />)
+      render(<RecipeEditForm tagCategories={mockTagCategories} recipe={mockRecipe} />)
 
       await waitFor(() => {
         expect(screen.getByText(/レシピを更新/)).toBeInTheDocument()
@@ -767,7 +767,7 @@ describe('RecipeEditForm', () => {
       })
       vi.mocked(updateRecipe).mockReturnValueOnce(updatePromise)
 
-      render(<RecipeEditForm recipe={mockRecipe} />)
+      render(<RecipeEditForm tagCategories={mockTagCategories} recipe={mockRecipe} />)
 
       await waitFor(() => {
         expect(screen.getByText(/レシピを更新/)).toBeInTheDocument()
@@ -794,7 +794,7 @@ describe('RecipeEditForm', () => {
     it('キャンセルボタンが表示される', async () => {
       // Given: RecipeEditFormが表示されている
       const user = userEvent.setup()
-      render(<RecipeEditForm recipe={mockRecipe} />)
+      render(<RecipeEditForm tagCategories={mockTagCategories} recipe={mockRecipe} />)
 
       // When: 初期レンダリングされる
       await waitFor(() => {
