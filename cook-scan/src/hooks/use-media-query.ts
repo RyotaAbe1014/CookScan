@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useSyncExternalStore } from 'react'
 
 /**
  * メディアクエリの状態を監視するカスタムフック
@@ -8,23 +8,17 @@ import { useState, useEffect } from 'react'
  * @returns メディアクエリがマッチしているかどうか
  */
 export function useMediaQuery(query: string): boolean {
-  const [matches, setMatches] = useState(false)
-
-  // windowオブジェクトはサーバー側に存在しないため、クライアント側で初期化
-  useEffect(() => {
+  const subscribe = (callback: () => void) => {
     const media = window.matchMedia(query)
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setMatches(media.matches)
+    media.addEventListener('change', callback)
+    return () => media.removeEventListener('change', callback)
+  }
 
-    const listener = (event: MediaQueryListEvent) => {
-      setMatches(event.matches)
-    }
+  const getSnapshot = () => {
+    return window.matchMedia(query).matches
+  }
 
-    media.addEventListener('change', listener)
-    return () => media.removeEventListener('change', listener)
-  }, [query])
-
-  return matches
+  return useSyncExternalStore(subscribe, getSnapshot)
 }
 
 /**
