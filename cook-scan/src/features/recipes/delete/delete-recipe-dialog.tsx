@@ -17,11 +17,10 @@ export default function DeleteRecipeDialog({ recipeId, recipeTitle, isOpen, onCl
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState<string | null>(null)
 
-  useEffect(() => {
-    if (isOpen) {
-      setError(null)
-    }
-  }, [isOpen])
+  const handleClose = () => {
+    setError(null)
+    onClose()
+  }
 
   if (!isOpen) {
     return null
@@ -33,7 +32,7 @@ export default function DeleteRecipeDialog({ recipeId, recipeTitle, isOpen, onCl
         const result = await deleteRecipe(recipeId)
         if (result.success) {
           router.push('/recipes')
-          onClose()
+          handleClose()
         } else {
           setError(result.error || 'レシピの削除に失敗しました')
         }
@@ -52,7 +51,7 @@ export default function DeleteRecipeDialog({ recipeId, recipeTitle, isOpen, onCl
         {/* Background overlay */}
         <div
           className="absolute inset-0"
-          onClick={onClose}
+          onClick={handleClose}
           aria-hidden="true"
         />
 
@@ -108,7 +107,7 @@ export default function DeleteRecipeDialog({ recipeId, recipeTitle, isOpen, onCl
               type="button"
               variant="secondary"
               disabled={isPending}
-              onClick={onClose}
+              onClick={handleClose}
               className="flex-1"
             >
               キャンセル
