@@ -4,6 +4,13 @@ import { useEffect, useRef } from 'react'
 import { Button } from '@/components/ui/button'
 import { useCookingTimer } from './hooks/use-cooking-timer'
 import { requestNotificationPermission } from '@/utils/timer-notifications'
+import {
+  ClockIcon,
+  PlayIcon,
+  PauseIcon,
+  ReloadIcon,
+  CheckIcon,
+} from '@/components/icons'
 
 type StepTimerProps = {
   stepId: string
@@ -92,19 +99,10 @@ export function StepTimer({
         aria-label={`ステップ${stepNumber}のタイマー、残り${formatTime(remainingSeconds)}`}
         className="mb-3 flex items-center justify-center gap-2"
       >
-        <svg
+        <ClockIcon
           className={`h-5 w-5 ${isInitial ? 'text-slate-600' : 'text-white'}`}
-          fill="none"
-          viewBox="0 0 24 24"
           stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-          />
-        </svg>
+        />
         <span
           className={`font-mono text-2xl font-bold tracking-wider ${isInitial ? 'text-slate-700' : 'text-white'}`}
         >
@@ -142,20 +140,7 @@ export function StepTimer({
             className="bg-indigo-600 shadow-md transition-transform hover:scale-105 hover:bg-indigo-700"
             aria-label="タイマーを開始"
           >
-            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
-              />
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
+            <PlayIcon className="h-4 w-4" />
             開始
           </Button>
         )}
@@ -169,14 +154,7 @@ export function StepTimer({
               className="bg-white/90 text-gray-800 shadow-md backdrop-blur-sm transition-transform hover:scale-105 hover:bg-white"
               aria-label="タイマーを一時停止"
             >
-              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
+              <PauseIcon className="h-4 w-4" />
               一時停止
             </Button>
             <Button
@@ -186,14 +164,7 @@ export function StepTimer({
               className="bg-white/90 text-gray-800 shadow-md backdrop-blur-sm transition-transform hover:scale-105 hover:bg-white"
               aria-label="タイマーをリセット"
             >
-              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                />
-              </svg>
+              <ReloadIcon className="h-4 w-4" />
               リセット
             </Button>
           </>
@@ -208,20 +179,7 @@ export function StepTimer({
               className="bg-white/90 text-gray-800 shadow-md backdrop-blur-sm transition-transform hover:scale-105 hover:bg-white"
               aria-label="タイマーを再開"
             >
-              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
-                />
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
+              <PlayIcon className="h-4 w-4" />
               再開
             </Button>
             <Button
@@ -231,14 +189,7 @@ export function StepTimer({
               className="bg-white/90 text-gray-800 shadow-md backdrop-blur-sm transition-transform hover:scale-105 hover:bg-white"
               aria-label="タイマーをリセット"
             >
-              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                />
-              </svg>
+              <ReloadIcon className="h-4 w-4" />
               リセット
             </Button>
           </>
@@ -252,14 +203,7 @@ export function StepTimer({
             className="bg-white/90 text-gray-800 shadow-md backdrop-blur-sm transition-transform hover:scale-105 hover:bg-white"
             aria-label="タイマーをリセット"
           >
-            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-              />
-            </svg>
+            <ReloadIcon className="h-4 w-4" />
             リセット
           </Button>
         )}
@@ -268,9 +212,7 @@ export function StepTimer({
       {/* 終了メッセージ */}
       {isFinished && (
         <div className="mt-3 flex items-center justify-center gap-2 text-sm font-medium text-white">
-          <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-          </svg>
+          <CheckIcon className="h-5 w-5" />
           タイマーが終了しました！
         </div>
       )}

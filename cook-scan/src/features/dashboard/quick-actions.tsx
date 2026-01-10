@@ -1,4 +1,10 @@
 import Link from 'next/link'
+import {
+  PlusIcon,
+  ChevronRightIcon,
+  EmptyIcon,
+  TagIcon,
+} from '@/components/icons'
 
 export function QuickActions() {
   return (
@@ -20,9 +26,7 @@ export function QuickActions() {
               <div className="relative">
                 <div className="absolute inset-0 rounded-2xl bg-indigo-400/30 blur-xl transition-all duration-300 group-hover:bg-indigo-400/50" />
                 <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-linear-to-br from-indigo-500 to-purple-600 shadow-lg transition-all duration-300 group-hover:scale-105 group-hover:rotate-3">
-                  <svg className="h-7 w-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" />
-                  </svg>
+                  <PlusIcon className="h-7 w-7 text-white" strokeWidth={2.5} />
                 </div>
               </div>
             </div>
@@ -36,9 +40,7 @@ export function QuickActions() {
             {/* アクションリンク */}
             <div className="flex items-center text-sm font-semibold text-indigo-600 transition-colors duration-200 group-hover:text-purple-600">
               スキャンを開始
-              <svg className="ml-1.5 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
-              </svg>
+              <ChevronRightIcon className="ml-1.5 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1.5" strokeWidth={2.5} />
             </div>
           </div>
         </Link>
@@ -58,14 +60,7 @@ export function QuickActions() {
               <div className="relative">
                 <div className="absolute inset-0 rounded-2xl bg-emerald-400/30 blur-xl transition-all duration-300 group-hover:bg-emerald-400/50" />
                 <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-linear-to-br from-emerald-500 to-teal-600 shadow-lg transition-all duration-300 group-hover:scale-105 group-hover:rotate-3">
-                  <svg className="h-7 w-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2.5}
-                      d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
-                    />
-                  </svg>
+                  <EmptyIcon className="h-7 w-7 text-white" strokeWidth={2.5} />
                 </div>
               </div>
             </div>
@@ -79,9 +74,7 @@ export function QuickActions() {
             {/* アクションリンク */}
             <div className="flex items-center text-sm font-semibold text-emerald-600 transition-colors duration-200 group-hover:text-teal-600">
               レシピを見る
-              <svg className="ml-1.5 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
-              </svg>
+              <ChevronRightIcon className="ml-1.5 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1.5" strokeWidth={2.5} />
             </div>
           </div>
         </Link>
@@ -101,14 +94,7 @@ export function QuickActions() {
               <div className="relative">
                 <div className="absolute inset-0 rounded-2xl bg-amber-400/30 blur-xl transition-all duration-300 group-hover:bg-amber-400/50" />
                 <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-linear-to-br from-amber-500 to-orange-600 shadow-lg transition-all duration-300 group-hover:scale-105 group-hover:rotate-3">
-                  <svg className="h-7 w-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2.5}
-                      d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
-                    />
-                  </svg>
+                  <TagIcon className="h-7 w-7 text-white" strokeWidth={2.5} />
                 </div>
               </div>
             </div>
@@ -122,9 +108,7 @@ export function QuickActions() {
             {/* アクションリンク */}
             <div className="flex items-center text-sm font-semibold text-amber-600 transition-colors duration-200 group-hover:text-orange-600">
               タグを管理
-              <svg className="ml-1.5 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
-              </svg>
+              <ChevronRightIcon className="ml-1.5 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1.5" strokeWidth={2.5} />
             </div>
           </div>
         </Link>

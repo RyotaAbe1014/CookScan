@@ -6,6 +6,12 @@ import { domToJpeg } from 'modern-screenshot'
 import type { RecipeMinimal } from '@/types/recipe'
 import DeleteRecipeDialog from '@/features/recipes/delete/delete-recipe-dialog'
 import { Button } from '@/components/ui/button'
+import {
+  PencilIcon,
+  DownloadIcon,
+  TrashIcon,
+  ExclamationTriangleIcon,
+} from '@/components/icons'
 
 type Props = {
   recipe: RecipeMinimal
@@ -75,9 +81,7 @@ export function RecipeDetailActions({ recipe }: Props) {
           href={`/recipes/${recipe.id}/edit`}
           className="inline-flex items-center gap-1.5 rounded-lg bg-linear-to-r from-indigo-600 to-purple-600 px-3 py-2 text-xs font-semibold text-white shadow-lg shadow-indigo-500/30 transition-all hover:shadow-xl hover:shadow-indigo-500/40 sm:gap-2 sm:px-4 sm:text-sm"
         >
-          <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-          </svg>
+          <PencilIcon className="h-4 w-4" />
           編集
         </Link>
         <Button
@@ -88,9 +92,7 @@ export function RecipeDetailActions({ recipe }: Props) {
           isLoading={isDownloading}
           className="border border-gray-200"
         >
-          <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V4" />
-          </svg>
+          <DownloadIcon className="h-4 w-4" />
           ダウンロード
         </Button>
         <Button
@@ -100,9 +102,7 @@ export function RecipeDetailActions({ recipe }: Props) {
           onClick={handleDeleteClick}
           className="border border-red-300"
         >
-          <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-          </svg>
+          <TrashIcon className="h-4 w-4" />
           削除
         </Button>
       </div>
@@ -117,9 +117,7 @@ export function RecipeDetailActions({ recipe }: Props) {
       {downloadError && (
         <div className="fixed inset-x-0 bottom-6 z-50 flex justify-center px-4">
           <div className="flex items-center gap-2 rounded-full bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-lg">
-            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-            </svg>
+            <ExclamationTriangleIcon className="h-4 w-4" />
             保存できませんでした
           </div>
         </div>

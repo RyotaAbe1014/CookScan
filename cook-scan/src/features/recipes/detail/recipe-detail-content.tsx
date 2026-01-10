@@ -13,6 +13,7 @@ import { RecipeDetailActions } from './recipe-detail-actions'
 import { CookingTimerManager } from './cooking-timer-manager'
 import { formatMemo, getSourceInfo } from './utils'
 import { cleanupOldTimerStatesAtom } from './atoms/timer-atoms'
+import { InfoCircleIcon } from '@/components/icons'
 
 type RecipeDetailContentProps = {
   recipe: RecipeWithRelations
@@ -42,9 +43,7 @@ export function RecipeDetailContent({ recipe }: RecipeDetailContentProps) {
             {recipe.title}
           </h1>
           <p className="mt-2 flex items-center gap-1.5 text-sm text-gray-600">
-            <svg className="h-4 w-4 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
+            <InfoCircleIcon className="h-4 w-4 text-indigo-500" />
             作成日: {recipe.createdAt.toLocaleDateString('ja-JP')}
           </p>
         </div>
