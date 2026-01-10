@@ -10,7 +10,7 @@ export function QuickActions() {
           className="group relative flex flex-col overflow-hidden rounded-xl border border-gray-200 bg-white p-6 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
         >
           <div className="absolute right-0 top-0 h-32 w-32 translate-x-8 -translate-y-8 rounded-full bg-linear-to-br from-indigo-100 to-purple-100 opacity-50 transition-transform group-hover:scale-110" />
-          <div className="relative flex flex-col h-full">
+          <div className="relative flex flex-col">
             <div className="mb-4 inline-flex rounded-xl bg-linear-to-br from-indigo-500 to-purple-600 p-3 text-white shadow-lg transition-transform group-hover:scale-110">
               <svg className="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -34,7 +34,7 @@ export function QuickActions() {
           className="group relative flex flex-col overflow-hidden rounded-xl border border-gray-200 bg-white p-6 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
         >
           <div className="absolute right-0 top-0 h-32 w-32 translate-x-8 -translate-y-8 rounded-full bg-linear-to-br from-green-100 to-emerald-100 opacity-50 transition-transform group-hover:scale-110" />
-          <div className="relative flex flex-col h-full">
+          <div className="relative flex flex-col">
             <div className="mb-4 inline-flex rounded-xl bg-linear-to-br from-green-500 to-emerald-600 p-3 text-white shadow-lg transition-transform group-hover:scale-110">
               <svg className="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
@@ -61,7 +61,7 @@ export function QuickActions() {
           className="group relative flex flex-col overflow-hidden rounded-xl border border-gray-200 bg-white p-6 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
         >
           <div className="absolute right-0 top-0 h-32 w-32 translate-x-8 -translate-y-8 rounded-full bg-linear-to-br from-amber-100 to-orange-100 opacity-50 transition-transform group-hover:scale-110" />
-          <div className="relative flex flex-col h-full">
+          <div className="relative flex flex-col">
             <div className="mb-4 inline-flex rounded-xl bg-linear-to-br from-amber-500 to-orange-600 p-3 text-white shadow-lg transition-transform group-hover:scale-110">
               <svg className="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
