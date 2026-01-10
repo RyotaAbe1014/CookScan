@@ -10,6 +10,7 @@ type Tag = {
   name: string
   description: string | null
   isSystem: boolean
+  userId: string | null
   recipeTags: { recipeId: string }[]
 }
 
@@ -234,13 +235,14 @@ export function CategoryItem({ category, currentUserId }: CategoryItemProps) {
           <div className="flex flex-wrap gap-3">
             {category.tags.map((tag) => {
               const usageCount = tag.recipeTags.length
+              const isTagUserOwned = tag.userId === currentUserId
 
               return (
                 <TagItem
                   key={tag.id}
                   tag={tag}
                   usageCount={usageCount}
-                  isUserOwned={isUserOwned}
+                  isUserOwned={isTagUserOwned}
                 />
               )
             })}

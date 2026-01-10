@@ -55,6 +55,7 @@ export async function createTag(categoryId: string, name: string, description?: 
         name,
         description: description || null,
         isSystem: false,
+        userId: profile.id,
       },
     })
 
@@ -88,8 +89,8 @@ export async function updateTag(tagId: string, name: string, description?: strin
       return { success: false, error: 'システムタグは編集できません' }
     }
 
-    // 自分のカテゴリのタグのみ編集可能
-    if (tag.category.userId !== profile.id) {
+    // 自分が作成したタグのみ編集可能
+    if (tag.userId !== profile.id) {
       return { success: false, error: 'このタグを編集する権限がありません' }
     }
 
@@ -134,8 +135,8 @@ export async function deleteTag(tagId: string) {
       return { success: false, error: 'システムタグは削除できません' }
     }
 
-    // 自分のカテゴリのタグのみ削除可能
-    if (tag.category.userId !== profile.id) {
+    // 自分が作成したタグのみ削除可能
+    if (tag.userId !== profile.id) {
       return { success: false, error: 'このタグを削除する権限がありません' }
     }
 

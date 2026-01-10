@@ -8,6 +8,7 @@ export type Tag = {
   name: string
   description: string | null
   isSystem: boolean
+  userId: string | null
   categoryId: string
 }
 
