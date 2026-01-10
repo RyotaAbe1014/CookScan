@@ -5,25 +5,15 @@ import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 
 import type { ExtractedRecipeData } from './types'
+import type { RecipeFormTagCategory } from '@/features/recipes/types/tag'
 import { createRecipe } from './actions'
 import { Input, Textarea, Card, CardHeader, CardContent, Alert } from '@/components/ui'
 import { IngredientInput, StepInput, FormActions } from '@/features/recipes/components'
 
-type TagCategory = {
-  id: string
-  name: string
-  description: string | null
-  tags: Array<{
-    id: string
-    name: string
-    description: string | null
-  }>
-}
-
 type Props = {
   imageUrl: string | null
   extractedData: ExtractedRecipeData | null
-  tagCategories: TagCategory[]
+  tagCategories: RecipeFormTagCategory[]
 }
 
 export default function RecipeForm({ imageUrl, extractedData, tagCategories }: Props) {

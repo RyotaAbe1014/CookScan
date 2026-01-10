@@ -3,11 +3,7 @@ import RecipeEditForm from '@/features/recipes/edit/recipe-edit-form'
 import { getAllTagsForRecipe } from '@/features/tags/actions'
 import { notFound } from 'next/navigation'
 
-type RecipeEditPageContentProps = {
-  recipeId: string
-}
-
-export async function RecipeEditPageContent({ recipeId }: RecipeEditPageContentProps) {
+export async function RecipeEditPageContent({ recipeId }: { recipeId: string }) {
   const [{ recipe, error }, tagCategories] = await Promise.all([
     getRecipeById(recipeId),
     getAllTagsForRecipe()

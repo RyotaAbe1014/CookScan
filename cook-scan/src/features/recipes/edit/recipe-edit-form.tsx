@@ -6,6 +6,7 @@ import Image from 'next/image'
 
 import { updateRecipe } from './actions'
 import type { UpdateRecipeRequest } from './types'
+import type { RecipeFormTagCategory } from '@/features/recipes/types/tag'
 import { Input, Textarea, Alert } from '@/components/ui'
 import { IngredientInput, StepInput, FormActions } from '@/features/recipes/components'
 
@@ -41,20 +42,9 @@ type RecipeData = {
   }[]
 }
 
-type TagCategory = {
-  id: string
-  name: string
-  description: string | null
-  tags: Array<{
-    id: string
-    name: string
-    description: string | null
-  }>
-}
-
 type Props = {
   recipe: RecipeData
-  tagCategories: TagCategory[]
+  tagCategories: RecipeFormTagCategory[]
 }
 
 export default function RecipeEditForm({ recipe, tagCategories }: Props) {
