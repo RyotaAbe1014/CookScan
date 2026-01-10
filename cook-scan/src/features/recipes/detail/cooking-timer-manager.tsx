@@ -27,7 +27,7 @@ function formatTime(seconds: number): string {
 }
 
 export function CookingTimerManager({ recipeId }: CookingTimerManagerProps) {
-  const [_tick, setTick] = useState(0)
+  const [tick, setTick] = useState(0)
   const timerStates = useAtomValue(recipeTimerStatesAtomFamily(recipeId))
   const stopAllTimers = useSetAtom(stopAllTimersAtomFamily(recipeId))
 
@@ -66,7 +66,7 @@ export function CookingTimerManager({ recipeId }: CookingTimerManagerProps) {
     // ステップ番号順にソート
     timers.sort((a, b) => a.stepNumber - b.stepNumber)
     return timers
-  }, [timerStates])
+  }, [timerStates, tick])
 
   const handleStopAll = () => {
     stopAllTimers()
