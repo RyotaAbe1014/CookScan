@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import type { RecipeBasic } from '@/types/recipe'
+import { ClipboardListIcon, TagIcon, ClockIcon } from '@/components/icons'
 
 type RecipeGridProps = {
   recipes: RecipeBasic[]
@@ -30,14 +31,7 @@ export function RecipeGrid({ recipes }: RecipeGridProps) {
               </h3>
               <div className="mt-2 flex items-center gap-4 text-sm text-gray-600">
                 <div className="flex items-center gap-1">
-                  <svg className="h-4 w-4 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-                    />
-                  </svg>
+                  <ClipboardListIcon className="h-4 w-4 text-indigo-500" />
                   <span className="font-medium">{recipe.ingredients.length}</span>
                   <span className="text-gray-500">品目</span>
                 </div>
@@ -49,14 +43,7 @@ export function RecipeGrid({ recipes }: RecipeGridProps) {
                       key={recipeTag.tagId}
                       className="inline-flex items-center gap-1 rounded-md bg-indigo-50 px-2 py-1 text-xs font-medium text-indigo-700 ring-1 ring-indigo-200"
                     >
-                      <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
-                        />
-                      </svg>
+                      <TagIcon className="h-3 w-3" />
                       {recipeTag.tag.name}
                     </span>
                   ))}
@@ -68,14 +55,7 @@ export function RecipeGrid({ recipes }: RecipeGridProps) {
                 </div>
               )}
               <div className="mt-4 flex items-center gap-1.5 border-t border-gray-100 pt-3 text-xs text-gray-500">
-                <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
+                <ClockIcon className="h-3.5 w-3.5" />
                 {new Date(recipe.createdAt).toLocaleDateString('ja-JP', {
                   year: 'numeric',
                   month: 'long',

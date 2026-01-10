@@ -3,6 +3,7 @@
 import { useAtomValue } from 'jotai'
 import Link from 'next/link'
 import { activeTimerRecipesAtom } from '@/features/recipes/detail/atoms/timer-atoms'
+import { ClockIcon, ChevronRightIcon, InfoCircleIcon } from '@/components/icons'
 
 export function ActiveTimerBanner() {
   const activeRecipes = useAtomValue(activeTimerRecipesAtom)
@@ -25,20 +26,11 @@ export function ActiveTimerBanner() {
               {/* Animated timer icon with ping effect */}
               <div className="relative">
                 <div className="absolute inset-0 animate-ping rounded-full bg-orange-400/30" />
-                <svg
+                <ClockIcon
                   className="relative h-8 w-8 shrink-0 animate-spin text-orange-600"
                   style={{ animationDuration: '8s' }}
-                  fill="none"
-                  viewBox="0 0 24 24"
                   stroke="currentColor"
-                  strokeWidth={2.5}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
+                />
               </div>
 
               {/* Status badge with pulse */}
@@ -88,19 +80,9 @@ export function ActiveTimerBanner() {
                     </div>
 
                     {/* Arrow indicator on hover */}
-                    <svg
+                    <ChevronRightIcon
                       className="h-4 w-4 shrink-0 translate-x-0 text-orange-600 opacity-0 transition-all duration-300 group-hover:translate-x-1 group-hover:opacity-100"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth={2}
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M9 5l7 7-7 7"
-                      />
-                    </svg>
+                    />
                   </div>
                 </div>
               </Link>
@@ -109,19 +91,9 @@ export function ActiveTimerBanner() {
 
           {/* Bottom instruction hint */}
           <div className="mt-4 flex items-center gap-2 text-xs text-orange-700/70">
-            <svg
+            <InfoCircleIcon
               className="h-3.5 w-3.5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
+            />
             <span>クリックしてレシピ詳細を確認</span>
           </div>
         </div>

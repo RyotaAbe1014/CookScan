@@ -8,6 +8,7 @@ import type { ExtractedRecipeData } from '@/features/recipes/upload/types'
 import type { RecipeFormTagCategory } from '@/features/recipes/types/tag'
 import { Button } from '@/components/ui/button'
 import { TextInput } from './text-input'
+import { ChevronLeftIcon } from '@/components/icons'
 
 type Step = 'method-selection' | 'image-upload' | 'text-input' | 'form'
 
@@ -59,19 +60,7 @@ export default function RecipeUploadContent({ tagCategories }: Props) {
           disabled={isUploading}
           className="mb-6"
         >
-          <svg
-            className="h-4 w-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M15 19l-7-7 7-7"
-            />
-          </svg>
+          <ChevronLeftIcon className="h-4 w-4" />
           戻る
         </Button>
       )}

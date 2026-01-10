@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { SearchIcon, CloseIcon } from '@/components/icons'
+import { SearchIcon, CloseIcon, DocumentSearchIcon } from '@/components/icons'
 
 type Props = {
   resultCount?: number
@@ -122,9 +122,7 @@ export function RecipeSearch({ resultCount }: Props) {
         <div className="mt-3 flex items-center justify-between px-2">
           <div className="flex items-center gap-2">
             <div className="flex h-6 w-6 items-center justify-center rounded-md bg-linear-to-br from-indigo-500 to-purple-600">
-              <svg className="h-3.5 w-3.5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clipRule="evenodd" />
-              </svg>
+              <DocumentSearchIcon className="h-3.5 w-3.5 text-white" />
             </div>
             <p className="text-sm font-medium text-gray-700">
               検索結果: <span className="font-bold text-indigo-600">{resultCount}</span>件
