@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { SearchIcon, CloseIcon } from '@/components/icons'
 
 type Props = {
   resultCount?: number
@@ -68,19 +69,9 @@ export function RecipeSearch({ resultCount }: Props) {
                 : 'bg-linear-to-br from-gray-100 to-gray-200'
               }
             `}>
-              <svg
+              <SearchIcon
                 className={`h-5 w-5 transition-colors duration-300 ${isFocused ? 'text-white' : 'text-gray-500'}`}
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                />
-              </svg>
+              />
             </div>
 
             {/* Input Field */}
@@ -102,14 +93,9 @@ export function RecipeSearch({ resultCount }: Props) {
                 className="group/clear flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gray-100 transition-all hover:bg-red-50 hover:scale-110"
                 aria-label="検索をクリア"
               >
-                <svg
+                <CloseIcon
                   className="h-4 w-4 text-gray-500 transition-colors group-hover/clear:text-red-600"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
+                />
               </button>
             )}
 
@@ -122,14 +108,9 @@ export function RecipeSearch({ resultCount }: Props) {
               {/* Shine effect on hover */}
               <div className="absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-white/20 to-transparent transition-transform duration-500 group-hover/btn:translate-x-full" />
 
-              <svg
+              <SearchIcon
                 className="relative h-4 w-4 transition-transform group-hover/btn:scale-110"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
+              />
               <span className="relative hidden sm:inline">検索</span>
             </button>
           </div>

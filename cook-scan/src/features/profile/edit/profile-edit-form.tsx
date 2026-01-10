@@ -4,6 +4,14 @@ import { useState, useTransition, FormEvent, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { updateUserProfile } from './actions'
 import { Button, Input, Alert } from '@/components/ui'
+import {
+  EnvelopeIcon,
+  MailIcon,
+  UserIcon,
+  UserCircleIcon,
+  CheckIcon,
+  LockIcon,
+} from '@/components/icons'
 
 type User = {
   id: string
@@ -70,9 +78,7 @@ export function ProfileEditForm({ initialData }: ProfileEditFormProps) {
       <div>
         <label htmlFor="email" className="mb-2 flex items-center gap-2 text-sm font-semibold text-gray-700">
           <div className="flex h-5 w-5 items-center justify-center rounded bg-linear-to-br from-gray-400 to-gray-500">
-            <svg className="h-3 w-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-            </svg>
+            <EnvelopeIcon className="h-3 w-3 text-white" />
           </div>
           メールアドレス
         </label>
@@ -87,9 +93,7 @@ export function ProfileEditForm({ initialData }: ProfileEditFormProps) {
             hasIcon
           />
           <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-            <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
-            </svg>
+            <MailIcon className="h-5 w-5 text-gray-400" />
           </div>
         </div>
         <p className="mt-2 text-sm text-gray-500">メールアドレスは変更できません</p>
@@ -99,9 +103,7 @@ export function ProfileEditForm({ initialData }: ProfileEditFormProps) {
       <div>
         <label htmlFor="name" className="mb-2 flex items-center gap-2 text-sm font-semibold text-gray-700">
           <div className="flex h-5 w-5 items-center justify-center rounded bg-linear-to-br from-indigo-500 to-purple-600">
-            <svg className="h-3 w-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-            </svg>
+            <UserIcon className="h-3 w-3 text-white" />
           </div>
           お名前
           <span className="text-red-500">*</span>
@@ -119,9 +121,7 @@ export function ProfileEditForm({ initialData }: ProfileEditFormProps) {
             maxLength={50}
           />
           <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-            <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
+            <UserCircleIcon className="h-5 w-5 text-gray-400" />
           </div>
         </div>
       </div>
@@ -144,9 +144,7 @@ export function ProfileEditForm({ initialData }: ProfileEditFormProps) {
           '更新中...'
         ) : (
           <>
-            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-            </svg>
+            <CheckIcon className="h-5 w-5" />
             更新する
           </>
         )}
@@ -161,14 +159,7 @@ export function ProfileEditForm({ initialData }: ProfileEditFormProps) {
           disabled={isPending}
           className="w-full"
         >
-          <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-            />
-          </svg>
+          <LockIcon className="h-5 w-5" />
           パスワードを変更
         </Button>
       </Link>

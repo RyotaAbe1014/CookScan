@@ -3,6 +3,12 @@
 import { useState, useTransition } from 'react'
 import { updatePassword, type PasswordChangeFormData } from './actions'
 import { Button, Input, Alert } from '@/components/ui'
+import {
+  LockIcon,
+  KeyIcon,
+  ShieldCheckIcon,
+  CheckCircleOutlineIcon,
+} from '@/components/icons'
 
 export function PasswordChangeForm() {
   const [isPending, startTransition] = useTransition()
@@ -39,19 +45,7 @@ export function PasswordChangeForm() {
           className="mb-2 flex items-center gap-2 text-sm font-semibold text-gray-700"
         >
           <div className="flex h-5 w-5 items-center justify-center rounded bg-linear-to-br from-gray-400 to-gray-500">
-            <svg
-              className="h-3 w-3 text-white"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-              />
-            </svg>
+            <LockIcon className="h-3 w-3 text-white" />
           </div>
           現在のパスワード
           <span className="text-red-500">*</span>
@@ -71,19 +65,7 @@ export function PasswordChangeForm() {
             hasIcon
           />
           <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-            <svg
-              className="h-5 w-5 text-gray-400"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"
-              />
-            </svg>
+            <KeyIcon className="h-5 w-5 text-gray-400" />
           </div>
         </div>
       </div>
@@ -95,19 +77,7 @@ export function PasswordChangeForm() {
           className="mb-2 flex items-center gap-2 text-sm font-semibold text-gray-700"
         >
           <div className="flex h-5 w-5 items-center justify-center rounded bg-linear-to-br from-indigo-500 to-purple-600">
-            <svg
-              className="h-3 w-3 text-white"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-              />
-            </svg>
+            <LockIcon className="h-3 w-3 text-white" />
           </div>
           新しいパスワード
           <span className="text-red-500">*</span>
@@ -127,19 +97,7 @@ export function PasswordChangeForm() {
             hasIcon
           />
           <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-            <svg
-              className="h-5 w-5 text-gray-400"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-              />
-            </svg>
+            <ShieldCheckIcon className="h-5 w-5 text-gray-400" />
           </div>
         </div>
         <p className="mt-2 text-sm text-gray-500">
@@ -154,19 +112,7 @@ export function PasswordChangeForm() {
           className="mb-2 flex items-center gap-2 text-sm font-semibold text-gray-700"
         >
           <div className="flex h-5 w-5 items-center justify-center rounded bg-linear-to-br from-indigo-500 to-purple-600">
-            <svg
-              className="h-3 w-3 text-white"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
+            <CheckCircleOutlineIcon className="h-3 w-3 text-white" />
           </div>
           新しいパスワード（確認）
           <span className="text-red-500">*</span>
@@ -186,19 +132,7 @@ export function PasswordChangeForm() {
             hasIcon
           />
           <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-            <svg
-              className="h-5 w-5 text-gray-400"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
+            <CheckCircleOutlineIcon className="h-5 w-5 text-gray-400" />
           </div>
         </div>
       </div>
@@ -222,19 +156,7 @@ export function PasswordChangeForm() {
             'パスワードを変更中...'
           ) : (
             <>
-              <svg
-                className="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
+              <CheckCircleOutlineIcon className="h-5 w-5" />
               パスワードを変更
             </>
           )}

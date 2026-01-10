@@ -4,6 +4,7 @@ import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { deleteRecipe } from './actions'
 import { Button, Alert } from '@/components/ui'
+import { TrashIcon, WarningIcon } from '@/components/icons'
 
 type Props = {
   recipeId: string
@@ -63,20 +64,8 @@ export default function DeleteRecipeDialog({ recipeId, recipeTitle, isOpen, onCl
           {/* Header with gradient */}
           <div className="border-b border-gray-200 bg-linear-to-r from-red-50 to-orange-50 px-6 py-5">
             <div className="flex items-start gap-4">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-red-500 to-orange-600 shadow-lg">
-                <svg
-                  className="h-6 w-6 text-white"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth="2"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"
-                  />
-                </svg>
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-red-50 to-orange-600 shadow-lg">
+                <WarningIcon className="h-6 w-6 text-white" />
               </div>
               <div className="flex-1">
                 <h3 className="text-xl font-bold text-gray-900">
@@ -124,9 +113,7 @@ export default function DeleteRecipeDialog({ recipeId, recipeTitle, isOpen, onCl
                 '削除中...'
               ) : (
                 <>
-                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                  </svg>
+                  <TrashIcon className="h-4 w-4" />
                   削除
                 </>
               )}

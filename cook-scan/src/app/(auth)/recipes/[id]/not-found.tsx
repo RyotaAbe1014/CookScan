@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { Header } from '@/components/layouts/header'
+import { ExclamationCircleIcon } from '@/components/icons'
 
 export default function NotFound() {
   return (
@@ -18,19 +19,7 @@ export default function NotFound() {
 
       <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="text-center py-12">
-          <svg
-            className="mx-auto h-12 w-12 text-gray-400"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6 4h6m-7-8V7a3 3 0 016 0v1M5 12a7 7 0 1114 0v5a2 2 0 01-2 2H7a2 2 0 01-2-2v-5z"
-            />
-          </svg>
+          <ExclamationCircleIcon className="mx-auto h-12 w-12 text-gray-400" />
           <h2 className="mt-2 text-lg font-medium text-gray-900">
             お探しのレシピが見つかりませんでした
           </h2>
