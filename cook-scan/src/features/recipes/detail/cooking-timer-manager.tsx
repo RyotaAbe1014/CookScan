@@ -66,7 +66,8 @@ export function CookingTimerManager({ recipeId }: CookingTimerManagerProps) {
     // ステップ番号順にソート
     timers.sort((a, b) => a.stepNumber - b.stepNumber)
     return timers
-  }, [timerStates])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [timerStates, _tick])
 
   const handleStopAll = () => {
     stopAllTimers()

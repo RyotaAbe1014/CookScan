@@ -47,7 +47,8 @@ export function useCookingTimer({
       elapsedSeconds,
       runningSinceSeconds
     )
-  }, [persistedTimerState, totalSeconds, elapsedSeconds, runningSinceSeconds, initialSeconds])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [persistedTimerState, totalSeconds, elapsedSeconds, runningSinceSeconds, initialSeconds, _tick])
 
   // タイマー終了時の処理をメモ化
   const handleTimerComplete = useCallback((completedStartedAt: number, totalSecondsValue: number) => {
