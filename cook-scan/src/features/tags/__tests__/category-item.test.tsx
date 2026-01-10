@@ -28,6 +28,7 @@ describe('CategoryItem', () => {
         name: '和食',
         description: '日本料理',
         isSystem: false,
+        userId: 'user-1',
         recipeTags: [{ recipeId: 'recipe-1' }, { recipeId: 'recipe-2' }],
       },
       {
@@ -35,6 +36,7 @@ describe('CategoryItem', () => {
         name: '洋食',
         description: null,
         isSystem: false,
+        userId: 'user-1',
         recipeTags: [{ recipeId: 'recipe-3' }],
       },
     ],
@@ -448,5 +450,122 @@ describe('CategoryItem', () => {
     await waitFor(() => {
       expect(updateTagCategory).toHaveBeenCalled()
     })
+  })
+
+  // タグのユーザー所有権に関するテスト
+  it('タグの編集・削除ボタン表示: システムカテゴリ内のユーザータグに編集・削除ボタンが表示される', () => {
+    // Given: システムカテゴリに属するユーザータグ
+    const systemCategoryWithUserTag = {
+      id: 'cat-system',
+      name: 'システムカテゴリ',
+      description: 'システムカテゴリ説明',
+      isSystem: true,
+      userId: null,
+      tags: [
+        {
+          id: 'tag-user',
+          name: 'ユーザー作成タグ',
+          description: 'ユーザーが作成したタグ',
+          isSystem: false,
+          userId: 'user-1',
+          recipeTags: [],
+        },
+      ],
+    }
+
+    // When: コンポーネントを描画
+    render(<CategoryItem category={systemCategoryWithUserTag} currentUserId="user-1" />)
+
+    // Then: タグの編集・削除ボタンが表示される
+    expect(screen.getByText('ユーザー作成タグ')).toBeInTheDocument()
+    expect(screen.getAllByTitle('編集').length).toBeGreaterThan(0)
+    expect(screen.getAllByTitle('削除').length).toBeGreaterThan(0)
+  })
+
+  it('タグの編集・削除ボタン表示: システムカテゴリ内のシステムタグに編集・削除ボタンが表示されない', () => {
+    // Given: システムカテゴリに属するシステムタグ
+    const systemCategoryWithSystemTag = {
+      id: 'cat-system',
+      name: 'システムカテゴリ',
+      description: 'システムカテゴリ説明',
+      isSystem: true,
+      userId: null,
+      tags: [
+        {
+          id: 'tag-system',
+          name: 'システムタグ',
+          description: 'システムが作成したタグ',
+          isSystem: true,
+          userId: null,
+          recipeTags: [],
+        },
+      ],
+    }
+
+    // When: コンポーネントを描画
+    render(<CategoryItem category={systemCategoryWithSystemTag} currentUserId="user-1" />)
+
+    // Then: タグの編集・削除ボタンが表示されない
+    expect(screen.getByText('システムタグ')).toBeInTheDocument()
+    expect(screen.queryAllByTitle('編集')).toHaveLength(0)
+    expect(screen.queryAllByTitle('削除')).toHaveLength(0)
+  })
+
+  it('タグの編集・削除ボタン表示: ユーザーカテゴリ内のユーザータグに編集・削除ボタンが表示される', () => {
+    // Given: ユーザーカテゴリに属するユーザータグ
+    const userCategoryWithUserTag = {
+      id: 'cat-user',
+      name: 'ユーザーカテゴリ',
+      description: 'ユーザーカテゴリ説明',
+      isSystem: false,
+      userId: 'user-1',
+      tags: [
+        {
+          id: 'tag-user',
+          name: 'ユーザータグ',
+          description: 'ユーザーが作成したタグ',
+          isSystem: false,
+          userId: 'user-1',
+          recipeTags: [],
+        },
+      ],
+    }
+
+    // When: コンポーネントを描画
+    render(<CategoryItem category={userCategoryWithUserTag} currentUserId="user-1" />)
+
+    // Then: カテゴリとタグの両方に編集・削除ボタンが表示される
+    expect(screen.getByText('ユーザータグ')).toBeInTheDocument()
+    expect(screen.getAllByTitle('編集').length).toBeGreaterThan(0)
+    expect(screen.getAllByTitle('削除').length).toBeGreaterThan(0)
+  })
+
+  it('タグの編集・削除ボタン表示: 他ユーザーのタグに編集・削除ボタンが表示されない', () => {
+    // Given: システムカテゴリに属する他ユーザーのタグ
+    const systemCategoryWithOtherUserTag = {
+      id: 'cat-system',
+      name: 'システムカテゴリ',
+      description: 'システムカテゴリ説明',
+      isSystem: true,
+      userId: null,
+      tags: [
+        {
+          id: 'tag-other',
+          name: '他ユーザーのタグ',
+          description: '他ユーザーが作成したタグ',
+          isSystem: false,
+          userId: 'user-2',
+          recipeTags: [],
+        },
+      ],
+    }
+
+    // When: コンポーネントを描画
+    render(<CategoryItem category={systemCategoryWithOtherUserTag} currentUserId="user-1" />)
+
+    // Then: タグの編集・削除ボタンが表示されない
+    expect(screen.getByText('他ユーザーのタグ')).toBeInTheDocument()
+    expect(screen.queryAllByTitle('編集')).toHaveLength(0)
+    expect(screen.queryAllByTitle('削除')).toHaveLength(0)
   })
 })
