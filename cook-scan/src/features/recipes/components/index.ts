@@ -6,3 +6,5 @@ export type { StepInputProps, Step } from './step-input'
 
 export { FormActions } from './form-actions'
 export type { FormActionsProps } from './form-actions'
+
+export { ParentRecipeSelector } from './parent-recipe-selector'

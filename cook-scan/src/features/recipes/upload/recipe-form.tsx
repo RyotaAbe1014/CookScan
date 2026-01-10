@@ -8,7 +8,7 @@ import type { ExtractedRecipeData } from './types'
 import { createRecipe } from './actions'
 import { getAllTagsForRecipe } from '@/features/tags/actions'
 import { Input, Textarea, Card, CardHeader, CardContent, Alert } from '@/components/ui'
-import { IngredientInput, StepInput, FormActions } from '@/features/recipes/components'
+import { IngredientInput, StepInput, FormActions, ParentRecipeSelector } from '@/features/recipes/components'
 
 type Props = {
   imageUrl: string | null
@@ -32,6 +32,7 @@ export default function RecipeForm({ imageUrl, extractedData }: Props) {
     extractedData?.steps || []
   )
   const [memo, setMemo] = useState(extractedData?.memo || '')
+  const [parentRecipeId, setParentRecipeId] = useState<string | null>(null)
   const [selectedTagIds, setSelectedTagIds] = useState<string[]>([])
   const [tagCategories, setTagCategories] = useState<Array<{
     id: string
@@ -120,7 +121,8 @@ export default function RecipeForm({ imageUrl, extractedData }: Props) {
         ingredients,
         steps,
         memo,
-        tags: selectedTagIds
+        tags: selectedTagIds,
+        parentRecipeId
       })
 
       if (result.success) {
@@ -257,6 +259,12 @@ export default function RecipeForm({ imageUrl, extractedData }: Props) {
                   onChange={(e) => setMemo(e.target.value)}
                   rows={3}
                   placeholder="このレシピについてのメモや感想..."
+                />
+              </div>
+              <div>
+                <ParentRecipeSelector
+                  value={parentRecipeId}
+                  onChange={setParentRecipeId}
                 />
               </div>
             </div>

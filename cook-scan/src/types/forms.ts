@@ -34,6 +34,7 @@ export type CreateRecipeRequest = {
   steps: StepFormData[]
   memo?: string
   tags: string[]
+  parentRecipeId?: string | null
 }
 
 // レシピ更新リクエスト型
@@ -45,6 +46,7 @@ export type UpdateRecipeRequest = {
   steps: Array<StepFormData & { orderIndex: number }>
   memo?: string
   tags: string[]
+  parentRecipeId?: string | null
 }
 
 // AI抽出結果の型

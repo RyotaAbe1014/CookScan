@@ -28,7 +28,25 @@ export async function getRecipeById(recipeId: string) {
             }
           }
         },
-        sourceInfo: true
+        sourceInfo: true,
+        parentRecipe: {
+          select: {
+            id: true,
+            title: true,
+            imageUrl: true
+          }
+        },
+        childRecipes: {
+          select: {
+            id: true,
+            title: true,
+            imageUrl: true,
+            createdAt: true
+          },
+          orderBy: {
+            createdAt: 'desc'
+          }
+        }
       }
     })
 

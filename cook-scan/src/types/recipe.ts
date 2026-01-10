@@ -15,6 +15,21 @@ export type RecipeTag = {
   }
 }
 
+// 親レシピの基本情報型（循環参照を避けるため最小限）
+export type ParentRecipeBasic = {
+  id: string
+  title: string
+  imageUrl: string | null
+}
+
+// 子レシピの基本情報型
+export type ChildRecipeBasic = {
+  id: string
+  title: string
+  imageUrl: string | null
+  createdAt: Date
+}
+
 // 完全なRecipe型（リレーションを含む）
 export type RecipeWithRelations = {
   id: string
@@ -29,6 +44,8 @@ export type RecipeWithRelations = {
   steps: Step[]
   recipeTags: RecipeTag[]
   sourceInfo: SourceInfo[]
+  parentRecipe?: ParentRecipeBasic | null
+  childRecipes?: ChildRecipeBasic[]
 }
 
 // 簡易Recipe型（リスト表示用）

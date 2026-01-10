@@ -8,11 +8,12 @@ import { updateRecipe } from './actions'
 import type { UpdateRecipeRequest } from './types'
 import { getAllTagsForRecipe } from '@/features/tags/actions'
 import { Input, Textarea, Alert } from '@/components/ui'
-import { IngredientInput, StepInput, FormActions } from '@/features/recipes/components'
+import { IngredientInput, StepInput, FormActions, ParentRecipeSelector } from '@/features/recipes/components'
 
 type RecipeData = {
   id: string
   title: string
+  parentRecipeId?: string | null
   memo: string | null
   imageUrl: string | null
   ingredients: {
@@ -83,6 +84,7 @@ export default function RecipeEditForm({ recipe }: Props) {
     }))
   )
   const [memo, setMemo] = useState(recipe.memo || '')
+  const [parentRecipeId, setParentRecipeId] = useState<string | null>(recipe.parentRecipeId ?? null)
   const [selectedTagIds, setSelectedTagIds] = useState<string[]>(
     recipe.recipeTags.map(rt => rt.tagId)
   )
@@ -186,7 +188,8 @@ export default function RecipeEditForm({ recipe }: Props) {
           orderIndex: step.orderIndex
         })),
         memo,
-        tags: selectedTagIds
+        tags: selectedTagIds,
+        parentRecipeId
       }
 
       const result = await updateRecipe(request)
@@ -324,6 +327,13 @@ export default function RecipeEditForm({ recipe }: Props) {
                       onChange={(e) => setMemo(e.target.value)}
                       rows={3}
                       placeholder="このレシピについてのメモや感想..."
+                    />
+                  </div>
+                  <div>
+                    <ParentRecipeSelector
+                      value={parentRecipeId}
+                      onChange={setParentRecipeId}
+                      currentRecipeId={recipe.id}
                     />
                   </div>
                 </div>

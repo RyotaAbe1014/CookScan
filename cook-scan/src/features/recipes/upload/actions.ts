@@ -6,10 +6,11 @@ import { requireUserProfile } from '@/features/auth/auth-utils'
 import { CreateRecipeRequest } from '@/features/recipes/upload/types'
 import { Prisma } from '@prisma/client'
 import { validateTagIdsForUser } from '@/features/tags/tag-utils'
+import { validateParentRecipe } from '@/features/recipes/recipe-utils'
 import { sanitizeUrl } from '@/utils/url-validation'
 
 export async function createRecipe(request: CreateRecipeRequest) {
-  const { title, sourceInfo, ingredients, steps, memo, tags } = request
+  const { title, sourceInfo, ingredients, steps, memo, tags, parentRecipeId } = request
 
   const profile = await requireUserProfile()
 
@@ -23,6 +24,14 @@ export async function createRecipe(request: CreateRecipeRequest) {
       return { success: false, error: '無効なタグが含まれています' }
     }
 
+    // 親レシピのバリデーション
+    if (parentRecipeId) {
+      const parentValidation = await validateParentRecipe(null, parentRecipeId, profile.id)
+      if (!parentValidation.isValid) {
+        return { success: false, error: parentValidation.error }
+      }
+    }
+
     // Create recipe with all related data in a transaction
     const recipe = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       // Create the main recipe
@@ -31,6 +40,7 @@ export async function createRecipe(request: CreateRecipeRequest) {
           userId: profile.id,
           title,
           memo: memo || null,
+          parentRecipeId: parentRecipeId || null,
         }
       })
 

@@ -7,6 +7,7 @@ import { RecipeImageSection } from './recipe-image-section'
 import { RecipeSourceInfo } from './recipe-source-info'
 import { RecipeMemo } from './recipe-memo'
 import { RecipeTagsSection } from './recipe-tags-section'
+import { RecipeRelationships } from './recipe-relationships'
 import { RecipeIngredients } from './recipe-ingredients'
 import { RecipeSteps } from './recipe-steps'
 import { RecipeDetailActions } from './recipe-detail-actions'
@@ -56,6 +57,7 @@ export function RecipeDetailContent({ recipe }: RecipeDetailContentProps) {
             {sourceInfo && <RecipeSourceInfo sourceInfo={sourceInfo} />}
             {memo && <RecipeMemo memo={memo} />}
             <RecipeTagsSection recipeTags={recipe.recipeTags} />
+            <RecipeRelationships parentRecipe={recipe.parentRecipe} childRecipes={recipe.childRecipes} />
           </div>
 
           {/* 右側: 材料と調理手順 */}

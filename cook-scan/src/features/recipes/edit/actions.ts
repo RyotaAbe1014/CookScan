@@ -6,10 +6,11 @@ import { requireUserProfile } from '@/features/auth/auth-utils'
 import { UpdateRecipeRequest, UpdateRecipeResponse } from '@/features/recipes/edit/types'
 import { Prisma } from '@prisma/client'
 import { validateTagIdsForUser } from '@/features/tags/tag-utils'
+import { validateParentRecipe } from '@/features/recipes/recipe-utils'
 import { sanitizeUrl } from '@/utils/url-validation'
 
 export async function updateRecipe(request: UpdateRecipeRequest): Promise<UpdateRecipeResponse> {
-  const { recipeId, title, sourceInfo, ingredients, steps, memo, tags } = request
+  const { recipeId, title, sourceInfo, ingredients, steps, memo, tags, parentRecipeId } = request
 
   const profile = await requireUserProfile()
 
@@ -21,6 +22,14 @@ export async function updateRecipe(request: UpdateRecipeRequest): Promise<Update
 
     if (!isValid) {
       return { success: false, error: '無効なタグが含まれています' }
+    }
+
+    // 親レシピのバリデーション（循環参照チェック含む）
+    if (parentRecipeId) {
+      const parentValidation = await validateParentRecipe(recipeId, parentRecipeId, profile.id)
+      if (!parentValidation.isValid) {
+        return { success: false, error: parentValidation.error }
+      }
     }
 
     // Verify that the recipe belongs to the current user
@@ -43,6 +52,7 @@ export async function updateRecipe(request: UpdateRecipeRequest): Promise<Update
         data: {
           title,
           memo: memo || null,
+          parentRecipeId: parentRecipeId || null,
           updatedAt: new Date()
         }
       })
