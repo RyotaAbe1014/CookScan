@@ -17,10 +17,10 @@ export function QuickActions() {
               </svg>
             </div>
             <h3 className="mb-2 text-xl font-bold text-gray-900">レシピをスキャン</h3>
-            <p className="flex-1 text-sm leading-relaxed text-gray-600">
+            <p className="text-sm leading-relaxed text-gray-600">
               料理本やレシピカードを撮影して、AIが自動でデジタル化します
             </p>
-            <div className="mt-4 flex items-center text-sm font-medium text-indigo-600 transition-colors group-hover:text-purple-600">
+            <div className="mt-auto flex items-center text-sm font-medium text-indigo-600 transition-colors group-hover:text-purple-600">
               スキャンを開始
               <svg className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -46,7 +46,7 @@ export function QuickActions() {
               </svg>
             </div>
             <h3 className="mb-2 text-xl font-bold text-gray-900">マイレシピ</h3>
-            <p className="flex-1 text-sm leading-relaxed text-gray-600">保存したレシピを閲覧・編集・管理できます</p>
+            <p className="text-sm leading-relaxed text-gray-600">保存したレシピを閲覧・編集・管理できます</p>
             <div className="mt-4 flex items-center text-sm font-medium text-green-600 transition-colors group-hover:text-emerald-600">
               レシピを見る
               <svg className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -73,7 +73,7 @@ export function QuickActions() {
               </svg>
             </div>
             <h3 className="mb-2 text-xl font-bold text-gray-900">タグ管理</h3>
-            <p className="flex-1 text-sm leading-relaxed text-gray-600">タグとカテゴリを作成・編集して、レシピを整理しましょう</p>
+            <p className="text-sm leading-relaxed text-gray-600">タグとカテゴリを作成・編集して、レシピを整理しましょう</p>
             <div className="mt-4 flex items-center text-sm font-medium text-amber-600 transition-colors group-hover:text-orange-600">
               タグを管理
               <svg className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
