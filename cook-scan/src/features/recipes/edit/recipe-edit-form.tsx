@@ -1,12 +1,11 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 
 import { updateRecipe } from './actions'
 import type { UpdateRecipeRequest } from './types'
-import { getAllTagsForRecipe } from '@/features/tags/actions'
 import { Input, Textarea, Alert } from '@/components/ui'
 import { IngredientInput, StepInput, FormActions } from '@/features/recipes/components'
 
@@ -42,11 +41,23 @@ type RecipeData = {
   }[]
 }
 
-type Props = {
-  recipe: RecipeData
+type TagCategory = {
+  id: string
+  name: string
+  description: string | null
+  tags: Array<{
+    id: string
+    name: string
+    description: string | null
+  }>
 }
 
-export default function RecipeEditForm({ recipe }: Props) {
+type Props = {
+  recipe: RecipeData
+  tagCategories: TagCategory[]
+}
+
+export default function RecipeEditForm({ recipe, tagCategories }: Props) {
   const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -86,25 +97,6 @@ export default function RecipeEditForm({ recipe }: Props) {
   const [selectedTagIds, setSelectedTagIds] = useState<string[]>(
     recipe.recipeTags.map(rt => rt.tagId)
   )
-  const [tagCategories, setTagCategories] = useState<Array<{
-    id: string
-    name: string
-    description: string | null
-    tags: Array<{
-      id: string
-      name: string
-      description: string | null
-    }>
-  }>>([])
-
-  // タグデータの取得
-  useEffect(() => {
-    const fetchTags = async () => {
-      const categories = await getAllTagsForRecipe()
-      setTagCategories(categories)
-    }
-    fetchTags()
-  }, [])
 
   const addIngredient = () => {
     setIngredients([

@@ -10,7 +10,22 @@ import { TextInput } from './text-input'
 
 type Step = 'method-selection' | 'image-upload' | 'text-input' | 'form'
 
-export default function RecipeUploadContent() {
+type TagCategory = {
+  id: string
+  name: string
+  description: string | null
+  tags: Array<{
+    id: string
+    name: string
+    description: string | null
+  }>
+}
+
+type Props = {
+  tagCategories: TagCategory[]
+}
+
+export default function RecipeUploadContent({ tagCategories }: Props) {
   const [currentStep, setCurrentStep] = useState<Step>('method-selection')
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null)
   const [extractedData, setExtractedData] = useState<ExtractedRecipeData | null>(null)
@@ -98,6 +113,7 @@ export default function RecipeUploadContent() {
         <RecipeForm
           imageUrl={uploadedImageUrl}
           extractedData={extractedData}
+          tagCategories={tagCategories}
         />
       )}
     </>

@@ -1,21 +1,32 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 
 import type { ExtractedRecipeData } from './types'
 import { createRecipe } from './actions'
-import { getAllTagsForRecipe } from '@/features/tags/actions'
 import { Input, Textarea, Card, CardHeader, CardContent, Alert } from '@/components/ui'
 import { IngredientInput, StepInput, FormActions } from '@/features/recipes/components'
+
+type TagCategory = {
+  id: string
+  name: string
+  description: string | null
+  tags: Array<{
+    id: string
+    name: string
+    description: string | null
+  }>
+}
 
 type Props = {
   imageUrl: string | null
   extractedData: ExtractedRecipeData | null
+  tagCategories: TagCategory[]
 }
 
-export default function RecipeForm({ imageUrl, extractedData }: Props) {
+export default function RecipeForm({ imageUrl, extractedData, tagCategories }: Props) {
   const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -33,25 +44,6 @@ export default function RecipeForm({ imageUrl, extractedData }: Props) {
   )
   const [memo, setMemo] = useState(extractedData?.memo || '')
   const [selectedTagIds, setSelectedTagIds] = useState<string[]>([])
-  const [tagCategories, setTagCategories] = useState<Array<{
-    id: string
-    name: string
-    description: string | null
-    tags: Array<{
-      id: string
-      name: string
-      description: string | null
-    }>
-  }>>([])
-
-  // タグデータの取得
-  useEffect(() => {
-    const fetchTags = async () => {
-      const categories = await getAllTagsForRecipe()
-      setTagCategories(categories)
-    }
-    fetchTags()
-  }, [])
 
   const addIngredient = () => {
     setIngredients([

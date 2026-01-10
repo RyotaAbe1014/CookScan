@@ -53,32 +53,44 @@ vi.mock('@/features/recipes/upload/text-input', () => ({
 }))
 
 vi.mock('@/features/recipes/upload/recipe-form', () => ({
-  default: ({ imageUrl, extractedData }: any) => (
+  default: ({ imageUrl, extractedData, tagCategories }: any) => (
     <div data-testid="recipe-form">
       <div>Image URL: {imageUrl || 'none'}</div>
       <div>Title: {extractedData?.title || 'none'}</div>
+      <div>Tag Categories: {tagCategories?.length || 0}</div>
     </div>
   )
 }))
 
 describe('RecipeUploadContent', () => {
+  const mockTagCategories = [
+    {
+      id: 'cat1',
+      name: 'カテゴリ1',
+      description: null,
+      tags: [
+        { id: 'tag1', name: 'タグ1', description: null }
+      ]
+    }
+  ]
+
   beforeEach(() => {
     vi.clearAllMocks()
   })
 
   it('renders method selector on initial load', () => {
-    render(<RecipeUploadContent />)
+    render(<RecipeUploadContent tagCategories={mockTagCategories} />)
     expect(screen.getByTestId('method-selector')).toBeInTheDocument()
   })
 
   it('does not show back button on method selection step', () => {
-    render(<RecipeUploadContent />)
+    render(<RecipeUploadContent tagCategories={mockTagCategories} />)
     expect(screen.queryByRole('button', { name: /戻る/ })).not.toBeInTheDocument()
   })
 
   it('navigates to image upload when scan method is selected', async () => {
     const user = userEvent.setup()
-    render(<RecipeUploadContent />)
+    render(<RecipeUploadContent tagCategories={mockTagCategories} />)
 
     await user.click(screen.getByText('スキャン'))
 
@@ -88,7 +100,7 @@ describe('RecipeUploadContent', () => {
 
   it('navigates to text input when text-input method is selected', async () => {
     const user = userEvent.setup()
-    render(<RecipeUploadContent />)
+    render(<RecipeUploadContent tagCategories={mockTagCategories} />)
 
     await user.click(screen.getByText('テキスト入力'))
 
@@ -98,7 +110,7 @@ describe('RecipeUploadContent', () => {
 
   it('navigates to form when manual method is selected', async () => {
     const user = userEvent.setup()
-    render(<RecipeUploadContent />)
+    render(<RecipeUploadContent tagCategories={mockTagCategories} />)
 
     await user.click(screen.getByText('手動入力'))
 
@@ -108,7 +120,7 @@ describe('RecipeUploadContent', () => {
 
   it('shows back button after navigating from method selection', async () => {
     const user = userEvent.setup()
-    render(<RecipeUploadContent />)
+    render(<RecipeUploadContent tagCategories={mockTagCategories} />)
 
     await user.click(screen.getByText('スキャン'))
 
@@ -117,7 +129,7 @@ describe('RecipeUploadContent', () => {
 
   it('navigates back to method selection from image upload', async () => {
     const user = userEvent.setup()
-    render(<RecipeUploadContent />)
+    render(<RecipeUploadContent tagCategories={mockTagCategories} />)
 
     await user.click(screen.getByText('スキャン'))
     expect(screen.getByTestId('image-upload')).toBeInTheDocument()
@@ -128,7 +140,7 @@ describe('RecipeUploadContent', () => {
 
   it('navigates back to method selection from text input', async () => {
     const user = userEvent.setup()
-    render(<RecipeUploadContent />)
+    render(<RecipeUploadContent tagCategories={mockTagCategories} />)
 
     await user.click(screen.getByText('テキスト入力'))
     expect(screen.getByTestId('text-input')).toBeInTheDocument()
@@ -139,7 +151,7 @@ describe('RecipeUploadContent', () => {
 
   it('stores uploaded image URL after upload', async () => {
     const user = userEvent.setup()
-    render(<RecipeUploadContent />)
+    render(<RecipeUploadContent tagCategories={mockTagCategories} />)
 
     await user.click(screen.getByText('スキャン'))
 
@@ -149,7 +161,7 @@ describe('RecipeUploadContent', () => {
 
   it('stores extracted data after text input', async () => {
     const user = userEvent.setup()
-    render(<RecipeUploadContent />)
+    render(<RecipeUploadContent tagCategories={mockTagCategories} />)
 
     await user.click(screen.getByText('テキスト入力'))
 
@@ -159,7 +171,7 @@ describe('RecipeUploadContent', () => {
 
   it('manages form state across navigation', async () => {
     const user = userEvent.setup()
-    render(<RecipeUploadContent />)
+    render(<RecipeUploadContent tagCategories={mockTagCategories} />)
 
     // Navigate to manual form entry
     await user.click(screen.getByText('手動入力'))
@@ -170,7 +182,7 @@ describe('RecipeUploadContent', () => {
   it('disables back button while uploading', async () => {
     const user = userEvent.setup()
 
-    render(<RecipeUploadContent />)
+    render(<RecipeUploadContent tagCategories={mockTagCategories} />)
 
     await user.click(screen.getByText('スキャン'))
     const backButton = screen.getByRole('button', { name: /戻る/ })
