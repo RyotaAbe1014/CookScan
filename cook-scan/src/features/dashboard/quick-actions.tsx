@@ -7,17 +7,17 @@ export function QuickActions() {
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         <Link
           href="/recipes/upload"
-          className="group relative overflow-hidden rounded-xl border border-gray-200 bg-white p-6 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+          className="group relative flex flex-col overflow-hidden rounded-xl border border-gray-200 bg-white p-6 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
         >
           <div className="absolute right-0 top-0 h-32 w-32 translate-x-8 -translate-y-8 rounded-full bg-linear-to-br from-indigo-100 to-purple-100 opacity-50 transition-transform group-hover:scale-110" />
-          <div className="relative">
+          <div className="relative flex flex-col h-full">
             <div className="mb-4 inline-flex rounded-xl bg-linear-to-br from-indigo-500 to-purple-600 p-3 text-white shadow-lg transition-transform group-hover:scale-110">
               <svg className="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
               </svg>
             </div>
             <h3 className="mb-2 text-xl font-bold text-gray-900">レシピをスキャン</h3>
-            <p className="text-sm leading-relaxed text-gray-600">
+            <p className="flex-1 text-sm leading-relaxed text-gray-600">
               料理本やレシピカードを撮影して、AIが自動でデジタル化します
             </p>
             <div className="mt-4 flex items-center text-sm font-medium text-indigo-600 transition-colors group-hover:text-purple-600">
@@ -31,10 +31,10 @@ export function QuickActions() {
 
         <Link
           href="/recipes"
-          className="group relative overflow-hidden rounded-xl border border-gray-200 bg-white p-6 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+          className="group relative flex flex-col overflow-hidden rounded-xl border border-gray-200 bg-white p-6 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
         >
           <div className="absolute right-0 top-0 h-32 w-32 translate-x-8 -translate-y-8 rounded-full bg-linear-to-br from-green-100 to-emerald-100 opacity-50 transition-transform group-hover:scale-110" />
-          <div className="relative">
+          <div className="relative flex flex-col h-full">
             <div className="mb-4 inline-flex rounded-xl bg-linear-to-br from-green-500 to-emerald-600 p-3 text-white shadow-lg transition-transform group-hover:scale-110">
               <svg className="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
@@ -46,7 +46,7 @@ export function QuickActions() {
               </svg>
             </div>
             <h3 className="mb-2 text-xl font-bold text-gray-900">マイレシピ</h3>
-            <p className="text-sm leading-relaxed text-gray-600">保存したレシピを閲覧・編集・管理できます</p>
+            <p className="flex-1 text-sm leading-relaxed text-gray-600">保存したレシピを閲覧・編集・管理できます</p>
             <div className="mt-4 flex items-center text-sm font-medium text-green-600 transition-colors group-hover:text-emerald-600">
               レシピを見る
               <svg className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -58,10 +58,10 @@ export function QuickActions() {
 
         <Link
           href="/tags"
-          className="group relative overflow-hidden rounded-xl border border-gray-200 bg-white p-6 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+          className="group relative flex flex-col overflow-hidden rounded-xl border border-gray-200 bg-white p-6 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
         >
           <div className="absolute right-0 top-0 h-32 w-32 translate-x-8 -translate-y-8 rounded-full bg-linear-to-br from-amber-100 to-orange-100 opacity-50 transition-transform group-hover:scale-110" />
-          <div className="relative">
+          <div className="relative flex flex-col h-full">
             <div className="mb-4 inline-flex rounded-xl bg-linear-to-br from-amber-500 to-orange-600 p-3 text-white shadow-lg transition-transform group-hover:scale-110">
               <svg className="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
@@ -73,7 +73,7 @@ export function QuickActions() {
               </svg>
             </div>
             <h3 className="mb-2 text-xl font-bold text-gray-900">タグ管理</h3>
-            <p className="text-sm leading-relaxed text-gray-600">タグとカテゴリを作成・編集して、レシピを整理しましょう</p>
+            <p className="flex-1 text-sm leading-relaxed text-gray-600">タグとカテゴリを作成・編集して、レシピを整理しましょう</p>
             <div className="mt-4 flex items-center text-sm font-medium text-amber-600 transition-colors group-hover:text-orange-600">
               タグを管理
               <svg className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
