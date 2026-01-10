@@ -41,7 +41,9 @@ describe('QuickActions', () => {
 
     // Then: マイレシピカードのタイトルと説明が表示される
     expect(screen.getByText('マイレシピ')).toBeInTheDocument()
-    expect(screen.getByText('保存したレシピを閲覧・編集・管理できます')).toBeInTheDocument()
+    expect(
+      screen.getByText('保存したレシピを閲覧・編集して、お気に入りのレシピを管理できます')
+    ).toBeInTheDocument()
   })
 
   test('正常系：マイレシピリンクが正しいhrefを持つ', () => {
