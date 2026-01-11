@@ -48,7 +48,8 @@ className="bg-gradient-to-br from-green-500 to-emerald-600"
 13. [複数要素カードヘッダー](#複数要素カードヘッダー)
 14. [アイコンバッジ](#アイコンバッジ)
 15. [アニメーション](#アニメーション)
-16. [セクション別カラーコーディング](#セクション別カラーコーディング)
+16. [クイックアクションカード](#クイックアクションカード)
+17. [セクション別カラーコーディング](#セクション別カラーコーディング)
 
 ---
 
@@ -723,6 +724,130 @@ className="hover:shadow-xl"
 
 ---
 
+## クイックアクションカード
+
+ダッシュボードなどで使用する、温かみのある親しみやすいデザインの対話型アクションカードです。
+
+### デザインコンセプト: "Kitchen Warmth"
+
+料理アプリにふさわしい温かみと親しみやすさを重視したデザイン。柔らかい色使い、丸みのあるシェイプ、心地よいインタラクションが特徴です。
+
+### 基本パターン
+
+```tsx
+<Link
+  href="/path/to/action"
+  className="group relative overflow-hidden rounded-2xl bg-linear-to-br from-indigo-50 via-purple-50 to-indigo-50 p-6 shadow-sm ring-1 ring-indigo-100/50 transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-lg hover:ring-indigo-200/60"
+>
+  {/* 装飾的な背景要素 */}
+  <div className="absolute -right-8 -top-8 h-40 w-40 rounded-full bg-linear-to-br from-indigo-200/30 to-purple-200/30 blur-2xl transition-transform duration-500 group-hover:scale-110" />
+  <div className="absolute -bottom-4 -left-4 h-32 w-32 rounded-full bg-linear-to-tr from-purple-200/20 to-indigo-200/20 blur-xl" />
+
+  <div className="relative flex h-full flex-col">
+    {/* アイコン */}
+    <div className="mb-5 inline-flex">
+      <div className="relative">
+        <div className="absolute inset-0 rounded-2xl bg-indigo-400/30 blur-xl transition-all duration-300 group-hover:bg-indigo-400/50" />
+        <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-linear-to-br from-indigo-500 to-purple-600 shadow-lg transition-all duration-300 group-hover:scale-105 group-hover:rotate-3">
+          <svg className="h-7 w-7 text-white">...</svg>
+        </div>
+      </div>
+    </div>
+
+    {/* タイトルと説明 */}
+    <h3 className="mb-2 text-xl font-bold text-gray-900">アクションタイトル</h3>
+    <p className="mb-4 flex-1 text-sm leading-relaxed text-gray-600">
+      アクションの説明文をここに記載します
+    </p>
+
+    {/* アクションリンク */}
+    <div className="flex items-center text-sm font-semibold text-indigo-600 transition-colors duration-200 group-hover:text-purple-600">
+      アクションを実行
+      <svg className="ml-1.5 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1.5">...</svg>
+    </div>
+  </div>
+</Link>
+```
+
+### カラーバリエーション
+
+各アクションの目的に応じて異なる色を使用：
+
+```tsx
+// レシピスキャン（Indigo-Purple）
+className="bg-linear-to-br from-indigo-50 via-purple-50 to-indigo-50"
+// 装飾: from-indigo-200/30 to-purple-200/30
+// アイコン: from-indigo-500 to-purple-600
+// テキスト: text-indigo-600 group-hover:text-purple-600
+
+// マイレシピ（Emerald-Teal）
+className="bg-linear-to-br from-emerald-50 via-teal-50 to-emerald-50"
+// 装飾: from-emerald-200/30 to-teal-200/30
+// アイコン: from-emerald-500 to-teal-600
+// テキスト: text-emerald-600 group-hover:text-teal-600
+
+// タグ管理（Amber-Orange）
+className="bg-linear-to-br from-amber-50 via-orange-50 to-amber-50"
+// 装飾: from-amber-200/30 to-orange-200/30
+// アイコン: from-amber-500 to-orange-600
+// テキスト: text-amber-600 group-hover:text-orange-600
+```
+
+### デザイン要素
+
+#### 背景グラデーション
+- パステル調の3色グラデーション（`from-{color}-50 via-{color2}-50 to-{color}-50`）
+- 柔らかいリング境界線（`ring-1 ring-{color}-100/50`）
+- ホバー時に境界線を強調（`hover:ring-{color}-200/60`）
+
+#### 装飾要素
+- 2層構造のぼかし円形（`blur-2xl` と `blur-xl`）
+- 半透明の色付き背景（`{color}-200/30`, `{color}-200/20`）
+- ホバー時にスケール変化（`group-hover:scale-110`）
+
+#### アイコングロー
+- アイコン背景に `blur-xl` のソフトグロー
+- ホバー時に明るさ増加（`group-hover:bg-{color}-400/50`）
+
+#### アニメーション
+- カード全体: `hover:-translate-y-1` で浮き上がり
+- アイコン: `group-hover:scale-105 group-hover:rotate-3` で軽やかな動き
+- 矢印: `group-hover:translate-x-1.5` で右移動
+- トランジション: `duration-300 ease-out` で自然な動き
+
+#### レイアウト
+- Flexbox縦配置（`flex h-full flex-col`）
+- 説明文を伸縮させてアクションリンクを下部に固定（`flex-1`）
+- 説明文を2行に統一して視覚的な整合性を保つ
+
+### 使用例
+
+```tsx
+// ダッシュボードのクイックアクション
+<div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+  {/* レシピをスキャン */}
+  <Link href="/recipes/upload" className="...">...</Link>
+
+  {/* マイレシピ */}
+  <Link href="/recipes" className="...">...</Link>
+
+  {/* タグ管理 */}
+  <Link href="/tags" className="...">...</Link>
+</div>
+```
+
+### ポイント
+
+1. **温かみのある配色**: パステル調で優しい印象
+2. **ソフトなシャドウ**: `shadow-sm` + `ring-1` で軽やかな立体感
+3. **装飾的な背景**: ぼかし効果で深みと奥行きを演出
+4. **親しみやすいアニメーション**: 自然な動きで心地よいインタラクション
+5. **視覚的な統一感**: Flexboxで高さを揃え、説明文を2行に統一
+
+**実装ファイル**: `src/features/dashboard/quick-actions.tsx`
+
+---
+
 ## セクション別カラーコーディング
 
 アプリケーション全体で一貫性を保つため、各セクションには特定のカラースキームを使用します。
@@ -832,7 +957,8 @@ className="disabled:cursor-not-allowed disabled:opacity-50"
 - **インラインバリデーションヘルパー**: 入力フィールド直下の状態別ヘルパーテキスト
 - **複数要素カードヘッダー**: 左右に異なる要素を配置した高度なカードヘッダーレイアウト
 - **リッチTextareaプレースホルダー**: 複数行の使用例を含むプレースホルダー
+- **クイックアクションカード**: 温かみのあるデザインの対話型アクションカード（2025年1月11日追加）
 
-これらのパターンは`src/features/recipes/upload/text-input.tsx`での実装を基に文書化されました。
+これらのパターンは実装されたコンポーネントを基に文書化されました。
 
 デザインシステムの更新や追加が必要な場合は、このドキュメントを更新してチーム全体で共有してください。

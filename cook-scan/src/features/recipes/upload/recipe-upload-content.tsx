@@ -5,29 +5,31 @@ import MethodSelector from '@/features/recipes/upload/method-selector'
 import ImageUpload from '@/features/recipes/upload/image-upload'
 import RecipeForm from '@/features/recipes/upload/recipe-form'
 import type { ExtractedRecipeData } from '@/features/recipes/upload/types'
+import type { RecipeFormTagCategory } from '@/features/recipes/types/tag'
 import { Button } from '@/components/ui/button'
 import { TextInput } from './text-input'
+import { ChevronLeftIcon } from '@/components/icons'
 
 type Step = 'method-selection' | 'image-upload' | 'text-input' | 'form'
 
-export default function RecipeUploadContent() {
+type Props = {
+  tagCategories: RecipeFormTagCategory[]
+}
+
+export default function RecipeUploadContent({ tagCategories }: Props) {
   const [currentStep, setCurrentStep] = useState<Step>('method-selection')
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null)
   const [extractedData, setExtractedData] = useState<ExtractedRecipeData | null>(null)
   const [isUploading, setIsUploading] = useState(false)
 
+  const stepMap: Record<string, Step> = {
+    scan: 'image-upload',
+    'text-input': 'text-input',
+    manual: 'form'
+  }
+
   const handleMethodSelect = (method: 'scan' | 'manual' | 'text-input') => {
-    switch (method) {
-      case 'scan':
-        setCurrentStep('image-upload')
-        break
-      case 'text-input':
-        setCurrentStep('text-input')
-        break
-      default:
-        setCurrentStep('form')
-        break
-    }
+    setCurrentStep(stepMap[method])
   }
 
   const handleImageUpload = (imageUrl: string, extractedData: ExtractedRecipeData) => {
@@ -42,14 +44,10 @@ export default function RecipeUploadContent() {
   }
 
   const handleBack = () => {
-    if (currentStep === 'image-upload' || currentStep === 'text-input') {
+    if (currentStep === 'form') {
+      setCurrentStep(uploadedImageUrl ? 'image-upload' : 'method-selection')
+    } else if (currentStep !== 'method-selection') {
       setCurrentStep('method-selection')
-    } else if (currentStep === 'form') {
-      if (uploadedImageUrl) {
-        setCurrentStep('image-upload')
-      } else {
-        setCurrentStep('method-selection')
-      }
     }
   }
 
@@ -62,19 +60,7 @@ export default function RecipeUploadContent() {
           disabled={isUploading}
           className="mb-6"
         >
-          <svg
-            className="h-4 w-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M15 19l-7-7 7-7"
-            />
-          </svg>
+          <ChevronLeftIcon className="h-4 w-4" />
           戻る
         </Button>
       )}
@@ -98,6 +84,7 @@ export default function RecipeUploadContent() {
         <RecipeForm
           imageUrl={uploadedImageUrl}
           extractedData={extractedData}
+          tagCategories={tagCategories}
         />
       )}
     </>

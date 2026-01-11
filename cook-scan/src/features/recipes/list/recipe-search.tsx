@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { SearchIcon, CloseIcon, DocumentSearchIcon } from '@/components/icons'
 
 type Props = {
   resultCount?: number
@@ -68,19 +69,9 @@ export function RecipeSearch({ resultCount }: Props) {
                 : 'bg-linear-to-br from-gray-100 to-gray-200'
               }
             `}>
-              <svg
+              <SearchIcon
                 className={`h-5 w-5 transition-colors duration-300 ${isFocused ? 'text-white' : 'text-gray-500'}`}
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                />
-              </svg>
+              />
             </div>
 
             {/* Input Field */}
@@ -102,14 +93,9 @@ export function RecipeSearch({ resultCount }: Props) {
                 className="group/clear flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gray-100 transition-all hover:bg-red-50 hover:scale-110"
                 aria-label="検索をクリア"
               >
-                <svg
+                <CloseIcon
                   className="h-4 w-4 text-gray-500 transition-colors group-hover/clear:text-red-600"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
+                />
               </button>
             )}
 
@@ -117,20 +103,15 @@ export function RecipeSearch({ resultCount }: Props) {
             <button
               type="submit"
               disabled={query.trim().length === 0}
-              className="group/btn relative flex h-11 items-center gap-2 overflow-hidden rounded-xl bg-linear-to-r from-indigo-600 to-purple-600 px-6 font-semibold text-white shadow-lg shadow-indigo-500/30 transition-all hover:shadow-xl hover:shadow-indigo-500/40 disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none"
+              className="group/btn relative flex h-11 w-11 sm:w-auto items-center justify-center gap-2 overflow-hidden rounded-xl bg-linear-to-r from-indigo-600 to-purple-600 px-3 sm:px-6 font-semibold text-white shadow-lg shadow-indigo-500/30 transition-all hover:shadow-xl hover:shadow-indigo-500/40 disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none"
             >
               {/* Shine effect on hover */}
               <div className="absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-white/20 to-transparent transition-transform duration-500 group-hover/btn:translate-x-full" />
 
-              <svg
+              <SearchIcon
                 className="relative h-4 w-4 transition-transform group-hover/btn:scale-110"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-              <span className="relative">検索</span>
+              />
+              <span className="relative hidden sm:inline">検索</span>
             </button>
           </div>
         </div>
@@ -141,9 +122,7 @@ export function RecipeSearch({ resultCount }: Props) {
         <div className="mt-3 flex items-center justify-between px-2">
           <div className="flex items-center gap-2">
             <div className="flex h-6 w-6 items-center justify-center rounded-md bg-linear-to-br from-indigo-500 to-purple-600">
-              <svg className="h-3.5 w-3.5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clipRule="evenodd" />
-              </svg>
+              <DocumentSearchIcon className="h-3.5 w-3.5 text-white" />
             </div>
             <p className="text-sm font-medium text-gray-700">
               検索結果: <span className="font-bold text-indigo-600">{resultCount}</span>件

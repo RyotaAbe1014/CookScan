@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { createTagCategory, createTag } from './actions'
 import { Button, Input, Textarea, Select, Alert } from '@/components/ui'
 import type { TagCategoryBasic } from '@/types/tag'
+import { TagIcon, FolderIcon, PlusIcon } from '@/components/icons'
 
 type TagCreateFormProps = {
   categories: TagCategoryBasic[]
@@ -109,51 +110,25 @@ export function TagCreateForm({ categories }: TagCreateFormProps) {
         <nav className="-mb-px flex" aria-label="Tabs">
           <button
             onClick={() => setActiveTab('tag')}
-            className={`group relative w-1/2 border-b-2 px-6 py-4 text-sm font-medium transition-all ${
-              activeTab === 'tag'
+            className={`group relative w-1/2 border-b-2 px-6 py-4 text-sm font-medium transition-all ${activeTab === 'tag'
                 ? 'border-indigo-500 text-indigo-600'
                 : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
-            }`}
+              }`}
           >
             <span className="flex items-center justify-center gap-2">
-              <svg
-                className={`h-5 w-5 ${activeTab === 'tag' ? 'text-indigo-600' : 'text-gray-400'}`}
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
-                />
-              </svg>
+              <TagIcon className={`h-5 w-5 ${activeTab === 'tag' ? 'text-indigo-600' : 'text-gray-400'}`} />
               タグを作成
             </span>
           </button>
           <button
             onClick={() => setActiveTab('category')}
-            className={`group relative w-1/2 border-b-2 px-6 py-4 text-sm font-medium transition-all ${
-              activeTab === 'category'
+            className={`group relative w-1/2 border-b-2 px-6 py-4 text-sm font-medium transition-all ${activeTab === 'category'
                 ? 'border-indigo-500 text-indigo-600'
                 : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
-            }`}
+              }`}
           >
             <span className="flex items-center justify-center gap-2">
-              <svg
-                className={`h-5 w-5 ${activeTab === 'category' ? 'text-indigo-600' : 'text-gray-400'}`}
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"
-                />
-              </svg>
+              <FolderIcon className={`h-5 w-5 ${activeTab === 'category' ? 'text-indigo-600' : 'text-gray-400'}`} />
               カテゴリを作成
             </span>
           </button>
@@ -234,11 +209,7 @@ export function TagCreateForm({ categories }: TagCreateFormProps) {
               size="lg"
               className="w-full"
             >
-              {!isSubmittingTag && (
-                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                </svg>
-              )}
+              <PlusIcon className="h-5 w-5" stroke="currentColor" />
               {isSubmittingTag ? '作成中...' : 'タグを作成'}
             </Button>
           </form>
@@ -290,11 +261,7 @@ export function TagCreateForm({ categories }: TagCreateFormProps) {
               size="lg"
               className="w-full"
             >
-              {!isSubmittingCategory && (
-                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                </svg>
-              )}
+              <PlusIcon className="h-5 w-5" stroke="currentColor" />
               {isSubmittingCategory ? '作成中...' : 'カテゴリを作成'}
             </Button>
           </form>

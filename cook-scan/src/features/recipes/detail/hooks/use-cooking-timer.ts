@@ -23,7 +23,7 @@ export function useCookingTimer({
   instruction,
   initialSeconds,
 }: UseCookingTimerParams) {
-  const [_tick, setTick] = useState(0)
+  const [tick, setTick] = useState(0)
 
   const [timerStates, setTimerStates] = useAtom(recipeTimerStatesAtomFamily(recipeId))
 
@@ -47,7 +47,7 @@ export function useCookingTimer({
       elapsedSeconds,
       runningSinceSeconds
     )
-  }, [persistedTimerState, totalSeconds, elapsedSeconds, runningSinceSeconds, initialSeconds])
+  }, [persistedTimerState, totalSeconds, elapsedSeconds, runningSinceSeconds, initialSeconds, tick])
 
   // タイマー終了時の処理をメモ化
   const handleTimerComplete = useCallback((completedStartedAt: number, totalSecondsValue: number) => {

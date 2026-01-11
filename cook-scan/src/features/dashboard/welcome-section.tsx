@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { UserIcon, MemoIcon } from '@/components/icons'
 
 type Profile = {
   name: string | null
@@ -16,25 +17,16 @@ export function WelcomeSection({ profile }: WelcomeSectionProps) {
     <div className="mb-10 overflow-hidden rounded-2xl bg-linear-to-r from-indigo-600 to-purple-600 p-4 sm:p-6 lg:p-8 shadow-xl">
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
         <div className="flex h-12 w-12 sm:h-16 sm:w-16 shrink-0 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm">
-          <svg className="h-6 w-6 sm:h-8 sm:w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-            />
-          </svg>
+          <UserIcon className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
         </div>
         <div className="flex-1">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
             <h2 className="text-xl font-bold text-white sm:text-2xl lg:text-3xl">こんにちは、{displayName}さん</h2>
             <Link
               href="/settings/profile"
-              className="flex items-center gap-1 rounded-lg bg-white/20 px-3 py-1 text-sm font-medium text-white transition-colors hover:bg-white/30"
+              className="flex items-center gap-1 self-start rounded-lg bg-white/20 px-3 py-1 text-sm font-medium text-white transition-colors hover:bg-white/30"
             >
-              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-              </svg>
+              <MemoIcon className="h-4 w-4" />
               編集
             </Link>
           </div>

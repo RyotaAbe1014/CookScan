@@ -4,12 +4,21 @@ import { useState } from 'react'
 import { updateTagCategory, deleteTagCategory } from './actions'
 import { TagItem } from './tag-item'
 import { Button, Input, Textarea, Card, CardContent } from '@/components/ui'
+import {
+  FolderIcon,
+  BadgeCheckIcon,
+  UserCircleSolidIcon,
+  TagIcon,
+  PencilIcon,
+  TrashIcon,
+} from '@/components/icons'
 
 type Tag = {
   id: string
   name: string
   description: string | null
   isSystem: boolean
+  userId: string | null
   recipeTags: { recipeId: string }[]
 }
 
@@ -155,9 +164,7 @@ export function CategoryItem({ category, currentUserId }: CategoryItemProps) {
           <div className="flex items-center justify-between">
             <div className="flex flex-1 items-center gap-4">
               <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-linear-to-br from-indigo-500 to-purple-600 shadow-md">
-                <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
-                </svg>
+                <FolderIcon className="h-6 w-6 text-white" />
               </div>
               <div className="flex-1">
                 <h3 className="text-xl font-bold text-gray-900">
@@ -166,16 +173,12 @@ export function CategoryItem({ category, currentUserId }: CategoryItemProps) {
                 <p className="mt-1 flex items-center gap-2 text-sm text-gray-600">
                   {category.isSystem ? (
                     <span className="inline-flex items-center gap-1 rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700">
-                      <svg className="h-3 w-3" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                      </svg>
+                      <BadgeCheckIcon className="h-3 w-3" />
                       システム
                     </span>
                   ) : (
                     <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700">
-                      <svg className="h-3 w-3" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
-                      </svg>
+                      <UserCircleSolidIcon className="h-3 w-3" />
                       ユーザー
                     </span>
                   )}
@@ -184,9 +187,7 @@ export function CategoryItem({ category, currentUserId }: CategoryItemProps) {
             </div>
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-2 rounded-lg bg-indigo-50 px-4 py-2 shadow-sm">
-                <svg className="h-5 w-5 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
-                </svg>
+                <TagIcon className="h-5 w-5 text-indigo-600" />
                 <span className="text-sm font-semibold text-indigo-900">
                   {category.tags.length}
                 </span>
@@ -199,9 +200,7 @@ export function CategoryItem({ category, currentUserId }: CategoryItemProps) {
                     title="編集"
                     disabled={isSubmitting}
                   >
-                    <svg className="h-5 w-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                    </svg>
+                    <PencilIcon className="h-5 w-5 text-indigo-600" />
                   </button>
                   <button
                     onClick={handleDelete}
@@ -209,9 +208,7 @@ export function CategoryItem({ category, currentUserId }: CategoryItemProps) {
                     title="削除"
                     disabled={isSubmitting}
                   >
-                    <svg className="h-5 w-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                    </svg>
+                    <TrashIcon className="h-5 w-5 text-red-600" />
                   </button>
                 </div>
               )}
@@ -234,13 +231,14 @@ export function CategoryItem({ category, currentUserId }: CategoryItemProps) {
           <div className="flex flex-wrap gap-3">
             {category.tags.map((tag) => {
               const usageCount = tag.recipeTags.length
+              const isTagUserOwned = tag.userId === currentUserId
 
               return (
                 <TagItem
                   key={tag.id}
                   tag={tag}
                   usageCount={usageCount}
-                  isUserOwned={isUserOwned}
+                  isUserOwned={isTagUserOwned}
                 />
               )
             })}

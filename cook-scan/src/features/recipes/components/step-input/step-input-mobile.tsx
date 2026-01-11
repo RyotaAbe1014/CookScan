@@ -1,6 +1,7 @@
 'use client'
 
 import { Input, Textarea } from '@/components/ui'
+import { TrashIcon, ClockIcon } from '@/components/icons'
 import type { StepInputProps } from './types'
 
 export function StepInputMobile({
@@ -33,9 +34,7 @@ export function StepInputMobile({
           className="flex h-12 w-12 items-center justify-center rounded-xl bg-gray-100 text-gray-400 transition-all duration-200 hover:bg-red-50 hover:text-red-500 active:scale-90 disabled:cursor-not-allowed disabled:opacity-40"
           aria-label="手順を削除"
         >
-          <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-          </svg>
+          <TrashIcon className="h-5 w-5" stroke="currentColor" />
         </button>
       </div>
 
@@ -58,9 +57,7 @@ export function StepInputMobile({
       {/* Timer input (full width) */}
       <div className="rounded-xl bg-linear-to-r from-indigo-50 to-blue-50 p-3 ring-1 ring-indigo-100">
         <label className="mb-2 flex items-center gap-2 text-xs font-semibold tracking-wide text-indigo-600 uppercase">
-          <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
+          <ClockIcon className="h-4 w-4" stroke="currentColor" />
           タイマー設定
         </label>
         <div className="flex items-center gap-3">

@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useAtomValue, useSetAtom } from 'jotai'
 import { Card, CardHeader, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { ClockIcon, StopCircleIcon } from '@/components/icons'
 import { recipeTimerStatesAtomFamily, stopAllTimersAtomFamily } from './atoms/timer-atoms'
 import { calculateRemainingSeconds } from '@/utils/timer-persistence'
 
@@ -27,7 +28,7 @@ function formatTime(seconds: number): string {
 }
 
 export function CookingTimerManager({ recipeId }: CookingTimerManagerProps) {
-  const [_tick, setTick] = useState(0)
+  const [tick, setTick] = useState(0)
   const timerStates = useAtomValue(recipeTimerStatesAtomFamily(recipeId))
   const stopAllTimers = useSetAtom(stopAllTimersAtomFamily(recipeId))
 
@@ -66,7 +67,7 @@ export function CookingTimerManager({ recipeId }: CookingTimerManagerProps) {
     // ステップ番号順にソート
     timers.sort((a, b) => a.stepNumber - b.stepNumber)
     return timers
-  }, [timerStates])
+  }, [timerStates, tick])
 
   const handleStopAll = () => {
     stopAllTimers()
@@ -85,20 +86,11 @@ export function CookingTimerManager({ recipeId }: CookingTimerManagerProps) {
         icon={
           <div className="relative">
             <div className="absolute inset-0 animate-ping rounded-full bg-orange-300/50" />
-            <svg
+            <ClockIcon
               className="relative h-5 w-5 animate-spin text-white"
               style={{ animationDuration: '3s' }}
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
               strokeWidth={2.5}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
+            />
           </div>
         }
         iconColor="amber"
@@ -119,13 +111,12 @@ export function CookingTimerManager({ recipeId }: CookingTimerManagerProps) {
             return (
               <div
                 key={timer.stepId}
-                className={`group relative overflow-hidden rounded-2xl border-2 p-4 shadow-lg transition-all duration-300 hover:scale-[1.02] hover:shadow-xl ${
-                  isUrgent
+                className={`group relative overflow-hidden rounded-2xl border-2 p-4 shadow-lg transition-all duration-300 hover:scale-[1.02] hover:shadow-xl ${isUrgent
                     ? 'animate-pulse border-red-400 bg-linear-to-r from-red-50 to-orange-50 shadow-red-200/40'
                     : isNearlyDone
                       ? 'border-orange-400 bg-linear-to-r from-orange-50 to-amber-50 shadow-orange-200/30'
                       : 'border-orange-200/60 bg-linear-to-r from-amber-50/50 to-white shadow-orange-100/20'
-                }`}
+                  }`}
               >
                 {/* Decorative gradient overlay */}
                 <div className="absolute inset-0 bg-linear-to-br from-orange-400/5 via-transparent to-amber-400/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
@@ -151,13 +142,12 @@ export function CookingTimerManager({ recipeId }: CookingTimerManagerProps) {
                       <div className="flex items-center justify-between">
                         <div className="flex items-baseline gap-2">
                           <span
-                            className={`font-mono text-3xl font-bold tabular-nums tracking-tight transition-colors ${
-                              isUrgent
+                            className={`font-mono text-3xl font-bold tabular-nums tracking-tight transition-colors ${isUrgent
                                 ? 'text-red-600'
                                 : isNearlyDone
                                   ? 'text-orange-700'
                                   : 'text-orange-600'
-                            }`}
+                              }`}
                           >
                             {formatTime(timer.remainingSeconds)}
                           </span>
@@ -169,11 +159,10 @@ export function CookingTimerManager({ recipeId }: CookingTimerManagerProps) {
                         {/* Status indicator */}
                         <div className="flex items-center gap-1.5">
                           <div
-                            className={`h-2 w-2 animate-pulse rounded-full shadow-sm ${
-                              isUrgent
+                            className={`h-2 w-2 animate-pulse rounded-full shadow-sm ${isUrgent
                                 ? 'bg-red-500 shadow-red-300'
                                 : 'bg-orange-500 shadow-orange-300'
-                            }`}
+                              }`}
                           />
                           <span className="text-xs font-medium text-orange-700">
                             {isUrgent ? '完了間近' : '調理中'}
@@ -185,11 +174,10 @@ export function CookingTimerManager({ recipeId }: CookingTimerManagerProps) {
                       <div className="relative">
                         <div className="h-3 overflow-hidden rounded-full bg-orange-100 shadow-inner">
                           <div
-                            className={`h-full rounded-full shadow-sm transition-all duration-1000 ease-linear ${
-                              isUrgent
+                            className={`h-full rounded-full shadow-sm transition-all duration-1000 ease-linear ${isUrgent
                                 ? 'bg-linear-to-r from-red-500 to-orange-600'
                                 : 'bg-linear-to-r from-orange-500 to-amber-500'
-                            }`}
+                              }`}
                             style={{ width: `${progress}%` }}
                           />
                         </div>
@@ -216,18 +204,7 @@ export function CookingTimerManager({ recipeId }: CookingTimerManagerProps) {
               className="w-full bg-linear-to-r from-red-600 to-orange-600 font-semibold shadow-lg shadow-red-600/20 transition-all hover:scale-[1.02] hover:shadow-xl hover:shadow-red-600/30"
               aria-label="すべてのタイマーを停止"
             >
-              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M9 10a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z"
-                />
-              </svg>
+              <StopCircleIcon className="h-5 w-5" strokeWidth={2.5} />
               すべてのタイマーを停止
             </Button>
           </div>

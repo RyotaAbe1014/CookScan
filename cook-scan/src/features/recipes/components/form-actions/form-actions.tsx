@@ -1,6 +1,7 @@
 'use client'
 
 import { Button } from '@/components/ui'
+import { CheckIcon, CloseIcon } from '@/components/icons'
 import type { FormActionsProps } from './types'
 
 export function FormActions({
@@ -17,9 +18,7 @@ export function FormActions({
         onClick={onCancel}
         size="lg"
       >
-        <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-        </svg>
+        <CloseIcon className="h-4 w-4" />
         キャンセル
       </Button>
       <Button
@@ -29,9 +28,7 @@ export function FormActions({
         size="lg"
       >
         {!isSubmitting && (
-          <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-          </svg>
+          <CheckIcon className="h-5 w-5" />
         )}
         {isSubmitting ? '保存中...' : submitLabel}
       </Button>

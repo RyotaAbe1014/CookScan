@@ -82,7 +82,7 @@ describe('RecipeForm', () => {
 
   it('正常系：抽出されたデータでフォームが表示される', async () => {
     // Given: 抽出されたデータが準備されている
-    render(<RecipeForm imageUrl={null} extractedData={mockExtractedData} />)
+    render(<RecipeForm tagCategories={mockTagCategories} imageUrl={null} extractedData={mockExtractedData} />)
 
     // When: フォームが表示される
     // Then: 抽出されたデータがフォームに反映されている
@@ -98,7 +98,7 @@ describe('RecipeForm', () => {
 
   it('正常系：imageUrlが提供された場合に画像プレビューが表示される', async () => {
     // Given: imageUrlが提供されている
-    render(<RecipeForm imageUrl="test-image.jpg" extractedData={null} />)
+    render(<RecipeForm tagCategories={mockTagCategories} imageUrl="test-image.jpg" extractedData={null} />)
 
     // When: フォームが表示される
     // Then: 画像プレビューが表示される
@@ -111,7 +111,7 @@ describe('RecipeForm', () => {
 
   it('正常系：抽出されたデータから材料が表示される', async () => {
     // Given: 材料データが含まれた抽出データが準備されている
-    render(<RecipeForm imageUrl={null} extractedData={mockExtractedData} />)
+    render(<RecipeForm tagCategories={mockTagCategories} imageUrl={null} extractedData={mockExtractedData} />)
 
     // When: フォームが表示される
     // Then: 材料が正しく表示される
@@ -127,7 +127,7 @@ describe('RecipeForm', () => {
 
   it('正常系：抽出されたデータから手順が表示される', async () => {
     // Given: 手順データが含まれた抽出データが準備されている
-    render(<RecipeForm imageUrl={null} extractedData={mockExtractedData} />)
+    render(<RecipeForm tagCategories={mockTagCategories} imageUrl={null} extractedData={mockExtractedData} />)
 
     // When: フォームが表示される
     // Then: 手順が正しく表示される
@@ -141,7 +141,7 @@ describe('RecipeForm', () => {
 
   it('正常系：タグカテゴリが読み込まれ表示される', async () => {
     // Given: タグカテゴリデータがモックされている
-    render(<RecipeForm imageUrl={null} extractedData={null} />)
+    render(<RecipeForm tagCategories={mockTagCategories} imageUrl={null} extractedData={null} />)
 
     // When: フォームが表示される
     // Then: タグカテゴリとタグが表示される
@@ -158,7 +158,7 @@ describe('RecipeForm', () => {
   it('正常系：タグを選択・解除できる', async () => {
     // Given: フォームが表示され、タグが読み込まれている
     const user = userEvent.setup()
-    render(<RecipeForm imageUrl={null} extractedData={null} />)
+    render(<RecipeForm tagCategories={mockTagCategories} imageUrl={null} extractedData={null} />)
 
     await waitFor(() => {
       expect(screen.getByText('タグ1')).toBeInTheDocument()
@@ -183,7 +183,7 @@ describe('RecipeForm', () => {
   it('正常系：新しい材料を追加できる', async () => {
     // Given: フォームが表示され、既存の材料がある
     const user = userEvent.setup()
-    render(<RecipeForm imageUrl={null} extractedData={mockExtractedData} />)
+    render(<RecipeForm tagCategories={mockTagCategories} imageUrl={null} extractedData={mockExtractedData} />)
 
     await waitFor(() => {
       expect(screen.getByDisplayValue('材料1')).toBeInTheDocument()
@@ -201,7 +201,7 @@ describe('RecipeForm', () => {
   it('正常系：材料が2つ以上ある場合に材料を削除できる', async () => {
     // Given: フォームが表示され、材料が2つ以上ある
     const user = userEvent.setup()
-    render(<RecipeForm imageUrl={null} extractedData={mockExtractedData} />)
+    render(<RecipeForm tagCategories={mockTagCategories} imageUrl={null} extractedData={mockExtractedData} />)
 
     await waitFor(() => {
       expect(screen.getByDisplayValue('材料1')).toBeInTheDocument()
@@ -224,7 +224,7 @@ describe('RecipeForm', () => {
       ingredients: [{ name: '材料1', unit: '100g', notes: '' }]
     }
 
-    render(<RecipeForm imageUrl={null} extractedData={singleIngredientData} />)
+    render(<RecipeForm tagCategories={mockTagCategories} imageUrl={null} extractedData={singleIngredientData} />)
 
     await waitFor(() => {
       expect(screen.getByDisplayValue('材料1')).toBeInTheDocument()
@@ -239,7 +239,7 @@ describe('RecipeForm', () => {
   it('正常系：新しい手順を追加できる', async () => {
     // Given: フォームが表示され、既存の手順がある
     const user = userEvent.setup()
-    render(<RecipeForm imageUrl={null} extractedData={mockExtractedData} />)
+    render(<RecipeForm tagCategories={mockTagCategories} imageUrl={null} extractedData={mockExtractedData} />)
 
     await waitFor(() => {
       expect(screen.getByDisplayValue('手順1の説明')).toBeInTheDocument()
@@ -257,7 +257,7 @@ describe('RecipeForm', () => {
   it('正常系：手順が2つ以上ある場合に手順を削除できる', async () => {
     // Given: フォームが表示され、手順が2つ以上ある
     const user = userEvent.setup()
-    render(<RecipeForm imageUrl={null} extractedData={mockExtractedData} />)
+    render(<RecipeForm tagCategories={mockTagCategories} imageUrl={null} extractedData={mockExtractedData} />)
 
     await waitFor(() => {
       expect(screen.getByDisplayValue('手順1の説明')).toBeInTheDocument()
@@ -276,7 +276,7 @@ describe('RecipeForm', () => {
   it('正常系：ユーザー入力で材料フィールドが更新される', async () => {
     // Given: フォームが表示され、材料が入力されている
     const user = userEvent.setup()
-    render(<RecipeForm imageUrl={null} extractedData={mockExtractedData} />)
+    render(<RecipeForm tagCategories={mockTagCategories} imageUrl={null} extractedData={mockExtractedData} />)
 
     await waitFor(() => {
       expect(screen.getByDisplayValue('材料1')).toBeInTheDocument()
@@ -294,7 +294,7 @@ describe('RecipeForm', () => {
   it('正常系：ユーザー入力で手順フィールドが更新される', async () => {
     // Given: フォームが表示され、手順が入力されている
     const user = userEvent.setup()
-    render(<RecipeForm imageUrl={null} extractedData={mockExtractedData} />)
+    render(<RecipeForm tagCategories={mockTagCategories} imageUrl={null} extractedData={mockExtractedData} />)
 
     await waitFor(() => {
       expect(screen.getByDisplayValue('手順1の説明')).toBeInTheDocument()
@@ -314,7 +314,7 @@ describe('RecipeForm', () => {
     const user = userEvent.setup()
     mockCreateRecipe.mockResolvedValue({ success: true, recipeId: 'recipe-123' })
 
-    render(<RecipeForm imageUrl={null} extractedData={mockExtractedData} />)
+    render(<RecipeForm tagCategories={mockTagCategories} imageUrl={null} extractedData={mockExtractedData} />)
 
     await waitFor(() => {
       expect(screen.getByDisplayValue('テストレシピ')).toBeInTheDocument()
@@ -349,7 +349,7 @@ describe('RecipeForm', () => {
     const user = userEvent.setup()
     mockCreateRecipe.mockResolvedValue({ success: false, error: '保存に失敗しました' })
 
-    render(<RecipeForm imageUrl={null} extractedData={mockExtractedData} />)
+    render(<RecipeForm tagCategories={mockTagCategories} imageUrl={null} extractedData={mockExtractedData} />)
 
     await waitFor(() => {
       expect(screen.getByDisplayValue('テストレシピ')).toBeInTheDocument()
@@ -368,7 +368,7 @@ describe('RecipeForm', () => {
   it('異常系：タイトルが空の場合、送信ボタンが無効化される', async () => {
     // Given: フォームが表示され、タイトルが入力されている
     const user = userEvent.setup()
-    render(<RecipeForm imageUrl={null} extractedData={mockExtractedData} />)
+    render(<RecipeForm tagCategories={mockTagCategories} imageUrl={null} extractedData={mockExtractedData} />)
 
     await waitFor(() => {
       expect(screen.getByDisplayValue('テストレシピ')).toBeInTheDocument()
@@ -386,7 +386,7 @@ describe('RecipeForm', () => {
   it('正常系：キャンセルボタンをクリックするとレシピ一覧ページにナビゲートする', async () => {
     // Given: フォームが表示されている
     const user = userEvent.setup()
-    render(<RecipeForm imageUrl={null} extractedData={null} />)
+    render(<RecipeForm tagCategories={mockTagCategories} imageUrl={null} extractedData={null} />)
 
     // When: ユーザーがキャンセルボタンをクリックする
     const cancelButton = screen.getByRole('button', { name: /キャンセル/ })
@@ -402,7 +402,7 @@ describe('RecipeForm', () => {
     mockCreateRecipe.mockResolvedValue({ success: true, recipeId: 'recipe-123' })
 
     const dataWithoutSource = { ...mockExtractedData, sourceInfo: null }
-    render(<RecipeForm imageUrl={null} extractedData={dataWithoutSource} />)
+    render(<RecipeForm tagCategories={mockTagCategories} imageUrl={null} extractedData={dataWithoutSource} />)
 
     await waitFor(() => {
       expect(screen.getByDisplayValue('テストレシピ')).toBeInTheDocument()
@@ -427,7 +427,7 @@ describe('RecipeForm', () => {
     const user = userEvent.setup()
     mockCreateRecipe.mockResolvedValue({ success: true, recipeId: 'recipe-123' })
 
-    render(<RecipeForm imageUrl={null} extractedData={mockExtractedData} />)
+    render(<RecipeForm tagCategories={mockTagCategories} imageUrl={null} extractedData={mockExtractedData} />)
 
     await waitFor(() => {
       expect(screen.getByText('タグ1')).toBeInTheDocument()
