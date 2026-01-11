@@ -20,6 +20,7 @@ vi.mock('next/image', () => ({
 // Mock actions
 const mockCreateRecipe = vi.fn()
 const mockGetAllTagsForRecipe = vi.fn()
+const mockGetCurrentUserRecipesForSelection = vi.fn()
 
 vi.mock('../actions', () => ({
   createRecipe: (...args: any[]) => mockCreateRecipe(...args)
@@ -27,6 +28,10 @@ vi.mock('../actions', () => ({
 
 vi.mock('@/features/tags/actions', () => ({
   getAllTagsForRecipe: () => mockGetAllTagsForRecipe()
+}))
+
+vi.mock('@/features/recipes/recipe-utils', () => ({
+  getCurrentUserRecipesForSelection: (...args: any[]) => mockGetCurrentUserRecipesForSelection(...args)
 }))
 
 describe('RecipeForm', () => {
@@ -72,6 +77,7 @@ describe('RecipeForm', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     mockGetAllTagsForRecipe.mockResolvedValue(mockTagCategories)
+    mockGetCurrentUserRecipesForSelection.mockResolvedValue([])
   })
 
   it('正常系：抽出されたデータでフォームが表示される', async () => {
@@ -330,7 +336,8 @@ describe('RecipeForm', () => {
         ingredients: mockExtractedData.ingredients,
         steps: mockExtractedData.steps,
         memo: 'テストメモ',
-        tags: []
+        tags: [],
+        parentRecipeId: null
       })
     })
 

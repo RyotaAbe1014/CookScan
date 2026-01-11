@@ -27,6 +27,10 @@ vi.mock('@/features/tags/actions', () => ({
   getAllTagsForRecipe: vi.fn(),
 }))
 
+vi.mock('@/features/recipes/recipe-utils', () => ({
+  getCurrentUserRecipesForSelection: vi.fn(),
+}))
+
 // モック: Header Component
 vi.mock('@/components/header', () => ({
   Header: ({ title, rightAction }: { title: string; rightAction?: React.ReactNode }) => (
@@ -39,6 +43,7 @@ vi.mock('@/components/header', () => ({
 
 import { updateRecipe } from '../actions'
 import { getAllTagsForRecipe } from '@/features/tags/actions'
+import { getCurrentUserRecipesForSelection } from '@/features/recipes/recipe-utils'
 
 describe('RecipeEditForm', () => {
   const mockRecipe = {
@@ -118,6 +123,7 @@ describe('RecipeEditForm', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     vi.mocked(getAllTagsForRecipe).mockResolvedValue(mockTagCategories)
+    vi.mocked(getCurrentUserRecipesForSelection).mockResolvedValue([])
   })
 
   describe('初期表示', () => {
@@ -624,6 +630,7 @@ describe('RecipeEditForm', () => {
           ],
           memo: 'テストメモ',
           tags: ['tag-1'],
+          parentRecipeId: null,
         })
         expect(mockPush).toHaveBeenCalledWith('/recipes/recipe-123')
       })
