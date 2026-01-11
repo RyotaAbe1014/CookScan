@@ -8,63 +8,72 @@ CookScanは、AIを使用して画像（スクリーンショット、写真、�
 
 **主な機能:**
 - AI搭載の画像からのレシピ抽出
+- テキスト入力からのレシピ構造化
 - クリップボードからの画像貼り付け対応
 - ユーザー認証とプロフィール管理
 - レシピのバージョン管理と履歴追跡
 - タグの作成・編集・削除機能
-- カテゴリ付きタグベースの整理
+- カテゴリ付きタグベースの整理（システムカテゴリ対応）
 - レシピ作成・編集時のタグ紐付け
 - レシピ詳細画面でのタグ表示（カテゴリ別グループ化）
+- **調理タイマー機能**（ステップごとのタイマー、クロスタブ同期）
+- **レシピスクリーンショット機能**
+- レスポンシブデザイン（モバイル対応）
 - レシピのソース帰属
 - OCR処理履歴
 
 ## リポジトリ構造
 
-このプロジェクトは2つのメインアプリケーションを含む**モノレポ**です:
-
 ```
 CookScan/
 ├── cook-scan/          # メインのNext.js本番アプリケーション
-├── sample/             # サンプル/プロトタイプアプリケーション
-│   ├── backend/        # Hono + Mastra バックエンド
-│   ├── frontend/       # React + Vite フロントエンド
-│   └── docs/           # ドキュメント
 ├── terraform/          # Vercelデプロイ自動化設定
+├── .husky/             # Git pre-commitフック
 ├── docker-compose.yml  # PostgreSQL 16 サービス
-└── CLAUDE.md          # このファイル
+├── mise.toml           # ツールバージョン管理
+├── package.json        # モノレポルート（lint-staged設定）
+└── CLAUDE.md           # このファイル
 ```
 
 ### cook-scan/ (メイン本番アプリケーション)
 
-Next.js 15フルスタックアプリケーション:
+Next.js 16フルスタックアプリケーション:
 - **prisma/** - データベーススキーマとマイグレーション
 - **public/** - 静的アセット
 - **src/**
   - **app/** - Next.js App RouterページとAPIルート
-    - `(auth)/` - 保護されたルート（ダッシュボード、レシピ、タグ）
+    - `(auth)/` - 保護されたルート（ダッシュボード、レシピ、タグ、設定）
     - `(auth-setup)/` - プロフィール設定フロー
     - `(public)/` - 公開ルート（ログイン）
-  - **features/** - 機能ベースのモジュール（認証、レシピ、プロフィール、タグ）
-  - **lib/** - 共有ライブラリ（Prismaクライアント）
+    - `auth/confirm/` - 認証コールバック
+  - **components/** - 共有UIコンポーネント
+    - `ui/` - 再利用可能なUIコンポーネント（テスト付き）
+    - `icons/` - SVGアイコンコンポーネント（30種類以上）
+    - `layouts/` - レイアウトラッパー
+    - `navigation/` - ナビゲーションコンポーネント
+  - **features/** - 機能ベースのモジュール
+    - `auth/` - 認証・ログアウト
+    - `dashboard/` - ダッシュボード表示
+    - `profile/` - プロフィール管理（setup, edit, password）
+    - `recipes/` - CRUD操作（upload, edit, detail, delete, list）
+    - `tags/` - タグとカテゴリ管理
+    - `errors/` - エラーページコンポーネント
+  - **hooks/** - カスタムReactフック
+  - **lib/** - 共有ライブラリ（Prisma、Supabaseクライアント）
   - **mastra/** - AIワークフロー実装
   - **types/** - TypeScript型定義
-  - **utils/** - ユーティリティ関数（Supabase統合）
-
-### sample/ (プロトタイプアプリケーション)
-
-シンプルなリファレンス実装:
-- **backend/** - HonoベースのAPIサーバー（AWS Lambda対応）
-- **frontend/** - React + Vite + Material-UI SPA
-- **docs/** - 追加ドキュメント
+  - **utils/** - ユーティリティ関数
+  - **test/** - テストセットアップ
 
 ## 技術スタック
 
 ### メインアプリケーション (cook-scan/)
 
 **フロントエンド:**
-- フレームワーク: Next.js 15.5.6 (App Router, React Server Components)
-- React: 19.1.0
+- フレームワーク: Next.js 16.1.1 (App Router, React Server Components)
+- React: 19.2.3
 - スタイリング: Tailwind CSS v4
+- 状態管理: Jotai（アトムベースの状態管理）
 - ビルドツール: Turbopack (Next.js経由)
 - TypeScript: v5
 
@@ -75,22 +84,15 @@ Next.js 15フルスタックアプリケーション:
 - 認証: Supabase Auth (@supabase/ssr, @supabase/supabase-js)
 
 **AI/ML:**
-- フレームワーク: Mastra v0.18.0 (@mastra/core v0.24.0)
+- フレームワーク: Mastra v1.0.0-beta.14 (@mastra/core v1.0.0-beta.11)
 - 画像処理: Google Gemini 2.5 Flash
-- テキスト処理: OpenAI GPT-4o
+- テキスト処理: OpenAI GPT-5-mini
 - AI SDK: Vercel AI SDK v5.0.0
 
-### サンプルアプリケーション
-
-**フロントエンド:**
-- React 19.1.0 + Vite 7.0.4
-- UIライブラリ: Material-UI (MUI) v7.2.0
-- ルーティング: React Router DOM v7.7.0
-
-**バックエンド:**
-- フレームワーク: Hono v4.8.5
-- データベース: lowdb v7.0.1 (JSONファイルストレージ)
-- デプロイ: AWS Lambda対応
+**その他のライブラリ:**
+- Jotai + jotai-family（状態管理）
+- modern-screenshot（スクリーンショット機能）
+- Zod（バリデーション）
 
 ## 開発コマンド
 
@@ -108,9 +110,11 @@ npm run start
 npm run lint             # ESLintチェック
 
 # テスト
-npm run test             # 全テスト実行
-npm run test -- --watch  # ウォッチモード
-npm run test -- src/features/recipes  # 特定ディレクトリのテスト
+npm run test             # 全テスト実行（ウォッチモード）
+npm run test:run         # 全テスト実行（単発）
+npm run test:watch       # ウォッチモード
+npm run test:coverage    # カバレッジレポート付き
+npm run test:ui          # Vitest UI
 
 # データベース操作（ローカル開発は .env.migration を使用）
 npm run db:generate      # Prisma Clientを生成
@@ -120,6 +124,8 @@ npm run db:seed:dev      # データベースにシードデータを投入
 npm run db:reset:dev     # データベースをリセット
 npm run db:studio:dev    # Prisma Studioを開く（開発環境）
 npm run db:studio:prod   # Prisma Studioを開く（本番環境）
+npm run db:format        # Prismaスキーマをフォーマット
+npm run db:validate      # Prismaスキーマを検証
 
 # Docker操作
 docker-compose up -d     # PostgreSQLを起動
@@ -127,52 +133,33 @@ docker-compose down      # PostgreSQLを停止
 docker-compose ps        # ステータス確認
 ```
 
-### サンプルアプリケーション
-
-**バックエンド (sample/backend/):**
-```bash
-npm run dev              # 開発サーバー起動（ポート3001）
-npm run build            # AWS Lambda用にビルド
-npm run deploy           # AWSへデプロイ
-```
-
-**フロントエンド (sample/frontend/):**
-```bash
-npm run dev              # 開発サーバー起動
-npm run build            # 本番ビルド
-npm run lint             # ESLint実行
-```
-
-**Mastra (sample/backend/mastra/):**
-```bash
-npm run dev              # 開発モード
-npm run build            # ビルド
-npm run start            # サーバー起動
-```
-
 ## テストとコード品質
 
 ### テストフレームワーク
 
 メインアプリケーションはVitest + React Testing Libraryを使用:
-- **Vitest** - ユニット/コンポーネントテスト
+- **Vitest 4.0.15** - ユニット/コンポーネントテスト
 - **jsdom** - DOMシミュレーション環境
-- **React Testing Library** - Reactコンポーネントテスト
+- **React Testing Library 16.3.0** - Reactコンポーネントテスト
+- **V8カバレッジ** - HTML/JSON/textレポート
 
 **テスト実行:**
 ```bash
-# 全テスト実行
+# 全テスト実行（ウォッチモード）
 npm run test
 
-# ウォッチモード（ファイル変更時に自動再実行）
-npm run test -- --watch
+# 単発実行
+npm run test:run
+
+# カバレッジ付き
+npm run test:coverage
 
 # 特定ファイル/ディレクトリのテスト
 npm run test -- src/features/recipes
 npm run test -- input.test.tsx
 
-# UI出力付きで実行
-npm run test -- --ui
+# Vitest UI
+npm run test:ui
 ```
 
 **テスト設定:**
@@ -186,7 +173,9 @@ npm run test -- --ui
 1. **UI コンポーネント** - `/src/components/ui/` 内のButton、Input、Card等
 2. **フォーム** - ProfileSetupForm、RecipeEditForm等
 3. **ダイアログ** - DeleteRecipeDialog等
-4. **機能コンポーネント** - MethodSelector等
+4. **機能コンポーネント** - MethodSelector、CookingTimerManager等
+5. **Atoms** - Jotaiアトムのテスト
+6. **ユーティリティ** - timer-persistence、url-validation等
 
 ### Pre-commit フック
 
@@ -197,9 +186,16 @@ Huskyとlint-stagedで自動チェック:
 ```bash
 # .git/hooksにセットアップ（npm installで自動実行）
 npx husky install
+```
 
-# 手動でhookを追加する場合
-npx husky add .husky/pre-commit "npm run lint"
+**lint-staged設定（ルートpackage.json）:**
+```json
+{
+  "lint-staged": {
+    "cook-scan/**/*.{ts,tsx}": ["eslint --fix"],
+    "cook-scan/prisma/schema.prisma": ["npx prisma format", "npx prisma validate"]
+  }
+}
 ```
 
 コミット時に自動的にESLintが実行され、エラーがあるとコミットがブロックされます。
@@ -210,8 +206,8 @@ npx husky add .husky/pre-commit "npm run lint"
 # ESLintチェック（全src）
 npm run lint
 
-# TypeScript型チェック
-npm run db:validate    # Prismaスキーマ検証
+# Prismaスキーマ検証
+npm run db:validate
 
 # Prismaスキーマフォーマット
 npm run db:format
@@ -221,55 +217,136 @@ npm run db:format
 
 ### AIワークフロー (Mastra)
 
-レシピ抽出のコア処理は**2ステップワークフロー**を使用:
+レシピ抽出のコア処理は**2つのワークフロー**を提供:
 
+**1. cookScanWorkflow（画像→レシピ）:**
 ```typescript
 cookScanWorkflow:
   ステップ1: imageToTextStep (Google Gemini 2.5 Flash)
     - OCRを使用して画像からテキストを抽出
-    - 入力: ファイル（画像）
+    - 入力: ファイル（画像、最大5ファイル）
     - 出力: 抽出されたテキスト文字列
 
-  ステップ2: convertTextToRecipeStep (OpenAI GPT-4o)
+  ステップ2: convertTextToRecipeStep (OpenAI GPT-5-mini)
     - テキストを構造化されたレシピに変換
     - 入力: テキスト文字列
     - 出力: 構造化されたレシピJSON
 ```
 
+**2. textToRecipeWorkflow（テキスト→レシピ）:**
+```typescript
+textToRecipeWorkflow:
+  ステップ1: convertTextToRecipeStep (OpenAI GPT-5-mini)
+    - テキストを直接構造化されたレシピに変換
+    - 入力: テキスト文字列
+    - 出力: 構造化されたレシピJSON
+```
+
 **エージェント:**
-1. `imageToTextAgent` - OCR専門家（エージェントはGPT-4o、ワークフローはGemini使用）
+1. `imageToTextAgent` - OCR専門家（GPT-4o-mini）
    - 場所: `src/mastra/agents/image-to-text-agent.ts`
    - 手書き文字やラベルを含むすべてのテキストを抽出
 
-2. `convertTextToRecipeAgent` - レシピ構造化専門家（GPT-4o）
+2. `convertTextToRecipeAgent` - レシピ構造化専門家（GPT-5-mini）
    - 場所: `src/mastra/agents/convert-text-to-recipe-agent.ts`
    - テキストを検証付きの構造化レシピフォーマットに解析
+   - `structuredOutput`でZodスキーマによる型安全な出力
+
+**APIルート:**
+- `POST /(auth)/recipes/extract/file` - 画像ファイルからの抽出
+- `POST /(auth)/recipes/extract/text` - テキストからの抽出
 
 ### データベーススキーマ
 
 詳細はPrismaスキーマ（`/prisma/schema.prisma`）を参照。主な構造：
 
-- **users** - Supabase Auth統合
-- **recipes** - メインレシピデータ（ingredients, steps, tags, sourceInfo を関連）
-- **tag_categories** / **tags** - カテゴリ付きタグシステム
-- **recipe_tags** - 多対多リレーション
-- **ocr_processing_history** - OCR結果とメタデータ
-- **recipe_versions** - バージョン履歴
+- **User** - Supabase Auth統合、レシピ・タグ・カテゴリとの関連
+- **Recipe** - メインレシピデータ、親子関係対応
+  - ingredients, steps, tags, versions, sourceInfo, ocrHistory を関連
+- **Ingredient** - 材料（name, unit, notes）
+- **Step** - 調理手順（orderIndex, **timerSeconds**）
+- **TagCategory** - ユーザー作成またはシステムカテゴリ
+- **Tag** - カテゴリ内のタグ（ユーザー所有権）
+- **RecipeTag** - 多対多リレーション
+- **OcrProcessingHistory** - OCR結果とメタデータ（JSON）
+- **RecipeVersion** - バージョン履歴（スナップショット）
+- **SourceInfo** - ソース帰属（書籍、URL、ページ番号）
 
-### ルートとAPI
+**最近のスキーマ変更:**
+- `timerSeconds`フィールドをStepモデルに追加（タイマー機能用）
+- ユーザータグ関係とシステムカテゴリのサポート
 
-主要ルートはREADME参照。主な機能：
-- `POST /(auth)/recipes/extract` - 画像抽出（Mastraワークフロー）
-- `(auth)` ルート - 認証済みユーザー向け（ダッシュボード、レシピ、タグ）
-- `(public)` ルート - ログインページ
+### 状態管理 (Jotai)
+
+クライアント側の複雑な状態管理にJotaiアトムを使用:
+
+**タイマー機能のアトム（`src/features/recipes/detail/atoms/`）:**
+```typescript
+// レシピごとのタイマー状態（atomFamily使用）
+recipeTimerStatesAtomFamily(recipeId)
+
+// 全タイマー停止用アトム
+stopAllTimersAtomFamily(recipeId)
+
+// 古いタイマー状態のクリーンアップ（24時間）
+cleanupOldTimerStatesAtom
+
+// アクティブタイマーを持つレシピ一覧
+activeTimerRecipesAtom
+```
+
+**特徴:**
+- `atomWithStorage`によるlocalStorage永続化
+- クロスタブ同期
+- 24時間後の自動クリーンアップ
+- `PersistedTimerState`型で running/paused 状態を追跡
 
 ### 機能ベースアーキテクチャ
 
 コードは層ではなく機能で整理（`/src/features/`）：
-- **auth/** - 認証・ログアウト
-- **profile/setup/** - プロフィール設定フロー
-- **recipes/** - CRUD操作（upload, edit, detail, delete各フォルダ）
-- **tags/** - タグとカテゴリ管理（CRUD操作）
+
+```
+features/
+├── auth/           # 認証・ログアウト
+│   ├── login/
+│   ├── logout-button.tsx
+│   ├── actions.ts
+│   └── auth-utils.ts
+├── dashboard/      # ダッシュボード表示
+│   ├── dashboard-content.tsx
+│   ├── welcome-section.tsx
+│   ├── features-overview.tsx
+│   └── quick-actions.tsx
+├── profile/        # プロフィール管理
+│   ├── setup/      # 初期設定フロー
+│   ├── edit/       # プロフィール編集
+│   └── password/   # パスワード変更
+├── recipes/        # レシピCRUD
+│   ├── components/ # 共有コンポーネント
+│   │   ├── form-actions/      # デスクトップ・モバイルフォーム
+│   │   ├── ingredient-input/  # 材料入力
+│   │   └── step-input/        # 手順入力
+│   ├── detail/     # レシピ詳細表示
+│   │   ├── atoms/  # Jotaiアトム
+│   │   ├── hooks/  # カスタムフック
+│   │   ├── cooking-timer-manager.tsx
+│   │   ├── step-timer.tsx
+│   │   └── recipe-detail-actions.tsx
+│   ├── edit/       # レシピ編集
+│   ├── upload/     # レシピ作成
+│   ├── list/       # レシピ一覧
+│   ├── delete/     # レシピ削除
+│   ├── types/      # 型定義
+│   └── actions.ts
+├── tags/           # タグとカテゴリ管理
+│   ├── tag-create-form.tsx
+│   ├── category-item.tsx
+│   ├── tag-item.tsx
+│   └── actions.ts
+└── errors/         # エラーページ
+    ├── error-page-content.tsx
+    └── not-found-page-content.tsx
+```
 
 各機能フォルダは `actions.ts`（Server Actions）とUIコンポーネントで構成。
 
@@ -310,7 +387,32 @@ cookScanWorkflow:
    - バリアント: `info` (青), `warning` (黄), `error` (赤), `success` (緑)
    - アイコンとタイトル対応
 
+8. **EmptyState** - 空状態表示
+   - アイコン、タイトル、説明、アクション対応
+
+9. **PageLoading** - ページローディング表示
+
 すべてのコンポーネントは100%テストカバレッジを目指します。
+
+### アイコンコンポーネント
+
+30種類以上のSVGアイコンをReactコンポーネントとして提供（`/src/components/icons/`）:
+- 各アイコンは独立したコンポーネントファイル
+- 統一されたpropsインターフェース（className、size等）
+- `index.ts`でまとめてエクスポート
+
+### レイアウトコンポーネント
+
+ページレイアウト用のラッパーコンポーネント（`/src/components/layouts/`）:
+- `auth-layout-wrapper.tsx` - 認証済みページ用レイアウト
+- `header.tsx` - ヘッダーコンポーネント
+- `page-container.tsx` - ページコンテナ
+
+### ナビゲーションコンポーネント
+
+ナビゲーション用コンポーネント（`/src/components/navigation/`）:
+- `back-to-dashboard-link.tsx` - ダッシュボードへの戻りリンク
+- `back-to-recipes-link.tsx` - レシピ一覧への戻りリンク
 
 ### Next.jsルートグループ
 
@@ -318,10 +420,46 @@ URLに影響を与えずにルートを整理するために括弧を使用:
 - `(auth)` - 認証レイアウト付きの認証済みルート
 - `(auth-setup)` - プロフィール設定フロー
 - `(public)` - 公開ルート
+- `auth/confirm/` - 認証コールバック
 
 ### Server Actions
 
 すべてのミューテーションはNext.js Server Actions（`'use server'`）を使用。各機能フォルダに `actions.ts` で実装。
+
+**特徴:**
+- 複雑な操作にはPrismaトランザクション使用
+- Zodによる入力バリデーション
+- ユーザー所有権チェック
+- `revalidatePath`によるキャッシュ再検証
+
+### カスタムフック
+
+再利用可能なReactフック（`/src/hooks/`）:
+- `use-media-query.ts` - メディアクエリフック
+- `useIsMobile()` - モバイル判定フック
+
+### 調理タイマー機能
+
+レシピ詳細画面でステップごとのタイマー機能を提供:
+
+**コンポーネント:**
+- `cooking-timer-manager.tsx` - グローバルタイマー管理
+- `step-timer.tsx` - 個別ステップタイマーUI
+- `recipe-detail-actions.tsx` - スクリーンショット機能含む
+- `active-timer-banner.tsx` - レシピ一覧でのアクティブタイマー表示
+
+**機能:**
+- ステップごとの `timerSeconds` フィールド
+- localStorage永続化
+- クロスタブ同期
+- ブラウザ通知
+- 24時間後の自動クリーンアップ
+
+### スクリーンショット機能
+
+`modern-screenshot`ライブラリを使用したレシピのスクリーンショット機能:
+- `recipe-detail-actions.tsx`で`domToJpeg`を使用
+- レシピ表示のエクスポート
 
 ## 開発規約
 
@@ -335,16 +473,21 @@ URLに影響を与えずにルートを整理するために括弧を使用:
    ```
 
 3. **ファイル命名**:
-   - Reactコンポーネント: PascalCase (例: `RecipeDisplay.tsx`)
-   - ユーティリティ/ヘルパー: camelCase (例: `createClient.ts`)
+   - Reactコンポーネント: kebab-case (例: `recipe-display.tsx`)
+   - ユーティリティ/ヘルパー: kebab-case (例: `create-client.ts`)
    - Server Actions: `actions.ts`
    - APIルート: `route.ts`
    - テストファイル: `__tests__/`ディレクトリまたは`.test.ts(x)`接尾辞
+   - アイコン: kebab-case (例: `arrow-left-icon.tsx`)
 
 4. **コンポーネント構成**:
    - デフォルトでServer Componentsを優先
    - 必要な場合のみ`'use client'`を使用（フック、イベント）
    - Client Componentsは小さく焦点を絞る
+
+5. **レスポンシブデザイン**:
+   - モバイル用に別コンポーネントを用意（`*-mobile.tsx`）
+   - `useIsMobile()`フックで判定
 
 ### Tailwind CSS v4 規約
 
@@ -368,10 +511,13 @@ URLに影響を与えずにルートを整理するために括弧を使用:
    @apply bg-indigo-500 hover:bg-indigo-600 text-white
    ```
 
-3. **値の指定**: 標準カラーパレットを使用
+3. **カラーパレット（globals.css定義）**:
    - プライマリ: `indigo` (UI要素)
+   - セカンダリ: `purple`
    - デストラクティブ: `red` (削除等)
    - グレー: `gray` (背景等)
+   - アクセント: `blue`(手順), `green`(材料), `amber`(タグ)
+   - ステータス: `success`, `warning`, `danger`
 
 ### コンポーネントテスト規約
 
@@ -406,6 +552,7 @@ URLに影響を与えずにルートを整理するために括弧を使用:
    - エラー状態の表示
    - 条件付きレンダリング
    - フォーム検証
+   - Jotaiアトムの状態変更
 
 4. **何をテストしないか**:
    - 細かい実装詳細
@@ -433,11 +580,20 @@ URLに影響を与えずにルートを整理するために括弧を使用:
    npm run db:seed:dev
    ```
 
+5. **トランザクション**: 複雑な操作にはPrismaトランザクションを使用
+   ```typescript
+   await prisma.$transaction(async (tx) => {
+     // 複数の操作をアトミックに実行
+   })
+   ```
+
 ### エラーハンドリング
 
 - **APIルート**: 構造化JSONレスポンス（`{success, error}` 形式）
 - **Server Actions**: エラーをスロー
 - **Client Components**: エラーバウンダリとtry-catch
+- **Error Boundaries**: `(auth)/error.tsx`で認証済みルートのエラー処理
+- **Not Found**: `(auth)/not-found.tsx`でレシピ等の404処理
 
 ### セキュリティプラクティス
 
@@ -446,32 +602,64 @@ URLに影響を与えずにルートを整理するために括弧を使用:
 - **入力検証**: Zodスキーマ使用
 - **SQLインジェクション**: Prismaで対策
 - **XSS**: Reactのデフォルトエスケープ活用
+- **URL検証**: `url-validation.ts`でソースURLをサニタイズ
 
 ### AI/MLベストプラクティス
 
 - **APIキー**: 環境変数保存、コミット禁止
-- **エラーハンドリング**: AIサービス障害対応
+- **エラーハンドリング**: AIサービス障害対応、ワークフローステータスチェック
 - **レート制限**: 本番実装
-- **モデル**: OCR→Gemini Flash（コスト効率）、構造化→GPT-4o（信頼性）
+- **モデル**: OCR→Gemini Flash（コスト効率）、構造化→GPT-5-mini（信頼性）
+- **ファイル制限**: 画像アップロードは最大5ファイル
 
 ## 環境変数
 
-**メインアプリ (.env):** DB接続、Supabase認証、AI APIキー
-**ローカル開発 (.env.migration):** ローカルPostgreSQL接続用（localhost:5433）
+**メインアプリ (.env):**
+- `DATABASE_URL` - DB接続
+- `NEXT_PUBLIC_SUPABASE_URL` - Supabase URL
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY` - Supabase Anon Key
+- `OPENAI_API_KEY` - OpenAI API Key
+- `GOOGLE_GENERATIVE_AI_API_KEY` - Google Gemini API Key
+
+**ローカル開発 (.env.migration):**
+- ローカルPostgreSQL接続用（localhost:5433）
+
 **詳細は`.env.example`等参照**
 
 ## よくあるタスク
 
-**新機能追加:** `src/features/`に機能ディレクトリ、`actions.ts` でServer Actions実装、UIコンポーネントを作成
+**新機能追加:**
+1. `src/features/`に機能ディレクトリを作成
+2. `actions.ts` でServer Actions実装
+3. UIコンポーネントを作成
+4. 必要に応じてJotaiアトムを追加
 
-**スキーマ変更:** `prisma/schema.prisma`編集 → `npm run db:migrate:dev --name xxx` → `npm run db:generate`
+**スキーマ変更:**
+```bash
+# 1. スキーマ編集
+vim prisma/schema.prisma
 
-**AIエージェント追加:** `src/mastra/agents/`で実装 → `src/mastra/index.ts`に登録
+# 2. マイグレーション作成
+npm run db:migrate:dev -- --name xxx
+
+# 3. Prisma Client再生成
+npm run db:generate
+```
+
+**AIエージェント追加:**
+1. `src/mastra/agents/`で実装
+2. `src/mastra/index.ts`に登録
+3. ワークフローに追加
+
+**新しいアイコン追加:**
+1. `src/components/icons/`にコンポーネント作成
+2. `src/components/icons/index.ts`でエクスポート
 
 **デバッグ:**
 - DB: `npm run db:studio:dev`
 - ログ: ターミナル（サーバー）/ ブラウザコンソール（クライアント）
 - Docker: `docker-compose logs postgres`
+- Mastra: Pinoロガーでログ出力
 
 **テストデータ:** `npm run db:seed:dev`
 
@@ -492,6 +680,11 @@ URLに影響を与えずにルートを整理するために括弧を使用:
 **AIサービスエラー:**
 - `.env`のAPIキー確認
 - Mastraログを確認
+- ワークフローステータスをチェック
+
+**タイマーが同期しない:**
+- localStorageのデータを確認
+- ブラウザの通知許可を確認
 
 ## デプロイ
 
@@ -500,17 +693,16 @@ URLに影響を与えずにルートを整理するために括弧を使用:
 - DB: Supabase等のマネージドPostgreSQL
 - マイグレーション: `npx prisma migrate deploy`
 
-**サンプルアプリケーション:**
-- バックエンド: AWS Lambda（`cd sample/backend && npm run deploy`）
-- フロントエンド: 静的ホスティング（Vercel等）
-
 ## 主要ファイル
 
 設定ファイルはプロジェクトルート、コアロジックは `/src/features/` 参照。特に以下：
 - `/prisma/schema.prisma` - DBスキーマ
 - `/src/mastra/workflows/cook-scan-workflow.ts` - 画像抽出ワークフロー
+- `/src/mastra/workflows/text-to-recipe.ts` - テキスト抽出ワークフロー
 - `/src/features/recipes/upload/actions.ts` - レシピ作成ロジック
+- `/src/features/recipes/detail/atoms/timer-atoms.ts` - タイマー状態管理
 - `/src/features/tags/actions.ts` - タグ管理ロジック
+- `/src/app/globals.css` - Tailwind CSS変数とカスタムテーマ
 
 ## 追加リソース
 
@@ -519,6 +711,7 @@ URLに影響を与えずにルートを整理するために括弧を使用:
 - **Mastraドキュメント**: https://mastra.ai/docs
 - **Supabaseドキュメント**: https://supabase.com/docs
 - **Tailwind CSS**: https://tailwindcss.com/docs
+- **Jotaiドキュメント**: https://jotai.org/docs
 - **Terraform Vercelプロバイダー**: https://registry.terraform.io/providers/vercel/vercel/latest/docs
 
 ## AIアシスタントへの注意事項
@@ -528,18 +721,22 @@ URLに影響を与えずにルートを整理するために括弧を使用:
 3. **ServerとClient**: Next.jsコンポーネントの境界に注意
 4. **認証**: データアクセス前に必ずユーザーセッションを確認
 5. **AIコスト**: AIワークフローを変更する際はAPIコストに注意
-6. **モノレポ**: これはモノレポであることを忘れずに - 変更が複数のアプリに影響する可能性
-7. **環境**: コンテキストに応じて正しい`.env`ファイルを使用（メインアプリ vs マイグレーション）
-8. **機能構成**: 新しいコードは機能ベース構造に従う
-9. **エラーハンドリング**: ユーザーフレンドリーなエラーメッセージを提供
-10. **セキュリティ**: すべての入力を検証、特にユーザー生成コンテンツ
-11. **タグ管理**: タグとカテゴリの作成時は必ずユーザー所有権を確認
-12. **タグ表示**: レシピ詳細ページではタグをカテゴリ別にグループ化して表示
-13. **インフラ変更**: Terraformファイル変更時は慎重に、本番環境に影響
-14. **リレーション**: SourceInfoは一対多関係（1レシピ:複数ソース）に注意
-15. **Prismaインクルード**: タグ表示には `recipeTags: { include: { tag: { include: { category: true } } } }` のようなネストしたインクルードが必要
-16. **Tailwind CSS v4**: グラデーション等で`bg-linear-to-r`を使用（v3の`bg-gradient-to-r`ではない）
-17. **コンポーネントテスト**: UI要素を追加・変更した場合、対応するテストを追加する
-18. **ESLint**: コミット前に`npm run lint`を実行、pre-commit hookで自動チェック実行
-19. **テスト実行**: 機能変更時は`npm run test -- --watch`でテストを監視実行
-20. **FormField**: レシピフォーム用の標準フォーム要素（UIコンポーネントに含まれる）
+6. **環境**: コンテキストに応じて正しい`.env`ファイルを使用
+7. **機能構成**: 新しいコードは機能ベース構造に従う
+8. **エラーハンドリング**: ユーザーフレンドリーなエラーメッセージを提供
+9. **セキュリティ**: すべての入力を検証、特にユーザー生成コンテンツ
+10. **タグ管理**: タグとカテゴリの作成時は必ずユーザー所有権を確認
+11. **タグ表示**: レシピ詳細ページではタグをカテゴリ別にグループ化して表示
+12. **インフラ変更**: Terraformファイル変更時は慎重に、本番環境に影響
+13. **リレーション**: SourceInfoは一対多関係（1レシピ:複数ソース）に注意
+14. **Prismaインクルード**: タグ表示には `recipeTags: { include: { tag: { include: { category: true } } } }` のようなネストしたインクルードが必要
+15. **Tailwind CSS v4**: グラデーション等で`bg-linear-to-r`を使用（v3の`bg-gradient-to-r`ではない）
+16. **コンポーネントテスト**: UI要素を追加・変更した場合、対応するテストを追加する
+17. **ESLint**: コミット前に`npm run lint`を実行、pre-commit hookで自動チェック実行
+18. **テスト実行**: 機能変更時は`npm run test -- --watch`でテストを監視実行
+19. **FormField**: レシピフォーム用の標準フォーム要素（UIコンポーネントに含まれる）
+20. **Jotai状態管理**: タイマー等の複雑なクライアント状態にはJotaiアトムを使用
+21. **モバイル対応**: レスポンシブデザインには`useIsMobile()`フックと`*-mobile.tsx`コンポーネントを活用
+22. **アイコン**: 新しいアイコンは`/src/components/icons/`にコンポーネントとして追加
+23. **スクリーンショット**: `modern-screenshot`の`domToJpeg`を使用
+24. **タイマー永続化**: localStorageへの永続化と24時間クリーンアップを考慮
