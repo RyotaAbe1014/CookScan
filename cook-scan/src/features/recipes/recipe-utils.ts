@@ -69,7 +69,7 @@ export async function checkCircularReference(
     visitedIds.add(currentId)
 
     // 親レシピを取得
-    const recipe = await prisma.recipe.findUnique({
+    const recipe: { parentRecipeId: string | null } | null = await prisma.recipe.findUnique({
       where: { id: currentId },
       select: { parentRecipeId: true }
     })

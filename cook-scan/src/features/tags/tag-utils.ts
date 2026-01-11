@@ -26,7 +26,7 @@ export async function validateTagIdsForUser(
     select: { id: true },
   })
 
-  const validTagIds = validTags.map((tag) => tag.id)
+  const validTagIds = validTags.map((tag: { id: string }) => tag.id)
 
   return {
     validTagIds,

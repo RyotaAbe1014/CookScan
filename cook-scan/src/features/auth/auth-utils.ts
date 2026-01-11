@@ -1,7 +1,8 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { prisma } from '@/lib/prisma'
-import type { User } from '@prisma/client'
+
+type User = NonNullable<Awaited<ReturnType<typeof prisma.user.findUnique>>>
 
 export async function checkUserProfile() {
   const supabase = await createClient()
