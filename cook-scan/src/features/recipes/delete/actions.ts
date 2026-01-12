@@ -49,13 +49,6 @@ export async function deleteRecipe(recipeId: string) {
       await tx.ocrProcessingHistory.deleteMany({
         where: { recipeId }
       })
-
-      // Handle child recipes (set parentRecipeId to null)
-      await tx.recipe.updateMany({
-        where: { parentRecipeId: recipeId },
-        data: { parentRecipeId: null }
-      })
-
       // Finally delete the recipe itself
       await tx.recipe.delete({
         where: { id: recipeId }
