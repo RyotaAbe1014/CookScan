@@ -1,6 +1,5 @@
 import { WelcomeSection } from './welcome-section'
 import { QuickActions } from './quick-actions'
-import { FeaturesOverview } from './features-overview'
 
 type Profile = {
   name: string | null
@@ -13,10 +12,9 @@ type DashboardContentProps = {
 
 export function DashboardContent({ profile }: DashboardContentProps) {
   return (
-    <>
+    <div className="space-y-8">
       <WelcomeSection profile={profile} />
       <QuickActions />
-      <FeaturesOverview />
-    </>
+    </div>
   )
 }
