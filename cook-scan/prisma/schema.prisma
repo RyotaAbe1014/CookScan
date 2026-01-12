@@ -9,9 +9,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-  directUrl  = env("DIRECT_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 // ユーザーテーブル（Supabase Auth用）
@@ -35,19 +35,16 @@ model User {
 
 // レシピテーブル
 model Recipe {
-  id             String   @id @default(uuid())
-  userId         String   @map("user_id")
-  title          String
-  parentRecipeId String?  @map("parent_recipe_id")
-  imageUrl       String?  @map("image_url")
-  memo           String?
-  createdAt      DateTime @default(now()) @map("created_at")
-  updatedAt      DateTime @updatedAt @map("updated_at")
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  title     String
+  imageUrl  String?  @map("image_url")
+  memo      String?
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   // Relations
   user                 User                  @relation(fields: [userId], references: [id])
-  parentRecipe         Recipe?               @relation("ParentChild", fields: [parentRecipeId], references: [id])
-  childRecipes         Recipe[]              @relation("ParentChild")
   ingredients          Ingredient[]
   steps                Step[]
   recipeTags           RecipeTag[]
@@ -55,18 +52,37 @@ model Recipe {
   recipeVersions       RecipeVersion[]
   sourceInfo           SourceInfo[]
 
+  // 自己結合(多対多)
+  usedInRecipes RecipeRelation[] @relation("ParentRecipe")
+  usesRecipes   RecipeRelation[] @relation("ChildRecipe")
+
   @@map("recipes")
+}
+
+model RecipeRelation {
+  id             String   @id @default(uuid())
+  parentRecipeId String   @map("parent_recipe_id")
+  childRecipeId  String   @map("child_recipe_id")
+  quantity       String? // 例: "大さじ2"
+  notes          String? // メモ
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  parentRecipe Recipe @relation("ParentRecipe", fields: [parentRecipeId], references: [id], onDelete: Cascade)
+  childRecipe  Recipe @relation("ChildRecipe", fields: [childRecipeId], references: [id], onDelete: Cascade)
+
+  @@unique([parentRecipeId, childRecipeId])
+  @@map("recipe_relations")
 }
 
 // 材料テーブル
 model Ingredient {
-  id         String   @id @default(uuid())
-  recipeId   String   @map("recipe_id")
-  name       String
-  unit       String?
-  notes      String?
-  createdAt  DateTime @default(now()) @map("created_at")
-  updatedAt  DateTime @updatedAt @map("updated_at")
+  id        String   @id @default(uuid())
+  recipeId  String   @map("recipe_id")
+  name      String
+  unit      String?
+  notes     String?
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   // Relations
   recipe Recipe @relation(fields: [recipeId], references: [id])
@@ -101,7 +117,7 @@ model TagCategory {
   updatedAt   DateTime @updatedAt @map("updated_at")
 
   // Relations
-  user User?  @relation(fields: [userId], references: [id])
+  user User? @relation(fields: [userId], references: [id])
   tags Tag[]
 
   @@map("tag_categories")
@@ -121,7 +137,7 @@ model Tag {
   // Relations
   category   TagCategory @relation(fields: [categoryId], references: [id])
   recipeTags RecipeTag[]
-  user       User?     @relation(fields: [userId], references: [id])
+  user       User?       @relation(fields: [userId], references: [id])
 
   @@map("tags")
 }
@@ -177,14 +193,14 @@ model RecipeVersion {
 
 // ソース情報テーブル
 model SourceInfo {
-  id String @id @default(uuid())
-  recipeId String @map("recipe_id")
+  id         String   @id @default(uuid())
+  recipeId   String   @map("recipe_id")
   sourceType String?
   sourceName String?
-  sourceUrl String?
+  sourceUrl  String?
   pageNumber String?
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
 
   // Relations
   recipe Recipe @relation(fields: [recipeId], references: [id])
