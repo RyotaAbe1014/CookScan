@@ -25,7 +25,7 @@ describe('Alert', () => {
 
     // Then: error variant用のスタイルが適用される
     const alert = screen.getByRole('alert')
-    expect(alert).toHaveClass('bg-red-50', 'ring-red-200')
+    expect(alert).toHaveClass('bg-danger-light', 'ring-danger-light')
 
     // Then: メッセージが表示される
     expect(screen.getByText('エラーメッセージ')).toBeInTheDocument()
@@ -38,7 +38,7 @@ describe('Alert', () => {
 
     // Then: success variant用のスタイルが適用される
     const alert = screen.getByRole('alert')
-    expect(alert).toHaveClass('bg-green-50', 'ring-green-200')
+    expect(alert).toHaveClass('bg-success-light', 'ring-success-light')
   })
 
   test('正常系：warning variantのスタイルが適用される', () => {
@@ -48,7 +48,7 @@ describe('Alert', () => {
 
     // Then: warning variant用のスタイルが適用される
     const alert = screen.getByRole('alert')
-    expect(alert).toHaveClass('bg-yellow-50', 'ring-yellow-200')
+    expect(alert).toHaveClass('bg-warning-light', 'ring-warning-light')
   })
 
   test('正常系：hideIcon=trueでアイコンが非表示になる', () => {
@@ -80,22 +80,22 @@ describe('Alert', () => {
     const { container: errorContainer } = render(
       <Alert variant="error">エラー</Alert>
     )
-    // Then: 赤いアイコンが表示される
-    expect(errorContainer.querySelector('span.text-red-600')).toBeInTheDocument()
+    // Then: dangerカラーのアイコンが表示される
+    expect(errorContainer.querySelector('span.text-danger')).toBeInTheDocument()
 
     // When: success variantでレンダリングする
     const { container: successContainer } = render(
       <Alert variant="success">成功</Alert>
     )
-    // Then: 緑のアイコンが表示される
-    expect(successContainer.querySelector('span.text-green-600')).toBeInTheDocument()
+    // Then: successカラーのアイコンが表示される
+    expect(successContainer.querySelector('span.text-success')).toBeInTheDocument()
 
     // When: warning variantでレンダリングする
     const { container: warningContainer } = render(
       <Alert variant="warning">警告</Alert>
     )
-    // Then: 黄色のアイコンが表示される
-    expect(warningContainer.querySelector('span.text-yellow-600')).toBeInTheDocument()
+    // Then: warningカラーのアイコンが表示される
+    expect(warningContainer.querySelector('span.text-warning')).toBeInTheDocument()
   })
 
   test('正常系：カスタムclassNameが追加される', () => {
@@ -117,7 +117,7 @@ describe('Alert', () => {
     render(<Alert variant="error">エラーテキスト</Alert>)
     // Then: エラー用のテキストカラーが適用される
     const errorText = screen.getByText('エラーテキスト')
-    expect(errorText).toHaveClass('text-red-800')
+    expect(errorText).toHaveClass('text-danger-hover')
 
     // When: success variantでレンダリングする
     render(<Alert variant="success">成功テキスト</Alert>)
@@ -129,7 +129,7 @@ describe('Alert', () => {
     render(<Alert variant="warning">警告テキスト</Alert>)
     // Then: 警告用のテキストカラーが適用される
     const warningText = screen.getByText('警告テキスト')
-    expect(warningText).toHaveClass('text-yellow-800')
+    expect(warningText).toHaveClass('text-amber-800')
 
     // When: info variantでレンダリングする
     render(<Alert variant="info">情報テキスト</Alert>)

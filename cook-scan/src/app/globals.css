@@ -1,20 +1,25 @@
 @import "tailwindcss";
 
 /* ==========================================================================
-   CookScan Theme Definition
+   CookScan Design System - Theme Definition
    ==========================================================================
+
+   デザインコンセプト: ミントグリーン系 + 単色ベース（フラットデザイン）
 
    使用方法:
    - Tailwind クラス: bg-primary, text-primary-foreground, shadow-card など
    - CSS 変数: var(--color-primary), var(--shadow-card) など
 
    カラー命名規則:
-   - primary: メインアクション（ボタン、リンク）
-   - secondary: セカンダリアクション
+   - primary: メインアクション（ボタン、リンク）- Emerald
+   - secondary: セカンダリアクション - Teal
    - accent-*: セクション別アクセントカラー
    - muted: 控えめな背景・テキスト
    - danger: 削除、エラー
    - success: 成功状態
+
+   更新履歴:
+   - 2026-01-12: Indigo/Purple系 → Emerald/Teal系に変更
    ========================================================================== */
 
 :root {
@@ -22,79 +27,79 @@
      Base Colors
      ------------------------------------------------------------------------- */
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #171717;           /* neutral-900 */
 
   /* -------------------------------------------------------------------------
-     Primary Colors - Indigo (メインアクション)
+     Primary Colors - Emerald (メインアクション)
      ------------------------------------------------------------------------- */
-  --primary: #4f46e5;           /* indigo-600 */
-  --primary-hover: #4338ca;     /* indigo-700 */
-  --primary-light: #e0e7ff;     /* indigo-100 */
+  --primary: #059669;              /* emerald-600 */
+  --primary-hover: #047857;        /* emerald-700 */
+  --primary-light: #d1fae5;        /* emerald-100 */
   --primary-foreground: #ffffff;
 
   /* -------------------------------------------------------------------------
-     Secondary Colors - Purple (グラデーション用)
+     Secondary Colors - Teal (補助色)
      ------------------------------------------------------------------------- */
-  --secondary: #9333ea;         /* purple-600 */
-  --secondary-hover: #7e22ce;   /* purple-700 */
-  --secondary-light: #f3e8ff;   /* purple-100 */
+  --secondary: #14b8a6;            /* teal-500 */
+  --secondary-hover: #0d9488;      /* teal-600 */
+  --secondary-light: #ccfbf1;      /* teal-100 */
   --secondary-foreground: #ffffff;
 
   /* -------------------------------------------------------------------------
      Accent Colors - セクション別
      ------------------------------------------------------------------------- */
-  /* Steps (調理手順) - Blue */
-  --accent-steps: #2563eb;      /* blue-600 */
-  --accent-steps-light: #dbeafe; /* blue-100 */
+  /* Steps (調理手順) - Sky Blue */
+  --accent-steps: #0ea5e9;         /* sky-500 */
+  --accent-steps-light: #e0f2fe;   /* sky-100 */
   --accent-steps-foreground: #ffffff;
 
-  /* Ingredients (材料) - Green */
-  --accent-ingredients: #16a34a; /* green-600 */
-  --accent-ingredients-light: #dcfce7; /* green-100 */
+  /* Ingredients (材料) - Emerald */
+  --accent-ingredients: #10b981;   /* emerald-500 */
+  --accent-ingredients-light: #d1fae5; /* emerald-100 */
   --accent-ingredients-foreground: #ffffff;
 
   /* Tags (タグ/ソース情報) - Amber */
-  --accent-tags: #d97706;       /* amber-600 */
-  --accent-tags-light: #fef3c7; /* amber-100 */
+  --accent-tags: #f59e0b;          /* amber-500 */
+  --accent-tags-light: #fef3c7;    /* amber-100 */
   --accent-tags-foreground: #ffffff;
 
   /* -------------------------------------------------------------------------
      Status Colors
      ------------------------------------------------------------------------- */
-  --success: #16a34a;           /* green-600 */
-  --success-light: #dcfce7;     /* green-100 */
+  --success: #22c55e;              /* green-500 */
+  --success-light: #dcfce7;        /* green-100 */
   --success-foreground: #ffffff;
 
-  --warning: #d97706;           /* amber-600 */
-  --warning-light: #fef3c7;     /* amber-100 */
+  --warning: #f59e0b;              /* amber-500 */
+  --warning-light: #fef3c7;        /* amber-100 */
   --warning-foreground: #ffffff;
 
-  --danger: #dc2626;            /* red-600 */
-  --danger-hover: #b91c1c;      /* red-700 */
-  --danger-light: #fee2e2;      /* red-100 */
+  --danger: #ef4444;               /* red-500 */
+  --danger-hover: #dc2626;         /* red-600 */
+  --danger-light: #fee2e2;         /* red-100 */
   --danger-foreground: #ffffff;
 
   /* -------------------------------------------------------------------------
      Neutral / Muted Colors
      ------------------------------------------------------------------------- */
-  --muted: #f9fafb;             /* gray-50 */
-  --muted-foreground: #6b7280;  /* gray-500 */
+  --muted: #f8fafc;                /* slate-50 */
+  --muted-foreground: #64748b;     /* slate-500 */
 
-  --border: #e5e7eb;            /* gray-200 */
-  --border-dark: #d1d5db;       /* gray-300 */
+  --border: #e2e8f0;               /* slate-200 */
+  --border-dark: #cbd5e1;          /* slate-300 */
 
-  --input-border: #d1d5db;      /* gray-300 */
-  --input-focus: #4f46e5;       /* indigo-600 */
-  --input-focus-ring: rgba(79, 70, 229, 0.2); /* indigo-600/20 */
+  --input-border: #cbd5e1;         /* slate-300 */
+  --input-focus: #059669;          /* emerald-600 */
+  --input-focus-ring: rgba(5, 150, 105, 0.2); /* emerald-600/20 */
 
   /* -------------------------------------------------------------------------
      Card / Surface Colors
      ------------------------------------------------------------------------- */
   --card: #ffffff;
-  --card-foreground: #171717;
+  --card-foreground: #171717;      /* neutral-900 */
   --card-border: rgba(17, 24, 39, 0.05); /* gray-900/5 */
 
-  --section-header: #f9fafb;    /* gray-50 */
+  --section-header: #f9fafb;       /* gray-50 */
   --section-header-border: #e5e7eb; /* gray-200 */
 
   /* -------------------------------------------------------------------------
@@ -105,13 +110,13 @@
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
   --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
 
-  /* Primary button shadow (indigo tint) */
-  --shadow-primary: 0 10px 15px -3px rgba(79, 70, 229, 0.3);
-  --shadow-primary-hover: 0 20px 25px -5px rgba(79, 70, 229, 0.4);
+  /* Primary button shadow (emerald tint) */
+  --shadow-primary: 0 10px 15px -3px rgba(5, 150, 105, 0.3);
+  --shadow-primary-hover: 0 20px 25px -5px rgba(5, 150, 105, 0.4);
 
   /* Danger button shadow (red tint) */
-  --shadow-danger: 0 10px 15px -3px rgba(220, 38, 38, 0.3);
-  --shadow-danger-hover: 0 20px 25px -5px rgba(220, 38, 38, 0.4);
+  --shadow-danger: 0 10px 15px -3px rgba(239, 68, 68, 0.3);
+  --shadow-danger-hover: 0 20px 25px -5px rgba(239, 68, 68, 0.4);
 
   /* Card shadow */
   --shadow-card: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
@@ -119,19 +124,19 @@
   /* -------------------------------------------------------------------------
      Border Radius
      ------------------------------------------------------------------------- */
-  --radius-sm: 0.25rem;         /* 4px */
-  --radius-md: 0.375rem;        /* 6px */
-  --radius-lg: 0.5rem;          /* 8px */
-  --radius-xl: 0.75rem;         /* 12px */
-  --radius-2xl: 1rem;           /* 16px */
+  --radius-sm: 0.25rem;            /* 4px - Badge、小要素 */
+  --radius-md: 0.375rem;           /* 6px - Input、Select */
+  --radius-lg: 0.5rem;             /* 8px - Button */
+  --radius-xl: 0.75rem;            /* 12px - Card */
+  --radius-2xl: 1rem;              /* 16px - Modal */
   --radius-full: 9999px;
 
   /* -------------------------------------------------------------------------
      Spacing (セクション用)
      ------------------------------------------------------------------------- */
-  --spacing-section: 1.5rem;    /* 24px - セクション間 */
-  --spacing-card: 1.5rem;       /* 24px - カード内パディング */
-  --spacing-header: 1rem;       /* 16px - ヘッダーパディング */
+  --spacing-section: 1.5rem;       /* 24px - セクション間 */
+  --spacing-card: 1.5rem;          /* 24px - カード内パディング */
+  --spacing-header: 1rem;          /* 16px - ヘッダーパディング */
 
   /* -------------------------------------------------------------------------
      Transitions

@@ -38,7 +38,7 @@ describe('PageContainer', () => {
 
     // Then: デフォルトのスタイルクラスが適用される
     const mainElement = container.querySelector('main')
-    expect(mainElement).toHaveClass('mx-auto', 'max-w-7xl', 'px-4', 'py-8', 'sm:px-6', 'lg:px-8')
+    expect(mainElement).toHaveClass('mx-auto', 'max-w-7xl', 'px-4', 'py-6', 'sm:px-6', 'sm:py-8', 'lg:px-8')
   })
 
   test('正常系：カスタムclassNameが追加される', () => {
@@ -57,7 +57,7 @@ describe('PageContainer', () => {
     expect(mainElement).toHaveClass('custom-padding', 'bg-gray-100')
 
     // Then: デフォルトのクラスも維持される
-    expect(mainElement).toHaveClass('mx-auto', 'max-w-7xl', 'px-4', 'py-8')
+    expect(mainElement).toHaveClass('mx-auto', 'max-w-7xl', 'px-4', 'py-6')
   })
 
   test('正常系：空文字列のclassNameでも正常に動作する', () => {
@@ -71,7 +71,7 @@ describe('PageContainer', () => {
 
     // Then: デフォルトのスタイルクラスが適用される
     const mainElement = container.querySelector('main')
-    expect(mainElement).toHaveClass('mx-auto', 'max-w-7xl', 'px-4', 'py-8')
+    expect(mainElement).toHaveClass('mx-auto', 'max-w-7xl', 'px-4', 'py-6')
   })
 
   test('正常系：複数の子要素を受け入れる', () => {

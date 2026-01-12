@@ -14,7 +14,7 @@ describe('Textarea', () => {
     expect(textarea).toBeInTheDocument()
 
     // Then: デフォルトのvariant（default）スタイルが適用される
-    expect(textarea).toHaveClass('focus:border-indigo-500', 'focus:ring-indigo-500/20')
+    expect(textarea).toHaveClass('focus:border-primary', 'focus:ring-primary/20')
 
     // Then: デフォルトのsize（lg）スタイルが適用される
     expect(textarea).toHaveClass('px-4', 'py-2.5')
@@ -27,7 +27,7 @@ describe('Textarea', () => {
 
     // Then: defaultスタイルが適用される
     const textarea = screen.getByPlaceholderText('デフォルト')
-    expect(textarea).toHaveClass('focus:border-indigo-500', 'focus:ring-indigo-500/20')
+    expect(textarea).toHaveClass('focus:border-primary', 'focus:ring-primary/20')
   })
 
   test('正常系：variant="green"のスタイルが適用される', () => {
@@ -37,7 +37,7 @@ describe('Textarea', () => {
 
     // Then: greenスタイルが適用される
     const textarea = screen.getByPlaceholderText('グリーン')
-    expect(textarea).toHaveClass('focus:border-green-500', 'focus:ring-green-500/20')
+    expect(textarea).toHaveClass('focus:border-accent-ingredients', 'focus:ring-accent-ingredients/20')
   })
 
   test('正常系：variant="blue"のスタイルが適用される', () => {
@@ -47,7 +47,7 @@ describe('Textarea', () => {
 
     // Then: blueスタイルが適用される
     const textarea = screen.getByPlaceholderText('ブルー')
-    expect(textarea).toHaveClass('focus:border-blue-500', 'focus:ring-blue-500/20')
+    expect(textarea).toHaveClass('focus:border-accent-steps', 'focus:ring-accent-steps/20')
   })
 
   test('正常系：size="sm"のスタイルが適用される', () => {
@@ -77,7 +77,7 @@ describe('Textarea', () => {
 
     // Then: lgサイズのスタイルが適用される
     const textarea = screen.getByPlaceholderText('大')
-    expect(textarea).toHaveClass('px-4', 'py-2.5', 'sm:text-sm')
+    expect(textarea).toHaveClass('px-4', 'py-2.5', 'text-sm')
   })
 
   test('正常系：size="xl"のスタイルが適用される', () => {
@@ -166,7 +166,7 @@ describe('Textarea', () => {
     expect(textarea).toHaveClass('custom-textarea')
 
     // Then: デフォルトのクラスも維持される
-    expect(textarea).toHaveClass('rounded-lg', 'border')
+    expect(textarea).toHaveClass('rounded-md', 'border')
   })
 
   test('正常系：複数のpropsを組み合わせて使用できる', () => {
@@ -183,7 +183,7 @@ describe('Textarea', () => {
 
     // Then: すべてのスタイルが適用される
     const textarea = screen.getByPlaceholderText('組み合わせ')
-    expect(textarea).toHaveClass('focus:border-green-500') // variant
+    expect(textarea).toHaveClass('focus:border-accent-ingredients') // variant
     expect(textarea).toHaveClass('px-2', 'py-1') // size
     expect(textarea).toHaveClass('mt-2') // custom
   })

@@ -64,7 +64,7 @@ export function ProfileEditForm({ initialData }: ProfileEditFormProps) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6 p-8">
-      {/* 成功メッセージ */}
+      {/* 成功メッセージ - emerald系 */}
       {isSuccess && (
         <Alert variant="success">プロフィールを更新しました</Alert>
       )}
@@ -74,10 +74,10 @@ export function ProfileEditForm({ initialData }: ProfileEditFormProps) {
         <Alert variant="error">{error}</Alert>
       )}
 
-      {/* メールアドレス（読み取り専用） */}
-      <div>
-        <label htmlFor="email" className="mb-2 flex items-center gap-2 text-sm font-semibold text-gray-700">
-          <div className="flex h-5 w-5 items-center justify-center rounded bg-linear-to-br from-gray-400 to-gray-500">
+      {/* メールアドレス（読み取り専用） - グレー系で無効表示 */}
+      <div className="space-y-2">
+        <label htmlFor="email" className="flex items-center gap-2 text-sm font-medium text-neutral-700">
+          <div className="flex h-5 w-5 items-center justify-center rounded bg-slate-500">
             <EnvelopeIcon className="h-3 w-3 text-white" />
           </div>
           メールアドレス
@@ -93,16 +93,16 @@ export function ProfileEditForm({ initialData }: ProfileEditFormProps) {
             hasIcon
           />
           <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-            <MailIcon className="h-5 w-5 text-gray-400" />
+            <MailIcon className="h-5 w-5 text-slate-400" />
           </div>
         </div>
-        <p className="mt-2 text-sm text-gray-500">メールアドレスは変更できません</p>
+        <p className="text-xs text-slate-500">メールアドレスは変更できません</p>
       </div>
 
-      {/* アカウント名 */}
-      <div>
-        <label htmlFor="name" className="mb-2 flex items-center gap-2 text-sm font-semibold text-gray-700">
-          <div className="flex h-5 w-5 items-center justify-center rounded bg-linear-to-br from-indigo-500 to-purple-600">
+      {/* アカウント名 - emerald系 */}
+      <div className="space-y-2">
+        <label htmlFor="name" className="flex items-center gap-2 text-sm font-medium text-neutral-700">
+          <div className="flex h-5 w-5 items-center justify-center rounded bg-emerald-600">
             <UserIcon className="h-3 w-3 text-white" />
           </div>
           お名前
@@ -115,42 +115,46 @@ export function ProfileEditForm({ initialData }: ProfileEditFormProps) {
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
-            placeholder="山田 太郎"
+            placeholder="例: 山田 太郎"
             size="xl"
             hasIcon
             maxLength={50}
           />
           <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-            <UserCircleIcon className="h-5 w-5 text-gray-400" />
+            <UserCircleIcon className="h-5 w-5 text-emerald-500" />
           </div>
         </div>
+        <p className="text-xs text-slate-500">レシピ管理で表示される名前（最大50文字）</p>
       </div>
 
-      {/* 最終更新日時 */}
-      <div className="text-sm text-gray-500">
-        最終更新: {new Date(initialData.updatedAt).toLocaleString('ja-JP')}
+      {/* 最終更新日時 - 軽いボーダーで区切り */}
+      <div className="rounded-lg bg-slate-50 p-4">
+        <p className="text-sm text-slate-600">
+          <span className="font-medium">最終更新:</span>{' '}
+          {new Date(initialData.updatedAt).toLocaleString('ja-JP')}
+        </p>
       </div>
 
-      {/* 送信ボタン */}
+      {/* 送信ボタン - emerald primary */}
       <Button
         type="submit"
         variant="primary"
         size="lg"
         disabled={isPending || !name.trim()}
         isLoading={isPending}
-        className="w-full"
+        className="w-full shadow-md hover:shadow-lg transition-shadow"
       >
         {isPending ? (
           '更新中...'
         ) : (
           <>
             <CheckIcon className="h-5 w-5" />
-            更新する
+            変更を保存
           </>
         )}
       </Button>
 
-      {/* パスワード変更へのリンク */}
+      {/* パスワード変更へのリンク - セカンダリボタン */}
       <Link href="/settings/password" className="block">
         <Button
           type="button"

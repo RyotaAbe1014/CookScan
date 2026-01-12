@@ -73,7 +73,7 @@ describe('NotFoundPageContent', () => {
     const { container } = render(<NotFoundPageContent />)
 
     // Then: SVGアイコンが表示される
-    const svgIcon = container.querySelector('svg.text-indigo-600')
+    const svgIcon = container.querySelector('svg.text-emerald-600')
     expect(svgIcon).toBeInTheDocument()
   })
 

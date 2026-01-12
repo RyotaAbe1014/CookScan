@@ -20,7 +20,7 @@ describe('Select', () => {
     expect(select).toBeInTheDocument()
 
     // Then: デフォルトのvariant（default）スタイルが適用される
-    expect(select).toHaveClass('focus:border-indigo-500', 'focus:ring-indigo-500/20')
+    expect(select).toHaveClass('focus:border-primary', 'focus:ring-primary/20')
 
     // Then: デフォルトのsize（xl）スタイルが適用される
     expect(select).toHaveClass('px-4', 'py-3')
@@ -56,7 +56,7 @@ describe('Select', () => {
 
     // Then: defaultスタイルが適用される
     const select = screen.getByRole('combobox')
-    expect(select).toHaveClass('focus:border-indigo-500', 'focus:ring-indigo-500/20')
+    expect(select).toHaveClass('focus:border-primary', 'focus:ring-primary/20')
   })
 
   test('正常系：variant="green"のスタイルが適用される', () => {
@@ -70,7 +70,7 @@ describe('Select', () => {
 
     // Then: greenスタイルが適用される
     const select = screen.getByRole('combobox')
-    expect(select).toHaveClass('focus:border-green-500', 'focus:ring-green-500/20')
+    expect(select).toHaveClass('focus:border-accent-ingredients', 'focus:ring-accent-ingredients/20')
   })
 
   test('正常系：variant="blue"のスタイルが適用される', () => {
@@ -84,7 +84,7 @@ describe('Select', () => {
 
     // Then: blueスタイルが適用される
     const select = screen.getByRole('combobox')
-    expect(select).toHaveClass('focus:border-blue-500', 'focus:ring-blue-500/20')
+    expect(select).toHaveClass('focus:border-accent-steps', 'focus:ring-accent-steps/20')
   })
 
   test('正常系：size="sm"のスタイルが適用される', () => {
@@ -126,7 +126,7 @@ describe('Select', () => {
 
     // Then: lgサイズのスタイルが適用される
     const select = screen.getByRole('combobox')
-    expect(select).toHaveClass('px-4', 'py-2.5', 'sm:text-sm')
+    expect(select).toHaveClass('px-4', 'py-2.5', 'text-sm')
   })
 
   test('正常系：size="xl"のスタイルが適用される', () => {
@@ -216,7 +216,7 @@ describe('Select', () => {
     expect(select).toHaveClass('custom-select')
 
     // Then: デフォルトのクラスも維持される
-    expect(select).toHaveClass('rounded-lg', 'border')
+    expect(select).toHaveClass('rounded-md', 'border')
   })
 
   test('正常系：複数のpropsを組み合わせて使用できる', () => {
@@ -230,7 +230,7 @@ describe('Select', () => {
 
     // Then: すべてのスタイルが適用される
     const select = screen.getByRole('combobox')
-    expect(select).toHaveClass('focus:border-green-500') // variant
+    expect(select).toHaveClass('focus:border-accent-ingredients') // variant
     expect(select).toHaveClass('px-2', 'py-1') // size
     expect(select).toHaveClass('mt-2') // custom
   })

@@ -38,13 +38,13 @@ export function PasswordChangeForm() {
       {/* エラー表示 */}
       {error && <Alert variant="error">{error}</Alert>}
 
-      {/* 現在のパスワード */}
-      <div>
+      {/* 現在のパスワード - slate系（認証用） */}
+      <div className="space-y-2">
         <label
           htmlFor="currentPassword"
-          className="mb-2 flex items-center gap-2 text-sm font-semibold text-gray-700"
+          className="flex items-center gap-2 text-sm font-medium text-neutral-700"
         >
-          <div className="flex h-5 w-5 items-center justify-center rounded bg-linear-to-br from-gray-400 to-gray-500">
+          <div className="flex h-5 w-5 items-center justify-center rounded bg-slate-500">
             <LockIcon className="h-3 w-3 text-white" />
           </div>
           現在のパスワード
@@ -65,18 +65,19 @@ export function PasswordChangeForm() {
             hasIcon
           />
           <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-            <KeyIcon className="h-5 w-5 text-gray-400" />
+            <KeyIcon className="h-5 w-5 text-slate-400" />
           </div>
         </div>
+        <p className="text-xs text-slate-500">本人確認のため、現在のパスワードが必要です</p>
       </div>
 
-      {/* 新しいパスワード */}
-      <div>
+      {/* 新しいパスワード - emerald系（新規設定） */}
+      <div className="space-y-2">
         <label
           htmlFor="newPassword"
-          className="mb-2 flex items-center gap-2 text-sm font-semibold text-gray-700"
+          className="flex items-center gap-2 text-sm font-medium text-neutral-700"
         >
-          <div className="flex h-5 w-5 items-center justify-center rounded bg-linear-to-br from-indigo-500 to-purple-600">
+          <div className="flex h-5 w-5 items-center justify-center rounded bg-emerald-600">
             <LockIcon className="h-3 w-3 text-white" />
           </div>
           新しいパスワード
@@ -97,21 +98,23 @@ export function PasswordChangeForm() {
             hasIcon
           />
           <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-            <ShieldCheckIcon className="h-5 w-5 text-gray-400" />
+            <ShieldCheckIcon className="h-5 w-5 text-emerald-500" />
           </div>
         </div>
-        <p className="mt-2 text-sm text-gray-500">
-          パスワードは8文字以上で、大文字、小文字、数字を含める必要があります
-        </p>
+        <div className="rounded-md bg-emerald-50 p-3">
+          <p className="text-xs text-emerald-700">
+            <strong>セキュリティ要件:</strong> パスワードは8文字以上で、大文字、小文字、数字を含める必要があります
+          </p>
+        </div>
       </div>
 
-      {/* パスワード確認 */}
-      <div>
+      {/* パスワード確認 - teal系（確認用） */}
+      <div className="space-y-2">
         <label
           htmlFor="confirmPassword"
-          className="mb-2 flex items-center gap-2 text-sm font-semibold text-gray-700"
+          className="flex items-center gap-2 text-sm font-medium text-neutral-700"
         >
-          <div className="flex h-5 w-5 items-center justify-center rounded bg-linear-to-br from-indigo-500 to-purple-600">
+          <div className="flex h-5 w-5 items-center justify-center rounded bg-teal-500">
             <CheckCircleOutlineIcon className="h-3 w-3 text-white" />
           </div>
           新しいパスワード（確認）
@@ -132,25 +135,26 @@ export function PasswordChangeForm() {
             hasIcon
           />
           <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-            <CheckCircleOutlineIcon className="h-5 w-5 text-gray-400" />
+            <CheckCircleOutlineIcon className="h-5 w-5 text-teal-400" />
           </div>
         </div>
+        <p className="text-xs text-slate-500">入力ミスを防ぐため、もう一度入力してください</p>
       </div>
 
-      {/* セキュリティ警告 */}
+      {/* セキュリティ警告 - amber warning */}
       <Alert variant="warning">
-        パスワード変更後、すべてのデバイスから自動的にログアウトされます。新しいパスワードで再度ログインしてください。
+        <strong>重要:</strong> パスワード変更後、すべてのデバイスから自動的にログアウトされます。新しいパスワードで再度ログインしてください。
       </Alert>
 
       {/* ボタン */}
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-3 pt-2">
         <Button
           type="submit"
           variant="primary"
           size="lg"
           isLoading={isPending}
           disabled={isPending}
-          className="w-full"
+          className="w-full shadow-md hover:shadow-lg transition-shadow"
         >
           {isPending ? (
             'パスワードを変更中...'

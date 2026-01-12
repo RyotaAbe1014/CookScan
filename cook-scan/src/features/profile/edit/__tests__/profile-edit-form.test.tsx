@@ -75,7 +75,7 @@ describe('ProfileEditForm', () => {
       render(<ProfileEditForm initialData={mockUser} />)
 
       // When: 初期レンダリングされる
-      const submitButton = screen.getByRole('button', { name: /更新する/i })
+      const submitButton = screen.getByRole('button', { name: /変更を保存/i })
 
       // Then: 送信ボタンがenabledである
       expect(submitButton).not.toBeDisabled()
@@ -119,7 +119,7 @@ describe('ProfileEditForm', () => {
       await user.clear(nameInput)
 
       // Then: 送信ボタンがdisabledになる
-      const submitButton = screen.getByRole('button', { name: /更新する/i })
+      const submitButton = screen.getByRole('button', { name: /変更を保存/i })
       expect(submitButton).toBeDisabled()
     })
 
@@ -134,7 +134,7 @@ describe('ProfileEditForm', () => {
       await user.type(nameInput, '   ')
 
       // Then: 送信ボタンはdisabledになる
-      const submitButton = screen.getByRole('button', { name: /更新する/i })
+      const submitButton = screen.getByRole('button', { name: /変更を保存/i })
       expect(submitButton).toBeDisabled()
     })
 
@@ -160,7 +160,7 @@ describe('ProfileEditForm', () => {
       await user.type(nameInput, '新しい名前')
 
       // When: フォームを送信する
-      const submitButton = screen.getByRole('button', { name: /更新する/i })
+      const submitButton = screen.getByRole('button', { name: /変更を保存/i })
       await user.click(submitButton)
 
       // Then: updateUserProfile()が正しいパラメータで呼ばれる
@@ -183,7 +183,7 @@ describe('ProfileEditForm', () => {
       await user.type(nameInput, '新しい名前')
 
       // When: フォームを送信する
-      const submitButton = screen.getByRole('button', { name: /更新する/i })
+      const submitButton = screen.getByRole('button', { name: /変更を保存/i })
       await user.click(submitButton)
 
       // Then: 成功メッセージが表示される
@@ -198,7 +198,7 @@ describe('ProfileEditForm', () => {
 
       const user = userEvent.setup()
       render(<ProfileEditForm initialData={mockUser} />)
-      const submitButton = screen.getByRole('button', { name: /更新する/i })
+      const submitButton = screen.getByRole('button', { name: /変更を保存/i })
       await user.click(submitButton)
 
       // Then: successバリアントのAlertが表示される
@@ -226,7 +226,7 @@ describe('ProfileEditForm', () => {
       await user.type(nameInput, '新しい名前')
 
       // When: フォームを送信する
-      const submitButton = screen.getByRole('button', { name: /更新する/i })
+      const submitButton = screen.getByRole('button', { name: /変更を保存/i })
       await user.click(submitButton)
 
       // Then: エラーメッセージが表示される
@@ -244,7 +244,7 @@ describe('ProfileEditForm', () => {
 
       const user = userEvent.setup()
       render(<ProfileEditForm initialData={mockUser} />)
-      const submitButton = screen.getByRole('button', { name: /更新する/i })
+      const submitButton = screen.getByRole('button', { name: /変更を保存/i })
       await user.click(submitButton)
 
       // Then: デフォルトエラーメッセージが表示される
@@ -259,7 +259,7 @@ describe('ProfileEditForm', () => {
       vi.mocked(updateUserProfile).mockResolvedValueOnce({ success: true })
       const user = userEvent.setup()
       render(<ProfileEditForm initialData={mockUser} />)
-      const submitButton = screen.getByRole('button', { name: /更新する/i })
+      const submitButton = screen.getByRole('button', { name: /変更を保存/i })
       await user.click(submitButton)
 
       // 成功メッセージが表示されることを確認
@@ -293,7 +293,7 @@ describe('ProfileEditForm', () => {
       render(<ProfileEditForm initialData={mockUser} />)
 
       // When: フォームを送信する
-      const submitButton = screen.getByRole('button', { name: /更新する/i })
+      const submitButton = screen.getByRole('button', { name: /変更を保存/i })
       await user.click(submitButton)
 
       // Then: 送信中はボタンがdisabledになる
@@ -320,7 +320,7 @@ describe('ProfileEditForm', () => {
       render(<ProfileEditForm initialData={mockUser} />)
 
       // When: フォームを送信する
-      const submitButton = screen.getByRole('button', { name: /更新する/i })
+      const submitButton = screen.getByRole('button', { name: /変更を保存/i })
       await user.click(submitButton)
 
       // Then: ローディングテキストが表示される
@@ -347,7 +347,7 @@ describe('ProfileEditForm', () => {
       render(<ProfileEditForm initialData={mockUser} />)
 
       // When: フォームを送信する
-      const submitButton = screen.getByRole('button', { name: /更新する/i })
+      const submitButton = screen.getByRole('button', { name: /変更を保存/i })
       await user.click(submitButton)
 
       // Then: 送信中はdisabled
@@ -370,7 +370,7 @@ describe('ProfileEditForm', () => {
 
       const user = userEvent.setup()
       render(<ProfileEditForm initialData={mockUser} />)
-      const submitButton = screen.getByRole('button', { name: /更新する/i })
+      const submitButton = screen.getByRole('button', { name: /変更を保存/i })
 
       // When: フォームを送信する
       await user.click(submitButton)

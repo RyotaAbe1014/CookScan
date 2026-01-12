@@ -35,7 +35,7 @@ export function RecipeTagsSection({ recipeTags }: RecipeTagsSectionProps) {
                 {category.tags.map((tag) => (
                   <span
                     key={tag.id}
-                    className="inline-flex items-center gap-1.5 rounded-lg bg-linear-to-r from-indigo-600 to-purple-600 px-3 py-2 text-sm font-medium text-white shadow-lg shadow-indigo-500/30 ring-2 ring-indigo-600"
+                    className="inline-flex items-center gap-1.5 rounded-lg bg-amber-100 px-3 py-2 text-sm font-medium text-amber-900 ring-1 ring-amber-300"
                   >
                     <TagIcon className="h-3.5 w-3.5" />
                     {tag.name}

@@ -7,111 +7,96 @@ import {
 } from '@/components/icons'
 
 export function QuickActions() {
+  const actions = [
+    {
+      href: '/recipes/upload',
+      icon: PlusIcon,
+      title: 'レシピをスキャン',
+      description: '料理本やレシピカードを撮影して、AIが自動でデジタル化します',
+      action: 'スキャンを開始',
+      bgColor: 'bg-emerald-100',
+      iconColor: 'text-emerald-600',
+      accentColor: 'bg-emerald-600',
+      borderColor: 'border-emerald-200',
+      hoverBorderColor: 'hover:border-emerald-300',
+    },
+    {
+      href: '/recipes',
+      icon: EmptyIcon,
+      title: 'マイレシピ',
+      description: '保存したレシピを閲覧・編集して、お気に入りのレシピを管理できます',
+      action: 'レシピを見る',
+      bgColor: 'bg-teal-100',
+      iconColor: 'text-teal-600',
+      accentColor: 'bg-teal-600',
+      borderColor: 'border-teal-200',
+      hoverBorderColor: 'hover:border-teal-300',
+    },
+    {
+      href: '/tags',
+      icon: TagIcon,
+      title: 'タグ管理',
+      description: 'タグとカテゴリを作成・編集して、レシピを整理しましょう',
+      action: 'タグを管理',
+      bgColor: 'bg-amber-100',
+      iconColor: 'text-amber-600',
+      accentColor: 'bg-amber-600',
+      borderColor: 'border-amber-200',
+      hoverBorderColor: 'hover:border-amber-300',
+    },
+  ]
+
   return (
     <div className="mb-8">
-      <h3 className="mb-6 text-lg font-semibold text-gray-900">クイックアクション</h3>
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {/* レシピをスキャン */}
-        <Link
-          href="/recipes/upload"
-          className="group relative overflow-hidden rounded-2xl bg-linear-to-br from-indigo-50 via-purple-50 to-indigo-50 p-6 shadow-sm ring-1 ring-indigo-100/50 transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-lg hover:ring-indigo-200/60"
-        >
-          {/* 装飾的な背景要素 */}
-          <div className="absolute -right-8 -top-8 h-40 w-40 rounded-full bg-linear-to-br from-indigo-200/30 to-purple-200/30 blur-2xl transition-transform duration-500 group-hover:scale-110" />
-          <div className="absolute -bottom-4 -left-4 h-32 w-32 rounded-full bg-linear-to-tr from-purple-200/20 to-indigo-200/20 blur-xl" />
+      <div className="mb-6 flex items-center gap-3">
+        <div className="h-1 w-12 rounded-full bg-emerald-600" />
+        <h2 className="text-2xl font-bold text-neutral-900">クイックアクション</h2>
+      </div>
 
-          <div className="relative flex h-full flex-col">
-            {/* アイコン */}
-            <div className="mb-5 inline-flex">
-              <div className="relative">
-                <div className="absolute inset-0 rounded-2xl bg-indigo-400/30 blur-xl transition-all duration-300 group-hover:bg-indigo-400/50" />
-                <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-linear-to-br from-indigo-500 to-purple-600 shadow-lg transition-all duration-300 group-hover:scale-105 group-hover:rotate-3">
-                  <PlusIcon className="h-7 w-7 text-white" strokeWidth={2.5} />
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {actions.map((action, index) => (
+          <Link
+            key={action.href}
+            href={action.href}
+            className={`group relative overflow-hidden rounded-xl bg-white p-6 shadow-md border ${action.borderColor} transition-all duration-200 hover:-translate-y-1 hover:shadow-lg ${action.hoverBorderColor}`}
+            style={{
+              animation: 'fadeIn 0.4s ease-out',
+              animationDelay: `${index * 80}ms`,
+              animationFillMode: 'both',
+            }}
+          >
+            <div className="relative flex h-full min-h-[200px] flex-col">
+              {/* アイコン */}
+              <div className="mb-4 inline-flex">
+                <div
+                  className={`flex h-14 w-14 items-center justify-center rounded-lg ${action.bgColor} transition-all duration-200 group-hover:scale-105`}
+                >
+                  <action.icon className={`h-7 w-7 ${action.iconColor}`} strokeWidth={2.5} />
                 </div>
               </div>
-            </div>
 
-            {/* タイトルと説明 */}
-            <h3 className="mb-2 text-xl font-bold text-gray-900">レシピをスキャン</h3>
-            <p className="mb-4 flex-1 text-sm leading-relaxed text-gray-600">
-              料理本やレシピカードを撮影して、AIが自動でデジタル化します
-            </p>
-
-            {/* アクションリンク */}
-            <div className="flex items-center text-sm font-semibold text-indigo-600 transition-colors duration-200 group-hover:text-purple-600">
-              スキャンを開始
-              <ChevronRightIcon className="ml-1.5 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1.5" strokeWidth={2.5} />
-            </div>
-          </div>
-        </Link>
-
-        {/* マイレシピ */}
-        <Link
-          href="/recipes"
-          className="group relative overflow-hidden rounded-2xl bg-linear-to-br from-emerald-50 via-teal-50 to-emerald-50 p-6 shadow-sm ring-1 ring-emerald-100/50 transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-lg hover:ring-emerald-200/60"
-        >
-          {/* 装飾的な背景要素 */}
-          <div className="absolute -right-8 -top-8 h-40 w-40 rounded-full bg-linear-to-br from-emerald-200/30 to-teal-200/30 blur-2xl transition-transform duration-500 group-hover:scale-110" />
-          <div className="absolute -bottom-4 -left-4 h-32 w-32 rounded-full bg-linear-to-tr from-teal-200/20 to-emerald-200/20 blur-xl" />
-
-          <div className="relative flex h-full flex-col">
-            {/* アイコン */}
-            <div className="mb-5 inline-flex">
-              <div className="relative">
-                <div className="absolute inset-0 rounded-2xl bg-emerald-400/30 blur-xl transition-all duration-300 group-hover:bg-emerald-400/50" />
-                <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-linear-to-br from-emerald-500 to-teal-600 shadow-lg transition-all duration-300 group-hover:scale-105 group-hover:rotate-3">
-                  <EmptyIcon className="h-7 w-7 text-white" strokeWidth={2.5} />
-                </div>
+              {/* コンテンツ */}
+              <div className="flex-1">
+                <h3 className="mb-2 text-xl font-semibold text-neutral-900">{action.title}</h3>
+                <p className="text-sm leading-relaxed text-slate-600">{action.description}</p>
               </div>
-            </div>
 
-            {/* タイトルと説明 */}
-            <h3 className="mb-2 text-xl font-bold text-gray-900">マイレシピ</h3>
-            <p className="mb-4 flex-1 text-sm leading-relaxed text-gray-600">
-              保存したレシピを閲覧・編集して、お気に入りのレシピを管理できます
-            </p>
-
-            {/* アクションリンク */}
-            <div className="flex items-center text-sm font-semibold text-emerald-600 transition-colors duration-200 group-hover:text-teal-600">
-              レシピを見る
-              <ChevronRightIcon className="ml-1.5 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1.5" strokeWidth={2.5} />
-            </div>
-          </div>
-        </Link>
-
-        {/* タグ管理 */}
-        <Link
-          href="/tags"
-          className="group relative overflow-hidden rounded-2xl bg-linear-to-br from-amber-50 via-orange-50 to-amber-50 p-6 shadow-sm ring-1 ring-amber-100/50 transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-lg hover:ring-amber-200/60"
-        >
-          {/* 装飾的な背景要素 */}
-          <div className="absolute -right-8 -top-8 h-40 w-40 rounded-full bg-linear-to-br from-amber-200/30 to-orange-200/30 blur-2xl transition-transform duration-500 group-hover:scale-110" />
-          <div className="absolute -bottom-4 -left-4 h-32 w-32 rounded-full bg-linear-to-tr from-orange-200/20 to-amber-200/20 blur-xl" />
-
-          <div className="relative flex h-full flex-col">
-            {/* アイコン */}
-            <div className="mb-5 inline-flex">
-              <div className="relative">
-                <div className="absolute inset-0 rounded-2xl bg-amber-400/30 blur-xl transition-all duration-300 group-hover:bg-amber-400/50" />
-                <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-linear-to-br from-amber-500 to-orange-600 shadow-lg transition-all duration-300 group-hover:scale-105 group-hover:rotate-3">
-                  <TagIcon className="h-7 w-7 text-white" strokeWidth={2.5} />
-                </div>
+              {/* アクションリンク */}
+              <div
+                className={`mt-4 flex items-center gap-2 text-sm font-semibold ${action.iconColor} transition-all duration-200`}
+              >
+                <span>{action.action}</span>
+                <ChevronRightIcon
+                  className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1"
+                  strokeWidth={2.5}
+                />
               </div>
-            </div>
 
-            {/* タイトルと説明 */}
-            <h3 className="mb-2 text-xl font-bold text-gray-900">タグ管理</h3>
-            <p className="mb-4 flex-1 text-sm leading-relaxed text-gray-600">
-              タグとカテゴリを作成・編集して、レシピを整理しましょう
-            </p>
-
-            {/* アクションリンク */}
-            <div className="flex items-center text-sm font-semibold text-amber-600 transition-colors duration-200 group-hover:text-orange-600">
-              タグを管理
-              <ChevronRightIcon className="ml-1.5 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1.5" strokeWidth={2.5} />
+              {/* ボトムアクセント */}
+              <div className={`absolute bottom-0 left-0 right-0 h-1 origin-left scale-x-0 rounded-full ${action.accentColor} transition-transform duration-200 group-hover:scale-x-100`} />
             </div>
-          </div>
-        </Link>
+          </Link>
+        ))}
       </div>
     </div>
   )

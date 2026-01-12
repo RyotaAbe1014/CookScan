@@ -7,11 +7,11 @@ import { cn } from '@/lib/tailwind'
  * ============================================================================= */
 
 const cardVariants = cva(
-  'overflow-hidden rounded-xl bg-white shadow-lg ring-1 ring-gray-900/5',
+  'overflow-hidden rounded-xl bg-white shadow-card ring-1 ring-gray-900/5',
   {
     variants: {
       hover: {
-        true: 'transition-all hover:shadow-xl',
+        true: 'transition-all duration-200 hover:shadow-lg',
         false: '',
       },
     },
@@ -42,23 +42,23 @@ Card.displayName = 'Card'
  * ============================================================================= */
 
 /**
- * アイコンバッジのグラデーションカラープリセット
+ * アイコンバッジのカラープリセット（単色ベース）
  */
 export type CardHeaderColor =
-  | 'indigo' // 基本情報、画像など
+  | 'emerald' // 基本情報、画像など
   | 'amber' // タグ、カテゴリ、ソース情報
   | 'green' // 材料
   | 'blue' // 手順
-  | 'purple' // メモ
+  | 'teal' // メモ
   | 'red' // 削除、警告
 
-const iconGradientColors: Record<CardHeaderColor, string> = {
-  indigo: 'from-indigo-500 to-purple-600',
-  amber: 'from-amber-500 to-orange-600',
-  green: 'from-green-500 to-emerald-600',
-  blue: 'from-blue-500 to-indigo-600',
-  purple: 'from-purple-500 to-pink-600',
-  red: 'from-red-500 to-orange-600',
+const iconColors: Record<CardHeaderColor, string> = {
+  emerald: 'bg-emerald-600',
+  amber: 'bg-amber-500',
+  green: 'bg-emerald-500',
+  blue: 'bg-sky-500',
+  teal: 'bg-teal-500',
+  red: 'bg-red-500',
 }
 
 export type CardHeaderProps = HTMLAttributes<HTMLDivElement> & {
@@ -73,7 +73,7 @@ export type CardHeaderProps = HTMLAttributes<HTMLDivElement> & {
 }
 
 const CardHeader = forwardRef<HTMLDivElement, CardHeaderProps>(
-  ({ className, icon, iconColor = 'indigo', title, actions, children, ...props }, ref) => {
+  ({ className, icon, iconColor = 'emerald', title, actions, children, ...props }, ref) => {
     return (
       <div
         ref={ref}
@@ -85,18 +85,18 @@ const CardHeader = forwardRef<HTMLDivElement, CardHeaderProps>(
       >
         {children ?? (
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
               {icon && (
                 <div
                   className={cn(
-                    'flex h-10 w-10 items-center justify-center rounded-lg shadow-md bg-linear-to-br',
-                    iconGradientColors[iconColor]
+                    'flex h-10 w-10 items-center justify-center rounded-lg shadow-md transition-transform duration-150 hover:scale-105',
+                    iconColors[iconColor]
                   )}
                 >
                   {icon}
                 </div>
               )}
-              {title && <h3 className="text-lg font-bold text-gray-900">{title}</h3>}
+              {title && <h3 className="text-lg font-semibold text-gray-900">{title}</h3>}
             </div>
             {actions && <div className="flex items-center gap-2">{actions}</div>}
           </div>

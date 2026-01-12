@@ -26,12 +26,12 @@ export function RecipeGrid({ recipes }: RecipeGridProps) {
               </div>
             )}
             <div className="p-5">
-              <h3 className="text-lg font-bold text-gray-900 transition-colors group-hover:text-indigo-600">
+              <h3 className="text-lg font-bold text-gray-900 transition-colors group-hover:text-emerald-600">
                 {recipe.title}
               </h3>
               <div className="mt-2 flex items-center gap-4 text-sm text-gray-600">
                 <div className="flex items-center gap-1">
-                  <ClipboardListIcon className="h-4 w-4 text-indigo-500" />
+                  <ClipboardListIcon className="h-4 w-4 text-emerald-500" />
                   <span className="font-medium">{recipe.ingredients.length}</span>
                   <span className="text-gray-500">品目</span>
                 </div>
@@ -41,7 +41,7 @@ export function RecipeGrid({ recipes }: RecipeGridProps) {
                   {recipe.recipeTags.slice(0, 3).map((recipeTag) => (
                     <span
                       key={recipeTag.tagId}
-                      className="inline-flex items-center gap-1 rounded-md bg-indigo-50 px-2 py-1 text-xs font-medium text-indigo-700 ring-1 ring-indigo-200"
+                      className="inline-flex items-center gap-1 rounded-md bg-amber-50 px-2 py-1 text-xs font-medium text-amber-700 ring-1 ring-amber-200"
                     >
                       <TagIcon className="h-3 w-3" />
                       {recipeTag.tag.name}

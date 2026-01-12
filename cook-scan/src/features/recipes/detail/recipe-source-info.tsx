@@ -47,7 +47,7 @@ export function RecipeSourceInfo({ sourceInfo }: RecipeSourceInfoProps) {
                     href={sourceInfo.sourceUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-1 block truncate text-indigo-600 transition-colors hover:text-indigo-700 hover:underline"
+                    className="mt-1 block truncate text-emerald-600 transition-colors hover:text-indigo-700 hover:underline"
                   >
                     {sourceInfo.sourceUrl}
                   </a>

@@ -105,7 +105,7 @@ describe('AuthLayoutWrapper', () => {
 
     // Then: メインコンテナにグラデーション背景クラスが適用される
     const layoutDiv = container.firstChild as HTMLElement
-    expect(layoutDiv).toHaveClass('min-h-screen', 'bg-linear-to-br', 'from-indigo-50', 'via-white', 'to-purple-50')
+    expect(layoutDiv).toHaveClass('min-h-screen', 'bg-linear-to-br', 'from-emerald-50', 'via-white')
   })
 
   test('正常系：すべてのプロパティを同時に使用できる', () => {

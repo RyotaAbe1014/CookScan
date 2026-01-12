@@ -56,7 +56,7 @@ export function StepInputMobile({
 
       {/* Timer input (full width) */}
       <div className="rounded-xl bg-linear-to-r from-indigo-50 to-blue-50 p-3 ring-1 ring-indigo-100">
-        <label className="mb-2 flex items-center gap-2 text-xs font-semibold tracking-wide text-indigo-600 uppercase">
+        <label className="mb-2 flex items-center gap-2 text-xs font-semibold tracking-wide text-emerald-600 uppercase">
           <ClockIcon className="h-4 w-4" stroke="currentColor" />
           タイマー設定
         </label>
@@ -69,7 +69,7 @@ export function StepInputMobile({
             size="lg"
             className="flex-1 text-center font-medium"
           />
-          <span className="shrink-0 text-base font-semibold text-indigo-600">秒</span>
+          <span className="shrink-0 text-base font-semibold text-emerald-600">秒</span>
         </div>
         <p className="mt-2 text-xs text-gray-500">
           調理中にタイマーを使用できます（任意）

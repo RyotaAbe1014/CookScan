@@ -104,11 +104,11 @@ export function CategoryItem({ category, currentUserId }: CategoryItemProps) {
 
   return (
     <Card hover>
-      <div className="border-b border-gray-200 bg-linear-to-r from-gray-50 to-white px-6 py-5">
+      <div className="border-b border-slate-200 bg-white px-6 py-5">
         {isEditing ? (
           <form onSubmit={handleEdit} className="space-y-3">
             <div>
-              <label htmlFor={`edit-category-name-${category.id}`} className="block text-sm font-medium text-gray-700">
+              <label htmlFor={`edit-category-name-${category.id}`} className="block text-sm font-medium text-slate-700">
                 カテゴリ名
               </label>
               <Input
@@ -123,7 +123,7 @@ export function CategoryItem({ category, currentUserId }: CategoryItemProps) {
             </div>
 
             <div>
-              <label htmlFor={`edit-category-description-${category.id}`} className="block text-sm font-medium text-gray-700">
+              <label htmlFor={`edit-category-description-${category.id}`} className="block text-sm font-medium text-slate-700">
                 説明（任意）
               </label>
               <Textarea
@@ -163,21 +163,21 @@ export function CategoryItem({ category, currentUserId }: CategoryItemProps) {
         ) : (
           <div className="flex items-center justify-between">
             <div className="flex flex-1 items-center gap-4">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-linear-to-br from-indigo-500 to-purple-600 shadow-md">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-emerald-600 shadow-sm">
                 <FolderIcon className="h-6 w-6 text-white" />
               </div>
               <div className="flex-1">
-                <h3 className="text-xl font-bold text-gray-900">
+                <h3 className="text-xl font-bold text-neutral-900">
                   {category.name}
                 </h3>
-                <p className="mt-1 flex items-center gap-2 text-sm text-gray-600">
+                <p className="mt-1 flex items-center gap-2 text-sm text-slate-500">
                   {category.isSystem ? (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700">
+                    <span className="inline-flex items-center gap-1 rounded-full bg-sky-100 px-2 py-0.5 text-xs font-medium text-sky-700">
                       <BadgeCheckIcon className="h-3 w-3" />
                       システム
                     </span>
                   ) : (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700">
+                    <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-700">
                       <UserCircleSolidIcon className="h-3 w-3" />
                       ユーザー
                     </span>
@@ -186,9 +186,9 @@ export function CategoryItem({ category, currentUserId }: CategoryItemProps) {
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <div className="flex items-center gap-2 rounded-lg bg-indigo-50 px-4 py-2 shadow-sm">
-                <TagIcon className="h-5 w-5 text-indigo-600" />
-                <span className="text-sm font-semibold text-indigo-900">
+              <div className="flex items-center gap-2 rounded-lg bg-emerald-50 px-4 py-2 border border-emerald-200">
+                <TagIcon className="h-5 w-5 text-emerald-600" />
+                <span className="text-sm font-semibold text-neutral-900">
                   {category.tags.length}
                 </span>
               </div>
@@ -196,11 +196,11 @@ export function CategoryItem({ category, currentUserId }: CategoryItemProps) {
                 <div className="flex gap-1">
                   <button
                     onClick={() => setIsEditing(true)}
-                    className="rounded-lg p-2 transition-colors hover:bg-indigo-100"
+                    className="rounded-lg p-2 transition-colors hover:bg-emerald-100"
                     title="編集"
                     disabled={isSubmitting}
                   >
-                    <PencilIcon className="h-5 w-5 text-indigo-600" />
+                    <PencilIcon className="h-5 w-5 text-emerald-600" />
                   </button>
                   <button
                     onClick={handleDelete}
@@ -224,7 +224,7 @@ export function CategoryItem({ category, currentUserId }: CategoryItemProps) {
 
       <CardContent padding="sm" className="px-6">
         {category.tags.length === 0 ? (
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-slate-500">
             このカテゴリにはまだタグがありません。
           </p>
         ) : (

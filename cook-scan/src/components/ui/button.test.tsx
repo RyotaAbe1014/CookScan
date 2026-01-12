@@ -13,7 +13,7 @@ describe('Button', () => {
     expect(button).toBeInTheDocument()
 
     // Then: デフォルトのprimary variant用スタイルが適用される
-    expect(button).toHaveClass('bg-linear-to-r', 'from-primary', 'to-secondary')
+    expect(button).toHaveClass('bg-primary')
   })
 
   test('正常系：secondary variantのスタイルが適用される', () => {
@@ -195,7 +195,7 @@ describe('Button', () => {
     expect(button).toHaveClass('custom-button')
 
     // Then: デフォルトのクラスも維持される
-    expect(button).toHaveClass('bg-linear-to-r', 'from-primary')
+    expect(button).toHaveClass('bg-primary')
   })
 
   test('正常系：複数のpropsを組み合わせて使用できる', () => {
