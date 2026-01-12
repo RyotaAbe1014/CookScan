@@ -11,9 +11,9 @@ type AuthLayoutWrapperProps = {
 
 export function AuthLayoutWrapper({ children, title, subtitle, rightAction, id }: AuthLayoutWrapperProps) {
   return (
-    <div id={id} className="min-h-screen bg-linear-to-br from-indigo-50 via-white to-purple-50">
+    <div id={id} className="min-h-screen bg-linear-to-br from-emerald-50 via-white to-teal-50/50">
       <Header title={title} subtitle={subtitle} rightAction={rightAction} />
-      {children}
+      <div className="mx-auto max-w-7xl">{children}</div>
     </div>
   )
 }

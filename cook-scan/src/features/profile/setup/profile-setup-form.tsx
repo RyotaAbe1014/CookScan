@@ -36,11 +36,11 @@ export default function ProfileSetupForm({ userId, userEmail }: ProfileSetupForm
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 p-8">
-      {/* Email Field */}
-      <div>
-        <label htmlFor="email" className="mb-2 flex items-center gap-2 text-sm font-semibold text-gray-700">
-          <div className="flex h-5 w-5 items-center justify-center rounded bg-linear-to-br from-gray-400 to-gray-500">
+    <form onSubmit={handleSubmit} className="space-y-8 p-8">
+      {/* Email Field - 無効化フィールド */}
+      <div className="space-y-2">
+        <label htmlFor="email" className="flex items-center gap-2 text-sm font-medium text-neutral-700">
+          <div className="flex h-5 w-5 items-center justify-center rounded bg-slate-500">
             <EnvelopeIcon className="h-3 w-3 text-white" />
           </div>
           メールアドレス
@@ -56,15 +56,16 @@ export default function ProfileSetupForm({ userId, userEmail }: ProfileSetupForm
             hasIcon
           />
           <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-            <MailIcon className="h-5 w-5 text-gray-400" />
+            <MailIcon className="h-5 w-5 text-slate-400" />
           </div>
         </div>
+        <p className="text-xs text-slate-500">認証済みのメールアドレスです</p>
       </div>
 
-      {/* Name Field */}
-      <div>
-        <label htmlFor="name" className="mb-2 flex items-center gap-2 text-sm font-semibold text-gray-700">
-          <div className="flex h-5 w-5 items-center justify-center rounded bg-linear-to-br from-indigo-500 to-purple-600">
+      {/* Name Field - プライマリフィールド */}
+      <div className="space-y-2">
+        <label htmlFor="name" className="flex items-center gap-2 text-sm font-medium text-neutral-700">
+          <div className="flex h-5 w-5 items-center justify-center rounded bg-emerald-600">
             <UserIcon className="h-3 w-3 text-white" />
           </div>
           お名前
@@ -77,14 +78,15 @@ export default function ProfileSetupForm({ userId, userEmail }: ProfileSetupForm
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
-            placeholder="山田 太郎"
+            placeholder="例: 山田 太郎"
             size="xl"
             hasIcon
           />
           <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-            <UserCircleIcon className="h-5 w-5 text-gray-400" />
+            <UserCircleIcon className="h-5 w-5 text-emerald-500" />
           </div>
         </div>
+        <p className="text-xs text-slate-500">レシピ管理で表示される名前です</p>
       </div>
 
       {/* Error Message */}
@@ -92,21 +94,21 @@ export default function ProfileSetupForm({ userId, userEmail }: ProfileSetupForm
         <Alert variant="error">{error}</Alert>
       )}
 
-      {/* Submit Button */}
+      {/* Submit Button - emerald primary */}
       <Button
         type="submit"
         variant="primary"
         size="lg"
         disabled={isPending || !name.trim()}
         isLoading={isPending}
-        className="w-full"
+        className="w-full shadow-md hover:shadow-lg transition-shadow"
       >
         {isPending ? (
           '作成中...'
         ) : (
           <>
             <CheckCircleOutlineIcon className="h-5 w-5" />
-            プロフィールを作成
+            プロフィールを作成して始める
           </>
         )}
       </Button>

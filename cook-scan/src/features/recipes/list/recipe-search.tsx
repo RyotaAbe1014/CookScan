@@ -50,13 +50,13 @@ export function RecipeSearch({ resultCount }: Props) {
         <div className={`
           group relative overflow-hidden rounded-2xl bg-white shadow-lg ring-1 transition-all duration-300
           ${isFocused
-            ? 'ring-2 ring-indigo-400 shadow-xl shadow-indigo-500/20'
+            ? 'ring-2 ring-emerald-400 shadow-xl shadow-emerald-500/20'
             : 'ring-gray-900/5 hover:shadow-xl'
           }
         `}>
           {/* Animated gradient background on focus */}
           <div className={`
-            absolute inset-0 bg-linear-to-r from-indigo-50 via-purple-50 to-pink-50 opacity-0 transition-opacity duration-500
+            absolute inset-0 bg-linear-to-r from-emerald-50 via-teal-50 to-sky-50 opacity-0 transition-opacity duration-500
             ${isFocused ? 'opacity-100' : 'group-hover:opacity-50'}
           `} />
 
@@ -65,7 +65,7 @@ export function RecipeSearch({ resultCount }: Props) {
             <div className={`
               flex h-11 w-11 shrink-0 items-center justify-center rounded-xl transition-all duration-300
               ${isFocused
-                ? 'bg-linear-to-br from-indigo-500 to-purple-600 shadow-lg shadow-indigo-500/40 scale-110'
+                ? 'bg-emerald-600 shadow-lg shadow-emerald-500/40 scale-110'
                 : 'bg-linear-to-br from-gray-100 to-gray-200'
               }
             `}>
@@ -103,7 +103,7 @@ export function RecipeSearch({ resultCount }: Props) {
             <button
               type="submit"
               disabled={query.trim().length === 0}
-              className="group/btn relative flex h-11 w-11 sm:w-auto items-center justify-center gap-2 overflow-hidden rounded-xl bg-linear-to-r from-indigo-600 to-purple-600 px-3 sm:px-6 font-semibold text-white shadow-lg shadow-indigo-500/30 transition-all hover:shadow-xl hover:shadow-indigo-500/40 disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none"
+              className="group/btn relative flex h-11 w-11 sm:w-auto items-center justify-center gap-2 overflow-hidden rounded-xl bg-emerald-600 px-3 sm:px-6 font-semibold text-white shadow-lg shadow-emerald-500/30 transition-all hover:shadow-xl hover:shadow-emerald-500/40 disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none"
             >
               {/* Shine effect on hover */}
               <div className="absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-white/20 to-transparent transition-transform duration-500 group-hover/btn:translate-x-full" />
@@ -121,11 +121,11 @@ export function RecipeSearch({ resultCount }: Props) {
       {hasActiveSearch && typeof resultCount === 'number' && (
         <div className="mt-3 flex items-center justify-between px-2">
           <div className="flex items-center gap-2">
-            <div className="flex h-6 w-6 items-center justify-center rounded-md bg-linear-to-br from-indigo-500 to-purple-600">
+            <div className="flex h-6 w-6 items-center justify-center rounded-md bg-emerald-600">
               <DocumentSearchIcon className="h-3.5 w-3.5 text-white" />
             </div>
             <p className="text-sm font-medium text-gray-700">
-              検索結果: <span className="font-bold text-indigo-600">{resultCount}</span>件
+              検索結果: <span className="font-bold text-emerald-600">{resultCount}</span>件
               {currentQuery && (
                 <span className="ml-2 text-gray-500">
                   「<span className="font-semibold text-gray-700">{currentQuery}</span>」

@@ -14,7 +14,7 @@ describe('Input', () => {
     expect(input).toBeInTheDocument()
 
     // Then: デフォルトのvariant（default）スタイルが適用される
-    expect(input).toHaveClass('focus:border-indigo-500', 'focus:ring-indigo-500/20')
+    expect(input).toHaveClass('focus:border-primary', 'focus:ring-primary/20')
 
     // Then: デフォルトのsize（lg）スタイルが適用される
     expect(input).toHaveClass('px-4', 'py-2.5')
@@ -27,7 +27,7 @@ describe('Input', () => {
 
     // Then: defaultスタイルが適用される
     const input = screen.getByPlaceholderText('デフォルト')
-    expect(input).toHaveClass('focus:border-indigo-500', 'focus:ring-indigo-500/20')
+    expect(input).toHaveClass('focus:border-primary', 'focus:ring-primary/20')
   })
 
   test('正常系：variant="green"のスタイルが適用される', () => {
@@ -37,7 +37,7 @@ describe('Input', () => {
 
     // Then: greenスタイルが適用される
     const input = screen.getByPlaceholderText('グリーン')
-    expect(input).toHaveClass('focus:border-green-500', 'focus:ring-green-500/20')
+    expect(input).toHaveClass('focus:border-accent-ingredients', 'focus:ring-accent-ingredients/20')
   })
 
   test('正常系：variant="blue"のスタイルが適用される', () => {
@@ -47,7 +47,7 @@ describe('Input', () => {
 
     // Then: blueスタイルが適用される
     const input = screen.getByPlaceholderText('ブルー')
-    expect(input).toHaveClass('focus:border-blue-500', 'focus:ring-blue-500/20')
+    expect(input).toHaveClass('focus:border-accent-steps', 'focus:ring-accent-steps/20')
   })
 
   test('正常系：variant="disabled"のスタイルが適用される', () => {
@@ -57,7 +57,7 @@ describe('Input', () => {
 
     // Then: disabledスタイルが適用される
     const input = screen.getByPlaceholderText('無効')
-    expect(input).toHaveClass('border-gray-200', 'bg-gray-50', 'text-gray-500')
+    expect(input).toHaveClass('border-border', 'bg-muted', 'text-muted-foreground')
   })
 
   test('正常系：size="sm"のスタイルが適用される', () => {
@@ -77,7 +77,7 @@ describe('Input', () => {
 
     // Then: mdサイズのスタイルが適用される
     const input = screen.getByPlaceholderText('中')
-    expect(input).toHaveClass('px-4', 'py-2', 'sm:text-sm')
+    expect(input).toHaveClass('px-3', 'py-2', 'text-sm')
   })
 
   test('正常系：size="lg"のスタイルが適用される', () => {
@@ -87,7 +87,7 @@ describe('Input', () => {
 
     // Then: lgサイズのスタイルが適用される
     const input = screen.getByPlaceholderText('大')
-    expect(input).toHaveClass('px-4', 'py-2.5', 'sm:text-sm')
+    expect(input).toHaveClass('px-4', 'py-2.5', 'text-sm')
   })
 
   test('正常系：size="xl"のスタイルが適用される', () => {
@@ -183,7 +183,7 @@ describe('Input', () => {
     expect(input).toHaveClass('custom-input')
 
     // Then: デフォルトのクラスも維持される
-    expect(input).toHaveClass('rounded-lg', 'border')
+    expect(input).toHaveClass('rounded-md', 'border')
   })
 
   test('正常系：複数のpropsを組み合わせて使用できる', () => {
@@ -201,7 +201,7 @@ describe('Input', () => {
 
     // Then: すべてのスタイルが適用される
     const input = screen.getByPlaceholderText('組み合わせ')
-    expect(input).toHaveClass('focus:border-green-500') // variant
+    expect(input).toHaveClass('focus:border-accent-ingredients') // variant
     expect(input).toHaveClass('px-2', 'py-1') // size
     expect(input).toHaveClass('pl-10') // hasIcon
     expect(input).toHaveClass('mt-2') // custom

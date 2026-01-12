@@ -25,17 +25,17 @@ export function FormField({
   htmlFor,
   required = false,
   icon,
-  iconColorClass = 'text-indigo-600',
+  iconColorClass = 'text-primary',
   children,
   className,
   labelVariant = 'default',
 }: FormFieldProps) {
   const labelClasses = cn(
-    'flex items-center gap-1.5 text-sm font-medium text-gray-700',
+    'flex items-center gap-2 font-medium text-foreground',
     {
-      'mb-2': labelVariant === 'default',
-      'mb-2 font-semibold text-gray-900': labelVariant === 'semibold',
-      'text-xs mb-1': labelVariant === 'compact',
+      'mb-2 text-sm': labelVariant === 'default',
+      'mb-2 text-sm font-semibold': labelVariant === 'semibold',
+      'mb-1 text-xs': labelVariant === 'compact',
     }
   )
 
@@ -44,7 +44,7 @@ export function FormField({
       <label htmlFor={htmlFor} className={labelClasses}>
         {icon && <span className={cn('h-4 w-4', iconColorClass)}>{icon}</span>}
         {label}
-        {required && <span className="text-red-500">*</span>}
+        {required && <span className="text-danger">*</span>}
       </label>
       {children}
     </div>

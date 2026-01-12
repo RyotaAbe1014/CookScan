@@ -74,7 +74,7 @@ export function TagFilter({ tagCategories }: TagFilterProps) {
       <CardHeader>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <FilterIcon className="h-5 w-5 text-indigo-600" />
+            <FilterIcon className="h-5 w-5 text-emerald-600" />
             <h2 className="text-base font-semibold text-gray-900">タグで絞り込み</h2>
           </div>
           {selectedTags.length > 0 && (
@@ -94,7 +94,7 @@ export function TagFilter({ tagCategories }: TagFilterProps) {
           {categoriesWithTags.map((category) => (
             <div key={category.id}>
               <div className="mb-2 flex items-center gap-2">
-                <div className="h-1 w-1 rounded-full bg-indigo-600" />
+                <div className="h-1 w-1 rounded-full bg-emerald-600" />
                 <h3 className="text-sm font-semibold text-gray-900">
                   {category.name}
                 </h3>
@@ -110,7 +110,7 @@ export function TagFilter({ tagCategories }: TagFilterProps) {
                         inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium
                         transition-all duration-200
                         ${isSelected
-                          ? 'bg-linear-to-r from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-500/30 ring-2 ring-indigo-600'
+                          ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-500/30 ring-2 ring-emerald-600'
                           : 'bg-gray-100 text-gray-700 ring-1 ring-gray-200 hover:bg-gray-200 hover:ring-gray-300'
                         }
                       `}
@@ -128,9 +128,9 @@ export function TagFilter({ tagCategories }: TagFilterProps) {
         </div>
 
         {selectedTags.length > 0 && (
-          <div className="mt-4 flex items-center gap-2 rounded-lg bg-indigo-50 px-4 py-3 ring-1 ring-indigo-200">
-            <CheckCircleOutlineIcon className="h-4 w-4 text-indigo-600" />
-            <p className="text-sm font-medium text-indigo-900">
+          <div className="mt-4 flex items-center gap-2 rounded-lg bg-emerald-50 px-4 py-3 ring-1 ring-emerald-200">
+            <CheckCircleOutlineIcon className="h-4 w-4 text-emerald-600" />
+            <p className="text-sm font-medium text-emerald-900">
               {selectedTags.length}件のタグで絞り込み中
             </p>
           </div>

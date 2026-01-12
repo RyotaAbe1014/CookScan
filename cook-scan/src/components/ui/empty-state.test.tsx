@@ -71,6 +71,6 @@ describe('EmptyState', () => {
 
     // Then: メインコンテナに適切なスタイルが適用される
     const mainDiv = container.firstChild as HTMLElement
-    expect(mainDiv).toHaveClass('rounded-xl', 'bg-white', 'p-12', 'text-center', 'shadow-lg')
+    expect(mainDiv).toHaveClass('rounded-xl', 'bg-white', 'p-12', 'text-center', 'shadow-card')
   })
 })

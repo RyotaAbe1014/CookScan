@@ -211,7 +211,7 @@ export default function RecipeEditForm({ recipe, tagCategories }: Props) {
         {recipe.imageUrl && (
           <div className="overflow-hidden rounded-xl bg-white p-6 shadow-lg ring-1 ring-gray-900/5">
             <div className="mb-4 flex items-center gap-2">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-linear-to-br from-indigo-500 to-purple-600 shadow-md">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-600 shadow-md">
                 <CameraIcon className="h-5 w-5 text-white" />
               </div>
               <h3 className="text-lg font-bold text-gray-900">レシピ画像</h3>
@@ -230,7 +230,7 @@ export default function RecipeEditForm({ recipe, tagCategories }: Props) {
         <div className="overflow-hidden rounded-xl bg-white shadow-lg ring-1 ring-gray-900/5">
           <div className="border-b border-gray-200 bg-linear-to-r from-gray-50 to-white px-6 py-4">
             <div className="flex items-center gap-2">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-linear-to-br from-indigo-500 to-purple-600 shadow-md">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-600 shadow-md">
                 <InfoCircleIcon className="h-5 w-5 text-white" />
               </div>
               <h3 className="text-lg font-bold text-gray-900">基本情報</h3>
@@ -240,7 +240,7 @@ export default function RecipeEditForm({ recipe, tagCategories }: Props) {
             <div className="space-y-4">
               <div>
                 <label htmlFor="title" className="mb-2 flex items-center gap-1.5 text-sm font-medium text-gray-700">
-                  <TagIcon className="h-4 w-4 text-indigo-600" />
+                  <TagIcon className="h-4 w-4 text-emerald-600" />
                   レシピタイトル <span className="text-red-500">*</span>
                 </label>
                 <Input
@@ -296,7 +296,7 @@ export default function RecipeEditForm({ recipe, tagCategories }: Props) {
               </div>
               <div>
                 <label htmlFor="memo" className="mb-2 flex items-center gap-1.5 text-sm font-medium text-gray-700">
-                  <DocumentTextIcon className="h-4 w-4 text-purple-600" />
+                  <DocumentTextIcon className="h-4 w-4 text-teal-600" />
                   メモ
                 </label>
                 <Textarea
@@ -338,7 +338,7 @@ export default function RecipeEditForm({ recipe, tagCategories }: Props) {
                           <label
                             key={tag.id}
                             className={`inline-flex cursor-pointer items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 ${selectedTagIds.includes(tag.id)
-                              ? 'bg-linear-to-r from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-500/30 ring-2 ring-indigo-600'
+                              ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-500/30 ring-2 ring-indigo-600'
                               : 'bg-gray-100 text-gray-700 ring-1 ring-gray-200 hover:bg-gray-200 hover:ring-gray-300'
                               }`}
                           >

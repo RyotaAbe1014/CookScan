@@ -25,7 +25,7 @@ export function StepInput({
           variant="blue"
         />
         <div className="flex items-center gap-2 rounded-lg bg-white p-2 ring-1 ring-gray-200">
-          <ClockIcon className="h-4 w-4 text-indigo-600" stroke="currentColor" />
+          <ClockIcon className="h-4 w-4 text-emerald-600" stroke="currentColor" />
           <Input
             type="number"
             placeholder="タイマー（秒）"

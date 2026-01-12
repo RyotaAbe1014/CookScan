@@ -104,31 +104,31 @@ export function TagCreateForm({ categories }: TagCreateFormProps) {
   const availableCategories = categories
 
   return (
-    <div className="overflow-hidden rounded-xl bg-white shadow-lg">
+    <div className="overflow-hidden rounded-xl bg-white shadow-md">
       {/* タブヘッダー */}
-      <div className="border-b border-gray-200 bg-linear-to-r from-gray-50 to-white">
+      <div className="border-b border-slate-200 bg-white">
         <nav className="-mb-px flex" aria-label="Tabs">
           <button
             onClick={() => setActiveTab('tag')}
             className={`group relative w-1/2 border-b-2 px-6 py-4 text-sm font-medium transition-all ${activeTab === 'tag'
-                ? 'border-indigo-500 text-indigo-600'
-                : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
+                ? 'border-emerald-600 text-emerald-600'
+                : 'border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-700'
               }`}
           >
             <span className="flex items-center justify-center gap-2">
-              <TagIcon className={`h-5 w-5 ${activeTab === 'tag' ? 'text-indigo-600' : 'text-gray-400'}`} />
+              <TagIcon className={`h-5 w-5 ${activeTab === 'tag' ? 'text-emerald-600' : 'text-slate-400'}`} />
               タグを作成
             </span>
           </button>
           <button
             onClick={() => setActiveTab('category')}
             className={`group relative w-1/2 border-b-2 px-6 py-4 text-sm font-medium transition-all ${activeTab === 'category'
-                ? 'border-indigo-500 text-indigo-600'
-                : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
+                ? 'border-emerald-600 text-emerald-600'
+                : 'border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-700'
               }`}
           >
             <span className="flex items-center justify-center gap-2">
-              <FolderIcon className={`h-5 w-5 ${activeTab === 'category' ? 'text-indigo-600' : 'text-gray-400'}`} />
+              <FolderIcon className={`h-5 w-5 ${activeTab === 'category' ? 'text-emerald-600' : 'text-slate-400'}`} />
               カテゴリを作成
             </span>
           </button>
@@ -140,7 +140,7 @@ export function TagCreateForm({ categories }: TagCreateFormProps) {
         {activeTab === 'tag' ? (
           <form onSubmit={handleTagSubmit} className="space-y-4">
             <div>
-              <label htmlFor="tag-category" className="block text-sm font-semibold text-gray-900">
+              <label htmlFor="tag-category" className="block text-sm font-semibold text-neutral-900">
                 カテゴリ <span className="text-red-500">*</span>
               </label>
               <Select
@@ -163,7 +163,7 @@ export function TagCreateForm({ categories }: TagCreateFormProps) {
             </div>
 
             <div>
-              <label htmlFor="tag-name" className="block text-sm font-semibold text-gray-900">
+              <label htmlFor="tag-name" className="block text-sm font-semibold text-neutral-900">
                 タグ名 <span className="text-red-500">*</span>
               </label>
               <Input
@@ -179,7 +179,7 @@ export function TagCreateForm({ categories }: TagCreateFormProps) {
             </div>
 
             <div>
-              <label htmlFor="tag-description" className="block text-sm font-semibold text-gray-900">
+              <label htmlFor="tag-description" className="block text-sm font-semibold text-neutral-900">
                 説明（任意）
               </label>
               <Textarea
@@ -216,7 +216,7 @@ export function TagCreateForm({ categories }: TagCreateFormProps) {
         ) : (
           <form onSubmit={handleCategorySubmit} className="space-y-4">
             <div>
-              <label htmlFor="category-name" className="block text-sm font-semibold text-gray-900">
+              <label htmlFor="category-name" className="block text-sm font-semibold text-neutral-900">
                 カテゴリ名 <span className="text-red-500">*</span>
               </label>
               <Input
@@ -232,7 +232,7 @@ export function TagCreateForm({ categories }: TagCreateFormProps) {
             </div>
 
             <div>
-              <label htmlFor="category-description" className="block text-sm font-semibold text-gray-900">
+              <label htmlFor="category-description" className="block text-sm font-semibold text-neutral-900">
                 説明（任意）
               </label>
               <Textarea

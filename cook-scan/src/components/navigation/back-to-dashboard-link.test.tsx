@@ -51,7 +51,7 @@ describe('BackToDashboardLink', () => {
 
     // Then: リンクに適切なスタイルクラスが適用される
     const link = screen.getByRole('link', { name: /ダッシュボード/ })
-    expect(link).toHaveClass('flex', 'items-center', 'gap-1.5', 'text-sm', 'text-gray-600', 'transition-colors', 'hover:text-indigo-600')
+    expect(link).toHaveClass('inline-flex', 'items-center', 'gap-2', 'text-sm', 'font-medium', 'text-slate-500', 'transition-all', 'duration-150', 'hover:text-emerald-600', 'focus:outline-none', 'focus:ring-2', 'focus:ring-emerald-600', 'focus:ring-offset-2', 'rounded-md')
   })
 
   test('正常系：SVGに戻る矢印のパスが含まれる', () => {

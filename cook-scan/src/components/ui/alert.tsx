@@ -9,18 +9,18 @@ import {
 } from '@/components/icons'
 
 const alertVariants = cva(
-  // 共通スタイル
-  'flex items-start gap-3 rounded-lg p-4 ring-1',
+  // 共通スタイル - デザインシステムに準拠
+  'flex items-start gap-3 rounded-lg p-4 ring-1 transition-colors duration-150',
   {
     variants: {
       variant: {
-        // エラー: 赤系
-        error: 'bg-red-50 ring-red-200',
-        // 成功: 緑系
-        success: 'bg-green-50 ring-green-200',
-        // 警告: 黄色系
-        warning: 'bg-yellow-50 ring-yellow-200',
-        // 情報: 青系
+        // エラー: red系
+        error: 'bg-danger-light ring-danger-light',
+        // 成功: green系
+        success: 'bg-success-light ring-success-light',
+        // 警告: amber系
+        warning: 'bg-warning-light ring-warning-light',
+        // 情報: blue系
         info: 'bg-blue-50 ring-blue-200',
       },
     },
@@ -33,9 +33,9 @@ const alertVariants = cva(
 const alertIconVariants = cva('h-5 w-5 shrink-0', {
   variants: {
     variant: {
-      error: 'text-red-600',
-      success: 'text-green-600',
-      warning: 'text-yellow-600',
+      error: 'text-danger',
+      success: 'text-success',
+      warning: 'text-warning',
       info: 'text-blue-600',
     },
   },
@@ -47,9 +47,9 @@ const alertIconVariants = cva('h-5 w-5 shrink-0', {
 const alertTextVariants = cva('text-sm font-medium', {
   variants: {
     variant: {
-      error: 'text-red-800',
+      error: 'text-danger-hover',
       success: 'text-green-800',
-      warning: 'text-yellow-800',
+      warning: 'text-amber-800',
       info: 'text-blue-800',
     },
   },

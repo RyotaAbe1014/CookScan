@@ -19,7 +19,7 @@ export function RecipeStatsBar({ recipeCount }: RecipeStatsBarProps) {
       </div>
       <Link
         href="/recipes/upload"
-        className="flex items-center gap-2 rounded-lg bg-linear-to-r from-indigo-600 to-purple-600 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-indigo-500/30 transition-all hover:shadow-xl hover:shadow-indigo-500/40"
+        className="flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-emerald-500/30 transition-all hover:shadow-xl hover:shadow-emerald-500/40"
       >
         <PlusIcon className="h-4 w-4" />
         レシピをスキャン

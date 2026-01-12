@@ -52,7 +52,7 @@ describe('FormField', () => {
     // Then: 必須マーク（*）が表示される
     const asterisk = screen.getByText('*')
     expect(asterisk).toBeInTheDocument()
-    expect(asterisk).toHaveClass('text-red-500')
+    expect(asterisk).toHaveClass('text-danger')
   })
 
   test('正常系：required=falseで必須マークが表示されない', () => {
@@ -87,7 +87,7 @@ describe('FormField', () => {
     expect(screen.getByTestId('field-icon')).toBeInTheDocument()
   })
 
-  test('正常系：デフォルトのiconColorClass（indigo）が適用される', () => {
+  test('正常系：デフォルトのiconColorClass（primary）が適用される', () => {
     // Given: iconColorClassを指定しないフィールドが用意されている
     const icon = <svg data-testid="icon" />
 
@@ -98,8 +98,8 @@ describe('FormField', () => {
       </FormField>
     )
 
-    // Then: デフォルトのindigoカラーが適用される
-    const iconSpan = container.querySelector('span.text-indigo-600')
+    // Then: デフォルトのprimaryカラーが適用される
+    const iconSpan = container.querySelector('span.text-primary')
     expect(iconSpan).toBeInTheDocument()
   })
 
@@ -144,7 +144,7 @@ describe('FormField', () => {
 
     // Then: semiboldスタイルが適用される
     const label = screen.getByText('セミボールド')
-    expect(label).toHaveClass('mb-2', 'font-semibold', 'text-gray-900')
+    expect(label).toHaveClass('mb-2', 'font-semibold', 'text-sm')
   })
 
   test('正常系：labelVariant="compact"のスタイルが適用される', () => {
@@ -201,7 +201,7 @@ describe('FormField', () => {
         htmlFor="full-input"
         required
         icon={icon}
-        iconColorClass="text-purple-600"
+        iconColorClass="text-teal-600"
         labelVariant="semibold"
         className="my-4"
       >

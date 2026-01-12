@@ -30,7 +30,7 @@ export function RecipeEmptyState({
           <div className="mt-6">
             <Link
               href="/recipes"
-              className="inline-flex items-center gap-2 rounded-lg border-2 border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-700 shadow-sm transition-all hover:border-indigo-300 hover:bg-indigo-50"
+              className="inline-flex items-center gap-2 rounded-lg border-2 border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-700 shadow-sm transition-all hover:border-emerald-300 hover:bg-emerald-50"
             >
               <CloseIcon className="h-4 w-4" />
               すべてクリア
@@ -44,7 +44,7 @@ export function RecipeEmptyState({
           <div className="mt-6">
             <Link
               href="/recipes/upload"
-              className="inline-flex items-center gap-2 rounded-lg bg-linear-to-r from-indigo-600 to-purple-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-500/30 transition-all hover:shadow-xl hover:shadow-indigo-500/40"
+              className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-500/30 transition-all hover:shadow-xl hover:shadow-emerald-500/40"
             >
               <PlusIcon className="h-5 w-5" />
               レシピをスキャン

@@ -81,7 +81,7 @@ export function StepTimer({
       return `${baseClass} bg-linear-to-br from-amber-500 to-orange-500 shadow-md`
     }
     if (isRunning) {
-      return `${baseClass} bg-linear-to-br from-indigo-600 to-violet-600 shadow-xl animate-pulse`
+      return `${baseClass} bg-linear-to-br from-sky-500 to-sky-600 shadow-xl animate-pulse`
     }
     return `${baseClass} bg-slate-100 ring-1 ring-slate-200`
   }
@@ -137,7 +137,7 @@ export function StepTimer({
             variant="primary"
             size="sm"
             onClick={handleStart}
-            className="bg-indigo-600 shadow-md transition-transform hover:scale-105 hover:bg-indigo-700"
+            className="bg-sky-600 shadow-md transition-transform hover:scale-105 hover:bg-sky-700"
             aria-label="タイマーを開始"
           >
             <PlayIcon className="h-4 w-4" />

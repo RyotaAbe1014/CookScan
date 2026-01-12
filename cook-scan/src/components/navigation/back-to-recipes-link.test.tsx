@@ -54,22 +54,33 @@ describe('BackToRecipesLink', () => {
     expect(link).toHaveClass(
       'inline-flex',
       'items-center',
-      'gap-1.5',
+      'gap-2',
       'rounded-lg',
       'border',
-      'border-gray-300',
+      'border-slate-200',
       'bg-white',
       'px-3',
       'py-2',
       'text-sm',
-      'text-gray-600',
-      'transition-colors',
-      'hover:bg-gray-50',
-      'hover:text-indigo-600',
+      'font-medium',
+      'text-slate-500',
+      'shadow-sm',
+      'transition-all',
+      'duration-150',
+      'hover:border-emerald-600',
+      'hover:bg-emerald-50',
+      'hover:text-emerald-600',
+      'focus:outline-none',
+      'focus:ring-2',
+      'focus:ring-emerald-600',
+      'focus:ring-offset-2',
       'sm:border-0',
       'sm:bg-transparent',
       'sm:px-0',
-      'sm:py-0'
+      'sm:py-0',
+      'sm:shadow-none',
+      'sm:hover:bg-transparent',
+      'sm:hover:border-0'
     )
   })
 
@@ -114,6 +125,6 @@ describe('BackToRecipesLink', () => {
 
     // Then: リンクにボーダーとボタンスタイルが適用される
     const link = screen.getByRole('link')
-    expect(link).toHaveClass('border', 'border-gray-300', 'bg-white', 'rounded-lg')
+    expect(link).toHaveClass('border', 'border-slate-200', 'bg-white', 'rounded-lg')
   })
 })

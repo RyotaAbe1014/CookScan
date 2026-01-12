@@ -15,7 +15,7 @@ describe('Card', () => {
     expect(screen.getByText('カード内容')).toBeInTheDocument()
 
     // Then: 基本スタイルが適用される
-    expect(card).toHaveClass('rounded-xl', 'bg-white', 'shadow-lg')
+    expect(card).toHaveClass('rounded-xl', 'bg-white', 'shadow-card')
   })
 
   test('正常系：hover=falseの時はホバーエフェクトなし', () => {
@@ -101,12 +101,12 @@ describe('CardHeader', () => {
     // When: デフォルトでレンダリングする
     const { container } = render(<CardHeader icon={icon} title="タイトル" />)
 
-    // Then: indigoのグラデーションクラスが適用される
-    const iconWrapper = container.querySelector('.from-indigo-500')
+    // Then: emeraldの単色クラスが適用される
+    const iconWrapper = container.querySelector('.bg-emerald-600')
     expect(iconWrapper).toBeInTheDocument()
   })
 
-  test('正常系：各iconColorのグラデーションが適用される', () => {
+  test('正常系：各iconColorの単色が適用される', () => {
     // Given: 各iconColorが用意されている
     const icon = <svg data-testid="icon" />
 
@@ -114,36 +114,36 @@ describe('CardHeader', () => {
     const { container: amberContainer } = render(
       <CardHeader icon={icon} iconColor="amber" title="Amber" />
     )
-    // Then: amberのグラデーションが適用される
-    expect(amberContainer.querySelector('.from-amber-500')).toBeInTheDocument()
+    // Then: amberの単色が適用される
+    expect(amberContainer.querySelector('.bg-amber-500')).toBeInTheDocument()
 
     // When: green iconColorでレンダリングする
     const { container: greenContainer } = render(
       <CardHeader icon={icon} iconColor="green" title="Green" />
     )
-    // Then: greenのグラデーションが適用される
-    expect(greenContainer.querySelector('.from-green-500')).toBeInTheDocument()
+    // Then: greenの単色が適用される
+    expect(greenContainer.querySelector('.bg-emerald-500')).toBeInTheDocument()
 
     // When: blue iconColorでレンダリングする
     const { container: blueContainer } = render(
       <CardHeader icon={icon} iconColor="blue" title="Blue" />
     )
-    // Then: blueのグラデーションが適用される
-    expect(blueContainer.querySelector('.from-blue-500')).toBeInTheDocument()
+    // Then: blueの単色が適用される
+    expect(blueContainer.querySelector('.bg-sky-500')).toBeInTheDocument()
 
     // When: purple iconColorでレンダリングする
     const { container: purpleContainer } = render(
-      <CardHeader icon={icon} iconColor="purple" title="Purple" />
+      <CardHeader icon={icon} iconColor="teal" title="Teal" />
     )
-    // Then: purpleのグラデーションが適用される
-    expect(purpleContainer.querySelector('.from-purple-500')).toBeInTheDocument()
+    // Then: tealの単色が適用される
+    expect(purpleContainer.querySelector('.bg-teal-500')).toBeInTheDocument()
 
     // When: red iconColorでレンダリングする
     const { container: redContainer } = render(
       <CardHeader icon={icon} iconColor="red" title="Red" />
     )
-    // Then: redのグラデーションが適用される
-    expect(redContainer.querySelector('.from-red-500')).toBeInTheDocument()
+    // Then: redの単色が適用される
+    expect(redContainer.querySelector('.bg-red-500')).toBeInTheDocument()
   })
 
   test('正常系：アクション要素が表示される', () => {
