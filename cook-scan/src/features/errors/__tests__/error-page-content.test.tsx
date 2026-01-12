@@ -99,7 +99,7 @@ describe('ErrorPageContent', () => {
     const { container } = render(<ErrorPageContent error={mockError} reset={mockReset} />)
 
     // Then: 警告アイコンのSVGが表示される
-    const svgIcon = container.querySelector('svg.text-red-600')
+    const svgIcon = container.querySelector('svg.text-red-500')
     expect(svgIcon).toBeInTheDocument()
   })
 

@@ -31,7 +31,7 @@ describe('WelcomeSection', () => {
     expect(screen.getByText('こんにちは、ゲストさん')).toBeInTheDocument()
   })
 
-  test('正常系：メールアドレスが表示される', () => {
+  test('正常系：サブテキストが表示される', () => {
     // Given: プロフィール情報
     const profile = {
       name: '山田太郎',
@@ -41,37 +41,7 @@ describe('WelcomeSection', () => {
     // When: WelcomeSectionをレンダリングする
     render(<WelcomeSection profile={profile} />)
 
-    // Then: メールアドレスが表示される
-    expect(screen.getByText('yamada@example.com')).toBeInTheDocument()
-  })
-
-  test('正常系：CookScanブランドが表示される', () => {
-    // Given: プロフィール情報
-    const profile = {
-      name: '山田太郎',
-      email: 'yamada@example.com',
-    }
-
-    // When: WelcomeSectionをレンダリングする
-    render(<WelcomeSection profile={profile} />)
-
-    // Then: CookScanブランドが表示される
-    expect(screen.getByText('CookScan')).toBeInTheDocument()
-    expect(screen.getByText('ダッシュボード')).toBeInTheDocument()
-  })
-
-  test('正常系：ユーザーアイコンSVGが表示される', () => {
-    // Given: プロフィール情報
-    const profile = {
-      name: '山田太郎',
-      email: 'yamada@example.com',
-    }
-
-    // When: WelcomeSectionをレンダリングする
-    const { container } = render(<WelcomeSection profile={profile} />)
-
-    // Then: SVGアイコンが表示される
-    const svgs = container.querySelectorAll('svg')
-    expect(svgs.length).toBeGreaterThan(0)
+    // Then: サブテキストが表示される
+    expect(screen.getByText('今日は何を料理しますか？')).toBeInTheDocument()
   })
 })

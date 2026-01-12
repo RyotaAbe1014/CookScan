@@ -15,10 +15,6 @@ vi.mock('../quick-actions', () => ({
   QuickActions: () => <div data-testid="quick-actions">QuickActions</div>,
 }))
 
-vi.mock('../features-overview', () => ({
-  FeaturesOverview: () => <div data-testid="features-overview">FeaturesOverview</div>,
-}))
-
 describe('DashboardContent', () => {
   const mockProfile = {
     name: '山田太郎',
@@ -54,26 +50,16 @@ describe('DashboardContent', () => {
     expect(screen.getByTestId('quick-actions')).toBeInTheDocument()
   })
 
-  test('正常系：FeaturesOverviewが表示される', () => {
-    // Given: プロフィール情報
-    // When: DashboardContentをレンダリングする
-    render(<DashboardContent profile={mockProfile} />)
-
-    // Then: FeaturesOverviewが表示される
-    expect(screen.getByTestId('features-overview')).toBeInTheDocument()
-  })
-
   test('正常系：全ての子コンポーネントが正しい順序で表示される', () => {
     // Given: プロフィール情報
     // When: DashboardContentをレンダリングする
     const { container } = render(<DashboardContent profile={mockProfile} />)
 
-    // Then: 3つの子コンポーネントが正しい順序で表示される
+    // Then: 2つの子コンポーネントが正しい順序で表示される
     const elements = container.querySelectorAll('[data-testid]')
-    expect(elements.length).toBe(3)
+    expect(elements.length).toBe(2)
     expect(elements[0]).toHaveAttribute('data-testid', 'welcome-section')
     expect(elements[1]).toHaveAttribute('data-testid', 'quick-actions')
-    expect(elements[2]).toHaveAttribute('data-testid', 'features-overview')
   })
 
   test('正常系：プロフィール名がnullの場合でも正しく表示される', () => {

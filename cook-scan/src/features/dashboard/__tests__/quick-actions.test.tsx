@@ -18,7 +18,7 @@ describe('QuickActions', () => {
     render(<QuickActions />)
 
     // Then: レシピをスキャンカードのタイトルと説明が表示される
-    expect(screen.getByText('レシピをスキャン')).toBeInTheDocument()
+    expect(screen.getByText('レシピをスキャンする')).toBeInTheDocument()
     expect(
       screen.getByText('料理本やレシピカードを撮影して、AIが自動でデジタル化します')
     ).toBeInTheDocument()
@@ -42,7 +42,7 @@ describe('QuickActions', () => {
     // Then: マイレシピカードのタイトルと説明が表示される
     expect(screen.getByText('マイレシピ')).toBeInTheDocument()
     expect(
-      screen.getByText('保存したレシピを閲覧・編集して、お気に入りのレシピを管理できます')
+      screen.getByText('保存したレシピを閲覧・編集')
     ).toBeInTheDocument()
   })
 
@@ -64,7 +64,7 @@ describe('QuickActions', () => {
     // Then: タグ管理カードのタイトルと説明が表示される
     expect(screen.getByText('タグ管理')).toBeInTheDocument()
     expect(
-      screen.getByText('タグとカテゴリを作成・編集して、レシピを整理しましょう')
+      screen.getByText('カテゴリを作成してレシピを整理')
     ).toBeInTheDocument()
   })
 
@@ -98,30 +98,12 @@ describe('QuickActions', () => {
     expect(svgs.length).toBeGreaterThan(0)
   })
 
-  test('正常系：スキャンを開始のCTAテキストが表示される', () => {
+  test('正常系：AIスキャンバッジが表示される', () => {
     // Given: QuickActionsコンポーネント
     // When: レンダリングする
     render(<QuickActions />)
 
-    // Then: スキャンを開始のテキストが表示される
-    expect(screen.getByText('スキャンを開始')).toBeInTheDocument()
-  })
-
-  test('正常系：レシピを見るのCTAテキストが表示される', () => {
-    // Given: QuickActionsコンポーネント
-    // When: レンダリングする
-    render(<QuickActions />)
-
-    // Then: レシピを見るのテキストが表示される
-    expect(screen.getByText('レシピを見る')).toBeInTheDocument()
-  })
-
-  test('正常系：タグを管理のCTAテキストが表示される', () => {
-    // Given: QuickActionsコンポーネント
-    // When: レンダリングする
-    render(<QuickActions />)
-
-    // Then: タグを管理のテキストが表示される
-    expect(screen.getByText('タグを管理')).toBeInTheDocument()
+    // Then: AIスキャンバッジが表示される
+    expect(screen.getByText('AIスキャン')).toBeInTheDocument()
   })
 })
