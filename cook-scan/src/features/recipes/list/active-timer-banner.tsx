@@ -2,7 +2,7 @@
 
 import { useAtomValue } from 'jotai'
 import Link from 'next/link'
-import { activeTimerRecipesAtom } from '@/features/recipes/detail/atoms/timer-atoms'
+import { activeTimerRecipesAtom } from '@/features/recipes/atoms'
 import { ClockIcon, ChevronRightIcon, InfoCircleIcon } from '@/components/icons'
 
 export function ActiveTimerBanner() {
