@@ -153,7 +153,7 @@ export function TagItem({ tag, usageCount, isUserOwned }: TagItemProps) {
       </div>
 
       {isUserOwned && !tag.isSystem && (
-        <div className="ml-1 flex gap-0.5 opacity-0 transition-all group-hover:opacity-100">
+        <div className="ml-1 flex gap-0.5">
           <button
             onClick={() => setIsEditing(true)}
             className="rounded-md p-1.5 transition-colors hover:bg-emerald-200"
