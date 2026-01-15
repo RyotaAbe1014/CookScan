@@ -11,7 +11,6 @@ type RecipeWithRelations = {
   id: string
   userId: string
   title: string
-  parentRecipeId: string | null
   imageUrl: string | null
   memo: string | null
   createdAt: Date

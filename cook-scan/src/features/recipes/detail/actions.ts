@@ -12,7 +12,6 @@ export type RecipeWithRelations = {
   id: string
   userId: string
   title: string
-  parentRecipeId: string | null
   imageUrl: string | null
   memo: string | null
   createdAt: Date
@@ -73,7 +72,7 @@ export async function getRecipeById(recipeId: string): Promise<Result<RecipeWith
         return failure(Errors.notFound('レシピ'))
       }
 
-      return success(recipe as RecipeWithRelations)
+      return success(recipe)
     } catch (error) {
       console.error('Failed to fetch recipe:', error)
       return failure(Errors.server('レシピの取得に失敗しました'))
