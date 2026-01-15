@@ -77,7 +77,7 @@ export async function getRecipesWithFilters(
         orderBy: { createdAt: 'desc' },
       })
 
-      return success(recipes as RecipeWithRelations[])
+      return success(recipes)
     } catch (error) {
       console.error('Failed to fetch recipes:', error)
       return failure(Errors.server('レシピの取得に失敗しました'))
@@ -105,7 +105,7 @@ export async function getTagCategoriesForUser(
         orderBy: { createdAt: 'asc' },
       })
 
-      return success(tagCategories as TagCategoryWithTags[])
+      return success(tagCategories)
     } catch (error) {
       console.error('Failed to fetch tag categories:', error)
       return failure(Errors.server('タグカテゴリの取得に失敗しました'))

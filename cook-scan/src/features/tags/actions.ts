@@ -342,40 +342,23 @@ export async function getTagCategoriesWithTags(userId: string): Promise<
             include: {
               recipeTags: userId
                 ? {
-                    where: {
-                      recipe: {
-                        userId,
-                      },
+                  where: {
+                    recipe: {
+                      userId,
                     },
-                    select: { recipeId: true },
-                  }
-                : {
-                    select: { recipeId: true },
                   },
+                  select: { recipeId: true },
+                }
+                : {
+                  select: { recipeId: true },
+                },
             },
           },
         },
         orderBy: { createdAt: 'asc' },
       })
 
-      return success({ tagCategories } as {
-        tagCategories: Array<{
-          id: string
-          name: string
-          description: string | null
-          isSystem: boolean
-          userId: string | null
-          tags: Array<{
-            id: string
-            name: string
-            description: string | null
-            isSystem: boolean
-            userId: string | null
-            categoryId: string
-            recipeTags: Array<{ recipeId: string }>
-          }>
-        }>
-      })
+      return success({ tagCategories })
     } catch (error) {
       console.error('Failed to fetch tag categories:', error)
       return failure(Errors.server('タグカテゴリの取得に失敗しました'))
