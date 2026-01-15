@@ -2,13 +2,18 @@
 
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
+import dynamic from 'next/dynamic'
 import type { RecipeMinimal } from '@/types/recipe'
-import DeleteRecipeDialog from '@/features/recipes/delete/delete-recipe-dialog'
 import { Button } from '@/components/ui/button'
 import { PencilIcon } from '@/components/icons/pencil-icon'
 import { DownloadIcon } from '@/components/icons/download-icon'
 import { TrashIcon } from '@/components/icons/trash-icon'
 import { ExclamationTriangleIcon } from '@/components/icons/exclamation-triangle-icon'
+
+const DeleteRecipeDialog = dynamic(
+  () => import('@/features/recipes/delete/delete-recipe-dialog'),
+  { ssr: false }
+)
 
 type Props = {
   recipe: RecipeMinimal

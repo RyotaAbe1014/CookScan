@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react'
 import { useSetAtom } from 'jotai'
+import dynamic from 'next/dynamic'
 import type { RecipeWithRelations } from '@/types/recipe'
 import { RecipeImageSection } from './recipe-image-section'
 import { RecipeSourceInfo } from './recipe-source-info'
@@ -10,10 +11,14 @@ import { RecipeTagsSection } from './recipe-tags-section'
 import { RecipeIngredients } from './recipe-ingredients'
 import { RecipeSteps } from './recipe-steps'
 import { RecipeDetailActions } from './recipe-detail-actions'
-import { CookingTimerManager } from './cooking-timer-manager'
 import { formatMemo, getSourceInfo } from './utils'
 import { cleanupOldTimerStatesAtom } from './atoms/timer-atoms'
 import { InfoCircleIcon } from '@/components/icons/info-circle-icon'
+
+const CookingTimerManager = dynamic(
+  () => import('./cooking-timer-manager').then(mod => ({ default: mod.CookingTimerManager })),
+  { ssr: false }
+)
 
 type RecipeDetailContentProps = {
   recipe: RecipeWithRelations
