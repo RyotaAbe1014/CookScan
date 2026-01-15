@@ -5,8 +5,8 @@ import { CategoryItem } from '../category-item'
 
 // モック: Server Actions
 vi.mock('../actions', () => ({
-  updateTagCategory: vi.fn(() => Promise.resolve({ success: true })),
-  deleteTagCategory: vi.fn(() => Promise.resolve({ success: true })),
+  updateTagCategory: vi.fn(() => Promise.resolve({ ok: true, data: undefined })),
+  deleteTagCategory: vi.fn(() => Promise.resolve({ ok: true, data: undefined })),
 }))
 
 import { updateTagCategory, deleteTagCategory } from '../actions'
@@ -246,7 +246,7 @@ describe('CategoryItem', () => {
 
   it('カテゴリ更新: updateTagCategoryがエラーを返した場合、エラーメッセージが表示される', async () => {
     // Given: updateTagCategoryがエラーを返す
-    vi.mocked(updateTagCategory).mockResolvedValueOnce({ success: false, error: '同名のカテゴリが存在します' })
+    vi.mocked(updateTagCategory).mockResolvedValueOnce({ ok: false, error: { code: 'CONFLICT', message: '同名のカテゴリが存在します' } })
 
     const user = userEvent.setup()
     render(<CategoryItem category={mockCategory} currentUserId="user-1" />)
@@ -353,7 +353,7 @@ describe('CategoryItem', () => {
 
   it('カテゴリ削除: deleteTagCategoryがエラーを返した場合、エラーメッセージが表示される', async () => {
     // Given: deleteTagCategoryがエラーを返す
-    vi.mocked(deleteTagCategory).mockResolvedValueOnce({ success: false, error: '削除に失敗しました' })
+    vi.mocked(deleteTagCategory).mockResolvedValueOnce({ ok: false, error: { code: 'SERVER_ERROR', message: '削除に失敗しました' } })
     mockConfirm.mockReturnValue(true)
 
     const user = userEvent.setup()
@@ -413,7 +413,7 @@ describe('CategoryItem', () => {
     })
 
     // クリーンアップ
-    resolveUpdate!({ success: true })
+    resolveUpdate!({ ok: true, data: undefined })
     await waitFor(() => {
       expect(updateTagCategory).toHaveBeenCalled()
     })
@@ -446,7 +446,7 @@ describe('CategoryItem', () => {
     })
 
     // クリーンアップ
-    resolveUpdate!({ success: true })
+    resolveUpdate!({ ok: true, data: undefined })
     await waitFor(() => {
       expect(updateTagCategory).toHaveBeenCalled()
     })

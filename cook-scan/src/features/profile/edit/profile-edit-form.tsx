@@ -3,6 +3,7 @@
 import { useState, useTransition, FormEvent, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { updateUserProfile } from './actions'
+import { isSuccess as isResultSuccess } from '@/utils/result'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Alert } from '@/components/ui/alert'
@@ -48,8 +49,8 @@ export function ProfileEditForm({ initialData }: ProfileEditFormProps) {
     startTransition(async () => {
       const result = await updateUserProfile({ name })
 
-      if (!result.success) {
-        setError(result.error || 'プロフィールの更新に失敗しました')
+      if (!isResultSuccess(result)) {
+        setError(result.error.message)
       } else {
         setIsSuccess(true)
         // 既存のタイマーをクリア

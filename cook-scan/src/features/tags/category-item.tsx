@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { updateTagCategory, deleteTagCategory } from './actions'
+import { isSuccess } from '@/utils/result'
 import { TagItem } from './tag-item'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -62,12 +63,12 @@ export function CategoryItem({ category, currentUserId }: CategoryItemProps) {
         editDescription.trim() || undefined
       )
 
-      if (result.success) {
+      if (isSuccess(result)) {
         setIsEditing(false)
       } else {
-        setError(result.error || 'カテゴリの更新に失敗しました')
+        setError(result.error.message)
       }
-    } catch (_error) {
+    } catch {
       setError('カテゴリの更新中にエラーが発生しました')
     } finally {
       setIsSubmitting(false)
@@ -75,7 +76,9 @@ export function CategoryItem({ category, currentUserId }: CategoryItemProps) {
   }
 
   const handleDelete = async () => {
-    if (!confirm(`カテゴリ「${category.name}」を削除しますか？この操作は取り消せません。`)) {
+    if (
+      !confirm(`カテゴリ「${category.name}」を削除しますか？この操作は取り消せません。`)
+    ) {
       return
     }
 
@@ -85,12 +88,12 @@ export function CategoryItem({ category, currentUserId }: CategoryItemProps) {
     try {
       const result = await deleteTagCategory(category.id)
 
-      if (!result.success) {
-        setError(result.error || 'カテゴリの削除に失敗しました')
+      if (!isSuccess(result)) {
+        setError(result.error.message)
         setIsSubmitting(false)
       }
       // 成功時はページがリロードされるのでローディング状態を維持
-    } catch (_error) {
+    } catch {
       setError('カテゴリの削除中にエラーが発生しました')
       setIsSubmitting(false)
     }
@@ -109,7 +112,10 @@ export function CategoryItem({ category, currentUserId }: CategoryItemProps) {
         {isEditing ? (
           <form onSubmit={handleEdit} className="space-y-3">
             <div>
-              <label htmlFor={`edit-category-name-${category.id}`} className="block text-sm font-medium text-slate-700">
+              <label
+                htmlFor={`edit-category-name-${category.id}`}
+                className="block text-sm font-medium text-slate-700"
+              >
                 カテゴリ名
               </label>
               <Input
@@ -124,7 +130,10 @@ export function CategoryItem({ category, currentUserId }: CategoryItemProps) {
             </div>
 
             <div>
-              <label htmlFor={`edit-category-description-${category.id}`} className="block text-sm font-medium text-slate-700">
+              <label
+                htmlFor={`edit-category-description-${category.id}`}
+                className="block text-sm font-medium text-slate-700"
+              >
                 説明（任意）
               </label>
               <Textarea
@@ -138,16 +147,10 @@ export function CategoryItem({ category, currentUserId }: CategoryItemProps) {
               />
             </div>
 
-            {error && (
-              <p className="text-sm text-red-600">{error}</p>
-            )}
+            {error && <p className="text-sm text-red-600">{error}</p>}
 
             <div className="flex gap-2">
-              <Button
-                type="submit"
-                isLoading={isSubmitting}
-                size="sm"
-              >
+              <Button type="submit" isLoading={isSubmitting} size="sm">
                 {isSubmitting ? '保存中...' : '保存'}
               </Button>
               <Button
@@ -168,9 +171,7 @@ export function CategoryItem({ category, currentUserId }: CategoryItemProps) {
                 <FolderIcon className="h-6 w-6 text-white" />
               </div>
               <div className="flex-1">
-                <h3 className="text-xl font-bold text-neutral-900">
-                  {category.name}
-                </h3>
+                <h3 className="text-xl font-bold text-neutral-900">{category.name}</h3>
                 <p className="mt-1 flex items-center gap-2 text-sm text-slate-500">
                   {category.isSystem ? (
                     <span className="inline-flex items-center gap-1 rounded-full bg-sky-100 px-2 py-0.5 text-xs font-medium text-sky-700">
@@ -187,7 +188,7 @@ export function CategoryItem({ category, currentUserId }: CategoryItemProps) {
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <div className="flex items-center gap-2 rounded-lg bg-emerald-50 px-4 py-2 border border-emerald-200">
+              <div className="flex items-center gap-2 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-2">
                 <TagIcon className="h-5 w-5 text-emerald-600" />
                 <span className="text-sm font-semibold text-neutral-900">
                   {category.tags.length}
@@ -225,9 +226,7 @@ export function CategoryItem({ category, currentUserId }: CategoryItemProps) {
 
       <CardContent padding="sm" className="px-6">
         {category.tags.length === 0 ? (
-          <p className="text-sm text-slate-500">
-            このカテゴリにはまだタグがありません。
-          </p>
+          <p className="text-sm text-slate-500">このカテゴリにはまだタグがありません。</p>
         ) : (
           <div className="flex flex-wrap gap-3">
             {category.tags.map((tag) => {
@@ -235,12 +234,7 @@ export function CategoryItem({ category, currentUserId }: CategoryItemProps) {
               const isTagUserOwned = tag.userId === currentUserId
 
               return (
-                <TagItem
-                  key={tag.id}
-                  tag={tag}
-                  usageCount={usageCount}
-                  isUserOwned={isTagUserOwned}
-                />
+                <TagItem key={tag.id} tag={tag} usageCount={usageCount} isUserOwned={isTagUserOwned} />
               )
             })}
           </div>

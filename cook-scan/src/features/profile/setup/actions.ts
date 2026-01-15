@@ -2,25 +2,38 @@
 
 import { prisma } from '@/lib/prisma'
 import { redirect } from 'next/navigation'
-import { checkUserProfile } from '@/features/auth/auth-utils'
+import { checkUserProfile, type UserProfile } from '@/features/auth/auth-utils'
+import type { Result } from '@/utils/result'
+import { success, failure, Errors } from '@/utils/result'
 
 /**
  * 既存のプロフィールをチェック
+ * 注: この関数は認証前に呼び出される可能性があるため、withAuthを使用しない
  */
-export async function checkExistingProfile(authId: string) {
+export async function checkExistingProfile(
+  authId: string
+): Promise<Result<{ exists: boolean; profile: UserProfile | null }>> {
   try {
     const existingProfile = await prisma.user.findUnique({
       where: { authId },
     })
 
-    return { exists: !!existingProfile, profile: existingProfile }
+    return success({ exists: !!existingProfile, profile: existingProfile })
   } catch (error) {
     console.error('Failed to check existing profile:', error)
-    return { exists: false, profile: null }
+    return failure(Errors.server('プロフィールの確認に失敗しました'))
   }
 }
 
-export async function createProfile(authId: string, email: string, name: string) {
+/**
+ * プロフィールを作成
+ * 成功時はダッシュボードにリダイレクト
+ */
+export async function createProfile(
+  authId: string,
+  email: string,
+  name: string
+): Promise<Result<void>> {
   // 現在のセッションユーザーを取得
   const { hasAuth, authUser, hasProfile } = await checkUserProfile()
 
@@ -31,12 +44,12 @@ export async function createProfile(authId: string, email: string, name: string)
 
   // authIdが現在のユーザーと一致するか検証
   if (authUser.id !== authId) {
-    throw new Error('認証エラー: ユーザーIDが一致しません')
+    return failure(Errors.forbidden('認証エラー: ユーザーIDが一致しません'))
   }
 
   // 既にプロフィールが存在する場合はエラー
   if (hasProfile) {
-    throw new Error('プロフィールは既に作成されています')
+    return failure(Errors.conflict('プロフィールは既に作成されています'))
   }
 
   try {
@@ -49,7 +62,7 @@ export async function createProfile(authId: string, email: string, name: string)
     })
   } catch (error) {
     console.error('Failed to create profile:', error)
-    throw new Error('プロフィールの作成に失敗しました')
+    return failure(Errors.server('プロフィールの作成に失敗しました'))
   }
 
   redirect('/dashboard')

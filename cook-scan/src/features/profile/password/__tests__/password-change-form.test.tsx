@@ -50,7 +50,7 @@ describe('PasswordChangeForm', () => {
 
   it('正しいデータでupdatePasswordを呼び出す', async () => {
     const user = userEvent.setup()
-    vi.mocked(updatePassword).mockResolvedValue({ success: true })
+    vi.mocked(updatePassword).mockResolvedValue({ ok: true, data: undefined })
 
     render(<PasswordChangeForm />)
 
@@ -78,8 +78,8 @@ describe('PasswordChangeForm', () => {
   it('失敗時にエラーメッセージを表示する', async () => {
     const user = userEvent.setup()
     vi.mocked(updatePassword).mockResolvedValue({
-      success: false,
-      error: '現在のパスワードが正しくありません',
+      ok: false,
+      error: { code: 'VALIDATION_ERROR', message: '現在のパスワードが正しくありません' },
     })
 
     render(<PasswordChangeForm />)
@@ -106,7 +106,7 @@ describe('PasswordChangeForm', () => {
   it('処理中は送信ボタンを無効化する', async () => {
     const user = userEvent.setup()
     vi.mocked(updatePassword).mockImplementation(
-      () => new Promise((resolve) => setTimeout(() => resolve({ success: true }), 100))
+      () => new Promise((resolve) => setTimeout(() => resolve({ ok: true, data: undefined }), 100))
     )
 
     render(<PasswordChangeForm />)
@@ -132,7 +132,7 @@ describe('PasswordChangeForm', () => {
   it('処理中はキャンセルボタンを無効化する', async () => {
     const user = userEvent.setup()
     vi.mocked(updatePassword).mockImplementation(
-      () => new Promise((resolve) => setTimeout(() => resolve({ success: true }), 100))
+      () => new Promise((resolve) => setTimeout(() => resolve({ ok: true, data: undefined }), 100))
     )
 
     render(<PasswordChangeForm />)
@@ -160,7 +160,7 @@ describe('PasswordChangeForm', () => {
   it('処理中はローディングテキストを表示する', async () => {
     const user = userEvent.setup()
     vi.mocked(updatePassword).mockImplementation(
-      () => new Promise((resolve) => setTimeout(() => resolve({ success: true }), 100))
+      () => new Promise((resolve) => setTimeout(() => resolve({ ok: true, data: undefined }), 100))
     )
 
     render(<PasswordChangeForm />)
@@ -185,7 +185,7 @@ describe('PasswordChangeForm', () => {
   it('入力フィールドが処理中に無効化される', async () => {
     const user = userEvent.setup()
     vi.mocked(updatePassword).mockImplementation(
-      () => new Promise((resolve) => setTimeout(() => resolve({ success: true }), 100))
+      () => new Promise((resolve) => setTimeout(() => resolve({ ok: true, data: undefined }), 100))
     )
 
     render(<PasswordChangeForm />)

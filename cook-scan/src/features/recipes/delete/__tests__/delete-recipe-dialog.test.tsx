@@ -56,7 +56,7 @@ describe('DeleteRecipeDialog', () => {
   describe('削除操作', () => {
     it('削除成功時、/recipesにリダイレクトされる', async () => {
       // Given: deleteRecipeが成功を返す
-      vi.mocked(deleteRecipe).mockResolvedValueOnce({ success: true })
+      vi.mocked(deleteRecipe).mockResolvedValueOnce({ ok: true, data: undefined })
 
       const user = userEvent.setup()
       render(<DeleteRecipeDialog {...defaultProps} />)
@@ -77,8 +77,8 @@ describe('DeleteRecipeDialog', () => {
       // Given: deleteRecipeが失敗を返す
       const errorMessage = 'レシピが見つかりません'
       vi.mocked(deleteRecipe).mockResolvedValueOnce({
-        success: false,
-        error: errorMessage
+        ok: false,
+        error: { code: 'NOT_FOUND', message: errorMessage }
       })
 
       const user = userEvent.setup()
@@ -150,9 +150,9 @@ describe('DeleteRecipeDialog', () => {
   describe('ローディング状態', () => {
     it('削除中は両ボタンがdisabledになる', async () => {
       // Given: deleteRecipeが遅延するようモック
-      let resolveDelete: (value: { success: boolean }) => void
-      const deletePromise = new Promise<{ success: boolean }>((resolve) => {
-        resolveDelete = resolve
+      let resolveDelete: () => void
+      const deletePromise = new Promise<{ ok: true; data: undefined }>((resolve) => {
+        resolveDelete = () => resolve({ ok: true, data: undefined })
       })
       vi.mocked(deleteRecipe).mockReturnValueOnce(deletePromise)
 
@@ -171,7 +171,7 @@ describe('DeleteRecipeDialog', () => {
       })
 
       // クリーンアップ: Promiseを解決し、状態更新を待つ
-      resolveDelete!({ success: true })
+      resolveDelete!()
       await waitFor(() => {
         expect(defaultProps.onClose).toHaveBeenCalled()
       })
@@ -179,9 +179,9 @@ describe('DeleteRecipeDialog', () => {
 
     it('削除中は削除ボタンにローディングテキストが表示される', async () => {
       // Given: deleteRecipeが遅延するようモック
-      let resolveDelete: (value: { success: boolean }) => void
-      const deletePromise = new Promise<{ success: boolean }>((resolve) => {
-        resolveDelete = resolve
+      let resolveDelete: () => void
+      const deletePromise = new Promise<{ ok: true; data: undefined }>((resolve) => {
+        resolveDelete = () => resolve({ ok: true, data: undefined })
       })
       vi.mocked(deleteRecipe).mockReturnValueOnce(deletePromise)
 
@@ -198,7 +198,7 @@ describe('DeleteRecipeDialog', () => {
       })
 
       // クリーンアップ: Promiseを解決し、状態更新を待つ
-      resolveDelete!({ success: true })
+      resolveDelete!()
       await waitFor(() => {
         expect(defaultProps.onClose).toHaveBeenCalled()
       })

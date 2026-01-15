@@ -3,6 +3,8 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { z } from 'zod'
+import type { Result } from '@/utils/result'
+import { failure, Errors } from '@/utils/result'
 
 // バリデーションスキーマ
 const passwordChangeSchema = z
@@ -24,13 +26,11 @@ const passwordChangeSchema = z
 
 export type PasswordChangeFormData = z.infer<typeof passwordChangeSchema>
 
-export type PasswordChangeResponse =
-  | { success: true }
-  | { success: false; error: string }
-
-export async function updatePassword(
-  formData: PasswordChangeFormData
-): Promise<PasswordChangeResponse> {
+/**
+ * パスワードを更新
+ * 成功時はログインページにリダイレクト
+ */
+export async function updatePassword(formData: PasswordChangeFormData): Promise<Result<void>> {
   const supabase = await createClient()
 
   // 1. セッション確認（認証チェック）
@@ -40,19 +40,15 @@ export async function updatePassword(
   } = await supabase.auth.getUser()
 
   if (userError || !user) {
-    return {
-      success: false,
-      error: 'ログインセッションが無効です。再度ログインしてください。',
-    }
+    return failure(
+      Errors.unauthenticated('ログインセッションが無効です。再度ログインしてください。')
+    )
   }
 
   // 2. バリデーション
   const validationResult = passwordChangeSchema.safeParse(formData)
   if (!validationResult.success) {
-    return {
-      success: false,
-      error: validationResult.error.errors[0].message,
-    }
+    return failure(Errors.validation(validationResult.error.errors[0].message))
   }
 
   const { currentPassword, newPassword } = validationResult.data
@@ -64,10 +60,7 @@ export async function updatePassword(
   })
 
   if (verifyError) {
-    return {
-      success: false,
-      error: '現在のパスワードが正しくありません',
-    }
+    return failure(Errors.validation('現在のパスワードが正しくありません'))
   }
 
   // 4. パスワード更新
@@ -76,10 +69,9 @@ export async function updatePassword(
   })
 
   if (updateError) {
-    return {
-      success: false,
-      error: 'パスワードの更新に失敗しました。時間をおいて再度お試しください。',
-    }
+    return failure(
+      Errors.server('パスワードの更新に失敗しました。時間をおいて再度お試しください。')
+    )
   }
 
   // 5. 全デバイスからログアウト（セキュリティベストプラクティス）

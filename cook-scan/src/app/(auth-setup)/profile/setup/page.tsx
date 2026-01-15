@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { checkExistingProfile } from '@/features/profile/setup/actions'
 import { ProfileSetupPageContent } from '@/features/profile/setup/profile-setup-page-content'
+import { isSuccess } from '@/utils/result'
 
 export default async function ProfileSetupPage() {
   const supabase = await createClient()
@@ -12,9 +13,9 @@ export default async function ProfileSetupPage() {
   }
 
   // 既にプロフィールが存在する場合はホームへリダイレクト
-  const { exists } = await checkExistingProfile(user.id)
+  const result = await checkExistingProfile(user.id)
 
-  if (exists) {
+  if (isSuccess(result) && result.data.exists) {
     redirect('/')
   }
 

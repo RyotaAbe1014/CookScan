@@ -1,17 +1,20 @@
 import { getRecipeById } from '@/features/recipes/detail/actions'
 import RecipeEditForm from '@/features/recipes/edit/recipe-edit-form'
 import { getAllTagsForRecipe } from '@/features/tags/actions'
+import { isSuccess } from '@/utils/result'
 import { notFound } from 'next/navigation'
 
 export async function RecipeEditPageContent({ recipeId }: { recipeId: string }) {
-  const [{ recipe, error }, tagCategories] = await Promise.all([
+  const [recipeResult, tagsResult] = await Promise.all([
     getRecipeById(recipeId),
-    getAllTagsForRecipe()
+    getAllTagsForRecipe(),
   ])
 
-  if (error || !recipe) {
+  if (!isSuccess(recipeResult)) {
     notFound()
   }
 
-  return <RecipeEditForm recipe={recipe} tagCategories={tagCategories} />
+  const tagCategories = isSuccess(tagsResult) ? tagsResult.data : []
+
+  return <RecipeEditForm recipe={recipeResult.data} tagCategories={tagCategories} />
 }

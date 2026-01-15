@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { updateTag, deleteTag } from './actions'
+import { isSuccess } from '@/utils/result'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
@@ -40,18 +41,14 @@ export function TagItem({ tag, usageCount, isUserOwned }: TagItemProps) {
     setIsSubmitting(true)
 
     try {
-      const result = await updateTag(
-        tag.id,
-        editName.trim(),
-        editDescription.trim() || undefined
-      )
+      const result = await updateTag(tag.id, editName.trim(), editDescription.trim() || undefined)
 
-      if (result.success) {
+      if (isSuccess(result)) {
         setIsEditing(false)
       } else {
-        setError(result.error || 'タグの更新に失敗しました')
+        setError(result.error.message)
       }
-    } catch (_error) {
+    } catch {
       setError('タグの更新中にエラーが発生しました')
     } finally {
       setIsSubmitting(false)
@@ -69,12 +66,12 @@ export function TagItem({ tag, usageCount, isUserOwned }: TagItemProps) {
     try {
       const result = await deleteTag(tag.id)
 
-      if (!result.success) {
-        setError(result.error || 'タグの削除に失敗しました')
+      if (!isSuccess(result)) {
+        setError(result.error.message)
         setIsSubmitting(false)
       }
       // 成功時はページがリロードされるのでローディング状態を維持
-    } catch (_error) {
+    } catch {
       setError('タグの削除中にエラーが発生しました')
       setIsSubmitting(false)
     }
@@ -92,7 +89,10 @@ export function TagItem({ tag, usageCount, isUserOwned }: TagItemProps) {
       <div className="rounded-lg border-2 border-emerald-300 bg-white p-4">
         <form onSubmit={handleEdit} className="space-y-3">
           <div>
-            <label htmlFor={`edit-tag-name-${tag.id}`} className="block text-xs font-medium text-slate-700">
+            <label
+              htmlFor={`edit-tag-name-${tag.id}`}
+              className="block text-xs font-medium text-slate-700"
+            >
               タグ名
             </label>
             <Input
@@ -107,7 +107,10 @@ export function TagItem({ tag, usageCount, isUserOwned }: TagItemProps) {
           </div>
 
           <div>
-            <label htmlFor={`edit-tag-description-${tag.id}`} className="block text-xs font-medium text-slate-700">
+            <label
+              htmlFor={`edit-tag-description-${tag.id}`}
+              className="block text-xs font-medium text-slate-700"
+            >
               説明（任意）
             </label>
             <Textarea
@@ -121,16 +124,10 @@ export function TagItem({ tag, usageCount, isUserOwned }: TagItemProps) {
             />
           </div>
 
-          {error && (
-            <p className="text-xs text-red-600">{error}</p>
-          )}
+          {error && <p className="text-xs text-red-600">{error}</p>}
 
           <div className="flex gap-2">
-            <Button
-              type="submit"
-              isLoading={isSubmitting}
-              size="sm"
-            >
+            <Button type="submit" isLoading={isSubmitting} size="sm">
               {isSubmitting ? '保存中...' : '保存'}
             </Button>
             <Button
@@ -149,10 +146,10 @@ export function TagItem({ tag, usageCount, isUserOwned }: TagItemProps) {
   }
 
   return (
-    <div className="group relative inline-flex items-center gap-2 rounded-lg bg-emerald-50 px-4 py-2.5 border border-emerald-200 transition-all hover:shadow-sm hover:border-emerald-300">
+    <div className="group relative inline-flex items-center gap-2 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-2.5 transition-all hover:border-emerald-300 hover:shadow-sm">
       <TagIcon className="h-4 w-4 text-emerald-600" />
       <span className="font-semibold text-neutral-900">{tag.name}</span>
-      <div className="flex items-center gap-1 rounded-md bg-white px-2 py-1 border border-slate-200">
+      <div className="flex items-center gap-1 rounded-md border border-slate-200 bg-white px-2 py-1">
         <BookOpenIcon className="h-3.5 w-3.5 text-emerald-600" />
         <span className="text-xs font-bold text-neutral-900">{usageCount}</span>
       </div>

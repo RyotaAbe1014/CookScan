@@ -2,10 +2,10 @@
 export type SourceInfo = {
   id: string
   recipeId: string
-  sourceType?: string | null
-  sourceName?: string | null
-  sourceUrl?: string | null
-  pageNumber?: string | null
+  sourceType: string | null
+  sourceName: string | null
+  sourceUrl: string | null
+  pageNumber: string | null
   createdAt: Date
   updatedAt: Date
 }

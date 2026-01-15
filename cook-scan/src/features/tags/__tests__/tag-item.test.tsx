@@ -5,8 +5,8 @@ import { TagItem } from '../tag-item'
 
 // モック: Server Actions
 vi.mock('../actions', () => ({
-  updateTag: vi.fn(() => Promise.resolve({ success: true })),
-  deleteTag: vi.fn(() => Promise.resolve({ success: true })),
+  updateTag: vi.fn(() => Promise.resolve({ ok: true, data: undefined })),
+  deleteTag: vi.fn(() => Promise.resolve({ ok: true, data: undefined })),
 }))
 
 import { updateTag, deleteTag } from '../actions'
@@ -204,7 +204,7 @@ describe('TagItem', () => {
 
   it('タグ更新: updateTagがエラーを返した場合、エラーメッセージが表示される', async () => {
     // Given: updateTagがエラーを返す
-    vi.mocked(updateTag).mockResolvedValueOnce({ success: false, error: '同名のタグが存在します' })
+    vi.mocked(updateTag).mockResolvedValueOnce({ ok: false, error: { code: 'CONFLICT', message: '同名のタグが存在します' } })
 
     const user = userEvent.setup()
     render(<TagItem tag={mockTag} usageCount={5} isUserOwned={true} />)
@@ -305,7 +305,7 @@ describe('TagItem', () => {
 
   it('タグ削除: deleteTagがエラーを返した場合、エラーメッセージが表示される', async () => {
     // Given: deleteTagがエラーを返す
-    vi.mocked(deleteTag).mockResolvedValueOnce({ success: false, error: '削除に失敗しました' })
+    vi.mocked(deleteTag).mockResolvedValueOnce({ ok: false, error: { code: 'SERVER_ERROR', message: '削除に失敗しました' } })
     mockConfirm.mockReturnValue(true)
 
     const user = userEvent.setup()
@@ -362,7 +362,7 @@ describe('TagItem', () => {
     })
 
     // クリーンアップ
-    resolveUpdate!({ success: true })
+    resolveUpdate!({ ok: true, data: undefined })
     await waitFor(() => {
       expect(updateTag).toHaveBeenCalled()
     })
@@ -394,7 +394,7 @@ describe('TagItem', () => {
     })
 
     // クリーンアップ
-    resolveUpdate!({ success: true })
+    resolveUpdate!({ ok: true, data: undefined })
     await waitFor(() => {
       expect(updateTag).toHaveBeenCalled()
     })
@@ -421,7 +421,7 @@ describe('TagItem', () => {
     })
 
     // クリーンアップ
-    resolveDelete!({ success: true })
+    resolveDelete!({ ok: true, data: undefined })
     await waitFor(() => {
       expect(deleteTag).toHaveBeenCalled()
     })
@@ -429,7 +429,7 @@ describe('TagItem', () => {
 
   it('エラー表示: 編集モード外でエラーが発生した場合、絶対配置でエラーが表示される', async () => {
     // Given: 削除がエラーを返す
-    vi.mocked(deleteTag).mockResolvedValueOnce({ success: false, error: '削除エラー' })
+    vi.mocked(deleteTag).mockResolvedValueOnce({ ok: false, error: { code: 'SERVER_ERROR', message: '削除エラー' } })
     mockConfirm.mockReturnValue(true)
 
     const user = userEvent.setup()

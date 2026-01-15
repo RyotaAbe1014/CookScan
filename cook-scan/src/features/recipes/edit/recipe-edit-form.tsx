@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 
 import { updateRecipe } from './actions'
+import { isSuccess } from '@/utils/result'
 import type { UpdateRecipeRequest } from './types'
 import type { RecipeFormTagCategory } from '@/features/recipes/types/tag'
 import { Input } from '@/components/ui/input'
@@ -186,14 +187,14 @@ export default function RecipeEditForm({ recipe, tagCategories }: Props) {
 
       const result = await updateRecipe(request)
 
-      if (result.success) {
+      if (isSuccess(result)) {
         router.push(`/recipes/${recipe.id}`)
       } else {
-        setError(result.error || 'レシピの更新に失敗しました')
+        setError(result.error.message)
         setIsSubmitting(false)
       }
-    } catch (error) {
-      console.error('Error updating recipe:', error)
+    } catch (err) {
+      console.error('Error updating recipe:', err)
       setError('エラーが発生しました')
       setIsSubmitting(false)
     }

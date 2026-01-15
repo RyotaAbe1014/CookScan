@@ -1,9 +1,11 @@
 'use server'
 
 import { prisma } from '@/lib/prisma'
-import { checkUserProfile } from '@/features/auth/auth-utils'
+import { checkUserProfile, type UserProfile } from '@/features/auth/auth-utils'
 import { z } from 'zod'
-import { refresh } from 'next/cache'
+import { revalidatePath } from 'next/cache'
+import type { Result } from '@/utils/result'
+import { success, failure, Errors } from '@/utils/result'
 
 // バリデーションスキーマ
 const profileUpdateSchema = z.object({
@@ -20,48 +22,39 @@ const profileUpdateSchema = z.object({
 /**
  * 現在のユーザープロフィールを取得
  */
-export async function getUserProfile() {
+export async function getUserProfile(): Promise<Result<UserProfile>> {
   const { hasAuth, authUser, profile } = await checkUserProfile()
 
   if (!hasAuth || !authUser) {
-    throw new Error('認証エラー')
+    return failure(Errors.unauthenticated())
   }
 
   if (!profile) {
-    throw new Error('プロフィールが見つかりません')
+    return failure(Errors.notFound('プロフィール'))
   }
 
-  return profile
+  return success(profile)
 }
 
 /**
  * ユーザープロフィールを更新
  */
-export async function updateUserProfile(data: { name: string }) {
+export async function updateUserProfile(data: { name: string }): Promise<Result<void>> {
   // バリデーション
   const validation = profileUpdateSchema.safeParse(data)
   if (!validation.success) {
-    return {
-      success: false,
-      error: validation.error.errors[0].message,
-    }
+    return failure(Errors.validation(validation.error.errors[0].message))
   }
 
   // 認証確認
   const { hasAuth, authUser, profile } = await checkUserProfile()
 
   if (!hasAuth || !authUser) {
-    return {
-      success: false,
-      error: '認証エラーが発生しました',
-    }
+    return failure(Errors.unauthenticated())
   }
 
   if (!profile) {
-    return {
-      success: false,
-      error: 'プロフィールが見つかりません',
-    }
+    return failure(Errors.notFound('プロフィール'))
   }
 
   try {
@@ -70,18 +63,14 @@ export async function updateUserProfile(data: { name: string }) {
       where: { authId: authUser.id },
       data: {
         name: validation.data.name,
-        // updatedAtは@updatedAtにより自動更新
       },
     })
 
-    refresh()
+    revalidatePath('/settings/profile')
 
-    return { success: true }
+    return success(undefined)
   } catch (error) {
     console.error('Failed to update profile:', error)
-    return {
-      success: false,
-      error: 'プロフィールの更新に失敗しました',
-    }
+    return failure(Errors.server('プロフィールの更新に失敗しました'))
   }
 }

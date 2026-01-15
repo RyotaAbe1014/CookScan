@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from 'react'
 import { updatePassword, type PasswordChangeFormData } from './actions'
+import { isSuccess } from '@/utils/result'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Alert } from '@/components/ui/alert'
@@ -25,11 +26,10 @@ export function PasswordChangeForm() {
 
     startTransition(async () => {
       const result = await updatePassword(formData)
-
-      if (!result.success) {
-        setError(result.error!)
+      // 成功時は自動的に /login にリダイレクトされるため、失敗時のみエラーを設定
+      if (!isSuccess(result)) {
+        setError(result.error.message)
       }
-      // 成功時は自動的に /login にリダイレクトされるため、ここでは何もしない
     })
   }
 

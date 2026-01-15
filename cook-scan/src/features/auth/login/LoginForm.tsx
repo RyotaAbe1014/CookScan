@@ -1,10 +1,12 @@
 'use client'
 
-import { useTransition } from 'react'
+import { useState, useTransition } from 'react'
 import { login } from '@/features/auth/actions'
+import { isSuccess } from '@/utils/result'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { FormField } from '@/components/ui/form-field'
+import { Alert } from '@/components/ui/alert'
 import { BookIcon } from '@/components/icons/book-icon'
 import { MailIcon } from '@/components/icons/mail-icon'
 import { LockIcon } from '@/components/icons/lock-icon'
@@ -13,10 +15,16 @@ import { UserAddIcon } from '@/components/icons/user-add-icon'
 
 export const LoginForm = () => {
   const [isPending, startTransition] = useTransition()
+  const [error, setError] = useState<string | null>(null)
 
   const handleLogin = async (formData: FormData) => {
+    setError(null)
     startTransition(async () => {
-      await login(formData)
+      const result = await login(formData)
+      // 成功時はリダイレクトされるため、失敗時のみエラーを設定
+      if (!isSuccess(result)) {
+        setError(result.error.message)
+      }
     })
   }
 
@@ -42,6 +50,9 @@ export const LoginForm = () => {
           </div>
 
           <form className="space-y-6">
+            {/* Error message */}
+            {error && <Alert variant="error">{error}</Alert>}
+
             <div className="space-y-5">
               {/* Email input */}
               <FormField

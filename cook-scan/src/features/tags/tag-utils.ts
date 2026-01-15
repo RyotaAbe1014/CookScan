@@ -15,7 +15,7 @@ export async function validateTagIdsForUser(
     return { validTagIds: [], isValid: true }
   }
 
-  const validTags = await prisma.tag.findMany({
+  const validTags: Array<{ id: string }> = await prisma.tag.findMany({
     where: {
       id: { in: uniqueTagIds },
       OR: [

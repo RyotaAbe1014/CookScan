@@ -6,7 +6,7 @@ import { login } from '@/features/auth/actions'
 
 // login actionをモック化
 vi.mock('@/features/auth/actions', () => ({
-  login: vi.fn(),
+  login: vi.fn(() => Promise.resolve({ ok: true, data: undefined })),
 }))
 
 describe('LoginForm', () => {

@@ -584,7 +584,7 @@ describe('RecipeEditForm', () => {
     it('更新成功時、レシピ詳細ページにリダイレクトされる', async () => {
       // Given: 有効なデータが入力されている
       const user = userEvent.setup()
-      vi.mocked(updateRecipe).mockResolvedValueOnce({ success: true })
+      vi.mocked(updateRecipe).mockResolvedValueOnce({ ok: true, data: { recipeId: 'recipe-123' } })
 
       render(<RecipeEditForm tagCategories={mockTagCategories} recipe={mockRecipe} />)
 
@@ -633,8 +633,8 @@ describe('RecipeEditForm', () => {
       // Given: updateRecipeが失敗を返す
       const user = userEvent.setup()
       vi.mocked(updateRecipe).mockResolvedValueOnce({
-        success: false,
-        error: '更新に失敗しました',
+        ok: false,
+        error: { code: 'SERVER_ERROR', message: '更新に失敗しました' },
       })
 
       render(<RecipeEditForm tagCategories={mockTagCategories} recipe={mockRecipe} />)
@@ -703,7 +703,7 @@ describe('RecipeEditForm', () => {
         ...mockRecipe,
         sourceInfo: [],
       }
-      vi.mocked(updateRecipe).mockResolvedValueOnce({ success: true })
+      vi.mocked(updateRecipe).mockResolvedValueOnce({ ok: true, data: { recipeId: 'recipe-123' } })
 
       render(<RecipeEditForm tagCategories={mockTagCategories} recipe={recipeWithoutSource} />)
 
@@ -730,9 +730,9 @@ describe('RecipeEditForm', () => {
     it('送信中はボタンが無効になる', async () => {
       // Given: updateRecipeが遅延するようモック
       const user = userEvent.setup()
-      let resolveUpdate: (value: { success: boolean }) => void
-      const updatePromise = new Promise<{ success: boolean }>((resolve) => {
-        resolveUpdate = resolve
+      let resolveUpdate: () => void
+      const updatePromise = new Promise<{ ok: true; data: { recipeId: string } }>((resolve) => {
+        resolveUpdate = () => resolve({ ok: true, data: { recipeId: 'recipe-123' } })
       })
       vi.mocked(updateRecipe).mockReturnValueOnce(updatePromise)
 
@@ -752,7 +752,7 @@ describe('RecipeEditForm', () => {
       })
 
       // クリーンアップ
-      resolveUpdate!({ success: true })
+      resolveUpdate!()
       await waitFor(() => {
         expect(mockPush).toHaveBeenCalled()
       })
@@ -761,9 +761,9 @@ describe('RecipeEditForm', () => {
     it('送信中はローディングテキストが表示される', async () => {
       // Given: updateRecipeが遅延するようモック
       const user = userEvent.setup()
-      let resolveUpdate: (value: { success: boolean }) => void
-      const updatePromise = new Promise<{ success: boolean }>((resolve) => {
-        resolveUpdate = resolve
+      let resolveUpdate: () => void
+      const updatePromise = new Promise<{ ok: true; data: { recipeId: string } }>((resolve) => {
+        resolveUpdate = () => resolve({ ok: true, data: { recipeId: 'recipe-123' } })
       })
       vi.mocked(updateRecipe).mockReturnValueOnce(updatePromise)
 
@@ -783,7 +783,7 @@ describe('RecipeEditForm', () => {
       })
 
       // クリーンアップ
-      resolveUpdate!({ success: true })
+      resolveUpdate!()
       await waitFor(() => {
         expect(mockPush).toHaveBeenCalled()
       })

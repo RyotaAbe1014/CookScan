@@ -5,8 +5,8 @@ import { TagCreateForm } from '../tag-create-form'
 
 // モック: Server Actions
 vi.mock('../actions', () => ({
-  createTag: vi.fn(() => Promise.resolve({ success: true })),
-  createTagCategory: vi.fn(() => Promise.resolve({ success: true })),
+  createTag: vi.fn(() => Promise.resolve({ ok: true, data: { tagId: 'test-tag-id' } })),
+  createTagCategory: vi.fn(() => Promise.resolve({ ok: true, data: { categoryId: 'test-category-id' } })),
 }))
 
 import { createTag, createTagCategory } from '../actions'
@@ -184,7 +184,7 @@ describe('TagCreateForm', () => {
 
     it('createTagがエラーを返した場合、エラーメッセージが表示される', async () => {
       // Given: createTagがエラーを返す
-      vi.mocked(createTag).mockResolvedValueOnce({ success: false, error: '同名のタグが存在します' })
+      vi.mocked(createTag).mockResolvedValueOnce({ ok: false, error: { code: 'CONFLICT', message: '同名のタグが存在します' } })
 
       const user = userEvent.setup()
       render(<TagCreateForm categories={mockCategories} />)
@@ -222,9 +222,9 @@ describe('TagCreateForm', () => {
   describe('タグ作成フォーム - ローディング状態', () => {
     it('送信中はローディングテキストが表示される', async () => {
       // Given: createTagが遅延する
-      let resolveCreate: (value: { success: true; tagId: string } | { success: false; error: string }) => void
-      const createPromise = new Promise<{ success: true; tagId: string } | { success: false; error: string }>((resolve) => {
-        resolveCreate = resolve
+      let resolveCreate: () => void
+      const createPromise = new Promise<{ ok: true; data: { tagId: string } }>((resolve) => {
+        resolveCreate = () => resolve({ ok: true, data: { tagId: 'test-tag-id' } })
       })
       vi.mocked(createTag).mockReturnValueOnce(createPromise)
 
@@ -242,7 +242,7 @@ describe('TagCreateForm', () => {
       })
 
       // クリーンアップ
-      resolveCreate!({ success: true, tagId: 'test-tag-id' })
+      resolveCreate!()
       await waitFor(() => {
         expect(createTag).toHaveBeenCalled()
       })
@@ -308,7 +308,7 @@ describe('TagCreateForm', () => {
 
     it('createTagCategoryがエラーを返した場合、エラーメッセージが表示される', async () => {
       // Given: createTagCategoryがエラーを返す
-      vi.mocked(createTagCategory).mockResolvedValueOnce({ success: false, error: '同名のカテゴリが存在します' })
+      vi.mocked(createTagCategory).mockResolvedValueOnce({ ok: false, error: { code: 'CONFLICT', message: '同名のカテゴリが存在します' } })
 
       const user = userEvent.setup()
       render(<TagCreateForm categories={mockCategories} />)
@@ -348,9 +348,9 @@ describe('TagCreateForm', () => {
   describe('カテゴリ作成フォーム - ローディング状態', () => {
     it('送信中はローディングテキストが表示される', async () => {
       // Given: createTagCategoryが遅延する
-      let resolveCreate: (value: { success: true; categoryId: string } | { success: false; error: string }) => void
-      const createPromise = new Promise<{ success: true; categoryId: string } | { success: false; error: string }>((resolve) => {
-        resolveCreate = resolve
+      let resolveCreate: () => void
+      const createPromise = new Promise<{ ok: true; data: { categoryId: string } }>((resolve) => {
+        resolveCreate = () => resolve({ ok: true, data: { categoryId: 'test-category-id' } })
       })
       vi.mocked(createTagCategory).mockReturnValueOnce(createPromise)
 
@@ -369,7 +369,7 @@ describe('TagCreateForm', () => {
       })
 
       // クリーンアップ
-      resolveCreate!({ success: true, categoryId: 'test-category-id' })
+      resolveCreate!()
       await waitFor(() => {
         expect(createTagCategory).toHaveBeenCalled()
       })

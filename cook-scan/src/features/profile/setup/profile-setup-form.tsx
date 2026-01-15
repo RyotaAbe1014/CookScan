@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from 'react'
 import { createProfile } from './actions'
+import { isSuccess } from '@/utils/result'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Alert } from '@/components/ui/alert'
@@ -26,11 +27,10 @@ export default function ProfileSetupForm({ userId, userEmail }: ProfileSetupForm
     setError(null)
 
     startTransition(async () => {
-      try {
-        await createProfile(userId, userEmail, name)
-      } catch (err) {
-        const errorMessage = err instanceof Error ? err.message : 'プロフィールの作成に失敗しました'
-        setError(errorMessage)
+      const result = await createProfile(userId, userEmail, name)
+      // 成功時はリダイレクトされるため、失敗時のみエラーを設定
+      if (!isSuccess(result)) {
+        setError(result.error.message)
       }
     })
   }

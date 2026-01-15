@@ -18,7 +18,7 @@ vi.mock('@/features/auth/auth-utils', () => ({
 }))
 
 vi.mock('next/cache', () => ({
-  refresh: vi.fn(),
+  revalidatePath: vi.fn(),
 }))
 
 describe('getUserProfile', () => {
@@ -47,11 +47,14 @@ describe('getUserProfile', () => {
     // When: getUserProfile()を呼び出す
     const result = await getUserProfile()
 
-    // Then: プロフィールが返却される
-    expect(result).toEqual(mockProfile)
+    // Then: 成功結果が返却される
+    expect(result.ok).toBe(true)
+    if (result.ok) {
+      expect(result.data).toEqual(mockProfile)
+    }
   })
 
-  it('エラー: 未認証ユーザーの場合はエラーをスロー', async () => {
+  it('エラー: 未認証ユーザーの場合はエラーを返す', async () => {
     // Given: 未認証ユーザー
     vi.mocked(checkUserProfile).mockResolvedValueOnce({
       hasAuth: false,
@@ -60,11 +63,17 @@ describe('getUserProfile', () => {
       profile: undefined,
     } as any)
 
-    // When & Then: エラーがスローされる
-    await expect(getUserProfile()).rejects.toThrow('認証エラー')
+    // When: getUserProfile()を呼び出す
+    const result = await getUserProfile()
+
+    // Then: 認証エラーが返される
+    expect(result.ok).toBe(false)
+    if (!result.ok) {
+      expect(result.error.code).toBe('UNAUTHENTICATED')
+    }
   })
 
-  it('エラー: プロフィールが存在しない場合はエラーをスロー', async () => {
+  it('エラー: プロフィールが存在しない場合はエラーを返す', async () => {
     // Given: 認証済みだがプロフィールがない
     vi.mocked(checkUserProfile).mockResolvedValueOnce({
       hasAuth: true,
@@ -73,8 +82,14 @@ describe('getUserProfile', () => {
       profile: null,
     })
 
-    // When & Then: エラーがスローされる
-    await expect(getUserProfile()).rejects.toThrow('プロフィールが見つかりません')
+    // When: getUserProfile()を呼び出す
+    const result = await getUserProfile()
+
+    // Then: NOT_FOUNDエラーが返される
+    expect(result.ok).toBe(false)
+    if (!result.ok) {
+      expect(result.error.code).toBe('NOT_FOUND')
+    }
   })
 })
 
@@ -110,7 +125,7 @@ describe('updateUserProfile', () => {
     const result = await updateUserProfile({ name: '新しい名前' })
 
     // Then: 成功結果が返される
-    expect(result).toEqual({ success: true })
+    expect(result.ok).toBe(true)
     expect(prisma.user.update).toHaveBeenCalledWith({
       where: { authId: 'auth-123' },
       data: { name: '新しい名前' },
@@ -122,8 +137,10 @@ describe('updateUserProfile', () => {
     const result = await updateUserProfile({ name: '' })
 
     // Then: バリデーションエラーが返される
-    expect(result.success).toBe(false)
-    expect(result.error).toContain('名前を入力してください')
+    expect(result.ok).toBe(false)
+    if (!result.ok) {
+      expect(result.error.message).toContain('名前を入力してください')
+    }
   })
 
   it('バリデーション: 空白のみはエラー', async () => {
@@ -131,8 +148,10 @@ describe('updateUserProfile', () => {
     const result = await updateUserProfile({ name: '   ' })
 
     // Then: バリデーションエラーが返される
-    expect(result.success).toBe(false)
-    expect(result.error).toContain('空白のみの名前は使用できません')
+    expect(result.ok).toBe(false)
+    if (!result.ok) {
+      expect(result.error.message).toContain('空白のみの名前は使用できません')
+    }
   })
 
   it('バリデーション: 51文字以上はエラー', async () => {
@@ -141,8 +160,10 @@ describe('updateUserProfile', () => {
     const result = await updateUserProfile({ name: longName })
 
     // Then: バリデーションエラーが返される
-    expect(result.success).toBe(false)
-    expect(result.error).toContain('50文字以内で入力してください')
+    expect(result.ok).toBe(false)
+    if (!result.ok) {
+      expect(result.error.message).toContain('50文字以内で入力してください')
+    }
   })
 
   it('バリデーション: 50文字は許可される', async () => {
@@ -173,7 +194,7 @@ describe('updateUserProfile', () => {
     const result = await updateUserProfile({ name: name50 })
 
     // Then: 成功する
-    expect(result.success).toBe(true)
+    expect(result.ok).toBe(true)
   })
 
   it('バリデーション: 前後の空白はtrimされる', async () => {
@@ -203,7 +224,7 @@ describe('updateUserProfile', () => {
     const result = await updateUserProfile({ name: '  山田太郎  ' })
 
     // Then: trimされた名前で更新される
-    expect(result.success).toBe(true)
+    expect(result.ok).toBe(true)
     expect(prisma.user.update).toHaveBeenCalledWith({
       where: { authId: 'auth-123' },
       data: { name: '山田太郎' },
@@ -223,8 +244,10 @@ describe('updateUserProfile', () => {
     const result = await updateUserProfile({ name: '新しい名前' })
 
     // Then: 認証エラーが返される
-    expect(result.success).toBe(false)
-    expect(result.error).toBe('認証エラーが発生しました')
+    expect(result.ok).toBe(false)
+    if (!result.ok) {
+      expect(result.error.code).toBe('UNAUTHENTICATED')
+    }
   })
 
   it('エラー: プロフィールが存在しない場合はエラー', async () => {
@@ -239,9 +262,11 @@ describe('updateUserProfile', () => {
     // When: 更新しようとする
     const result = await updateUserProfile({ name: '新しい名前' })
 
-    // Then: エラーが返される
-    expect(result.success).toBe(false)
-    expect(result.error).toBe('プロフィールが見つかりません')
+    // Then: NOT_FOUNDエラーが返される
+    expect(result.ok).toBe(false)
+    if (!result.ok) {
+      expect(result.error.code).toBe('NOT_FOUND')
+    }
   })
 
   it('エラー: データベースエラー時は汎用エラーメッセージを返す', async () => {
@@ -270,8 +295,10 @@ describe('updateUserProfile', () => {
     const result = await updateUserProfile({ name: '新しい名前' })
 
     // Then: 汎用エラーメッセージが返される
-    expect(result.success).toBe(false)
-    expect(result.error).toBe('プロフィールの更新に失敗しました')
+    expect(result.ok).toBe(false)
+    if (!result.ok) {
+      expect(result.error.message).toBe('プロフィールの更新に失敗しました')
+    }
 
     consoleErrorSpy.mockRestore()
   })
