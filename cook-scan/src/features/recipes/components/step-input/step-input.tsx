@@ -1,7 +1,9 @@
 'use client'
 
-import { Input, Textarea } from '@/components/ui'
-import { TrashIcon, ClockIcon } from '@/components/icons'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { TrashIcon } from '@/components/icons/trash-icon'
+import { ClockIcon } from '@/components/icons/clock-icon'
 import type { StepInputProps } from './types'
 
 export function StepInput({

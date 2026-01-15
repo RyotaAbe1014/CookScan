@@ -1,7 +1,7 @@
 'use client'
 
-import { Input } from '@/components/ui'
-import { TrashIcon } from '@/components/icons'
+import { Input } from '@/components/ui/input'
+import { TrashIcon } from '@/components/icons/trash-icon'
 import type { IngredientInputProps } from './types'
 
 export function IngredientInputMobile({

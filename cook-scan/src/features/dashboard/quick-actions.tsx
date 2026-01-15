@@ -1,10 +1,8 @@
 import Link from 'next/link'
-import {
-  CameraIcon,
-  ChevronRightIcon,
-  EmptyIcon,
-  TagIcon,
-} from '@/components/icons'
+import { CameraIcon } from '@/components/icons/camera-icon'
+import { ChevronRightIcon } from '@/components/icons/chevron-right-icon'
+import { EmptyIcon } from '@/components/icons/empty-icon'
+import { TagIcon } from '@/components/icons/tag-icon'
 
 export function QuickActions() {
   return (

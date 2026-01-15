@@ -2,7 +2,7 @@ import { ReactNode } from 'react'
 import { AuthLayoutWrapper } from '@/components/layouts/auth-layout-wrapper'
 import { PageContainer } from '@/components/layouts/page-container'
 import Link from 'next/link'
-import { ChevronLeftIcon } from '@/components/icons'
+import { ChevronLeftIcon } from '@/components/icons/chevron-left-icon'
 
 type RecipeEditLayoutProps = {
   children: ReactNode

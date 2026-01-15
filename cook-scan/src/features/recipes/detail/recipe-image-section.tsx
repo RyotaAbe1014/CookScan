@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import { Card, CardContent } from '@/components/ui/card'
-import { PhotographIcon } from '@/components/icons'
+import { PhotographIcon } from '@/components/icons/photograph-icon'
 
 type RecipeImageSectionProps = {
   imageUrl: string

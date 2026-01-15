@@ -1,7 +1,9 @@
 import { Card, CardHeader, CardContent } from '@/components/ui/card'
 import type { SourceInfoDisplay } from '@/types/sourceInfo'
 import { isValidHttpUrl } from '@/utils/url-validation'
-import { BookOpenIcon, DocumentIcon, LinkIcon } from '@/components/icons'
+import { BookOpenIcon } from '@/components/icons/book-open-icon'
+import { DocumentIcon } from '@/components/icons/document-icon'
+import { LinkIcon } from '@/components/icons/link-icon'
 
 type RecipeSourceInfoProps = {
   sourceInfo: SourceInfoDisplay

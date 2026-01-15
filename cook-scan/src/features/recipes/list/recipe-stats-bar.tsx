@@ -1,5 +1,6 @@
 import Link from 'next/link'
-import { BookOpenIcon, PlusIcon } from '@/components/icons'
+import { BookOpenIcon } from '@/components/icons/book-open-icon'
+import { PlusIcon } from '@/components/icons/plus-icon'
 
 type RecipeStatsBarProps = {
   recipeCount: number

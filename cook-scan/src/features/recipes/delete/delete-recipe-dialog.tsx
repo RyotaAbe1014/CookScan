@@ -3,8 +3,10 @@
 import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { deleteRecipe } from './actions'
-import { Button, Alert } from '@/components/ui'
-import { TrashIcon, WarningIcon } from '@/components/icons'
+import { Button } from '@/components/ui/button'
+import { Alert } from '@/components/ui/alert'
+import { TrashIcon } from '@/components/icons/trash-icon'
+import { WarningIcon } from '@/components/icons/warning-icon'
 
 type Props = {
   recipeId: string

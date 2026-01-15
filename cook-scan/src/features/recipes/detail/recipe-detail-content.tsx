@@ -13,7 +13,7 @@ import { RecipeDetailActions } from './recipe-detail-actions'
 import { CookingTimerManager } from './cooking-timer-manager'
 import { formatMemo, getSourceInfo } from './utils'
 import { cleanupOldTimerStatesAtom } from './atoms/timer-atoms'
-import { InfoCircleIcon } from '@/components/icons'
+import { InfoCircleIcon } from '@/components/icons/info-circle-icon'
 
 type RecipeDetailContentProps = {
   recipe: RecipeWithRelations

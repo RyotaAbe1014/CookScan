@@ -2,14 +2,14 @@
 
 import { useState, useTransition } from 'react'
 import { createProfile } from './actions'
-import { Button, Input, Alert } from '@/components/ui'
-import {
-  EnvelopeIcon,
-  MailIcon,
-  UserIcon,
-  UserCircleIcon,
-  CheckCircleOutlineIcon,
-} from '@/components/icons'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Alert } from '@/components/ui/alert'
+import { EnvelopeIcon } from '@/components/icons/envelope-icon'
+import { MailIcon } from '@/components/icons/mail-icon'
+import { UserIcon } from '@/components/icons/user-icon'
+import { UserCircleIcon } from '@/components/icons/user-circle-icon'
+import { CheckCircleOutlineIcon } from '@/components/icons/check-circle-outline-icon'
 
 type ProfileSetupFormProps = {
   userId: string

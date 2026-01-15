@@ -4,7 +4,9 @@ import Link from 'next/link'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 
-import { ErrorIcon, HomeIcon, ReloadIcon } from '@/components/icons'
+import { ErrorIcon } from '@/components/icons/error-icon'
+import { HomeIcon } from '@/components/icons/home-icon'
+import { ReloadIcon } from '@/components/icons/reload-icon'
 
 type ErrorPageContentProps = {
   error: Error & { digest?: string }

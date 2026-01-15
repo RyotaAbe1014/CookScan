@@ -1,7 +1,10 @@
 'use client'
 
 import { useRouter, useSearchParams } from 'next/navigation'
-import { FilterIcon, CloseIcon, CheckSolidIcon, CheckCircleOutlineIcon } from '@/components/icons'
+import { FilterIcon } from '@/components/icons/filter-icon'
+import { CloseIcon } from '@/components/icons/close-icon'
+import { CheckSolidIcon } from '@/components/icons/check-solid-icon'
+import { CheckCircleOutlineIcon } from '@/components/icons/check-circle-outline-icon'
 import { useCallback } from 'react'
 import { Card, CardHeader, CardContent } from '@/components/ui/card'
 

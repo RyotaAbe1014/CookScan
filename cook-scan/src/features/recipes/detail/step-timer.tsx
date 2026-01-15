@@ -4,13 +4,11 @@ import { useEffect, useRef } from 'react'
 import { Button } from '@/components/ui/button'
 import { useCookingTimer } from './hooks/use-cooking-timer'
 import { requestNotificationPermission } from '@/utils/timer-notifications'
-import {
-  ClockIcon,
-  PlayIcon,
-  PauseIcon,
-  ReloadIcon,
-  CheckIcon,
-} from '@/components/icons'
+import { ClockIcon } from '@/components/icons/clock-icon'
+import { PlayIcon } from '@/components/icons/play-icon'
+import { PauseIcon } from '@/components/icons/pause-icon'
+import { ReloadIcon } from '@/components/icons/reload-icon'
+import { CheckIcon } from '@/components/icons/check-icon'
 
 type StepTimerProps = {
   stepId: string

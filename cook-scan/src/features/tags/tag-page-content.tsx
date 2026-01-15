@@ -3,7 +3,7 @@ import { CategoryItem } from './category-item'
 import { TagInfoBanner } from './tag-info-banner'
 import { TagEmptyState } from './tag-empty-state'
 import type { TagCategoryWithTags } from '@/types/tag'
-import { TagIcon } from '@/components/icons'
+import { TagIcon } from '@/components/icons/tag-icon'
 
 type TagPageContentProps = {
   tagCategories: TagCategoryWithTags[]

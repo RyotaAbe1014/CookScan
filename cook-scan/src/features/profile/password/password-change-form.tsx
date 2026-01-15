@@ -2,13 +2,13 @@
 
 import { useState, useTransition } from 'react'
 import { updatePassword, type PasswordChangeFormData } from './actions'
-import { Button, Input, Alert } from '@/components/ui'
-import {
-  LockIcon,
-  KeyIcon,
-  ShieldCheckIcon,
-  CheckCircleOutlineIcon,
-} from '@/components/icons'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Alert } from '@/components/ui/alert'
+import { LockIcon } from '@/components/icons/lock-icon'
+import { KeyIcon } from '@/components/icons/key-icon'
+import { ShieldCheckIcon } from '@/components/icons/shield-check-icon'
+import { CheckCircleOutlineIcon } from '@/components/icons/check-circle-outline-icon'
 
 export function PasswordChangeForm() {
   const [isPending, startTransition] = useTransition()

@@ -1,4 +1,5 @@
-import { TagIcon, InfoSolidIcon } from '@/components/icons'
+import { TagIcon } from '@/components/icons/tag-icon'
+import { InfoSolidIcon } from '@/components/icons/info-solid-icon'
 
 export function TagEmptyState() {
   return (

@@ -1,7 +1,7 @@
 import { forwardRef, type ButtonHTMLAttributes } from 'react'
 import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/lib/tailwind'
-import { SpinnerIcon } from '@/components/icons'
+import { SpinnerIcon } from '@/components/icons/spinner-icon'
 
 const buttonVariants = cva(
   // 共通スタイル - デザインシステムに準拠

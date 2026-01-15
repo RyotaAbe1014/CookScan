@@ -1,5 +1,7 @@
 import Link from 'next/link'
-import { EmptyIcon, CloseIcon, PlusIcon } from '@/components/icons'
+import { EmptyIcon } from '@/components/icons/empty-icon'
+import { CloseIcon } from '@/components/icons/close-icon'
+import { PlusIcon } from '@/components/icons/plus-icon'
 
 type RecipeEmptyStateProps = {
   hasFilters: boolean

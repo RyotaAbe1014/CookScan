@@ -3,15 +3,16 @@
 import { useState } from 'react'
 import { updateTagCategory, deleteTagCategory } from './actions'
 import { TagItem } from './tag-item'
-import { Button, Input, Textarea, Card, CardContent } from '@/components/ui'
-import {
-  FolderIcon,
-  BadgeCheckIcon,
-  UserCircleSolidIcon,
-  TagIcon,
-  PencilIcon,
-  TrashIcon,
-} from '@/components/icons'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { Card, CardContent } from '@/components/ui/card'
+import { FolderIcon } from '@/components/icons/folder-icon'
+import { BadgeCheckIcon } from '@/components/icons/badge-check-icon'
+import { UserCircleSolidIcon } from '@/components/icons/user-circle-solid-icon'
+import { TagIcon } from '@/components/icons/tag-icon'
+import { PencilIcon } from '@/components/icons/pencil-icon'
+import { TrashIcon } from '@/components/icons/trash-icon'
 
 type Tag = {
   id: string

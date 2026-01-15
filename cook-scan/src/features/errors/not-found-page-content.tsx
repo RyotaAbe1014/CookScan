@@ -2,7 +2,9 @@ import Link from 'next/link'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 
-import { SadFaceIcon, HomeIcon, BookIcon } from '@/components/icons'
+import { SadFaceIcon } from '@/components/icons/sad-face-icon'
+import { HomeIcon } from '@/components/icons/home-icon'
+import { BookIcon } from '@/components/icons/book-icon'
 
 export function NotFoundPageContent() {
   return (

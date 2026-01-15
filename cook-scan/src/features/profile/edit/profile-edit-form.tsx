@@ -3,15 +3,15 @@
 import { useState, useTransition, FormEvent, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { updateUserProfile } from './actions'
-import { Button, Input, Alert } from '@/components/ui'
-import {
-  EnvelopeIcon,
-  MailIcon,
-  UserIcon,
-  UserCircleIcon,
-  CheckIcon,
-  LockIcon,
-} from '@/components/icons'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Alert } from '@/components/ui/alert'
+import { EnvelopeIcon } from '@/components/icons/envelope-icon'
+import { MailIcon } from '@/components/icons/mail-icon'
+import { UserIcon } from '@/components/icons/user-icon'
+import { UserCircleIcon } from '@/components/icons/user-circle-icon'
+import { CheckIcon } from '@/components/icons/check-icon'
+import { LockIcon } from '@/components/icons/lock-icon'
 
 type User = {
   id: string
