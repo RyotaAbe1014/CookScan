@@ -1,7 +1,6 @@
-import type { User } from '@prisma/client'
 import type { Result } from '@/utils/result'
 import { failure, success, Errors } from '@/utils/result'
-import { checkUserProfile } from '@/features/auth/auth-utils'
+import { checkUserProfile, type UserProfile } from '@/features/auth/auth-utils'
 
 /**
  * 認証必須のServer Actionラッパー
@@ -19,7 +18,7 @@ import { checkUserProfile } from '@/features/auth/auth-utils'
  * ```
  */
 export async function withAuth<T>(
-  action: (profile: User) => Promise<Result<T>>
+  action: (profile: UserProfile) => Promise<Result<T>>
 ): Promise<Result<T>> {
   const { hasAuth, hasProfile, profile } = await checkUserProfile()
 
@@ -51,7 +50,7 @@ export async function withAuth<T>(
  * ```
  */
 export async function withAuthSafe<T>(
-  action: (profile: User) => Promise<T>,
+  action: (profile: UserProfile) => Promise<T>,
   errorMessage = 'エラーが発生しました'
 ): Promise<Result<T>> {
   return withAuth(async (profile) => {

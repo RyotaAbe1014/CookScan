@@ -4,16 +4,40 @@ import { prisma } from '@/lib/prisma'
 import type { Result } from '@/utils/result'
 import { success, failure, Errors } from '@/utils/result'
 import { withAuth } from '@/utils/server-action'
-import type { Recipe, Ingredient, Step, RecipeTag, Tag, TagCategory, SourceInfo } from '@prisma/client'
+import type { Ingredient } from '@/types/ingredient'
+import type { Step } from '@/types/step'
+import type { SourceInfo } from '@/types/sourceInfo'
 
-export type RecipeWithRelations = Recipe & {
+export type RecipeWithRelations = {
+  id: string
+  userId: string
+  title: string
+  parentRecipeId: string | null
+  imageUrl: string | null
+  memo: string | null
+  createdAt: Date
+  updatedAt: Date
   ingredients: Ingredient[]
   steps: Step[]
-  recipeTags: (RecipeTag & {
-    tag: Tag & {
-      category: TagCategory
+  recipeTags: Array<{
+    tagId: string
+    recipeId: string
+    tag: {
+      id: string
+      name: string
+      description: string | null
+      isSystem: boolean
+      userId: string | null
+      categoryId: string
+      category: {
+        id: string
+        name: string
+        description: string | null
+        isSystem: boolean
+        userId: string | null
+      }
     }
-  })[]
+  }>
   sourceInfo: SourceInfo[]
 }
 

@@ -325,6 +325,7 @@ export async function getTagCategoriesWithTags(userId: string): Promise<
         description: string | null
         isSystem: boolean
         userId: string | null
+        categoryId: string
         recipeTags: Array<{ recipeId: string }>
       }>
     }>

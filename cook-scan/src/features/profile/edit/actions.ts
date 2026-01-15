@@ -1,12 +1,11 @@
 'use server'
 
 import { prisma } from '@/lib/prisma'
-import { checkUserProfile } from '@/features/auth/auth-utils'
+import { checkUserProfile, type UserProfile } from '@/features/auth/auth-utils'
 import { z } from 'zod'
 import { revalidatePath } from 'next/cache'
 import type { Result } from '@/utils/result'
 import { success, failure, Errors } from '@/utils/result'
-import type { User } from '@prisma/client'
 
 // バリデーションスキーマ
 const profileUpdateSchema = z.object({
@@ -23,7 +22,7 @@ const profileUpdateSchema = z.object({
 /**
  * 現在のユーザープロフィールを取得
  */
-export async function getUserProfile(): Promise<Result<User>> {
+export async function getUserProfile(): Promise<Result<UserProfile>> {
   const { hasAuth, authUser, profile } = await checkUserProfile()
 
   if (!hasAuth || !authUser) {

@@ -2,10 +2,9 @@
 
 import { prisma } from '@/lib/prisma'
 import { redirect } from 'next/navigation'
-import { checkUserProfile } from '@/features/auth/auth-utils'
+import { checkUserProfile, type UserProfile } from '@/features/auth/auth-utils'
 import type { Result } from '@/utils/result'
 import { success, failure, Errors } from '@/utils/result'
-import type { User } from '@prisma/client'
 
 /**
  * 既存のプロフィールをチェック
@@ -13,7 +12,7 @@ import type { User } from '@prisma/client'
  */
 export async function checkExistingProfile(
   authId: string
-): Promise<Result<{ exists: boolean; profile: User | null }>> {
+): Promise<Result<{ exists: boolean; profile: UserProfile | null }>> {
   try {
     const existingProfile = await prisma.user.findUnique({
       where: { authId },

@@ -5,13 +5,30 @@ import { buildTagFilters } from './utils'
 import type { Result } from '@/utils/result'
 import { success, failure, Errors } from '@/utils/result'
 import { withAuth } from '@/utils/server-action'
-import type { Recipe, Ingredient, RecipeTag, Tag } from '@prisma/client'
+import type { Ingredient } from '@/types/ingredient'
 
-type RecipeWithRelations = Recipe & {
+type RecipeWithRelations = {
+  id: string
+  userId: string
+  title: string
+  parentRecipeId: string | null
+  imageUrl: string | null
+  memo: string | null
+  createdAt: Date
+  updatedAt: Date
   ingredients: Ingredient[]
-  recipeTags: (RecipeTag & {
-    tag: Tag
-  })[]
+  recipeTags: Array<{
+    tagId: string
+    recipeId: string
+    tag: {
+      id: string
+      name: string
+      description: string | null
+      isSystem: boolean
+      userId: string | null
+      categoryId: string
+    }
+  }>
 }
 
 type TagCategoryWithTags = {

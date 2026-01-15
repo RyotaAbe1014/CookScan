@@ -4,7 +4,7 @@ export type Step = {
   recipeId: string
   orderIndex: number
   instruction: string
-  timerSeconds?: number | null
+  timerSeconds: number | null
   createdAt: Date
   updatedAt: Date
 }

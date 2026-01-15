@@ -1,7 +1,16 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { prisma } from '@/lib/prisma'
-import type { User } from '@prisma/client'
+
+// Prisma User model type (defined locally to avoid Prisma client generation issues)
+export type UserProfile = {
+  id: string
+  authId: string
+  email: string
+  name: string | null
+  createdAt: Date
+  updatedAt: Date
+}
 
 export async function checkUserProfile() {
   const supabase = await createClient()
@@ -30,7 +39,7 @@ export async function checkUserProfile() {
  *
  * @returns ユーザープロフィール（認証済み保証）
  */
-export async function requireUserProfile(): Promise<User> {
+export async function requireUserProfile(): Promise<UserProfile> {
   const { hasAuth, hasProfile, profile } = await checkUserProfile()
 
   if (!hasAuth || !hasProfile || !profile) {
