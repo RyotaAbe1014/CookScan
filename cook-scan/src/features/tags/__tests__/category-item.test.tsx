@@ -389,8 +389,8 @@ describe('CategoryItem', () => {
 
   it('ローディング状態: 更新中はローディングテキストが表示される', async () => {
     // Given: updateTagCategoryが遅延する
-    let resolveUpdate: (value: { success: boolean }) => void
-    const updatePromise = new Promise<{ success: boolean }>((resolve) => {
+    let resolveUpdate: (value: { ok: true; data: undefined }) => void
+    const updatePromise = new Promise<{ ok: true; data: undefined }>((resolve) => {
       resolveUpdate = resolve
     })
     vi.mocked(updateTagCategory).mockReturnValueOnce(updatePromise)
@@ -421,8 +421,8 @@ describe('CategoryItem', () => {
 
   it('ローディング状態: ローディング中は入力フィールドが無効化される', async () => {
     // Given: updateTagCategoryが遅延する
-    let resolveUpdate: (value: { success: boolean }) => void
-    const updatePromise = new Promise<{ success: boolean }>((resolve) => {
+    let resolveUpdate: (value: { ok: true; data: undefined }) => void
+    const updatePromise = new Promise<{ ok: true; data: undefined }>((resolve) => {
       resolveUpdate = resolve
     })
     vi.mocked(updateTagCategory).mockReturnValueOnce(updatePromise)

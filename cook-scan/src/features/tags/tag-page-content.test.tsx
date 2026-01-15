@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import { describe, test, expect, vi } from 'vitest'
 import { TagPageContent } from './tag-page-content'
+import type { TagCategoryWithTags } from '@/types/tag'
 
 // 子コンポーネントをモック
 vi.mock('./tag-create-form', () => ({
@@ -26,7 +27,7 @@ vi.mock('./tag-empty-state', () => ({
 describe('TagPageContent', () => {
   const mockUserId = 'user-123'
 
-  const createMockCategory = (id: string, name: string) => ({
+  const createMockCategory = (id: string, name: string): TagCategoryWithTags => ({
     id,
     name,
     description: `Description for ${name}`,
@@ -38,6 +39,7 @@ describe('TagPageContent', () => {
         name: `Tag 1 for ${name}`,
         description: null,
         isSystem: false,
+        userId: mockUserId,
         categoryId: id,
         recipeTags: [] as { recipeId: string }[],
       },

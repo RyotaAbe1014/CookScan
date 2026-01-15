@@ -86,30 +86,17 @@ describe('RecipeEditForm', () => {
       id: 'cat-1',
       name: 'ジャンル',
       description: null,
-      userId: null,
       isSystem: false,
-      createdAt: new Date('2024-01-01'),
-      updatedAt: new Date('2024-01-01'),
       tags: [
         {
           id: 'tag-1',
           name: '和食',
           description: null,
-          categoryId: 'cat-1',
-          userId: null,
-          isSystem: false,
-          createdAt: new Date('2024-01-01'),
-          updatedAt: new Date('2024-01-01'),
         },
         {
           id: 'tag-2',
           name: '洋食',
           description: null,
-          categoryId: 'cat-1',
-          userId: null,
-          isSystem: false,
-          createdAt: new Date('2024-01-01'),
-          updatedAt: new Date('2024-01-01'),
         },
       ],
     },
@@ -117,7 +104,7 @@ describe('RecipeEditForm', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
-    vi.mocked(getAllTagsForRecipe).mockResolvedValue(mockTagCategories)
+    vi.mocked(getAllTagsForRecipe).mockResolvedValue({ ok: true, data: mockTagCategories })
   })
 
   describe('初期表示', () => {
