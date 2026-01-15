@@ -339,8 +339,8 @@ describe('TagItem', () => {
 
   it('ローディング状態: 更新中はローディングテキストが表示される', async () => {
     // Given: updateTagが遅延する
-    let resolveUpdate: (value: { success: boolean }) => void
-    const updatePromise = new Promise<{ success: boolean }>((resolve) => {
+    let resolveUpdate: (value: { ok: true; data: undefined }) => void
+    const updatePromise = new Promise<{ ok: true; data: undefined }>((resolve) => {
       resolveUpdate = resolve
     })
     vi.mocked(updateTag).mockReturnValueOnce(updatePromise)
@@ -370,8 +370,8 @@ describe('TagItem', () => {
 
   it('ローディング状態: ローディング中は入力フィールドが無効化される', async () => {
     // Given: updateTagが遅延する
-    let resolveUpdate: (value: { success: boolean }) => void
-    const updatePromise = new Promise<{ success: boolean }>((resolve) => {
+    let resolveUpdate: (value: { ok: true; data: undefined }) => void
+    const updatePromise = new Promise<{ ok: true; data: undefined }>((resolve) => {
       resolveUpdate = resolve
     })
     vi.mocked(updateTag).mockReturnValueOnce(updatePromise)
@@ -402,8 +402,8 @@ describe('TagItem', () => {
 
   it('ローディング状態: 削除ボタンクリック中は編集ボタンが無効化される', async () => {
     // Given: deleteTagが遅延する
-    let resolveDelete: (value: { success: boolean }) => void
-    const deletePromise = new Promise<{ success: boolean }>((resolve) => {
+    let resolveDelete: (value: { ok: true; data: undefined }) => void
+    const deletePromise = new Promise<{ ok: true; data: undefined }>((resolve) => {
       resolveDelete = resolve
     })
     vi.mocked(deleteTag).mockReturnValueOnce(deletePromise)
