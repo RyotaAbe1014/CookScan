@@ -7,21 +7,21 @@ import Image from 'next/image'
 import { updateRecipe } from './actions'
 import type { UpdateRecipeRequest } from './types'
 import type { RecipeFormTagCategory } from '@/features/recipes/types/tag'
-import { Input, Textarea, Alert } from '@/components/ui'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { Alert } from '@/components/ui/alert'
 import { IngredientInput, StepInput, FormActions } from '@/features/recipes/components'
-import {
-  CameraIcon,
-  InfoCircleIcon,
-  TagIcon,
-  BookOpenIcon,
-  DocumentIcon,
-  LinkIcon,
-  DocumentTextIcon,
-  CheckSolidIcon,
-  BeakerIcon,
-  PlusIcon,
-  ClipboardListIcon,
-} from '@/components/icons'
+import { CameraIcon } from '@/components/icons/camera-icon'
+import { InfoCircleIcon } from '@/components/icons/info-circle-icon'
+import { TagIcon } from '@/components/icons/tag-icon'
+import { BookOpenIcon } from '@/components/icons/book-open-icon'
+import { DocumentIcon } from '@/components/icons/document-icon'
+import { LinkIcon } from '@/components/icons/link-icon'
+import { DocumentTextIcon } from '@/components/icons/document-text-icon'
+import { CheckSolidIcon } from '@/components/icons/check-solid-icon'
+import { BeakerIcon } from '@/components/icons/beaker-icon'
+import { PlusIcon } from '@/components/icons/plus-icon'
+import { ClipboardListIcon } from '@/components/icons/clipboard-list-icon'
 
 type RecipeData = {
   id: string

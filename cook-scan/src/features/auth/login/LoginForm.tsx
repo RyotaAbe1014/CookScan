@@ -5,13 +5,11 @@ import { login } from '@/features/auth/actions'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { FormField } from '@/components/ui/form-field'
-import {
-  BookIcon,
-  MailIcon,
-  LockIcon,
-  LoginIcon,
-  UserAddIcon,
-} from '@/components/icons'
+import { BookIcon } from '@/components/icons/book-icon'
+import { MailIcon } from '@/components/icons/mail-icon'
+import { LockIcon } from '@/components/icons/lock-icon'
+import { LoginIcon } from '@/components/icons/login-icon'
+import { UserAddIcon } from '@/components/icons/user-add-icon'
 
 export const LoginForm = () => {
   const [isPending, startTransition] = useTransition()

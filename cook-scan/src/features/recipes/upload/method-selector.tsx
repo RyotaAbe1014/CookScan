@@ -1,10 +1,8 @@
-import {
-  CameraIcon,
-  CheckSolidIcon,
-  AdjustmentsIcon,
-  DocumentTextIcon,
-  CheckCircleOutlineIcon,
-} from '@/components/icons'
+import { CameraIcon } from '@/components/icons/camera-icon'
+import { CheckSolidIcon } from '@/components/icons/check-solid-icon'
+import { AdjustmentsIcon } from '@/components/icons/adjustments-icon'
+import { DocumentTextIcon } from '@/components/icons/document-text-icon'
+import { CheckCircleOutlineIcon } from '@/components/icons/check-circle-outline-icon'
 
 type Props = {
   onSelect: (method: 'scan' | 'manual' | 'text-input') => void

@@ -2,7 +2,9 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { SearchIcon, CloseIcon, DocumentSearchIcon } from '@/components/icons'
+import { SearchIcon } from '@/components/icons/search-icon'
+import { CloseIcon } from '@/components/icons/close-icon'
+import { DocumentSearchIcon } from '@/components/icons/document-search-icon'
 
 type Props = {
   resultCount?: number

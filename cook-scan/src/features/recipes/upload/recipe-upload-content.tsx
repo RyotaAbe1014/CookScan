@@ -8,7 +8,7 @@ import type { ExtractedRecipeData } from '@/features/recipes/upload/types'
 import type { RecipeFormTagCategory } from '@/features/recipes/types/tag'
 import { Button } from '@/components/ui/button'
 import { TextInput } from './text-input'
-import { ChevronLeftIcon } from '@/components/icons'
+import { ChevronLeftIcon } from '@/components/icons/chevron-left-icon'
 
 type Step = 'method-selection' | 'image-upload' | 'text-input' | 'form'
 

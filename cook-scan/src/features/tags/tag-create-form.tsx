@@ -2,9 +2,15 @@
 
 import { useState } from 'react'
 import { createTagCategory, createTag } from './actions'
-import { Button, Input, Textarea, Select, Alert } from '@/components/ui'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { Select } from '@/components/ui/select'
+import { Alert } from '@/components/ui/alert'
 import type { TagCategoryBasic } from '@/types/tag'
-import { TagIcon, FolderIcon, PlusIcon } from '@/components/icons'
+import { TagIcon } from '@/components/icons/tag-icon'
+import { FolderIcon } from '@/components/icons/folder-icon'
+import { PlusIcon } from '@/components/icons/plus-icon'
 
 type TagCreateFormProps = {
   categories: TagCategoryBasic[]

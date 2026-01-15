@@ -5,14 +5,12 @@ import type { ExtractedRecipeData, ExtractResponse } from "./types"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import { Alert } from "@/components/ui/alert"
-import {
-  DocumentTextIcon,
-  CheckCircleSolidIcon,
-  ExclamationTriangleSolidIcon,
-  InfoCircleIcon,
-  InfoSolidIcon,
-  LightningBoltIcon,
-} from '@/components/icons'
+import { DocumentTextIcon } from '@/components/icons/document-text-icon'
+import { CheckCircleSolidIcon } from '@/components/icons/check-circle-solid-icon'
+import { ExclamationTriangleSolidIcon } from '@/components/icons/exclamation-triangle-solid-icon'
+import { InfoCircleIcon } from '@/components/icons/info-circle-icon'
+import { InfoSolidIcon } from '@/components/icons/info-solid-icon'
+import { LightningBoltIcon } from '@/components/icons/lightning-bolt-icon'
 
 type Props = {
   handleTextInput: (extractedData: ExtractedRecipeData) => void

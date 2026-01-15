@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { Header } from '@/components/layouts/header'
-import { ExclamationCircleIcon } from '@/components/icons'
+import { ExclamationCircleIcon } from '@/components/icons/exclamation-circle-icon'
 
 export default function NotFound() {
   return (

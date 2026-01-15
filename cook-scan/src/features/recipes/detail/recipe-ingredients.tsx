@@ -1,5 +1,5 @@
 import { Card, CardHeader, CardContent } from '@/components/ui/card'
-import { BeakerIcon } from '@/components/icons'
+import { BeakerIcon } from '@/components/icons/beaker-icon'
 import type { Ingredient } from '@/types/ingredient'
 
 type RecipeIngredientsProps = {

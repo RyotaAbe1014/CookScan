@@ -1,5 +1,6 @@
 import { ReactNode } from 'react'
-import { BookIcon, InfoCircleIcon } from '@/components/icons'
+import { BookIcon } from '@/components/icons/book-icon'
+import { InfoCircleIcon } from '@/components/icons/info-circle-icon'
 
 type HeaderProps = {
   title: string

@@ -2,7 +2,7 @@ import { ReactNode } from 'react'
 import Link from 'next/link'
 import LogoutButton from '@/features/auth/logout-button'
 import { AuthLayoutWrapper } from '@/components/layouts/auth-layout-wrapper'
-import { UserIcon } from '@/components/icons'
+import { UserIcon } from '@/components/icons/user-icon'
 
 type DashboardLayoutProps = {
   children: ReactNode

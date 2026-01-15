@@ -1,7 +1,9 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import type { RecipeBasic } from '@/types/recipe'
-import { ClipboardListIcon, TagIcon, ClockIcon } from '@/components/icons'
+import { ClipboardListIcon } from '@/components/icons/clipboard-list-icon'
+import { TagIcon } from '@/components/icons/tag-icon'
+import { ClockIcon } from '@/components/icons/clock-icon'
 
 type RecipeGridProps = {
   recipes: RecipeBasic[]

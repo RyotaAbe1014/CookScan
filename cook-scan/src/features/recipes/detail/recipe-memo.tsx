@@ -1,5 +1,5 @@
 import { Card, CardHeader, CardContent } from '@/components/ui/card'
-import { MemoIcon } from '@/components/icons'
+import { MemoIcon } from '@/components/icons/memo-icon'
 
 type RecipeMemoProps = {
   memo: string

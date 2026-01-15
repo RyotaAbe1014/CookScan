@@ -1,7 +1,7 @@
 import { Card, CardHeader, CardContent } from '@/components/ui/card'
 import type { RecipeTag } from '@/types/recipe'
 import { groupTagsByCategory } from './utils'
-import { TagIcon } from '@/components/icons'
+import { TagIcon } from '@/components/icons/tag-icon'
 
 type RecipeTagsSectionProps = {
   recipeTags: RecipeTag[]

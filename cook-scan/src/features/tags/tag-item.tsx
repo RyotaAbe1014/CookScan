@@ -2,8 +2,13 @@
 
 import { useState } from 'react'
 import { updateTag, deleteTag } from './actions'
-import { Button, Input, Textarea } from '@/components/ui'
-import { TagIcon, BookOpenIcon, PencilIcon, TrashIcon } from '@/components/icons'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { TagIcon } from '@/components/icons/tag-icon'
+import { BookOpenIcon } from '@/components/icons/book-open-icon'
+import { PencilIcon } from '@/components/icons/pencil-icon'
+import { TrashIcon } from '@/components/icons/trash-icon'
 
 type TagItemProps = {
   tag: {

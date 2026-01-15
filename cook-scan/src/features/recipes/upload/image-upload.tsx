@@ -3,16 +3,15 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
 import Image from 'next/image'
 import type { ExtractedRecipeData, ExtractResponse } from './types'
-import { Button, Alert } from '@/components/ui'
-import {
-  CloudUploadIcon,
-  ClipboardIcon,
-  InfoCircleIcon,
-  CloseIcon,
-  ReloadIcon,
-  LightningBoltIcon,
-  PhotographIcon,
-} from '@/components/icons'
+import { Button } from '@/components/ui/button'
+import { Alert } from '@/components/ui/alert'
+import { CloudUploadIcon } from '@/components/icons/cloud-upload-icon'
+import { ClipboardIcon } from '@/components/icons/clipboard-icon'
+import { InfoCircleIcon } from '@/components/icons/info-circle-icon'
+import { CloseIcon } from '@/components/icons/close-icon'
+import { ReloadIcon } from '@/components/icons/reload-icon'
+import { LightningBoltIcon } from '@/components/icons/lightning-bolt-icon'
+import { PhotographIcon } from '@/components/icons/photograph-icon'
 
 type Props = {
   onUpload: (imageUrl: string, extractedData: ExtractedRecipeData) => void

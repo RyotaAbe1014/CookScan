@@ -1,7 +1,8 @@
 'use client'
 
-import { Button } from '@/components/ui'
-import { CheckIcon, CloseIcon } from '@/components/icons'
+import { Button } from '@/components/ui/button'
+import { CheckIcon } from '@/components/icons/check-icon'
+import { CloseIcon } from '@/components/icons/close-icon'
 import type { FormActionsProps } from './types'
 
 export function FormActions({

@@ -1,12 +1,10 @@
 import { type HTMLAttributes, forwardRef } from 'react'
 import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/lib/tailwind'
-import {
-  XCircleIcon,
-  CheckCircleIcon,
-  WarningIcon,
-  InfoSolidIcon,
-} from '@/components/icons'
+import { XCircleIcon } from '@/components/icons/x-circle-icon'
+import { CheckCircleIcon } from '@/components/icons/check-circle-icon'
+import { WarningIcon } from '@/components/icons/warning-icon'
+import { InfoSolidIcon } from '@/components/icons/info-solid-icon'
 
 const alertVariants = cva(
   // 共通スタイル - デザインシステムに準拠

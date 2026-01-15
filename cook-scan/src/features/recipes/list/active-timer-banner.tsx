@@ -3,7 +3,9 @@
 import { useAtomValue } from 'jotai'
 import Link from 'next/link'
 import { activeTimerRecipesAtom } from '@/features/recipes/atoms'
-import { ClockIcon, ChevronRightIcon, InfoCircleIcon } from '@/components/icons'
+import { ClockIcon } from '@/components/icons/clock-icon'
+import { ChevronRightIcon } from '@/components/icons/chevron-right-icon'
+import { InfoCircleIcon } from '@/components/icons/info-circle-icon'
 
 export function ActiveTimerBanner() {
   const activeRecipes = useAtomValue(activeTimerRecipesAtom)

@@ -1,4 +1,4 @@
-import { TagIcon } from '@/components/icons'
+import { TagIcon } from '@/components/icons/tag-icon'
 
 export function TagInfoBanner() {
   return (

@@ -3,7 +3,7 @@
 import { Card, CardHeader, CardContent } from '@/components/ui/card'
 import type { Step } from '@/types/step'
 import { StepTimer } from './step-timer'
-import { ClipboardListIcon } from '@/components/icons'
+import { ClipboardListIcon } from '@/components/icons/clipboard-list-icon'
 
 type RecipeStepsProps = {
   recipeId: string

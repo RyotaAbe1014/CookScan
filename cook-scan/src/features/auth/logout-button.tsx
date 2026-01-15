@@ -3,7 +3,8 @@
 import { useTransition } from 'react'
 import { logout } from './actions'
 import { Button } from '@/components/ui/button'
-import { LogoutIcon, SpinnerIcon } from '@/components/icons'
+import { LogoutIcon } from '@/components/icons/logout-icon'
+import { SpinnerIcon } from '@/components/icons/spinner-icon'
 
 export default function LogoutButton() {
   const [isPending, startTransition] = useTransition()

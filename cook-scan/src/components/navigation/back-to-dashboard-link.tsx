@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { ChevronLeftIcon } from '@/components/icons'
+import { ChevronLeftIcon } from '@/components/icons/chevron-left-icon'
 
 export function BackToDashboardLink() {
   return (
