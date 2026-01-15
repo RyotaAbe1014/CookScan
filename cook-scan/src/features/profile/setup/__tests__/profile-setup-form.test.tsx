@@ -5,7 +5,7 @@ import ProfileSetupForm from '../profile-setup-form'
 
 // モック: Server Action (createProfile)
 vi.mock('../actions', () => ({
-  createProfile: vi.fn(() => Promise.resolve()),
+  createProfile: vi.fn(() => Promise.resolve({ ok: true, data: undefined })),
 }))
 
 import { createProfile } from '../actions'
@@ -127,10 +127,13 @@ describe('ProfileSetupForm', () => {
   })
 
   describe('エラーハンドリング', () => {
-    it('createProfileがエラーをスローした場合、エラーメッセージが表示される', async () => {
-      // Given: createProfileがエラーをスローするようにモック
+    it('createProfileがエラーを返した場合、エラーメッセージが表示される', async () => {
+      // Given: createProfileがエラーを返すようにモック
       const errorMessage = 'プロフィール作成に失敗しました'
-      vi.mocked(createProfile).mockRejectedValueOnce(new Error(errorMessage))
+      vi.mocked(createProfile).mockResolvedValueOnce({
+        ok: false,
+        error: { code: 'SERVER_ERROR', message: errorMessage },
+      })
 
       const user = userEvent.setup()
       render(<ProfileSetupForm {...defaultProps} />)
@@ -148,9 +151,12 @@ describe('ProfileSetupForm', () => {
       })
     })
 
-    it('Error以外がスローされた場合、デフォルトエラーメッセージが表示される', async () => {
-      // Given: createProfileが文字列エラーをスローするようにモック
-      vi.mocked(createProfile).mockRejectedValueOnce('Unknown error')
+    it('重複エラーの場合、適切なメッセージが表示される', async () => {
+      // Given: createProfileが重複エラーを返すようにモック
+      vi.mocked(createProfile).mockResolvedValueOnce({
+        ok: false,
+        error: { code: 'CONFLICT', message: 'プロフィールは既に作成されています' },
+      })
 
       const user = userEvent.setup()
       render(<ProfileSetupForm {...defaultProps} />)
@@ -161,10 +167,10 @@ describe('ProfileSetupForm', () => {
       const submitButton = screen.getByRole('button', { name: /プロフィールを作成/i })
       await user.click(submitButton)
 
-      // Then: デフォルトエラーメッセージが表示される
+      // Then: エラーメッセージが表示される
       await waitFor(() => {
         expect(screen.getByRole('alert')).toBeInTheDocument()
-        expect(screen.getByText('プロフィールの作成に失敗しました')).toBeInTheDocument()
+        expect(screen.getByText('プロフィールは既に作成されています')).toBeInTheDocument()
       })
     })
   })
@@ -173,8 +179,8 @@ describe('ProfileSetupForm', () => {
     it('送信中は送信ボタンがdisabledになる', async () => {
       // Given: createProfileが遅延するようにモック
       let resolveCreate: () => void
-      const createPromise = new Promise<void>((resolve) => {
-        resolveCreate = resolve
+      const createPromise = new Promise<{ ok: true; data: undefined }>((resolve) => {
+        resolveCreate = () => resolve({ ok: true, data: undefined })
       })
       vi.mocked(createProfile).mockReturnValueOnce(createPromise)
 
@@ -202,8 +208,8 @@ describe('ProfileSetupForm', () => {
     it('送信中はローディングテキストが表示される', async () => {
       // Given: createProfileが遅延するようにモック
       let resolveCreate: () => void
-      const createPromise = new Promise<void>((resolve) => {
-        resolveCreate = resolve
+      const createPromise = new Promise<{ ok: true; data: undefined }>((resolve) => {
+        resolveCreate = () => resolve({ ok: true, data: undefined })
       })
       vi.mocked(createProfile).mockReturnValueOnce(createPromise)
 

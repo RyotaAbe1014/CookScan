@@ -3,6 +3,7 @@
 import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { deleteRecipe } from './actions'
+import { isSuccess } from '@/utils/result'
 import { Button } from '@/components/ui/button'
 import { Alert } from '@/components/ui/alert'
 import { TrashIcon } from '@/components/icons/trash-icon'
@@ -33,13 +34,13 @@ export default function DeleteRecipeDialog({ recipeId, recipeTitle, isOpen, onCl
     startTransition(async () => {
       try {
         const result = await deleteRecipe(recipeId)
-        if (result.success) {
+        if (isSuccess(result)) {
           router.push('/recipes')
           handleClose()
         } else {
-          setError(result.error || 'レシピの削除に失敗しました')
+          setError(result.error.message)
         }
-      } catch (_error) {
+      } catch {
         setError('エラーが発生しました')
       }
     })
@@ -52,11 +53,7 @@ export default function DeleteRecipeDialog({ recipeId, recipeTitle, isOpen, onCl
     >
       <div className="flex min-h-screen items-center justify-center p-4">
         {/* Background overlay */}
-        <div
-          className="absolute inset-0"
-          onClick={handleClose}
-          aria-hidden="true"
-        />
+        <div className="absolute inset-0" onClick={handleClose} aria-hidden="true" />
 
         {/* Modal panel */}
         <div
@@ -70,11 +67,10 @@ export default function DeleteRecipeDialog({ recipeId, recipeTitle, isOpen, onCl
                 <WarningIcon className="h-6 w-6 text-white" />
               </div>
               <div className="flex-1">
-                <h3 className="text-xl font-bold text-gray-900">
-                  レシピを削除
-                </h3>
+                <h3 className="text-xl font-bold text-gray-900">レシピを削除</h3>
                 <p className="mt-2 text-sm leading-relaxed text-gray-600">
-                  「<span className="font-semibold text-gray-900">{recipeTitle}</span>」を削除してもよろしいですか？
+                  「<span className="font-semibold text-gray-900">{recipeTitle}</span>
+                  」を削除してもよろしいですか？
                 </p>
               </div>
             </div>
@@ -87,9 +83,7 @@ export default function DeleteRecipeDialog({ recipeId, recipeTitle, isOpen, onCl
                 {error}
               </Alert>
             )}
-            <Alert variant="error">
-              この操作は取り消すことができません
-            </Alert>
+            <Alert variant="error">この操作は取り消すことができません</Alert>
           </div>
 
           {/* Actions */}

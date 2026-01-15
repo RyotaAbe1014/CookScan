@@ -5,7 +5,7 @@ import { ProfileEditForm } from '../profile-edit-form'
 
 // モック: Server Action (updateUserProfile)
 vi.mock('../actions', () => ({
-  updateUserProfile: vi.fn(() => Promise.resolve({ success: true })),
+  updateUserProfile: vi.fn(() => Promise.resolve({ ok: true, data: undefined })),
 }))
 
 import { updateUserProfile } from '../actions'
@@ -174,7 +174,7 @@ describe('ProfileEditForm', () => {
 
     it('更新成功時に成功メッセージが表示される', async () => {
       // Given: updateUserProfileが成功を返すようにモック
-      vi.mocked(updateUserProfile).mockResolvedValueOnce({ success: true })
+      vi.mocked(updateUserProfile).mockResolvedValueOnce({ ok: true, data: undefined })
 
       const user = userEvent.setup()
       render(<ProfileEditForm initialData={mockUser} />)
@@ -194,7 +194,7 @@ describe('ProfileEditForm', () => {
 
     it('成功メッセージはAlert variantがsuccessである', async () => {
       // Given: updateUserProfileが成功を返す
-      vi.mocked(updateUserProfile).mockResolvedValueOnce({ success: true })
+      vi.mocked(updateUserProfile).mockResolvedValueOnce({ ok: true, data: undefined })
 
       const user = userEvent.setup()
       render(<ProfileEditForm initialData={mockUser} />)
@@ -215,8 +215,8 @@ describe('ProfileEditForm', () => {
       // Given: updateUserProfileがエラーを返すようにモック
       const errorMessage = '名前を入力してください'
       vi.mocked(updateUserProfile).mockResolvedValueOnce({
-        success: false,
-        error: errorMessage,
+        ok: false,
+        error: { code: 'VALIDATION_ERROR', message: errorMessage },
       })
 
       const user = userEvent.setup()
@@ -236,10 +236,11 @@ describe('ProfileEditForm', () => {
       })
     })
 
-    it('エラーメッセージがない場合はデフォルトメッセージが表示される', async () => {
-      // Given: updateUserProfileがエラー情報なしで失敗
+    it('サーバーエラーの場合はサーバーエラーメッセージが表示される', async () => {
+      // Given: updateUserProfileがサーバーエラーを返す
       vi.mocked(updateUserProfile).mockResolvedValueOnce({
-        success: false,
+        ok: false,
+        error: { code: 'SERVER_ERROR', message: 'プロフィールの更新に失敗しました' },
       })
 
       const user = userEvent.setup()
@@ -256,7 +257,7 @@ describe('ProfileEditForm', () => {
 
     it('送信時にエラーと成功メッセージが両方消える', async () => {
       // Given: 前回の送信で成功していた
-      vi.mocked(updateUserProfile).mockResolvedValueOnce({ success: true })
+      vi.mocked(updateUserProfile).mockResolvedValueOnce({ ok: true, data: undefined })
       const user = userEvent.setup()
       render(<ProfileEditForm initialData={mockUser} />)
       const submitButton = screen.getByRole('button', { name: /変更を保存/i })
@@ -268,7 +269,7 @@ describe('ProfileEditForm', () => {
       })
 
       // When: 再度送信する
-      vi.mocked(updateUserProfile).mockResolvedValueOnce({ success: true })
+      vi.mocked(updateUserProfile).mockResolvedValueOnce({ ok: true, data: undefined })
       await user.click(submitButton)
 
       // Then: 古いメッセージは一旦消える（新しい送信開始時）
@@ -283,9 +284,9 @@ describe('ProfileEditForm', () => {
   describe('ローディング状態', () => {
     it('送信中は送信ボタンがdisabledになる', async () => {
       // Given: updateUserProfileが遅延するようにモック
-      let resolveUpdate: (value: { success: boolean }) => void
-      const updatePromise = new Promise<{ success: boolean }>((resolve) => {
-        resolveUpdate = resolve
+      let resolveUpdate: () => void
+      const updatePromise = new Promise<{ ok: true; data: undefined }>((resolve) => {
+        resolveUpdate = () => resolve({ ok: true, data: undefined })
       })
       vi.mocked(updateUserProfile).mockReturnValueOnce(updatePromise)
 
@@ -302,7 +303,7 @@ describe('ProfileEditForm', () => {
       })
 
       // クリーンアップ: Promiseを解決
-      resolveUpdate!({ success: true })
+      resolveUpdate!()
       await waitFor(() => {
         expect(updateUserProfile).toHaveBeenCalled()
       })
@@ -310,9 +311,9 @@ describe('ProfileEditForm', () => {
 
     it('送信中はローディングテキストが表示される', async () => {
       // Given: updateUserProfileが遅延するようにモック
-      let resolveUpdate: (value: { success: boolean }) => void
-      const updatePromise = new Promise<{ success: boolean }>((resolve) => {
-        resolveUpdate = resolve
+      let resolveUpdate: () => void
+      const updatePromise = new Promise<{ ok: true; data: undefined }>((resolve) => {
+        resolveUpdate = () => resolve({ ok: true, data: undefined })
       })
       vi.mocked(updateUserProfile).mockReturnValueOnce(updatePromise)
 
@@ -329,7 +330,7 @@ describe('ProfileEditForm', () => {
       })
 
       // クリーンアップ: Promiseを解決
-      resolveUpdate!({ success: true })
+      resolveUpdate!()
       await waitFor(() => {
         expect(updateUserProfile).toHaveBeenCalled()
       })
@@ -337,9 +338,9 @@ describe('ProfileEditForm', () => {
 
     it('送信中は名前が空でもボタンがdisabledのまま', async () => {
       // Given: updateUserProfileが遅延するようにモック
-      let resolveUpdate: (value: { success: boolean }) => void
-      const updatePromise = new Promise<{ success: boolean }>((resolve) => {
-        resolveUpdate = resolve
+      let resolveUpdate: () => void
+      const updatePromise = new Promise<{ ok: true; data: undefined }>((resolve) => {
+        resolveUpdate = () => resolve({ ok: true, data: undefined })
       })
       vi.mocked(updateUserProfile).mockReturnValueOnce(updatePromise)
 
@@ -356,7 +357,7 @@ describe('ProfileEditForm', () => {
       })
 
       // クリーンアップ
-      resolveUpdate!({ success: true })
+      resolveUpdate!()
       await waitFor(() => {
         expect(updateUserProfile).toHaveBeenCalled()
       })
@@ -366,7 +367,7 @@ describe('ProfileEditForm', () => {
   describe('成功メッセージの自動非表示', () => {
     it('成功メッセージは3秒後に自動的に消える', async () => {
       // Given: updateUserProfileが成功を返す
-      vi.mocked(updateUserProfile).mockResolvedValueOnce({ success: true })
+      vi.mocked(updateUserProfile).mockResolvedValueOnce({ ok: true, data: undefined })
 
       const user = userEvent.setup()
       render(<ProfileEditForm initialData={mockUser} />)

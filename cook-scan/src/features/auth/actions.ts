@@ -2,30 +2,48 @@
 
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
+import { z } from 'zod'
 
 import { createClient } from '@/lib/supabase/server'
+import type { Result } from '@/utils/result'
+import { failure, Errors } from '@/utils/result'
 
-export async function login(formData: FormData) {
+// ログインバリデーションスキーマ
+const loginSchema = z.object({
+  email: z.string().email('有効なメールアドレスを入力してください'),
+  password: z.string().min(1, 'パスワードを入力してください'),
+})
+
+export async function login(formData: FormData): Promise<Result<void>> {
   const supabase = await createClient()
 
-  // type-casting here for convenience
-  // in practice, you should validate your inputs
-  const data = {
-    email: formData.get('email') as string,
-    password: formData.get('password') as string,
+  // バリデーション
+  const validationResult = loginSchema.safeParse({
+    email: formData.get('email'),
+    password: formData.get('password'),
+  })
+
+  if (!validationResult.success) {
+    return failure(Errors.validation(validationResult.error.errors[0].message))
   }
 
-  const { error } = await supabase.auth.signInWithPassword(data)
+  const { email, password } = validationResult.data
+
+  const { error } = await supabase.auth.signInWithPassword({ email, password })
 
   if (error) {
-    redirect('/error')
+    // Supabaseのエラーメッセージをユーザーフレンドリーに変換
+    if (error.message.includes('Invalid login credentials')) {
+      return failure(Errors.validation('メールアドレスまたはパスワードが正しくありません'))
+    }
+    return failure(Errors.server('ログインに失敗しました。時間をおいて再度お試しください。'))
   }
 
   revalidatePath('/', 'layout')
   redirect('/dashboard')
 }
 
-export async function logout() {
+export async function logout(): Promise<void> {
   const supabase = await createClient()
   await supabase.auth.signOut()
   redirect('/login')

@@ -1,9 +1,31 @@
 'use server'
 
-import { redirect } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
-import { checkUserProfile } from '@/features/auth/auth-utils'
 import { buildTagFilters } from './utils'
+import type { Result } from '@/utils/result'
+import { success, failure, Errors } from '@/utils/result'
+import { withAuth } from '@/utils/server-action'
+import type { Recipe, Ingredient, RecipeTag, Tag } from '@prisma/client'
+
+type RecipeWithRelations = Recipe & {
+  ingredients: Ingredient[]
+  recipeTags: (RecipeTag & {
+    tag: Tag
+  })[]
+}
+
+type TagCategoryWithTags = {
+  id: string
+  name: string
+  description: string | null
+  isSystem: boolean
+  userId: string | null
+  tags: {
+    id: string
+    name: string
+    description: string | null
+  }[]
+}
 
 /**
  * フィルタ条件に基づいてレシピを取得
@@ -12,71 +34,65 @@ export async function getRecipesWithFilters(
   userId: string,
   searchQuery: string,
   tagIds: string[]
-) {
-  const { hasAuth, hasProfile } = await checkUserProfile()
+): Promise<Result<RecipeWithRelations[]>> {
+  return withAuth(async () => {
+    const tagFilters = buildTagFilters(tagIds)
 
-  if (!hasAuth || !hasProfile) {
-    redirect('/login')
-  }
-
-  const tagFilters = buildTagFilters(tagIds)
-
-  try {
-    const recipes = await prisma.recipe.findMany({
-      where: {
-        userId,
-        ...(searchQuery && {
-          title: {
-            contains: searchQuery,
-            mode: 'insensitive',
-          },
-        }),
-        ...(tagFilters && { AND: tagFilters }),
-      },
-      include: {
-        ingredients: true,
-        recipeTags: {
-          include: {
-            tag: true,
+    try {
+      const recipes = await prisma.recipe.findMany({
+        where: {
+          userId,
+          ...(searchQuery && {
+            title: {
+              contains: searchQuery,
+              mode: 'insensitive',
+            },
+          }),
+          ...(tagFilters && { AND: tagFilters }),
+        },
+        include: {
+          ingredients: true,
+          recipeTags: {
+            include: {
+              tag: true,
+            },
           },
         },
-      },
-      orderBy: { createdAt: 'desc' },
-    })
+        orderBy: { createdAt: 'desc' },
+      })
 
-    return { recipes, error: null }
-  } catch (error) {
-    console.error('Failed to fetch recipes:', error)
-    return { recipes: [], error: 'Failed to load recipes' }
-  }
+      return success(recipes)
+    } catch (error) {
+      console.error('Failed to fetch recipes:', error)
+      return failure(Errors.server('レシピの取得に失敗しました'))
+    }
+  })
 }
 
 /**
  * ユーザー用のタグカテゴリを取得
  */
-export async function getTagCategoriesForUser(userId: string) {
-  const { hasAuth, hasProfile } = await checkUserProfile()
-
-  if (!hasAuth || !hasProfile) {
-    redirect('/login')
-  }
-
-  try {
-    const tagCategories = await prisma.tagCategory.findMany({
-      where: {
-        OR: [{ isSystem: true }, { userId }],
-      },
-      include: {
-        tags: {
-          orderBy: { name: 'asc' },
+export async function getTagCategoriesForUser(
+  userId: string
+): Promise<Result<TagCategoryWithTags[]>> {
+  return withAuth(async () => {
+    try {
+      const tagCategories = await prisma.tagCategory.findMany({
+        where: {
+          OR: [{ isSystem: true }, { userId }],
         },
-      },
-      orderBy: { createdAt: 'asc' },
-    })
+        include: {
+          tags: {
+            orderBy: { name: 'asc' },
+          },
+        },
+        orderBy: { createdAt: 'asc' },
+      })
 
-    return { tagCategories, error: null }
-  } catch (error) {
-    console.error('Failed to fetch tag categories:', error)
-    return { tagCategories: [], error: 'Failed to load tag categories' }
-  }
+      return success(tagCategories)
+    } catch (error) {
+      console.error('Failed to fetch tag categories:', error)
+      return failure(Errors.server('タグカテゴリの取得に失敗しました'))
+    }
+  })
 }

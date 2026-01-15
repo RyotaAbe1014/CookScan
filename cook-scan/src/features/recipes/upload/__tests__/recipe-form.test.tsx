@@ -306,7 +306,7 @@ describe('RecipeForm', () => {
   it('正常系：正しいデータでフォームを送信し、成功時にナビゲートする', async () => {
     // Given: フォームが表示され、Server Actionが成功を返すようにモックされている
     const user = userEvent.setup()
-    mockCreateRecipe.mockResolvedValue({ success: true, recipeId: 'recipe-123' })
+    mockCreateRecipe.mockResolvedValue({ ok: true, data: { recipeId: 'recipe-123' } })
 
     render(<RecipeForm tagCategories={mockTagCategories} imageUrl={null} extractedData={mockExtractedData} />)
 
@@ -340,7 +340,7 @@ describe('RecipeForm', () => {
   it('異常系：送信エラー時にアラートが表示される', async () => {
     // Given: フォームが表示され、Server Actionがエラーを返すようにモックされている
     const user = userEvent.setup()
-    mockCreateRecipe.mockResolvedValue({ success: false, error: '保存に失敗しました' })
+    mockCreateRecipe.mockResolvedValue({ ok: false, error: { code: 'SERVER_ERROR', message: '保存に失敗しました' } })
 
     render(<RecipeForm tagCategories={mockTagCategories} imageUrl={null} extractedData={mockExtractedData} />)
 
@@ -392,7 +392,7 @@ describe('RecipeForm', () => {
   it('正常系：すべての出典フィールドが空の場合、sourceInfoがnullで送信される', async () => {
     // Given: フォームが表示され、出典情報がnullのデータが準備されている
     const user = userEvent.setup()
-    mockCreateRecipe.mockResolvedValue({ success: true, recipeId: 'recipe-123' })
+    mockCreateRecipe.mockResolvedValue({ ok: true, data: { recipeId: 'recipe-123' } })
 
     const dataWithoutSource = { ...mockExtractedData, sourceInfo: null }
     render(<RecipeForm tagCategories={mockTagCategories} imageUrl={null} extractedData={dataWithoutSource} />)
@@ -418,7 +418,7 @@ describe('RecipeForm', () => {
   it('正常系：選択されたタグとともにフォームを送信する', async () => {
     // Given: フォームが表示され、タグが読み込まれている
     const user = userEvent.setup()
-    mockCreateRecipe.mockResolvedValue({ success: true, recipeId: 'recipe-123' })
+    mockCreateRecipe.mockResolvedValue({ ok: true, data: { recipeId: 'recipe-123' } })
 
     render(<RecipeForm tagCategories={mockTagCategories} imageUrl={null} extractedData={mockExtractedData} />)
 

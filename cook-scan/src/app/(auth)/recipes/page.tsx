@@ -6,6 +6,7 @@ import {
   getRecipesWithFilters,
   getTagCategoriesForUser,
 } from '@/features/recipes/list/actions'
+import { isSuccess } from '@/utils/result'
 import { parseRecipeSearchParams } from '@/features/recipes/list/utils'
 import { RecipeListContent } from '@/features/recipes/list/recipe-list-content'
 
@@ -32,11 +33,15 @@ export default async function RecipesPage({
     getTagCategoriesForUser(profile.id),
   ])
 
-  const recipes = recipesResult.recipes
-  const tagCategories = tagCategoriesResult.tagCategories
+  const recipes = isSuccess(recipesResult) ? recipesResult.data : []
+  const tagCategories = isSuccess(tagCategoriesResult) ? tagCategoriesResult.data : []
 
   return (
-    <AuthLayoutWrapper title="マイレシピ" subtitle="保存済みのレシピ一覧" rightAction={<BackToDashboardLink />}>
+    <AuthLayoutWrapper
+      title="マイレシピ"
+      subtitle="保存済みのレシピ一覧"
+      rightAction={<BackToDashboardLink />}
+    >
       <PageContainer>
         <RecipeListContent
           recipes={recipes}

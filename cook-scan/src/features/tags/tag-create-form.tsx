@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { createTagCategory, createTag } from './actions'
+import { isSuccess } from '@/utils/result'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
@@ -21,7 +22,7 @@ export function TagCreateForm({ categories }: TagCreateFormProps) {
 
   // タグ作成フォーム
   const [selectedCategoryId, setSelectedCategoryId] = useState(
-    categories.find(c => !c.isSystem)?.id || categories[0]?.id || ''
+    categories.find((c) => !c.isSystem)?.id || categories[0]?.id || ''
   )
   const [tagName, setTagName] = useState('')
   const [tagDescription, setTagDescription] = useState('')
@@ -60,14 +61,14 @@ export function TagCreateForm({ categories }: TagCreateFormProps) {
         tagDescription.trim() || undefined
       )
 
-      if (result.success) {
+      if (isSuccess(result)) {
         setTagSuccess('タグを作成しました')
         setTagName('')
         setTagDescription('')
       } else {
-        setTagError(result.error || 'タグの作成に失敗しました')
+        setTagError(result.error.message)
       }
-    } catch (_error) {
+    } catch {
       setTagError('タグの作成中にエラーが発生しました')
     } finally {
       setIsSubmittingTag(false)
@@ -92,14 +93,14 @@ export function TagCreateForm({ categories }: TagCreateFormProps) {
         categoryDescription.trim() || undefined
       )
 
-      if (result.success) {
+      if (isSuccess(result)) {
         setCategorySuccess('カテゴリを作成しました')
         setCategoryName('')
         setCategoryDescription('')
       } else {
-        setCategoryError(result.error || 'カテゴリの作成に失敗しました')
+        setCategoryError(result.error.message)
       }
-    } catch (_error) {
+    } catch {
       setCategoryError('カテゴリの作成中にエラーが発生しました')
     } finally {
       setIsSubmittingCategory(false)
@@ -116,25 +117,31 @@ export function TagCreateForm({ categories }: TagCreateFormProps) {
         <nav className="-mb-px flex" aria-label="Tabs">
           <button
             onClick={() => setActiveTab('tag')}
-            className={`group relative w-1/2 border-b-2 px-6 py-4 text-sm font-medium transition-all ${activeTab === 'tag'
+            className={`group relative w-1/2 border-b-2 px-6 py-4 text-sm font-medium transition-all ${
+              activeTab === 'tag'
                 ? 'border-emerald-600 text-emerald-600'
                 : 'border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-700'
-              }`}
+            }`}
           >
             <span className="flex items-center justify-center gap-2">
-              <TagIcon className={`h-5 w-5 ${activeTab === 'tag' ? 'text-emerald-600' : 'text-slate-400'}`} />
+              <TagIcon
+                className={`h-5 w-5 ${activeTab === 'tag' ? 'text-emerald-600' : 'text-slate-400'}`}
+              />
               タグを作成
             </span>
           </button>
           <button
             onClick={() => setActiveTab('category')}
-            className={`group relative w-1/2 border-b-2 px-6 py-4 text-sm font-medium transition-all ${activeTab === 'category'
+            className={`group relative w-1/2 border-b-2 px-6 py-4 text-sm font-medium transition-all ${
+              activeTab === 'category'
                 ? 'border-emerald-600 text-emerald-600'
                 : 'border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-700'
-              }`}
+            }`}
           >
             <span className="flex items-center justify-center gap-2">
-              <FolderIcon className={`h-5 w-5 ${activeTab === 'category' ? 'text-emerald-600' : 'text-slate-400'}`} />
+              <FolderIcon
+                className={`h-5 w-5 ${activeTab === 'category' ? 'text-emerald-600' : 'text-slate-400'}`}
+              />
               カテゴリを作成
             </span>
           </button>
@@ -200,13 +207,9 @@ export function TagCreateForm({ categories }: TagCreateFormProps) {
               />
             </div>
 
-            {tagError && (
-              <Alert variant="error">{tagError}</Alert>
-            )}
+            {tagError && <Alert variant="error">{tagError}</Alert>}
 
-            {tagSuccess && (
-              <Alert variant="success">{tagSuccess}</Alert>
-            )}
+            {tagSuccess && <Alert variant="success">{tagSuccess}</Alert>}
 
             <Button
               type="submit"
@@ -238,7 +241,10 @@ export function TagCreateForm({ categories }: TagCreateFormProps) {
             </div>
 
             <div>
-              <label htmlFor="category-description" className="block text-sm font-semibold text-neutral-900">
+              <label
+                htmlFor="category-description"
+                className="block text-sm font-semibold text-neutral-900"
+              >
                 説明（任意）
               </label>
               <Textarea
@@ -253,20 +259,11 @@ export function TagCreateForm({ categories }: TagCreateFormProps) {
               />
             </div>
 
-            {categoryError && (
-              <Alert variant="error">{categoryError}</Alert>
-            )}
+            {categoryError && <Alert variant="error">{categoryError}</Alert>}
 
-            {categorySuccess && (
-              <Alert variant="success">{categorySuccess}</Alert>
-            )}
+            {categorySuccess && <Alert variant="success">{categorySuccess}</Alert>}
 
-            <Button
-              type="submit"
-              isLoading={isSubmittingCategory}
-              size="lg"
-              className="w-full"
-            >
+            <Button type="submit" isLoading={isSubmittingCategory} size="lg" className="w-full">
               <PlusIcon className="h-5 w-5" stroke="currentColor" />
               {isSubmittingCategory ? '作成中...' : 'カテゴリを作成'}
             </Button>

@@ -3,6 +3,7 @@ import { AuthLayoutWrapper } from '@/components/layouts/auth-layout-wrapper'
 import { PageContainer } from '@/components/layouts/page-container'
 import { BackToDashboardLink } from '@/components/navigation/back-to-dashboard-link'
 import { getTagCategoriesWithTags } from '@/features/tags/actions'
+import { isSuccess } from '@/utils/result'
 import { TagPageContent } from '@/features/tags/tag-page-content'
 
 export default async function TagsPage() {
@@ -12,10 +13,15 @@ export default async function TagsPage() {
     return null
   }
 
-  const { tagCategories } = await getTagCategoriesWithTags(profile.id)
+  const result = await getTagCategoriesWithTags(profile.id)
+  const tagCategories = isSuccess(result) ? result.data.tagCategories : []
 
   return (
-    <AuthLayoutWrapper title="タグ管理" subtitle="レシピを整理・分類するタグを管理" rightAction={<BackToDashboardLink />}>
+    <AuthLayoutWrapper
+      title="タグ管理"
+      subtitle="レシピを整理・分類するタグを管理"
+      rightAction={<BackToDashboardLink />}
+    >
       <PageContainer>
         <TagPageContent tagCategories={tagCategories} currentUserId={profile.id} />
       </PageContainer>
