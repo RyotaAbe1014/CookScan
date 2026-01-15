@@ -73,7 +73,7 @@ export async function getRecipeById(recipeId: string): Promise<Result<RecipeWith
         return failure(Errors.notFound('レシピ'))
       }
 
-      return success(recipe)
+      return success(recipe as RecipeWithRelations)
     } catch (error) {
       console.error('Failed to fetch recipe:', error)
       return failure(Errors.server('レシピの取得に失敗しました'))
