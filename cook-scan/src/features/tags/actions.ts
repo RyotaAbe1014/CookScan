@@ -152,15 +152,6 @@ export async function deleteTag(tagId: string): Promise<Result<void>> {
         return failure(Errors.forbidden('このタグを削除する権限がありません'))
       }
 
-      // 使用中のタグは削除不可
-      if (tag.recipeTags.length > 0) {
-        return failure(
-          Errors.conflict(
-            `このタグは${tag.recipeTags.length}件のレシピで使用されているため削除できません`
-          )
-        )
-      }
-
       await prisma.tag.delete({
         where: { id: tagId },
       })
