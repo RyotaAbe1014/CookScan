@@ -32,19 +32,3 @@ export async function checkUserProfile() {
     profile
   }
 }
-
-/**
- * 認証済みユーザーのプロフィールを取得する
- * 未認証またはプロフィール未設定の場合はログインページにリダイレクト
- *
- * @returns ユーザープロフィール（認証済み保証）
- */
-export async function requireUserProfile(): Promise<UserProfile> {
-  const { hasAuth, hasProfile, profile } = await checkUserProfile()
-
-  if (!hasAuth || !hasProfile || !profile) {
-    redirect('/login')
-  }
-
-  return profile
-}
