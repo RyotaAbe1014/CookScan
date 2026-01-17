@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 
 export async function GET(request: NextRequest) {
+  console.log('request', request)
   const { searchParams } = new URL(request.url)
   const token_hash = searchParams.get('token_hash')
   const type = searchParams.get('type') as EmailOtpType | null
@@ -18,6 +19,10 @@ export async function GET(request: NextRequest) {
       token_hash,
     })
     if (!error) {
+      // 招待の場合はパスワード設定ページへリダイレクト
+      if (type === 'invite') {
+        redirect('/password/setup')
+      }
       // redirect user to specified redirect URL or root of app
       redirect(next)
     }

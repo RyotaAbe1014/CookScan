@@ -26,6 +26,63 @@ const passwordChangeSchema = z
 
 export type PasswordChangeFormData = z.infer<typeof passwordChangeSchema>
 
+// パスワード設定用バリデーションスキーマ
+const passwordSetupSchema = z
+  .object({
+    password: z
+      .string()
+      .min(8, 'パスワードは8文字以上で入力してください')
+      .regex(/[A-Z]/, 'パスワードには大文字を1文字以上含めてください')
+      .regex(/[a-z]/, 'パスワードには小文字を1文字以上含めてください')
+      .regex(/[0-9]/, 'パスワードには数字を1文字以上含めてください'),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: 'パスワードが一致しません',
+    path: ['confirmPassword'],
+  })
+
+export type PasswordSetupFormData = z.infer<typeof passwordSetupSchema>
+
+/**
+ * 招待後の初回パスワード設定
+ * 成功時はプロフィール設定画面にリダイレクト
+ */
+export async function setupPassword(
+  data: PasswordSetupFormData
+): Promise<Result<void>> {
+  // バリデーション
+  const validation = passwordSetupSchema.safeParse(data)
+  if (!validation.success) {
+    return failure(Errors.validation(validation.error.errors[0].message))
+  }
+
+  const supabase = await createClient()
+
+  // 認証確認
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser()
+
+  if (userError || !user) {
+    return failure(Errors.unauthenticated())
+  }
+
+  // パスワード設定
+  const { error } = await supabase.auth.updateUser({
+    password: validation.data.password,
+  })
+
+  if (error) {
+    console.error('Failed to setup password:', error)
+    return failure(Errors.server('パスワードの設定に失敗しました'))
+  }
+
+  // 成功時はプロフィール設定画面にリダイレクト
+  redirect('/profile/setup')
+}
+
 /**
  * パスワードを更新
  * 成功時はログインページにリダイレクト
