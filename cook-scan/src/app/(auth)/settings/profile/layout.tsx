@@ -11,7 +11,7 @@ type ProfileEditLayoutProps = {
 export default function ProfileEditLayout({ children }: ProfileEditLayoutProps) {
   return (
     <AuthLayoutWrapper
-      title="プロフィール編集"
+      title="プロフィール"
       rightAction={
         <Link
           href="/dashboard"

@@ -28,8 +28,8 @@ describe('PasswordSetupForm', () => {
     render(<PasswordSetupForm />)
 
     // When: ユーザーが有効なパスワードを入力して送信する
-    const passwordInput = screen.getByLabelText(/新しいパスワード/i)
-    const confirmPasswordInput = screen.getByLabelText(/パスワード確認/i)
+    const passwordInput = screen.getByPlaceholderText('8文字以上、大文字・小文字・数字を含む')
+    const confirmPasswordInput = screen.getByPlaceholderText('もう一度入力してください')
     const submitButton = screen.getByRole('button', { name: /パスワードを設定/i })
 
     await user.type(passwordInput, 'Password123')
@@ -56,8 +56,8 @@ describe('PasswordSetupForm', () => {
     render(<PasswordSetupForm />)
 
     // When: ユーザーが異なるパスワードを入力して送信する
-    const passwordInput = screen.getByLabelText(/新しいパスワード/i)
-    const confirmPasswordInput = screen.getByLabelText(/パスワード確認/i)
+    const passwordInput = screen.getByPlaceholderText('8文字以上、大文字・小文字・数字を含む')
+    const confirmPasswordInput = screen.getByPlaceholderText('もう一度入力してください')
     const submitButton = screen.getByRole('button', { name: /パスワードを設定/i })
 
     await user.type(passwordInput, 'Password123')
@@ -81,8 +81,8 @@ describe('PasswordSetupForm', () => {
     render(<PasswordSetupForm />)
 
     // When: ユーザーが短いパスワードを入力して送信する
-    const passwordInput = screen.getByLabelText(/新しいパスワード/i)
-    const confirmPasswordInput = screen.getByLabelText(/パスワード確認/i)
+    const passwordInput = screen.getByPlaceholderText('8文字以上、大文字・小文字・数字を含む')
+    const confirmPasswordInput = screen.getByPlaceholderText('もう一度入力してください')
     const submitButton = screen.getByRole('button', { name: /パスワードを設定/i })
 
     await user.type(passwordInput, 'Pass1')
@@ -100,11 +100,10 @@ describe('PasswordSetupForm', () => {
     render(<PasswordSetupForm />)
 
     // Then: パスワード要件が表示される
-    expect(screen.getByText('パスワードの要件:')).toBeInTheDocument()
-    expect(screen.getByText('• 8文字以上')).toBeInTheDocument()
-    expect(screen.getByText('• 大文字を1文字以上含む')).toBeInTheDocument()
-    expect(screen.getByText('• 小文字を1文字以上含む')).toBeInTheDocument()
-    expect(screen.getByText('• 数字を1文字以上含む')).toBeInTheDocument()
+    expect(screen.getByText(/セキュリティ要件:/)).toBeInTheDocument()
+    expect(
+      screen.getByText(/パスワードは8文字以上で、大文字、小文字、数字を含める必要があります/)
+    ).toBeInTheDocument()
   })
 
   test('UI：空のフォームでは送信ボタンが無効になる', () => {

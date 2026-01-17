@@ -29,8 +29,6 @@ export async function inviteUser(email: string): Promise<Result<void>> {
       }
     )
 
-    console.log('Invite user result:', { error })
-
     if (error) {
       console.error('Invite user error:', error)
       return failure(Errors.server(error.message || '招待の送信に失敗しました'))
