@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { toast } from 'sonner'
 import { updateTag, deleteTag } from './actions'
 import { isSuccess } from '@/utils/result'
 import { Button } from '@/components/ui/button'
@@ -26,15 +27,13 @@ export function TagItem({ tag, usageCount, isUserOwned }: TagItemProps) {
   const [isEditing, setIsEditing] = useState(false)
   const [editName, setEditName] = useState(tag.name)
   const [editDescription, setEditDescription] = useState(tag.description || '')
-  const [error, setError] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const handleEdit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setError(null)
 
     if (!editName.trim()) {
-      setError('タグ名を入力してください')
+      toast.error('タグ名を入力してください')
       return
     }
 
@@ -46,10 +45,10 @@ export function TagItem({ tag, usageCount, isUserOwned }: TagItemProps) {
       if (isSuccess(result)) {
         setIsEditing(false)
       } else {
-        setError(result.error.message)
+        toast.error(result.error.message)
       }
     } catch {
-      setError('タグの更新中にエラーが発生しました')
+      toast.error('タグの更新中にエラーが発生しました')
     } finally {
       setIsSubmitting(false)
     }
@@ -61,18 +60,17 @@ export function TagItem({ tag, usageCount, isUserOwned }: TagItemProps) {
     }
 
     setIsSubmitting(true)
-    setError(null)
 
     try {
       const result = await deleteTag(tag.id)
 
       if (!isSuccess(result)) {
-        setError(result.error.message)
+        toast.error(result.error.message)
         setIsSubmitting(false)
       }
       // 成功時はページがリロードされるのでローディング状態を維持
     } catch {
-      setError('タグの削除中にエラーが発生しました')
+      toast.error('タグの削除中にエラーが発生しました')
       setIsSubmitting(false)
     }
   }
@@ -81,7 +79,6 @@ export function TagItem({ tag, usageCount, isUserOwned }: TagItemProps) {
     setIsEditing(false)
     setEditName(tag.name)
     setEditDescription(tag.description || '')
-    setError(null)
   }
 
   if (isEditing) {
@@ -123,8 +120,6 @@ export function TagItem({ tag, usageCount, isUserOwned }: TagItemProps) {
               disabled={isSubmitting}
             />
           </div>
-
-          {error && <p className="text-xs text-red-600">{error}</p>}
 
           <div className="flex gap-2">
             <Button type="submit" isLoading={isSubmitting} size="sm">
@@ -172,12 +167,6 @@ export function TagItem({ tag, usageCount, isUserOwned }: TagItemProps) {
           >
             <TrashIcon className="h-4 w-4 text-red-700" />
           </button>
-        </div>
-      )}
-
-      {error && !isEditing && (
-        <div className="absolute left-0 top-full z-10 mt-2 rounded-lg bg-red-50 p-3 shadow-lg ring-1 ring-red-200">
-          <p className="text-xs font-medium text-red-800">{error}</p>
         </div>
       )}
     </div>
