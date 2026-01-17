@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { toast } from 'sonner'
 import { createTagCategory, createTag } from './actions'
 import { isSuccess } from '@/utils/result'
 import { Button } from '@/components/ui/button'
@@ -26,29 +27,26 @@ export function TagCreateForm({ categories }: TagCreateFormProps) {
   )
   const [tagName, setTagName] = useState('')
   const [tagDescription, setTagDescription] = useState('')
-  const [tagError, setTagError] = useState<string | null>(null)
   const [tagSuccess, setTagSuccess] = useState<string | null>(null)
   const [isSubmittingTag, setIsSubmittingTag] = useState(false)
 
   // カテゴリ作成フォーム
   const [categoryName, setCategoryName] = useState('')
   const [categoryDescription, setCategoryDescription] = useState('')
-  const [categoryError, setCategoryError] = useState<string | null>(null)
   const [categorySuccess, setCategorySuccess] = useState<string | null>(null)
   const [isSubmittingCategory, setIsSubmittingCategory] = useState(false)
 
   const handleTagSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setTagError(null)
     setTagSuccess(null)
 
     if (!tagName.trim()) {
-      setTagError('タグ名を入力してください')
+      toast.error('タグ名を入力してください')
       return
     }
 
     if (!selectedCategoryId) {
-      setTagError('カテゴリを選択してください')
+      toast.error('カテゴリを選択してください')
       return
     }
 
@@ -66,10 +64,10 @@ export function TagCreateForm({ categories }: TagCreateFormProps) {
         setTagName('')
         setTagDescription('')
       } else {
-        setTagError(result.error.message)
+        toast.error(result.error.message)
       }
     } catch {
-      setTagError('タグの作成中にエラーが発生しました')
+      toast.error('タグの作成中にエラーが発生しました')
     } finally {
       setIsSubmittingTag(false)
     }
@@ -77,11 +75,10 @@ export function TagCreateForm({ categories }: TagCreateFormProps) {
 
   const handleCategorySubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setCategoryError(null)
     setCategorySuccess(null)
 
     if (!categoryName.trim()) {
-      setCategoryError('カテゴリ名を入力してください')
+      toast.error('カテゴリ名を入力してください')
       return
     }
 
@@ -98,10 +95,10 @@ export function TagCreateForm({ categories }: TagCreateFormProps) {
         setCategoryName('')
         setCategoryDescription('')
       } else {
-        setCategoryError(result.error.message)
+        toast.error(result.error.message)
       }
     } catch {
-      setCategoryError('カテゴリの作成中にエラーが発生しました')
+      toast.error('カテゴリの作成中にエラーが発生しました')
     } finally {
       setIsSubmittingCategory(false)
     }
@@ -207,8 +204,6 @@ export function TagCreateForm({ categories }: TagCreateFormProps) {
               />
             </div>
 
-            {tagError && <Alert variant="error">{tagError}</Alert>}
-
             {tagSuccess && <Alert variant="success">{tagSuccess}</Alert>}
 
             <Button
@@ -258,8 +253,6 @@ export function TagCreateForm({ categories }: TagCreateFormProps) {
                 disabled={isSubmittingCategory}
               />
             </div>
-
-            {categoryError && <Alert variant="error">{categoryError}</Alert>}
 
             {categorySuccess && <Alert variant="success">{categorySuccess}</Alert>}
 

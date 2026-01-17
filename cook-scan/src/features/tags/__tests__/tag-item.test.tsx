@@ -9,7 +9,17 @@ vi.mock('../actions', () => ({
   deleteTag: vi.fn(() => Promise.resolve({ ok: true, data: undefined })),
 }))
 
+// モック: sonner
+vi.mock('sonner', () => ({
+  toast: {
+    error: vi.fn(),
+  },
+}))
+
 import { updateTag, deleteTag } from '../actions'
+import { toast } from 'sonner'
+
+const mockToastError = vi.mocked(toast.error)
 
 // window.confirmをモック
 const mockConfirm = vi.fn()
@@ -32,6 +42,7 @@ describe('TagItem', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
+    mockToastError.mockClear()
     mockConfirm.mockReturnValue(true)
   })
 
@@ -202,7 +213,7 @@ describe('TagItem', () => {
     })
   })
 
-  it('タグ更新: updateTagがエラーを返した場合、エラーメッセージが表示される', async () => {
+  it('タグ更新: updateTagがエラーを返した場合、エラートーストが表示される', async () => {
     // Given: updateTagがエラーを返す
     vi.mocked(updateTag).mockResolvedValueOnce({ ok: false, error: { code: 'CONFLICT', message: '同名のタグが存在します' } })
 
@@ -217,13 +228,13 @@ describe('TagItem', () => {
     // When: 保存ボタンをクリック
     await user.click(screen.getByRole('button', { name: /保存/ }))
 
-    // Then: エラーメッセージが表示される
+    // Then: エラートーストが表示される
     await waitFor(() => {
-      expect(screen.getByText('同名のタグが存在します')).toBeInTheDocument()
+      expect(mockToastError).toHaveBeenCalledWith('同名のタグが存在します')
     })
   })
 
-  it('タグ更新: updateTagが例外をスローした場合、エラーメッセージが表示される', async () => {
+  it('タグ更新: updateTagが例外をスローした場合、エラートーストが表示される', async () => {
     // Given: updateTagが例外をスロー
     vi.mocked(updateTag).mockRejectedValueOnce(new Error('Network error'))
 
@@ -238,13 +249,13 @@ describe('TagItem', () => {
     // When: 保存ボタンをクリック
     await user.click(screen.getByRole('button', { name: /保存/ }))
 
-    // Then: エラーメッセージが表示される
+    // Then: エラートーストが表示される
     await waitFor(() => {
-      expect(screen.getByText('タグの更新中にエラーが発生しました')).toBeInTheDocument()
+      expect(mockToastError).toHaveBeenCalledWith('タグの更新中にエラーが発生しました')
     })
   })
 
-  it('バリデーション: タグ名が空の場合、エラーメッセージが表示される', async () => {
+  it('バリデーション: タグ名が空の場合、エラートーストが表示される', async () => {
     // Given: タグ名が空
     const user = userEvent.setup()
     render(<TagItem tag={mockTag} usageCount={5} isUserOwned={true} />)
@@ -256,8 +267,8 @@ describe('TagItem', () => {
     // When: 保存ボタンをクリック
     await user.click(screen.getByRole('button', { name: /保存/ }))
 
-    // Then: エラーメッセージが表示される
-    expect(screen.getByText('タグ名を入力してください')).toBeInTheDocument()
+    // Then: エラートーストが表示される
+    expect(mockToastError).toHaveBeenCalledWith('タグ名を入力してください')
     expect(updateTag).not.toHaveBeenCalled()
   })
 
@@ -303,7 +314,7 @@ describe('TagItem', () => {
     expect(deleteTag).not.toHaveBeenCalled()
   })
 
-  it('タグ削除: deleteTagがエラーを返した場合、エラーメッセージが表示される', async () => {
+  it('タグ削除: deleteTagがエラーを返した場合、エラートーストが表示される', async () => {
     // Given: deleteTagがエラーを返す
     vi.mocked(deleteTag).mockResolvedValueOnce({ ok: false, error: { code: 'SERVER_ERROR', message: '削除に失敗しました' } })
     mockConfirm.mockReturnValue(true)
@@ -314,13 +325,13 @@ describe('TagItem', () => {
     // When: 削除ボタンをクリック
     await user.click(screen.getByTitle('削除'))
 
-    // Then: エラーメッセージが表示される
+    // Then: エラートーストが表示される
     await waitFor(() => {
-      expect(screen.getByText('削除に失敗しました')).toBeInTheDocument()
+      expect(mockToastError).toHaveBeenCalledWith('削除に失敗しました')
     })
   })
 
-  it('タグ削除: deleteTagが例外をスローした場合、エラーメッセージが表示される', async () => {
+  it('タグ削除: deleteTagが例外をスローした場合、エラートーストが表示される', async () => {
     // Given: deleteTagが例外をスロー
     vi.mocked(deleteTag).mockRejectedValueOnce(new Error('Network error'))
     mockConfirm.mockReturnValue(true)
@@ -331,9 +342,9 @@ describe('TagItem', () => {
     // When: 削除ボタンをクリック
     await user.click(screen.getByTitle('削除'))
 
-    // Then: エラーメッセージが表示される
+    // Then: エラートーストが表示される
     await waitFor(() => {
-      expect(screen.getByText('タグの削除中にエラーが発生しました')).toBeInTheDocument()
+      expect(mockToastError).toHaveBeenCalledWith('タグの削除中にエラーが発生しました')
     })
   })
 
@@ -424,25 +435,6 @@ describe('TagItem', () => {
     resolveDelete!({ ok: true, data: undefined })
     await waitFor(() => {
       expect(deleteTag).toHaveBeenCalled()
-    })
-  })
-
-  it('エラー表示: 編集モード外でエラーが発生した場合、絶対配置でエラーが表示される', async () => {
-    // Given: 削除がエラーを返す
-    vi.mocked(deleteTag).mockResolvedValueOnce({ ok: false, error: { code: 'SERVER_ERROR', message: '削除エラー' } })
-    mockConfirm.mockReturnValue(true)
-
-    const user = userEvent.setup()
-    render(<TagItem tag={mockTag} usageCount={5} isUserOwned={true} />)
-
-    // When: 削除ボタンをクリック
-    await user.click(screen.getByTitle('削除'))
-
-    // Then: エラーメッセージが表示される（絶対配置）
-    await waitFor(() => {
-      const errorMessage = screen.getByText('削除エラー')
-      expect(errorMessage).toBeInTheDocument()
-      expect(errorMessage.parentElement).toHaveClass('absolute')
     })
   })
 })

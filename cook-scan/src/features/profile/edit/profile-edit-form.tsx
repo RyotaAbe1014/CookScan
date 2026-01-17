@@ -13,6 +13,7 @@ import { UserIcon } from '@/components/icons/user-icon'
 import { UserCircleIcon } from '@/components/icons/user-circle-icon'
 import { CheckIcon } from '@/components/icons/check-icon'
 import { LockIcon } from '@/components/icons/lock-icon'
+import { InviteUserForm } from '@/features/profile/invite/invite-user-form'
 
 type User = {
   id: string
@@ -64,7 +65,8 @@ export function ProfileEditForm({ initialData }: ProfileEditFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 p-8">
+    <>
+      <form onSubmit={handleSubmit} className="space-y-6 p-8">
       {/* 成功メッセージ - emerald系 */}
       {isSuccess && (
         <Alert variant="success">プロフィールを更新しました</Alert>
@@ -169,5 +171,17 @@ export function ProfileEditForm({ initialData }: ProfileEditFormProps) {
         </Button>
       </Link>
     </form>
+
+    {/* 招待セクション（formの外） */}
+    <div className="border-t border-slate-200 pt-6 px-8 pb-8">
+      <h3 className="text-lg font-semibold text-slate-800 mb-4">
+        ユーザーを招待
+      </h3>
+      <p className="text-sm text-slate-600 mb-4">
+        新しいユーザーをCookScanに招待します。招待されたユーザーには、メールでアカウント設定用のリンクが送信されます。
+      </p>
+      <InviteUserForm />
+    </div>
+    </>
   )
 }

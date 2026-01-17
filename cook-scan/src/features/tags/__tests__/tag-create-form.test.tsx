@@ -9,7 +9,17 @@ vi.mock('../actions', () => ({
   createTagCategory: vi.fn(() => Promise.resolve({ ok: true, data: { categoryId: 'test-category-id' } })),
 }))
 
+// モック: sonner
+vi.mock('sonner', () => ({
+  toast: {
+    error: vi.fn(),
+  },
+}))
+
 import { createTag, createTagCategory } from '../actions'
+import { toast } from 'sonner'
+
+const mockToastError = vi.mocked(toast.error)
 
 // ヘルパー: type="submit"のボタンを取得
 const getSubmitButton = () => {
@@ -31,6 +41,7 @@ describe('TagCreateForm', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
+    mockToastError.mockClear()
   })
 
   describe('初期表示', () => {
@@ -107,7 +118,7 @@ describe('TagCreateForm', () => {
   })
 
   describe('タグ作成フォーム - バリデーション', () => {
-    it('タグ名が空の場合、送信するとエラーメッセージが表示される', async () => {
+    it('タグ名が空の場合、送信するとエラートーストが表示される', async () => {
       // Given: タグ名が空
       const user = userEvent.setup()
       render(<TagCreateForm categories={mockCategories} />)
@@ -115,8 +126,8 @@ describe('TagCreateForm', () => {
       // When: 送信ボタンをクリック
       await user.click(getSubmitButton())
 
-      // Then: エラーメッセージが表示される
-      expect(screen.getByText('タグ名を入力してください')).toBeInTheDocument()
+      // Then: エラートーストが表示される
+      expect(mockToastError).toHaveBeenCalledWith('タグ名を入力してください')
       expect(createTag).not.toHaveBeenCalled()
     })
 
@@ -182,7 +193,7 @@ describe('TagCreateForm', () => {
       })
     })
 
-    it('createTagがエラーを返した場合、エラーメッセージが表示される', async () => {
+    it('createTagがエラーを返した場合、エラートーストが表示される', async () => {
       // Given: createTagがエラーを返す
       vi.mocked(createTag).mockResolvedValueOnce({ ok: false, error: { code: 'CONFLICT', message: '同名のタグが存在します' } })
 
@@ -194,13 +205,13 @@ describe('TagCreateForm', () => {
       // When: 送信ボタンをクリック
       await user.click(getSubmitButton())
 
-      // Then: エラーメッセージが表示される
+      // Then: エラートーストが表示される
       await waitFor(() => {
-        expect(screen.getByText('同名のタグが存在します')).toBeInTheDocument()
+        expect(mockToastError).toHaveBeenCalledWith('同名のタグが存在します')
       })
     })
 
-    it('createTagが例外をスローした場合、エラーメッセージが表示される', async () => {
+    it('createTagが例外をスローした場合、エラートーストが表示される', async () => {
       // Given: createTagが例外をスロー
       vi.mocked(createTag).mockRejectedValueOnce(new Error('Network error'))
 
@@ -212,9 +223,9 @@ describe('TagCreateForm', () => {
       // When: 送信ボタンをクリック
       await user.click(getSubmitButton())
 
-      // Then: エラーメッセージが表示される
+      // Then: エラートーストが表示される
       await waitFor(() => {
-        expect(screen.getByText('タグの作成中にエラーが発生しました')).toBeInTheDocument()
+        expect(mockToastError).toHaveBeenCalledWith('タグの作成中にエラーが発生しました')
       })
     })
   })
@@ -250,7 +261,7 @@ describe('TagCreateForm', () => {
   })
 
   describe('カテゴリ作成フォーム - バリデーション', () => {
-    it('カテゴリ名が空の場合、送信するとエラーメッセージが表示される', async () => {
+    it('カテゴリ名が空の場合、送信するとエラートーストが表示される', async () => {
       // Given: カテゴリタブがアクティブ
       const user = userEvent.setup()
       render(<TagCreateForm categories={mockCategories} />)
@@ -259,10 +270,8 @@ describe('TagCreateForm', () => {
       // When: 送信ボタンをクリック
       await user.click(getSubmitButton())
 
-      // Then: エラーメッセージが表示される
-      await waitFor(() => {
-        expect(screen.getByText('カテゴリ名を入力してください')).toBeInTheDocument()
-      })
+      // Then: エラートーストが表示される
+      expect(mockToastError).toHaveBeenCalledWith('カテゴリ名を入力してください')
       expect(createTagCategory).not.toHaveBeenCalled()
     })
   })
@@ -306,7 +315,7 @@ describe('TagCreateForm', () => {
       })
     })
 
-    it('createTagCategoryがエラーを返した場合、エラーメッセージが表示される', async () => {
+    it('createTagCategoryがエラーを返した場合、エラートーストが表示される', async () => {
       // Given: createTagCategoryがエラーを返す
       vi.mocked(createTagCategory).mockResolvedValueOnce({ ok: false, error: { code: 'CONFLICT', message: '同名のカテゴリが存在します' } })
 
@@ -319,13 +328,13 @@ describe('TagCreateForm', () => {
       // When: 送信ボタンをクリック
       await user.click(getSubmitButton())
 
-      // Then: エラーメッセージが表示される
+      // Then: エラートーストが表示される
       await waitFor(() => {
-        expect(screen.getByText('同名のカテゴリが存在します')).toBeInTheDocument()
+        expect(mockToastError).toHaveBeenCalledWith('同名のカテゴリが存在します')
       })
     })
 
-    it('createTagCategoryが例外をスローした場合、エラーメッセージが表示される', async () => {
+    it('createTagCategoryが例外をスローした場合、エラートーストが表示される', async () => {
       // Given: createTagCategoryが例外をスロー
       vi.mocked(createTagCategory).mockRejectedValueOnce(new Error('Network error'))
 
@@ -338,9 +347,9 @@ describe('TagCreateForm', () => {
       // When: 送信ボタンをクリック
       await user.click(getSubmitButton())
 
-      // Then: エラーメッセージが表示される
+      // Then: エラートーストが表示される
       await waitFor(() => {
-        expect(screen.getByText('カテゴリの作成中にエラーが発生しました')).toBeInTheDocument()
+        expect(mockToastError).toHaveBeenCalledWith('カテゴリの作成中にエラーが発生しました')
       })
     })
   })

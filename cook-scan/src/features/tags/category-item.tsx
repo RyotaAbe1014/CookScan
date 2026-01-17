@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { toast } from 'sonner'
 import { updateTagCategory, deleteTagCategory } from './actions'
 import { isSuccess } from '@/utils/result'
 import { TagItem } from './tag-item'
@@ -40,17 +41,15 @@ export function CategoryItem({ category, currentUserId }: CategoryItemProps) {
   const [isEditing, setIsEditing] = useState(false)
   const [editName, setEditName] = useState(category.name)
   const [editDescription, setEditDescription] = useState(category.description || '')
-  const [error, setError] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const isUserOwned = category.userId === currentUserId
 
   const handleEdit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setError(null)
 
     if (!editName.trim()) {
-      setError('カテゴリ名を入力してください')
+      toast.error('カテゴリ名を入力してください')
       return
     }
 
@@ -66,10 +65,10 @@ export function CategoryItem({ category, currentUserId }: CategoryItemProps) {
       if (isSuccess(result)) {
         setIsEditing(false)
       } else {
-        setError(result.error.message)
+        toast.error(result.error.message)
       }
     } catch {
-      setError('カテゴリの更新中にエラーが発生しました')
+      toast.error('カテゴリの更新中にエラーが発生しました')
     } finally {
       setIsSubmitting(false)
     }
@@ -83,18 +82,17 @@ export function CategoryItem({ category, currentUserId }: CategoryItemProps) {
     }
 
     setIsSubmitting(true)
-    setError(null)
 
     try {
       const result = await deleteTagCategory(category.id)
 
       if (!isSuccess(result)) {
-        setError(result.error.message)
+        toast.error(result.error.message)
         setIsSubmitting(false)
       }
       // 成功時はページがリロードされるのでローディング状態を維持
     } catch {
-      setError('カテゴリの削除中にエラーが発生しました')
+      toast.error('カテゴリの削除中にエラーが発生しました')
       setIsSubmitting(false)
     }
   }
@@ -103,7 +101,6 @@ export function CategoryItem({ category, currentUserId }: CategoryItemProps) {
     setIsEditing(false)
     setEditName(category.name)
     setEditDescription(category.description || '')
-    setError(null)
   }
 
   return (
@@ -146,8 +143,6 @@ export function CategoryItem({ category, currentUserId }: CategoryItemProps) {
                 disabled={isSubmitting}
               />
             </div>
-
-            {error && <p className="text-sm text-red-600">{error}</p>}
 
             <div className="flex gap-2">
               <Button type="submit" isLoading={isSubmitting} size="sm">
@@ -215,11 +210,6 @@ export function CategoryItem({ category, currentUserId }: CategoryItemProps) {
                 </div>
               )}
             </div>
-          </div>
-        )}
-        {error && !isEditing && (
-          <div className="mt-2 rounded-md bg-red-50 p-3">
-            <p className="text-sm text-red-800">{error}</p>
           </div>
         )}
       </div>
