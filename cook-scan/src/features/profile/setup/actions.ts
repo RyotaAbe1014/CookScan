@@ -8,7 +8,6 @@ import { success, failure, Errors } from '@/utils/result'
 
 /**
  * 既存のプロフィールをチェック
- * 注: この関数は認証前に呼び出される可能性があるため、withAuthを使用しない
  */
 export async function checkExistingProfile(
   authId: string
