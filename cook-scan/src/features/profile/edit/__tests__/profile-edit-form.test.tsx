@@ -8,6 +8,11 @@ vi.mock('../actions', () => ({
   updateUserProfile: vi.fn(() => Promise.resolve({ ok: true, data: undefined })),
 }))
 
+// モック: InviteUserForm (admin.ts の依存を回避)
+vi.mock('@/features/profile/invite/invite-user-form', () => ({
+  InviteUserForm: () => <div data-testid="mocked-invite-form">Mocked InviteUserForm</div>,
+}))
+
 import { updateUserProfile } from '../actions'
 
 describe('ProfileEditForm', () => {

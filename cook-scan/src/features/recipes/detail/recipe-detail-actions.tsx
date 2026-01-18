@@ -2,18 +2,14 @@
 
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
-import dynamic from 'next/dynamic'
+import { domToJpeg } from 'modern-screenshot'
 import type { RecipeMinimal } from '@/types/recipe'
 import { Button } from '@/components/ui/button'
 import { PencilIcon } from '@/components/icons/pencil-icon'
 import { DownloadIcon } from '@/components/icons/download-icon'
 import { TrashIcon } from '@/components/icons/trash-icon'
 import { ExclamationTriangleIcon } from '@/components/icons/exclamation-triangle-icon'
-
-const DeleteRecipeDialog = dynamic(
-  () => import('@/features/recipes/delete/delete-recipe-dialog'),
-  { ssr: false }
-)
+import DeleteRecipeDialog from '@/features/recipes/delete/delete-recipe-dialog'
 
 type Props = {
   recipe: RecipeMinimal
@@ -55,7 +51,6 @@ export function RecipeDetailActions({ recipe }: Props) {
         await document.fonts.ready
       }
 
-      const { domToJpeg } = await import('modern-screenshot')
       const dataUrl = await domToJpeg(target, { quality: 0.95 })
       const link = document.createElement('a')
       link.download = `${recipe.title}.jpg`

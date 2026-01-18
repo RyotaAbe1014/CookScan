@@ -9,7 +9,15 @@ vi.mock('../actions', () => ({
   deleteTagCategory: vi.fn(() => Promise.resolve({ ok: true, data: undefined })),
 }))
 
+// モック: sonner (toast)
+vi.mock('sonner', () => ({
+  toast: {
+    error: vi.fn(),
+  },
+}))
+
 import { updateTagCategory, deleteTagCategory } from '../actions'
+import { toast } from 'sonner'
 
 // window.confirmをモック
 const mockConfirm = vi.fn()
@@ -53,6 +61,7 @@ describe('CategoryItem', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     mockConfirm.mockReturnValue(true)
+    vi.mocked(toast.error).mockClear()
   })
 
   it('初期表示: カテゴリ名とタグ数が表示される', () => {
@@ -260,9 +269,9 @@ describe('CategoryItem', () => {
     // When: 保存ボタンをクリック
     await user.click(screen.getByRole('button', { name: /保存/ }))
 
-    // Then: エラーメッセージが表示される
+    // Then: toast.errorが呼ばれる
     await waitFor(() => {
-      expect(screen.getByText('同名のカテゴリが存在します')).toBeInTheDocument()
+      expect(toast.error).toHaveBeenCalledWith('同名のカテゴリが存在します')
     })
   })
 
@@ -282,9 +291,9 @@ describe('CategoryItem', () => {
     // When: 保存ボタンをクリック
     await user.click(screen.getByRole('button', { name: /保存/ }))
 
-    // Then: エラーメッセージが表示される
+    // Then: toast.errorが呼ばれる
     await waitFor(() => {
-      expect(screen.getByText('カテゴリの更新中にエラーが発生しました')).toBeInTheDocument()
+      expect(toast.error).toHaveBeenCalledWith('カテゴリの更新中にエラーが発生しました')
     })
   })
 
@@ -301,8 +310,8 @@ describe('CategoryItem', () => {
     // When: 保存ボタンをクリック
     await user.click(screen.getByRole('button', { name: /保存/ }))
 
-    // Then: エラーメッセージが表示される
-    expect(screen.getByText('カテゴリ名を入力してください')).toBeInTheDocument()
+    // Then: toast.errorが呼ばれる
+    expect(toast.error).toHaveBeenCalledWith('カテゴリ名を入力してください')
     expect(updateTagCategory).not.toHaveBeenCalled()
   })
 
@@ -363,9 +372,9 @@ describe('CategoryItem', () => {
     const deleteButtons = screen.getAllByTitle('削除')
     await user.click(deleteButtons[0])
 
-    // Then: エラーメッセージが表示される
+    // Then: toast.errorが呼ばれる
     await waitFor(() => {
-      expect(screen.getByText('削除に失敗しました')).toBeInTheDocument()
+      expect(toast.error).toHaveBeenCalledWith('削除に失敗しました')
     })
   })
 
@@ -381,9 +390,9 @@ describe('CategoryItem', () => {
     const deleteButtons = screen.getAllByTitle('削除')
     await user.click(deleteButtons[0])
 
-    // Then: エラーメッセージが表示される
+    // Then: toast.errorが呼ばれる
     await waitFor(() => {
-      expect(screen.getByText('カテゴリの削除中にエラーが発生しました')).toBeInTheDocument()
+      expect(toast.error).toHaveBeenCalledWith('カテゴリの削除中にエラーが発生しました')
     })
   })
 
