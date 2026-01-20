@@ -10,7 +10,6 @@ import { LockIcon } from '@/components/icons/lock-icon'
 import { CheckIcon } from '@/components/icons/check-icon'
 import { ShieldCheckIcon } from '@/components/icons/shield-check-icon'
 import { CheckCircleOutlineIcon } from '@/components/icons/check-circle-outline-icon'
-import { PasswordRequirements } from './password-requirements'
 
 export const PasswordSetupForm = () => {
   const [password, setPassword] = useState('')
@@ -83,7 +82,11 @@ export const PasswordSetupForm = () => {
               <ShieldCheckIcon className="h-5 w-5 text-emerald-500" />
             </div>
           </div>
-          <PasswordRequirements />
+          <div className="rounded-md bg-emerald-50 p-3">
+            <p className="text-xs text-emerald-700">
+              <strong>セキュリティ要件:</strong> パスワードは8文字以上で、大文字、小文字、数字を含める必要があります
+            </p>
+          </div>
         </div>
 
         {/* パスワード確認 - teal系（確認用） */}
