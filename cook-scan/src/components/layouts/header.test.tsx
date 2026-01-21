@@ -1,11 +1,11 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import { Header } from './header'
 import { vi } from 'vitest'
-import { usePathname } from 'next/navigation'
+import userEvent from '@testing-library/user-event'
 
 // モック: next/navigation
 vi.mock('next/navigation', () => ({
-  usePathname: vi.fn(),
+  usePathname: vi.fn().mockReturnValue('/'),
   useRouter: vi.fn(),
   redirect: vi.fn(),
 }))
@@ -28,9 +28,6 @@ vi.mock('@/features/auth/actions', () => ({
 }))
 
 describe('Header', () => {
-  beforeEach(() => {
-    vi.mocked(usePathname).mockReturnValue('/')
-  })
   test('正常系：タイトルが表示される', () => {
     render(<Header title="Test Title" />)
     expect(screen.getByText('Test Title')).toBeInTheDocument()
@@ -38,20 +35,16 @@ describe('Header', () => {
 
   test('正常系：ハンバーガーメニューが表示される', () => {
     render(<Header title="Test Title" />)
-    // ハンバーガーメニューボタンは sm:hidden だが DOM には存在する
     const menuButton = screen.getByLabelText('メニューを開く')
     expect(menuButton).toBeInTheDocument()
   })
 
   test('正常系：メニューボタンクリックでメニューが開く', async () => {
+    const user = userEvent.setup()
     render(<Header title="Test Title" />)
     const menuButton = screen.getByLabelText('メニューを開く')
 
-    // 初期状態ではメニュー(Sheet)の中身は見えないはず (ポータルではないとしても opacity:0 等)
-    // Sheetの実装はポータルではないのでDOMには存在するが visible ではない
-    // テスト環境ではCSSの visible/invisible は効かない場合があるが、aria-modal="true" は開いた時だけつく
-
-    fireEvent.click(menuButton)
+    await user.click(menuButton)
 
     await waitFor(() => {
       expect(screen.getByRole('dialog', { hidden: false })).toBeInTheDocument()

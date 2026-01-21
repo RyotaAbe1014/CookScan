@@ -9,6 +9,7 @@ interface SheetProps {
 }
 
 export function Sheet({ isOpen, onClose, children, className }: SheetProps) {
+  // background scrolling disabled
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden'
