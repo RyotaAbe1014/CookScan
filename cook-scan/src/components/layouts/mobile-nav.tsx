@@ -7,13 +7,15 @@ import { BookIcon } from '@/components/icons/book-icon'
 import { TagIcon } from '@/components/icons/tag-icon'
 import { UserIcon } from '@/components/icons/user-icon'
 import { LogoutIcon } from '@/components/icons/logout-icon'
+import { SpinnerIcon } from '@/components/icons/spinner-icon'
 
 interface MobileNavProps {
   onUiLinkClick: () => void
   onLogoutClick?: () => void
+  isLoggingOut?: boolean
 }
 
-export function MobileNav({ onUiLinkClick, onLogoutClick }: MobileNavProps) {
+export function MobileNav({ onUiLinkClick, onLogoutClick, isLoggingOut }: MobileNavProps) {
   const pathname = usePathname()
 
   const links = [
@@ -52,10 +54,20 @@ export function MobileNav({ onUiLinkClick, onLogoutClick }: MobileNavProps) {
       {onLogoutClick && (
         <button
           onClick={onLogoutClick}
-          className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-red-600 transition-colors hover:bg-red-50"
+          disabled={isLoggingOut}
+          className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
         >
-          <LogoutIcon className="h-5 w-5" />
-          Log out
+          {isLoggingOut ? (
+            <>
+              <SpinnerIcon className="h-5 w-5 animate-spin" />
+              ログアウト中...
+            </>
+          ) : (
+            <>
+              <LogoutIcon className="h-5 w-5" />
+              Log out
+            </>
+          )}
         </button>
       )}
     </div>
