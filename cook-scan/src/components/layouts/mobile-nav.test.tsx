@@ -69,4 +69,26 @@ describe('MobileNav', () => {
     render(<MobileNav onUiLinkClick={vi.fn()} />)
     expect(screen.queryByText('Log out')).not.toBeInTheDocument()
   })
+
+  test('ログアウト中はローディング状態が表示される', () => {
+    const onLogoutClick = vi.fn()
+    render(<MobileNav onUiLinkClick={vi.fn()} onLogoutClick={onLogoutClick} isLoggingOut={true} />)
+
+    expect(screen.getByText('ログアウト中...')).toBeInTheDocument()
+    expect(screen.queryByText('Log out')).not.toBeInTheDocument()
+
+    const logoutButton = screen.getByRole('button')
+    expect(logoutButton).toBeDisabled()
+  })
+
+  test('ログアウト中でない場合は通常表示', () => {
+    const onLogoutClick = vi.fn()
+    render(<MobileNav onUiLinkClick={vi.fn()} onLogoutClick={onLogoutClick} isLoggingOut={false} />)
+
+    expect(screen.getByText('Log out')).toBeInTheDocument()
+    expect(screen.queryByText('ログアウト中...')).not.toBeInTheDocument()
+
+    const logoutButton = screen.getByRole('button')
+    expect(logoutButton).not.toBeDisabled()
+  })
 })

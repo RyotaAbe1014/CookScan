@@ -1,6 +1,6 @@
 'use client'
 
-import { ReactNode, useState } from 'react'
+import { ReactNode, useState, useTransition } from 'react'
 import { BookIcon } from '@/components/icons/book-icon'
 import { InfoCircleIcon } from '@/components/icons/info-circle-icon'
 import { MenuIcon } from '@/components/icons/menu-icon'
@@ -16,10 +16,13 @@ type HeaderProps = {
 
 export function Header({ title, subtitle, rightAction }: HeaderProps) {
   const [isOpen, setIsOpen] = useState(false)
+  const [isPending, startTransition] = useTransition()
 
-  const handleLogout = async () => {
-    await logout()
-    setIsOpen(false)
+  const handleLogout = () => {
+    startTransition(async () => {
+      await logout()
+      setIsOpen(false)
+    })
   }
 
   return (
@@ -73,6 +76,7 @@ export function Header({ title, subtitle, rightAction }: HeaderProps) {
         <MobileNav
           onUiLinkClick={() => setIsOpen(false)}
           onLogoutClick={handleLogout}
+          isLoggingOut={isPending}
         />
       </Sheet>
     </header>
