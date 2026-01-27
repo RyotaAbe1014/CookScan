@@ -8,6 +8,9 @@ import { TagIcon } from '@/components/icons/tag-icon'
 import { UserIcon } from '@/components/icons/user-icon'
 import { LogoutIcon } from '@/components/icons/logout-icon'
 import { SpinnerIcon } from '@/components/icons/spinner-icon'
+import { Route } from 'next'
+import { ComponentType } from 'react'
+import { IconProps } from '@/components/icons/types'
 
 interface MobileNavProps {
   onUiLinkClick: () => void
@@ -18,12 +21,16 @@ interface MobileNavProps {
 export function MobileNav({ onUiLinkClick, onLogoutClick, isLoggingOut }: MobileNavProps) {
   const pathname = usePathname()
 
-  const links = [
-    { href: '/dashboard', label: 'ダッシュボード', icon: HomeIcon },
-    { href: '/recipes', label: 'レシピ', icon: BookIcon },
-    { href: '/tags', label: 'タグ', icon: TagIcon },
-    { href: '/settings/profile', label: 'プロフィール', icon: UserIcon },
-  ]
+  const links: {
+    href: Route
+    label: string
+    icon: ComponentType<IconProps>
+  }[] = [
+      { href: '/dashboard', label: 'ダッシュボード', icon: HomeIcon },
+      { href: '/recipes', label: 'レシピ', icon: BookIcon },
+      { href: '/tags', label: 'タグ', icon: TagIcon },
+      { href: '/settings/profile', label: 'プロフィール', icon: UserIcon },
+    ]
 
   return (
     <div className="flex h-full flex-col justify-between p-6">

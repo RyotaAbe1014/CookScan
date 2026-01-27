@@ -7,6 +7,7 @@ import { CheckSolidIcon } from '@/components/icons/check-solid-icon'
 import { CheckCircleOutlineIcon } from '@/components/icons/check-circle-outline-icon'
 import { useCallback } from 'react'
 import { Card, CardHeader, CardContent } from '@/components/ui/card'
+import { Route } from 'next'
 
 type Tag = {
   id: string
@@ -60,7 +61,7 @@ export function TagFilter({ tagCategories }: TagFilterProps) {
   const handleTagClick = useCallback(
     (tagId: string) => {
       const queryString = createQueryString(tagId)
-      router.push(`/recipes${queryString ? `?${queryString}` : ''}`)
+      router.push(`/recipes${queryString ? `?${queryString}` : ''}` as Route)
     },
     [createQueryString, router]
   )
