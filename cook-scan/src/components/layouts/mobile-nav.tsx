@@ -22,7 +22,7 @@ export function MobileNav({ onUiLinkClick, onLogoutClick, isLoggingOut }: Mobile
     { href: '/dashboard', label: 'ダッシュボード', icon: HomeIcon },
     { href: '/recipes', label: 'レシピ', icon: BookIcon },
     { href: '/tags', label: 'タグ', icon: TagIcon },
-    { href: '/profile', label: 'プロフィール', icon: UserIcon },
+    { href: '/settings/profile', label: 'プロフィール', icon: UserIcon },
   ]
 
   return (
