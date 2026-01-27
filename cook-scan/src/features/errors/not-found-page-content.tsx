@@ -70,10 +70,10 @@ export function NotFoundPageContent() {
                   タグ管理
                 </Link>
                 <Link
-                  href="/profile/setup"
+                  href="/settings/profile"
                   className="text-sm text-emerald-600 hover:text-emerald-700 font-medium underline decoration-emerald-600/30 hover:decoration-emerald-700 transition-colors"
                 >
-                  プロフィール設定
+                  プロフィール
                 </Link>
               </div>
             </div>
