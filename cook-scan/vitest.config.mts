@@ -33,7 +33,6 @@ export default defineConfig({
         'coverage/**',
         '.claude/**',
       ],
-      all: true, // テストされていないファイルも含める
     },
   },
 })
