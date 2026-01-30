@@ -2,33 +2,11 @@
 
 import { prisma } from '@/lib/prisma'
 import { buildTagFilters } from './utils'
+import * as RecipeService from '@/backend/services/recipes'
 import type { Result } from '@/utils/result'
 import { success, failure, Errors } from '@/utils/result'
 import { withAuth } from '@/utils/server-action'
-import type { Ingredient } from '@/types/ingredient'
-
-type RecipeWithRelations = {
-  id: string
-  userId: string
-  title: string
-  imageUrl: string | null
-  memo: string | null
-  createdAt: Date
-  updatedAt: Date
-  ingredients: Ingredient[]
-  recipeTags: Array<{
-    tagId: string
-    recipeId: string
-    tag: {
-      id: string
-      name: string
-      description: string | null
-      isSystem: boolean
-      userId: string | null
-      categoryId: string
-    }
-  }>
-}
+import type { RecipeListOutput } from '@/backend/domain/recipes'
 
 type TagCategoryWithTags = {
   id: string
@@ -50,33 +28,12 @@ export async function getRecipesWithFilters(
   userId: string,
   searchQuery: string,
   tagIds: string[]
-): Promise<Result<RecipeWithRelations[]>> {
+): Promise<Result<RecipeListOutput[]>> {
   return withAuth(async () => {
     const tagFilters = buildTagFilters(tagIds)
 
     try {
-      const recipes = await prisma.recipe.findMany({
-        where: {
-          userId,
-          ...(searchQuery && {
-            title: {
-              contains: searchQuery,
-              mode: 'insensitive',
-            },
-          }),
-          ...(tagFilters && { AND: tagFilters }),
-        },
-        include: {
-          ingredients: true,
-          recipeTags: {
-            include: {
-              tag: true,
-            },
-          },
-        },
-        orderBy: { createdAt: 'desc' },
-      })
-
+      const recipes = await RecipeService.getRecipes(userId, searchQuery, tagFilters)
       return success(recipes)
     } catch (error) {
       console.error('Failed to fetch recipes:', error)

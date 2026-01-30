@@ -1,7 +1,7 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
-import { prisma } from '@/lib/prisma'
+import * as TagService from '@/backend/services/tags'
 import type { Result } from '@/utils/result'
 import { success, failure, Errors } from '@/utils/result'
 import { withAuth } from '@/utils/server-action'
@@ -15,17 +15,10 @@ export async function createTagCategory(
 ): Promise<Result<{ categoryId: string }>> {
   return withAuth(async (profile) => {
     try {
-      const category = await prisma.tagCategory.create({
-        data: {
-          userId: profile.id,
-          name,
-          description: description || null,
-          isSystem: false,
-        },
-      })
+      const result = await TagService.createTagCategory(profile.id, { name, description })
 
       revalidatePath('/tags')
-      return success({ categoryId: category.id })
+      return success(result)
     } catch (error) {
       console.error('Failed to create tag category:', error)
       return failure(Errors.server('カテゴリの作成に失敗しました'))
@@ -43,34 +36,20 @@ export async function createTag(
 ): Promise<Result<{ tagId: string }>> {
   return withAuth(async (profile) => {
     try {
-      // カテゴリの存在と権限を確認
-      const category = await prisma.tagCategory.findUnique({
-        where: { id: categoryId },
-      })
-
-      if (!category) {
-        return failure(Errors.notFound('カテゴリ'))
-      }
-
-      // システムカテゴリ、または自分のカテゴリのみタグを作成可能
-      if (!category.isSystem && category.userId !== profile.id) {
-        return failure(Errors.forbidden('このカテゴリにタグを作成する権限がありません'))
-      }
-
-      const tag = await prisma.tag.create({
-        data: {
-          categoryId,
-          name,
-          description: description || null,
-          isSystem: false,
-          userId: profile.id,
-        },
-      })
+      const result = await TagService.createTag(profile.id, { categoryId, name, description })
 
       revalidatePath('/tags')
-      return success({ tagId: tag.id })
+      return success(result)
     } catch (error) {
       console.error('Failed to create tag:', error)
+      if (error instanceof Error) {
+        if (error.message.includes('見つかりません')) {
+          return failure(Errors.notFound('カテゴリ'))
+        }
+        if (error.message.includes('権限がありません')) {
+          return failure(Errors.forbidden(error.message))
+        }
+      }
       return failure(Errors.server('タグの作成に失敗しました'))
     }
   })
@@ -86,38 +65,20 @@ export async function updateTag(
 ): Promise<Result<void>> {
   return withAuth(async (profile) => {
     try {
-      // タグの存在と権限を確認
-      const tag = await prisma.tag.findUnique({
-        where: { id: tagId },
-        include: { category: true },
-      })
-
-      if (!tag) {
-        return failure(Errors.notFound('タグ'))
-      }
-
-      // システムタグは編集不可
-      if (tag.isSystem) {
-        return failure(Errors.forbidden('システムタグは編集できません'))
-      }
-
-      // 自分が作成したタグのみ編集可能
-      if (tag.userId !== profile.id) {
-        return failure(Errors.forbidden('このタグを編集する権限がありません'))
-      }
-
-      await prisma.tag.update({
-        where: { id: tagId },
-        data: {
-          name,
-          description: description || null,
-        },
-      })
+      await TagService.updateTag(profile.id, { tagId, name, description })
 
       revalidatePath('/tags')
       return success(undefined)
     } catch (error) {
       console.error('Failed to update tag:', error)
+      if (error instanceof Error) {
+        if (error.message.includes('見つかりません')) {
+          return failure(Errors.notFound('タグ'))
+        }
+        if (error.message.includes('編集できません') || error.message.includes('権限がありません')) {
+          return failure(Errors.forbidden(error.message))
+        }
+      }
       return failure(Errors.server('タグの更新に失敗しました'))
     }
   })
@@ -129,37 +90,20 @@ export async function updateTag(
 export async function deleteTag(tagId: string): Promise<Result<void>> {
   return withAuth(async (profile) => {
     try {
-      // タグの存在と権限を確認
-      const tag = await prisma.tag.findUnique({
-        where: { id: tagId },
-        include: {
-          category: true,
-          recipeTags: true,
-        },
-      })
-
-      if (!tag) {
-        return failure(Errors.notFound('タグ'))
-      }
-
-      // システムタグは削除不可
-      if (tag.isSystem) {
-        return failure(Errors.forbidden('システムタグは削除できません'))
-      }
-
-      // 自分が作成したタグのみ削除可能
-      if (tag.userId !== profile.id) {
-        return failure(Errors.forbidden('このタグを削除する権限がありません'))
-      }
-
-      await prisma.tag.delete({
-        where: { id: tagId },
-      })
+      await TagService.deleteTag(profile.id, tagId)
 
       revalidatePath('/tags')
       return success(undefined)
     } catch (error) {
       console.error('Failed to delete tag:', error)
+      if (error instanceof Error) {
+        if (error.message.includes('見つかりません')) {
+          return failure(Errors.notFound('タグ'))
+        }
+        if (error.message.includes('削除できません') || error.message.includes('権限がありません')) {
+          return failure(Errors.forbidden(error.message))
+        }
+      }
       return failure(Errors.server('タグの削除に失敗しました'))
     }
   })
@@ -175,37 +119,20 @@ export async function updateTagCategory(
 ): Promise<Result<void>> {
   return withAuth(async (profile) => {
     try {
-      // カテゴリの存在と権限を確認
-      const category = await prisma.tagCategory.findUnique({
-        where: { id: categoryId },
-      })
-
-      if (!category) {
-        return failure(Errors.notFound('カテゴリ'))
-      }
-
-      // システムカテゴリは編集不可
-      if (category.isSystem) {
-        return failure(Errors.forbidden('システムカテゴリは編集できません'))
-      }
-
-      // 自分のカテゴリのみ編集可能
-      if (category.userId !== profile.id) {
-        return failure(Errors.forbidden('このカテゴリを編集する権限がありません'))
-      }
-
-      await prisma.tagCategory.update({
-        where: { id: categoryId },
-        data: {
-          name,
-          description: description || null,
-        },
-      })
+      await TagService.updateTagCategory(profile.id, { categoryId, name, description })
 
       revalidatePath('/tags')
       return success(undefined)
     } catch (error) {
       console.error('Failed to update tag category:', error)
+      if (error instanceof Error) {
+        if (error.message.includes('見つかりません')) {
+          return failure(Errors.notFound('カテゴリ'))
+        }
+        if (error.message.includes('編集できません') || error.message.includes('権限がありません')) {
+          return failure(Errors.forbidden(error.message))
+        }
+      }
       return failure(Errors.server('カテゴリの更新に失敗しました'))
     }
   })
@@ -217,43 +144,23 @@ export async function updateTagCategory(
 export async function deleteTagCategory(categoryId: string): Promise<Result<void>> {
   return withAuth(async (profile) => {
     try {
-      // カテゴリの存在と権限を確認
-      const category = await prisma.tagCategory.findUnique({
-        where: { id: categoryId },
-        include: { tags: true },
-      })
-
-      if (!category) {
-        return failure(Errors.notFound('カテゴリ'))
-      }
-
-      // システムカテゴリは削除不可
-      if (category.isSystem) {
-        return failure(Errors.forbidden('システムカテゴリは削除できません'))
-      }
-
-      // 自分のカテゴリのみ削除可能
-      if (category.userId !== profile.id) {
-        return failure(Errors.forbidden('このカテゴリを削除する権限がありません'))
-      }
-
-      // タグが存在する場合は削除不可
-      if (category.tags.length > 0) {
-        return failure(
-          Errors.conflict(
-            `このカテゴリには${category.tags.length}個のタグがあるため削除できません`
-          )
-        )
-      }
-
-      await prisma.tagCategory.delete({
-        where: { id: categoryId },
-      })
+      await TagService.deleteTagCategory(profile.id, categoryId)
 
       revalidatePath('/tags')
       return success(undefined)
     } catch (error) {
       console.error('Failed to delete tag category:', error)
+      if (error instanceof Error) {
+        if (error.message.includes('見つかりません')) {
+          return failure(Errors.notFound('カテゴリ'))
+        }
+        if (error.message.includes('削除できません') || error.message.includes('権限がありません')) {
+          if (error.message.includes('個のタグがあるため')) {
+            return failure(Errors.conflict(error.message))
+          }
+          return failure(Errors.forbidden(error.message))
+        }
+      }
       return failure(Errors.server('カテゴリの削除に失敗しました'))
     }
   })
@@ -279,17 +186,7 @@ export async function getAllTagsForRecipe(): Promise<
 > {
   return withAuth(async (profile) => {
     try {
-      const tagCategories = await prisma.tagCategory.findMany({
-        where: {
-          OR: [{ isSystem: true }, { userId: profile.id }],
-        },
-        include: {
-          tags: {
-            orderBy: { name: 'asc' },
-          },
-        },
-        orderBy: { createdAt: 'asc' },
-      })
+      const tagCategories = await TagService.getAllTagsForRecipe(profile.id)
 
       return success(tagCategories)
     } catch (error) {
@@ -324,32 +221,9 @@ export async function getTagCategoriesWithTags(userId: string): Promise<
 > {
   return withAuth(async () => {
     try {
-      const tagCategories = await prisma.tagCategory.findMany({
-        where: {
-          OR: [{ isSystem: true }, { userId }],
-        },
-        include: {
-          tags: {
-            include: {
-              recipeTags: userId
-                ? {
-                  where: {
-                    recipe: {
-                      userId,
-                    },
-                  },
-                  select: { recipeId: true },
-                }
-                : {
-                  select: { recipeId: true },
-                },
-            },
-          },
-        },
-        orderBy: { createdAt: 'asc' },
-      })
+      const result = await TagService.getTagCategoriesWithTags(userId)
 
-      return success({ tagCategories })
+      return success(result)
     } catch (error) {
       console.error('Failed to fetch tag categories:', error)
       return failure(Errors.server('タグカテゴリの取得に失敗しました'))

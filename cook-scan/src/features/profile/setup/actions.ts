@@ -1,8 +1,8 @@
 'use server'
 
-import { prisma } from '@/lib/prisma'
 import { redirect } from 'next/navigation'
 import { checkUserProfile, type UserProfile } from '@/features/auth/auth-utils'
+import * as UserService from '@/backend/services/users'
 import type { Result } from '@/utils/result'
 import { success, failure, Errors } from '@/utils/result'
 
@@ -13,11 +13,8 @@ export async function checkExistingProfile(
   authId: string
 ): Promise<Result<{ exists: boolean; profile: UserProfile | null }>> {
   try {
-    const existingProfile = await prisma.user.findUnique({
-      where: { authId },
-    })
-
-    return success({ exists: !!existingProfile, profile: existingProfile })
+    const result = await UserService.checkExistingProfile(authId)
+    return success(result)
   } catch (error) {
     console.error('Failed to check existing profile:', error)
     return failure(Errors.server('プロフィールの確認に失敗しました'))
@@ -52,15 +49,12 @@ export async function createProfile(
   }
 
   try {
-    await prisma.user.create({
-      data: {
-        authId,
-        email,
-        name,
-      },
-    })
+    await UserService.createProfile({ authId, email, name })
   } catch (error) {
     console.error('Failed to create profile:', error)
+    if (error instanceof Error && error.message.includes('既に作成されています')) {
+      return failure(Errors.conflict(error.message))
+    }
     return failure(Errors.server('プロフィールの作成に失敗しました'))
   }
 
