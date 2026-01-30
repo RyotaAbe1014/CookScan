@@ -1,23 +1,11 @@
 'use server'
 
-import { prisma } from '@/lib/prisma'
 import { checkUserProfile, type UserProfile } from '@/features/auth/auth-utils'
-import { z } from 'zod'
+import * as UserService from '@/backend/services/users'
+import { updateProfileInputSchema } from '@/backend/domain/users'
 import { revalidatePath } from 'next/cache'
 import type { Result } from '@/utils/result'
 import { success, failure, Errors } from '@/utils/result'
-
-// バリデーションスキーマ
-const profileUpdateSchema = z.object({
-  name: z
-    .string()
-    .min(1, '名前を入力してください')
-    .max(50, '名前は50文字以内で入力してください')
-    .trim()
-    .refine((val) => val.length > 0, {
-      message: '空白のみの名前は使用できません',
-    }),
-})
 
 /**
  * 現在のユーザープロフィールを取得
@@ -41,7 +29,7 @@ export async function getUserProfile(): Promise<Result<UserProfile>> {
  */
 export async function updateUserProfile(data: { name: string }): Promise<Result<void>> {
   // バリデーション
-  const validation = profileUpdateSchema.safeParse(data)
+  const validation = updateProfileInputSchema.safeParse(data)
   if (!validation.success) {
     return failure(Errors.validation(validation.error.errors[0].message))
   }
@@ -59,18 +47,16 @@ export async function updateUserProfile(data: { name: string }): Promise<Result<
 
   try {
     // プロフィール更新
-    await prisma.user.update({
-      where: { authId: authUser.id },
-      data: {
-        name: validation.data.name,
-      },
-    })
+    await UserService.updateProfile(authUser.id, validation.data)
 
     revalidatePath('/settings/profile')
 
     return success(undefined)
   } catch (error) {
     console.error('Failed to update profile:', error)
+    if (error instanceof Error && error.message.includes('見つかりません')) {
+      return failure(Errors.notFound('プロフィール'))
+    }
     return failure(Errors.server('プロフィールの更新に失敗しました'))
   }
 }

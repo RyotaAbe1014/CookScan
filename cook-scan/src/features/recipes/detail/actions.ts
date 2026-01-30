@@ -1,72 +1,18 @@
 'use server'
 
-import { prisma } from '@/lib/prisma'
+import * as RecipeService from '@/backend/services/recipes'
 import type { Result } from '@/utils/result'
 import { success, failure, Errors } from '@/utils/result'
 import { withAuth } from '@/utils/server-action'
-import type { Ingredient } from '@/types/ingredient'
-import type { Step } from '@/types/step'
-import type { SourceInfo } from '@/types/sourceInfo'
+import type { RecipeDetailOutput } from '@/backend/domain/recipes'
 
-export type RecipeWithRelations = {
-  id: string
-  userId: string
-  title: string
-  imageUrl: string | null
-  memo: string | null
-  createdAt: Date
-  updatedAt: Date
-  ingredients: Ingredient[]
-  steps: Step[]
-  recipeTags: Array<{
-    tagId: string
-    recipeId: string
-    tag: {
-      id: string
-      name: string
-      description: string | null
-      isSystem: boolean
-      userId: string | null
-      categoryId: string
-      category: {
-        id: string
-        name: string
-        description: string | null
-        isSystem: boolean
-        userId: string | null
-      }
-    }
-  }>
-  sourceInfo: SourceInfo[]
-}
+// 後方互換性のためのエイリアス
+export type RecipeWithRelations = RecipeDetailOutput
 
-export async function getRecipeById(recipeId: string): Promise<Result<RecipeWithRelations>> {
+export async function getRecipeById(recipeId: string): Promise<Result<RecipeDetailOutput>> {
   return withAuth(async (profile) => {
     try {
-      const recipe = await prisma.recipe.findFirst({
-        where: {
-          id: recipeId,
-          userId: profile.id, // Only allow access to user's own recipes
-        },
-        include: {
-          ingredients: {
-            orderBy: { createdAt: 'asc' },
-          },
-          steps: {
-            orderBy: { orderIndex: 'asc' },
-          },
-          recipeTags: {
-            include: {
-              tag: {
-                include: {
-                  category: true,
-                },
-              },
-            },
-          },
-          sourceInfo: true,
-        },
-      })
+      const recipe = await RecipeService.getRecipeById(recipeId, profile.id)
 
       if (!recipe) {
         return failure(Errors.notFound('レシピ'))
