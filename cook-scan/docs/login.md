@@ -326,23 +326,3 @@ async function checkUserProfile(): Promise<{
 
 5. **HTTPS通信**
    - Vercelデプロイ時は自動的にHTTPS通信
-
-## 関連ドキュメント
-
-- [プロフィール設定機能](./profile-setup.md)（存在する場合）
-- [ダッシュボード機能](./dashboard.md)（存在する場合）
-- [認証フロー全体](./auth-flow.md)（存在する場合）
-
-## 今後の拡張予定
-
-- 新規登録機能の実装
-- パスワードリセット機能
-- ソーシャルログイン（Google、GitHub等）
-- 二要素認証（2FA）
-- Remember Me 機能
-
-## 参考リンク
-
-- [Supabase Auth ドキュメント](https://supabase.com/docs/guides/auth)
-- [Next.js Server Actions](https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions-and-mutations)
-- [Zod バリデーション](https://zod.dev/)
