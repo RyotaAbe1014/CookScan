@@ -12,6 +12,7 @@ export const convertTextToRecipeStep = createStep({
     ingredients: z.array(z.object({
       name: z.string(),
       unit: z.string(),
+      notes: z.string().nullable(),
     })),
     steps: z.array(z.object({
       instruction: z.string(),
@@ -37,6 +38,7 @@ export const convertTextToRecipeStep = createStep({
           ingredients: z.array(z.object({
             name: z.string(),
             unit: z.string(),
+            notes: z.string().nullable(),
           })),
           steps: z.array(z.object({
             instruction: z.string(),
