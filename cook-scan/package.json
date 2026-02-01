@@ -23,6 +23,7 @@
     "db:studio": "prisma studio"
   },
   "dependencies": {
+    "@ai-sdk/google": "^3.0.19",
     "@ai-sdk/openai": "^2.0.64",
     "@mastra/core": "^1.0.0-beta.14",
     "@mastra/libsql": "^1.0.0-beta.8",
