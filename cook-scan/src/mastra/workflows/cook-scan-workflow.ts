@@ -1,7 +1,5 @@
 import { createStep, createWorkflow } from '@mastra/core/workflows';
 import { z } from "zod";
-import { generateText } from "ai";
-import { openaiGpt4oMini } from "../models/openai";
 import { convertTextToRecipeStep } from "./steps/convert-text-to-recipe";
 
 const imageToTextStep = createStep({
@@ -13,15 +11,27 @@ const imageToTextStep = createStep({
   outputSchema: z.object({
     text: z.string(),
   }),
-  execute: async ({ inputData }) => {
+  execute: async ({ inputData, mastra }) => {
     try {
       const texts = await Promise.all(inputData.images.map(async (image) => {
         const arrayBuffer = await image.arrayBuffer();
         const buffer = Buffer.from(arrayBuffer);
-        const response = await generateText({
-          model: openaiGpt4oMini,
-          messages: [{ role: 'user', content: [{ type: 'image', image: buffer, mediaType: image.type }] }],
-        });
+        const agent = mastra.getAgent('imageToTextAgent');
+        const response = await agent.generate([
+          {
+            role: 'user',
+            content: [{ type: 'image', image: buffer, mediaType: image.type }],
+          },
+        ], {
+          structuredOutput: {
+            schema: z.object({
+              text: z.string(),
+            }),
+          }
+        }
+        );
+
+        console.log(response.text);
         return response.text;
       }));
       return {
