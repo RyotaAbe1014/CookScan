@@ -233,10 +233,20 @@ export default function ImageUpload({ onUpload, onUploadingChange }: Props) {
               <PhotographIcon className="h-5 w-5" />
               ファイルを選択
             </Button>
-            <p className="mt-4 flex items-center gap-1.5 text-xs text-gray-500">
-              <InfoCircleIcon className="h-3.5 w-3.5" />
-              PNG、JPG、GIF形式（最大10MB）
-            </p>
+            <div className="mt-6 space-y-3">
+              <p className="flex items-center justify-center gap-1.5 text-xs text-gray-500">
+                <InfoCircleIcon className="h-3.5 w-3.5" />
+                PNG、JPG、GIF形式（最大10MB）
+              </p>
+              <div className="rounded-lg bg-emerald-50/50 p-3 text-left ring-1 ring-emerald-100/50">
+                <div className="flex gap-2">
+                  <InfoCircleIcon className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
+                  <p className="text-xs leading-relaxed text-emerald-800">
+                    <span className="font-bold">ヒント:</span> 複数のファイルをアップロードする場合、レシピの続きに合わせて順番に設定すると、より正確に読み取ることができます。
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       ) : (

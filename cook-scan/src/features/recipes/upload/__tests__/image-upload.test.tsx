@@ -46,6 +46,8 @@ describe('ImageUpload', () => {
 
     expect(screen.getByText('画像をドラッグ&ドロップ')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /ファイルを選択/ })).toBeInTheDocument()
+    expect(screen.getByText(/複数のファイルをアップロードする場合/)).toBeInTheDocument()
+    expect(screen.getByText(/順番に設定すると/)).toBeInTheDocument()
   })
 
   it('handles file selection via input', async () => {
@@ -187,10 +189,10 @@ describe('ImageUpload', () => {
   it('shows alert on upload error', async () => {
     const user = userEvent.setup()
 
-    ;(global.fetch as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
-      ok: false,
-      json: async () => ({ success: false, error: 'アップロードエラー' })
-    })
+      ; (global.fetch as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
+        ok: false,
+        json: async () => ({ success: false, error: 'アップロードエラー' })
+      })
 
     render(<ImageUpload onUpload={mockOnUpload} onUploadingChange={mockOnUploadingChange} />)
 
@@ -213,9 +215,9 @@ describe('ImageUpload', () => {
 
   it('shows alert on network error', async () => {
     const user = userEvent.setup()
-    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => { })
 
-    ;(global.fetch as ReturnType<typeof vi.fn>).mockRejectedValueOnce(new Error('Network error'))
+      ; (global.fetch as ReturnType<typeof vi.fn>).mockRejectedValueOnce(new Error('Network error'))
 
     render(<ImageUpload onUpload={mockOnUpload} onUploadingChange={mockOnUploadingChange} />)
 
@@ -247,7 +249,7 @@ describe('ImageUpload', () => {
       resolveUpload = resolve
     })
 
-    ;(global.fetch as ReturnType<typeof vi.fn>).mockReturnValueOnce(uploadPromise)
+      ; (global.fetch as ReturnType<typeof vi.fn>).mockReturnValueOnce(uploadPromise)
 
     render(<ImageUpload onUpload={mockOnUpload} onUploadingChange={mockOnUploadingChange} />)
 
