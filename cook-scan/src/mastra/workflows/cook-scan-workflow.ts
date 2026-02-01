@@ -27,6 +27,10 @@ const imageToTextStep = createStep({
             schema: z.object({
               text: z.string(),
             }),
+          },
+          modelSettings: {
+            temperature: 0,
+            topP: 0.1,
           }
         }
         );

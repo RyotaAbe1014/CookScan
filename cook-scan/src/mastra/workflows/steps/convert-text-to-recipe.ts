@@ -44,6 +44,10 @@ export const convertTextToRecipeStep = createStep({
           })),
           memo: z.string().nullable(),
         })
+      },
+      modelSettings: {
+        temperature: 0,
+        topP: 0.1,
       }
     });
 
