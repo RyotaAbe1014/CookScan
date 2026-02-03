@@ -14,6 +14,10 @@ export async function requestNotificationPermission(): Promise<boolean> {
 
 // ブラウザ通知の表示
 export function showTimerNotification(stepNumber: number, instruction: string): void {
+  if (typeof window === 'undefined' || typeof Notification === 'undefined') {
+    return
+  }
+
   if (Notification.permission === 'granted') {
     try {
       new Notification('調理タイマー', {
