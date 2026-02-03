@@ -49,7 +49,7 @@ export function RecipeDetailContent({ recipe }: RecipeDetailContentProps) {
           </h1>
           <p className="mt-2 flex items-center gap-1.5 text-sm text-gray-600">
             <InfoCircleIcon className="h-4 w-4 text-emerald-500" />
-            作成日: {recipe.createdAt.toLocaleDateString('ja-JP')}
+            作成日: {new Date(recipe.createdAt).toLocaleDateString('ja-JP')}
           </p>
         </div>
 
