@@ -15,6 +15,13 @@ export type RecipeTag = {
   }
 }
 
+// レシピ概要型（リレーション先の共通型）
+export type RecipeSummary = {
+  id: string
+  title: string
+  imageUrl: string | null
+}
+
 // 子レシピ関係型
 export type ChildRecipeRelation = {
   id: string
@@ -22,7 +29,7 @@ export type ChildRecipeRelation = {
   quantity: string | null
   notes: string | null
   createdAt: Date
-  childRecipe: { id: string; title: string; imageUrl: string | null }
+  childRecipe: RecipeSummary
 }
 
 // 親レシピ関係型
@@ -31,7 +38,7 @@ export type ParentRecipeRelation = {
   parentRecipeId: string
   quantity: string | null
   notes: string | null
-  parentRecipe: { id: string; title: string; imageUrl: string | null }
+  parentRecipe: RecipeSummary
 }
 
 // 完全なRecipe型（リレーションを含む）
@@ -48,8 +55,8 @@ export type RecipeWithRelations = {
   steps: Step[]
   recipeTags: RecipeTag[]
   sourceInfo: SourceInfo[]
-  usedInRecipes: ChildRecipeRelation[]
-  usesRecipes: ParentRecipeRelation[]
+  childRecipes: ChildRecipeRelation[]
+  parentRecipes: ParentRecipeRelation[]
 }
 
 // 簡易Recipe型（リスト表示用）

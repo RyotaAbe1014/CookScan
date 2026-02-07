@@ -79,7 +79,7 @@ describe('RecipeEditForm', () => {
         },
       },
     ],
-    usedInRecipes: [],
+    childRecipes: [],
   }
 
   const mockTagCategories = [

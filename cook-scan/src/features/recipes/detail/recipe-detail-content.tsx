@@ -62,13 +62,13 @@ export function RecipeDetailContent({ recipe }: RecipeDetailContentProps) {
             {sourceInfo && <RecipeSourceInfo sourceInfo={sourceInfo} />}
             {memo && <RecipeMemo memo={memo} />}
             <RecipeTagsSection recipeTags={recipe.recipeTags} />
-            <RecipeParentRecipesSection parentRecipes={recipe.usesRecipes} />
+            <RecipeParentRecipesSection parentRecipes={recipe.parentRecipes} />
           </div>
 
           {/* 右側: 材料と調理手順 */}
           <div className="lg:col-span-2">
             <RecipeIngredients ingredients={recipe.ingredients} />
-            <RecipeChildRecipesSection childRecipes={recipe.usedInRecipes} />
+            <RecipeChildRecipesSection childRecipes={recipe.childRecipes} />
             <RecipeSteps recipeId={recipe.id} recipeTitle={recipe.title} steps={recipe.steps} />
           </div>
         </div>

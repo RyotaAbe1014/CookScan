@@ -44,7 +44,7 @@ export async function findRecipeById(
         },
       },
       sourceInfo: true,
-      usedInRecipes: {
+      childRecipes: {
         include: {
           childRecipe: {
             select: { id: true, title: true, imageUrl: true },
@@ -52,7 +52,7 @@ export async function findRecipeById(
         },
         orderBy: { createdAt: 'asc' },
       },
-      usesRecipes: {
+      parentRecipes: {
         include: {
           parentRecipe: {
             select: { id: true, title: true, imageUrl: true },

@@ -53,8 +53,8 @@ model Recipe {
   sourceInfo           SourceInfo[]
 
   // 自己結合(多対多)
-  usedInRecipes RecipeRelation[] @relation("ParentRecipe")
-  usesRecipes   RecipeRelation[] @relation("ChildRecipe")
+  childRecipes  RecipeRelation[] @relation("ParentRecipe")
+  parentRecipes RecipeRelation[] @relation("ChildRecipe")
 
   @@map("recipes")
 }
