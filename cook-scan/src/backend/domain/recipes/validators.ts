@@ -31,6 +31,14 @@ export const sourceInfoInputSchema = z
   })
   .nullable()
 
+// ===== ChildRecipeRelation Validator =====
+
+export const childRecipeRelationInputSchema = z.object({
+  childRecipeId: z.string().min(1, '子レシピを選択してください'),
+  quantity: z.string().max(100, '分量は100文字以内').optional(),
+  notes: z.string().max(500, 'メモは500文字以内').optional(),
+})
+
 // ===== Recipe Validators =====
 
 export const createRecipeInputSchema = z.object({
@@ -40,6 +48,7 @@ export const createRecipeInputSchema = z.object({
   steps: z.array(stepInputSchema),
   memo: z.string().optional(),
   tags: z.array(z.string()),
+  childRecipes: z.array(childRecipeRelationInputSchema).optional(),
 })
 
 export const updateRecipeInputSchema = z.object({
@@ -54,4 +63,5 @@ export const updateRecipeInputSchema = z.object({
   ),
   memo: z.string().optional(),
   tags: z.array(z.string()),
+  childRecipes: z.array(childRecipeRelationInputSchema).optional(),
 })

@@ -5,4 +5,5 @@ export type {
   SourceInfoFormData,
   IngredientFormData,
   StepFormData,
+  ChildRecipeFormData,
 } from '@/types/forms'

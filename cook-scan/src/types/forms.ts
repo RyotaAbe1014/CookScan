@@ -3,6 +3,13 @@
  * レシピ作成・編集フォームで使用される型
  */
 
+// 子レシピのフォーム入力用型
+export type ChildRecipeFormData = {
+  childRecipeId: string
+  quantity?: string
+  notes?: string
+}
+
 // ソース情報のフォーム入力用型
 export type SourceInfoFormData = {
   bookName: string
@@ -34,6 +41,7 @@ export type CreateRecipeRequest = {
   steps: StepFormData[]
   memo?: string
   tags: string[]
+  childRecipes?: ChildRecipeFormData[]
 }
 
 // レシピ更新リクエスト型
@@ -45,6 +53,7 @@ export type UpdateRecipeRequest = {
   steps: Array<StepFormData & { orderIndex: number }>
   memo?: string
   tags: string[]
+  childRecipes?: ChildRecipeFormData[]
 }
 
 // AI抽出結果の型
