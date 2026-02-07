@@ -61,10 +61,10 @@ describe('NotFoundPageContent', () => {
     expect(tagsLink).toBeInTheDocument()
     expect(tagsLink).toHaveAttribute('href', '/tags')
 
-    // Then: プロフィール設定リンクが表示される
-    const profileLink = screen.getByRole('link', { name: /プロフィール設定/i })
+    // Then: プロフィールリンクが表示される
+    const profileLink = screen.getByRole('link', { name: /プロフィール/i })
     expect(profileLink).toBeInTheDocument()
-    expect(profileLink).toHaveAttribute('href', '/profile/setup')
+    expect(profileLink).toHaveAttribute('href', '/settings/profile')
   })
 
   test('正常系：404アイコンが表示される', () => {
@@ -87,7 +87,7 @@ describe('NotFoundPageContent', () => {
       { name: /ダッシュボードに戻る/i, href: '/dashboard' },
       { name: /レシピアップロード/i, href: '/recipes/upload' },
       { name: /タグ管理/i, href: '/tags' },
-      { name: /プロフィール設定/i, href: '/profile/setup' },
+      { name: /プロフィール/i, href: '/settings/profile' },
     ]
 
     links.forEach(({ name, href }) => {
