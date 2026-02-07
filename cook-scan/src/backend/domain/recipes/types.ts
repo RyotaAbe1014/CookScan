@@ -6,8 +6,16 @@
 import type { Ingredient } from '@/types/ingredient'
 import type { Step } from '@/types/step'
 import type { SourceInfo } from '@/types/sourceInfo'
+import type { RecipeSummary } from '@/types/recipe'
 
 // ===== Input Types (リクエスト用) =====
+
+/** 子レシピ関係の入力型 */
+export type ChildRecipeRelationInput = {
+  childRecipeId: string
+  quantity?: string
+  notes?: string
+}
 
 /** 材料の入力型 */
 export type IngredientInput = {
@@ -38,6 +46,7 @@ export type CreateRecipeInput = {
   steps: StepInput[]
   memo?: string
   tags: string[]
+  childRecipes?: ChildRecipeRelationInput[]
 }
 
 /** レシピ更新用の入力型 */
@@ -49,9 +58,29 @@ export type UpdateRecipeInput = {
   steps: Array<StepInput & { orderIndex: number }>
   memo?: string
   tags: string[]
+  childRecipes?: ChildRecipeRelationInput[]
 }
 
 // ===== Output Types (レスポンス用) =====
+
+/** 子レシピ関係の出力型（詳細画面用） */
+export type ChildRecipeRelationOutput = {
+  id: string
+  childRecipeId: string
+  quantity: string | null
+  notes: string | null
+  createdAt: Date
+  childRecipe: RecipeSummary
+}
+
+/** 親レシピ関係の出力型（逆参照用） */
+export type ParentRecipeRelationOutput = {
+  id: string
+  parentRecipeId: string
+  quantity: string | null
+  notes: string | null
+  parentRecipe: RecipeSummary
+}
 
 /** レシピタグの出力型 */
 export type RecipeTagOutput = {
@@ -87,6 +116,8 @@ export type RecipeDetailOutput = {
   steps: Step[]
   recipeTags: RecipeTagOutput[]
   sourceInfo: SourceInfo[]
+  childRecipes: ChildRecipeRelationOutput[]
+  parentRecipes: ParentRecipeRelationOutput[]
 }
 
 /** レシピ一覧の出力型（簡易版） */

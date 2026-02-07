@@ -79,6 +79,7 @@ describe('RecipeEditForm', () => {
         },
       },
     ],
+    childRecipes: [],
   }
 
   const mockTagCategories = [
@@ -611,6 +612,7 @@ describe('RecipeEditForm', () => {
           ],
           memo: 'テストメモ',
           tags: ['tag-1'],
+          childRecipes: [],
         })
         expect(mockPush).toHaveBeenCalledWith('/recipes/recipe-123')
       })

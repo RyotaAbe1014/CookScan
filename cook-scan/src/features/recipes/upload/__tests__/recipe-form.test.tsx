@@ -330,7 +330,8 @@ describe('RecipeForm', () => {
         ingredients: mockExtractedData.ingredients,
         steps: mockExtractedData.steps,
         memo: 'テストメモ',
-        tags: []
+        tags: [],
+        childRecipes: [],
       })
     })
 

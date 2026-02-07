@@ -51,6 +51,8 @@ export type CardHeaderColor =
   | 'blue' // 手順
   | 'teal' // メモ
   | 'red' // 削除、警告
+  | 'purple' // サブレシピ（子レシピ）
+  | 'indigo' // 親レシピ参照
 
 const iconColors: Record<CardHeaderColor, string> = {
   emerald: 'bg-emerald-600',
@@ -59,6 +61,8 @@ const iconColors: Record<CardHeaderColor, string> = {
   blue: 'bg-sky-500',
   teal: 'bg-teal-500',
   red: 'bg-red-500',
+  purple: 'bg-purple-500',
+  indigo: 'bg-indigo-500',
 }
 
 export type CardHeaderProps = HTMLAttributes<HTMLDivElement> & {

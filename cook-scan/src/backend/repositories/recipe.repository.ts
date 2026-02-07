@@ -44,6 +44,21 @@ export async function findRecipeById(
         },
       },
       sourceInfo: true,
+      childRecipes: {
+        include: {
+          childRecipe: {
+            select: { id: true, title: true, imageUrl: true },
+          },
+        },
+        orderBy: { createdAt: 'asc' },
+      },
+      parentRecipes: {
+        include: {
+          parentRecipe: {
+            select: { id: true, title: true, imageUrl: true },
+          },
+        },
+      },
     },
   })
 }
@@ -236,6 +251,11 @@ export async function deleteRelatedData(tx: Prisma.TransactionClient, recipeId: 
   await tx.recipeTag.deleteMany({
     where: { recipeId },
   })
+
+  // 子レシピ関係を削除（親として）
+  await tx.recipeRelation.deleteMany({
+    where: { parentRecipeId: recipeId },
+  })
 }
 
 /**
@@ -244,6 +264,11 @@ export async function deleteRelatedData(tx: Prisma.TransactionClient, recipeId: 
 export async function deleteRecipe(tx: Prisma.TransactionClient, recipeId: string) {
   // 関連データを削除
   await deleteRelatedData(tx, recipeId)
+
+  // 子レシピ関係を削除（子として参照されている場合）
+  await tx.recipeRelation.deleteMany({
+    where: { childRecipeId: recipeId },
+  })
 
   // レシピバージョンを削除
   await tx.recipeVersion.deleteMany({

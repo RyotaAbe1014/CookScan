@@ -10,8 +10,10 @@ import type { UpdateRecipeRequest } from './types'
 import type { RecipeFormTagCategory } from '@/features/recipes/types/tag'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
+import { Card, CardHeader, CardContent } from '@/components/ui/card'
 import { Alert } from '@/components/ui/alert'
-import { IngredientInput, StepInput, FormActions } from '@/features/recipes/components'
+import { IngredientInput, StepInput, FormActions, ChildRecipeInput, ChildRecipeSelectorDialog } from '@/features/recipes/components'
+import type { ChildRecipeItem } from '@/features/recipes/components'
 import { CameraIcon } from '@/components/icons/camera-icon'
 import { InfoCircleIcon } from '@/components/icons/info-circle-icon'
 import { TagIcon } from '@/components/icons/tag-icon'
@@ -23,6 +25,7 @@ import { CheckSolidIcon } from '@/components/icons/check-solid-icon'
 import { BeakerIcon } from '@/components/icons/beaker-icon'
 import { PlusIcon } from '@/components/icons/plus-icon'
 import { ClipboardListIcon } from '@/components/icons/clipboard-list-icon'
+import { FolderIcon } from '@/components/icons/folder-icon'
 
 type RecipeData = {
   id: string
@@ -53,6 +56,13 @@ type RecipeData = {
       id: string
       name: string
     }
+  }[]
+  childRecipes: {
+    id: string
+    childRecipeId: string
+    quantity: string | null
+    notes: string | null
+    childRecipe: { id: string; title: string; imageUrl: string | null }
   }[]
 }
 
@@ -101,6 +111,15 @@ export default function RecipeEditForm({ recipe, tagCategories }: Props) {
   const [selectedTagIds, setSelectedTagIds] = useState<string[]>(
     recipe.recipeTags.map(rt => rt.tagId)
   )
+  const [childRecipes, setChildRecipes] = useState<ChildRecipeItem[]>(
+    recipe.childRecipes.map(rel => ({
+      childRecipeId: rel.childRecipeId,
+      childRecipeTitle: rel.childRecipe.title,
+      quantity: rel.quantity || '',
+      notes: rel.notes || '',
+    }))
+  )
+  const [isChildRecipeDialogOpen, setIsChildRecipeDialogOpen] = useState(false)
 
   const addIngredient = () => {
     setIngredients([
@@ -149,6 +168,20 @@ export default function RecipeEditForm({ recipe, tagCategories }: Props) {
     ))
   }
 
+  const addChildRecipe = (item: ChildRecipeItem) => {
+    setChildRecipes([...childRecipes, item])
+  }
+
+  const removeChildRecipe = (index: number) => {
+    setChildRecipes(childRecipes.filter((_, i) => i !== index))
+  }
+
+  const updateChildRecipe = (index: number, field: 'quantity' | 'notes', value: string) => {
+    setChildRecipes(childRecipes.map((cr, i) =>
+      i === index ? { ...cr, [field]: value } : cr
+    ))
+  }
+
   const toggleTag = (tagId: string) => {
     setSelectedTagIds(prev =>
       prev.includes(tagId)
@@ -182,7 +215,12 @@ export default function RecipeEditForm({ recipe, tagCategories }: Props) {
           orderIndex: step.orderIndex
         })),
         memo,
-        tags: selectedTagIds
+        tags: selectedTagIds,
+        childRecipes: childRecipes.map(cr => ({
+          childRecipeId: cr.childRecipeId,
+          quantity: cr.quantity || undefined,
+          notes: cr.notes || undefined,
+        })),
       }
 
       const result = await updateRecipe(request)
@@ -367,24 +405,23 @@ export default function RecipeEditForm({ recipe, tagCategories }: Props) {
         )}
 
         {/* 材料 */}
-        <div className="overflow-hidden rounded-xl bg-white shadow-lg ring-1 ring-gray-900/5">
-          <div className="flex items-center justify-between border-b border-gray-200 bg-linear-to-r from-gray-50 to-white px-6 py-4">
-            <div className="flex items-center gap-2">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-linear-to-br from-green-500 to-emerald-600 shadow-md">
-                <BeakerIcon className="h-5 w-5 text-white" />
-              </div>
-              <h3 className="text-lg font-bold text-gray-900">材料</h3>
-            </div>
-            <button
-              type="button"
-              onClick={addIngredient}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-linear-to-r from-green-600 to-emerald-600 px-3 py-2 text-sm font-semibold text-white shadow-md shadow-green-500/30 transition-all hover:shadow-lg hover:shadow-green-500/40"
-            >
-              <PlusIcon className="h-4 w-4" stroke="currentColor" />
-              材料を追加
-            </button>
-          </div>
-          <div className="p-6">
+        <Card>
+          <CardHeader
+            icon={<BeakerIcon className="h-5 w-5 text-white" />}
+            iconColor="green"
+            title="材料"
+            actions={
+              <button
+                type="button"
+                onClick={addIngredient}
+                className="inline-flex items-center gap-1.5 rounded-lg bg-linear-to-r from-green-600 to-emerald-600 px-3 py-2 text-sm font-semibold text-white shadow-md shadow-green-500/30 transition-all hover:shadow-lg hover:shadow-green-500/40"
+              >
+                <PlusIcon className="h-4 w-4" stroke="currentColor" />
+                材料を追加
+              </button>
+            }
+          />
+          <CardContent>
             <div className="space-y-3">
               {ingredients.map((ingredient, index) => (
                 <IngredientInput
@@ -397,28 +434,61 @@ export default function RecipeEditForm({ recipe, tagCategories }: Props) {
                 />
               ))}
             </div>
-          </div>
-        </div>
-
-        {/* 調理手順 */}
-        <div className="overflow-hidden rounded-xl bg-white shadow-lg ring-1 ring-gray-900/5">
-          <div className="flex items-center justify-between border-b border-gray-200 bg-linear-to-r from-gray-50 to-white px-6 py-4">
-            <div className="flex items-center gap-2">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-linear-to-br from-blue-500 to-indigo-600 shadow-md">
-                <ClipboardListIcon className="h-5 w-5 text-white" />
+          </CardContent>
+        </Card>
+        {/* サブレシピ */}
+        <Card>
+          <CardHeader
+            icon={<FolderIcon className="h-5 w-5 text-white" />}
+            iconColor="purple"
+            title="サブレシピ"
+            actions={
+              <button
+                type="button"
+                onClick={() => setIsChildRecipeDialogOpen(true)}
+                className="inline-flex items-center gap-1.5 rounded-lg bg-linear-to-r from-purple-600 to-violet-600 px-3 py-2 text-sm font-semibold text-white shadow-md shadow-purple-500/30 transition-all hover:shadow-lg hover:shadow-purple-500/40"
+              >
+                <PlusIcon className="h-4 w-4" stroke="currentColor" />
+                サブレシピを追加
+              </button>
+            }
+          />
+          <CardContent>
+            {childRecipes.length > 0 ? (
+              <div className="space-y-3">
+                {childRecipes.map((item, index) => (
+                  <ChildRecipeInput
+                    key={item.childRecipeId}
+                    item={item}
+                    index={index}
+                    onUpdate={updateChildRecipe}
+                    onRemove={removeChildRecipe}
+                  />
+                ))}
               </div>
-              <h3 className="text-lg font-bold text-gray-900">調理手順</h3>
-            </div>
-            <button
-              type="button"
-              onClick={addStep}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-linear-to-r from-blue-600 to-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-md shadow-blue-500/30 transition-all hover:shadow-lg hover:shadow-blue-500/40"
-            >
-              <PlusIcon className="h-4 w-4" stroke="currentColor" />
-              手順を追加
-            </button>
-          </div>
-          <div className="p-6">
+            ) : (
+              <p className="text-sm text-gray-500">サブレシピが追加されていません</p>
+            )}
+          </CardContent>
+        </Card>
+        {/* 調理手順 */}
+        <Card>
+          <CardHeader
+            icon={<ClipboardListIcon className="h-5 w-5 text-white" />}
+            iconColor="blue"
+            title="調理手順"
+            actions={
+              <button
+                type="button"
+                onClick={addStep}
+                className="inline-flex items-center gap-1.5 rounded-lg bg-linear-to-r from-blue-600 to-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-md shadow-blue-500/30 transition-all hover:shadow-lg hover:shadow-blue-500/40"
+              >
+                <PlusIcon className="h-4 w-4" stroke="currentColor" />
+                手順を追加
+              </button>
+            }
+          />
+          <CardContent>
             <div className="space-y-4">
               {steps.map((step, index) => (
                 <StepInput
@@ -431,8 +501,15 @@ export default function RecipeEditForm({ recipe, tagCategories }: Props) {
                 />
               ))}
             </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
+        <ChildRecipeSelectorDialog
+          isOpen={isChildRecipeDialogOpen}
+          onClose={() => setIsChildRecipeDialogOpen(false)}
+          onAdd={addChildRecipe}
+          parentRecipeId={recipe.id}
+          existingChildRecipeIds={childRecipes.map(cr => cr.childRecipeId)}
+        />
 
         {/* ボタン */}
         <div className="rounded-xl bg-linear-to-r from-gray-50 to-white p-6 shadow-lg ring-1 ring-gray-900/5">

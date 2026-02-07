@@ -6,6 +6,7 @@
 import { prisma } from '@/lib/prisma'
 import { Prisma } from '@prisma/client'
 import * as RecipeRepository from '@/backend/repositories/recipe.repository'
+import * as RecipeRelationRepository from '@/backend/repositories/recipe-relation.repository'
 import * as TagRepository from '@/backend/repositories/tag.repository'
 import { sanitizeUrl } from '@/utils/url-validation'
 import type {
@@ -15,6 +16,7 @@ import type {
   RecipeListOutput,
   CreateRecipeResult,
   UpdateRecipeResult,
+  ChildRecipeRelationInput,
 } from '@/backend/domain/recipes'
 
 // ===== Recipe Retrieval =====
@@ -40,6 +42,41 @@ export async function getRecipes(
   return RecipeRepository.findRecipesByUser(userId, searchQuery, tagFilters)
 }
 
+/**
+ * 子レシピ関係の所有権・循環参照を検証して作成
+ */
+async function validateAndCreateChildRecipeRelations(
+  tx: Prisma.TransactionClient,
+  userId: string,
+  parentRecipeId: string,
+  childRecipes?: ChildRecipeRelationInput[]
+): Promise<void> {
+  if (!childRecipes || childRecipes.length === 0) return
+
+  const childRecipeIds = childRecipes.map((cr) => cr.childRecipeId)
+  const hasValidOwnership = await RecipeRelationRepository.validateChildRecipeOwnership(
+    tx,
+    userId,
+    childRecipeIds
+  )
+
+  if (!hasValidOwnership) {
+    throw new Error('無効な子レシピが含まれています')
+  }
+
+  for (const childRecipe of childRecipes) {
+    const isCircular = await RecipeRelationRepository.checkCircularReference(
+      parentRecipeId,
+      childRecipe.childRecipeId
+    )
+    if (isCircular) {
+      throw new Error('循環参照が検出されました。子レシピの設定を見直してください')
+    }
+  }
+
+  await RecipeRelationRepository.createRecipeRelations(tx, parentRecipeId, childRecipes)
+}
+
 // ===== Recipe Creation =====
 
 /**
@@ -49,7 +86,7 @@ export async function createRecipe(
   userId: string,
   input: CreateRecipeInput
 ): Promise<CreateRecipeResult> {
-  const { title, sourceInfo, ingredients, steps, memo, tags } = input
+  const { title, sourceInfo, ingredients, steps, memo, tags, childRecipes } = input
 
   // タグのバリデーション
   const { validTagIds, isValid } = await TagRepository.validateTagIdsForUser(tags ?? [], userId)
@@ -78,6 +115,9 @@ export async function createRecipe(
     // レシピタグ作成
     await RecipeRepository.createRecipeTags(tx, newRecipe.id, validTagIds)
 
+    // 子レシピ関係作成
+    await validateAndCreateChildRecipeRelations(tx, userId, newRecipe.id, childRecipes)
+
     return newRecipe
   })
 
@@ -93,7 +133,7 @@ export async function updateRecipe(
   userId: string,
   input: UpdateRecipeInput
 ): Promise<UpdateRecipeResult> {
-  const { recipeId, title, sourceInfo, ingredients, steps, memo, tags } = input
+  const { recipeId, title, sourceInfo, ingredients, steps, memo, tags, childRecipes } = input
 
   // 所有権チェック
   const hasOwnership = await RecipeRepository.checkRecipeOwnership(recipeId, userId)
@@ -130,6 +170,9 @@ export async function updateRecipe(
 
     // レシピタグ作成
     await RecipeRepository.createRecipeTags(tx, recipeId, validTagIds)
+
+    // 子レシピ関係作成
+    await validateAndCreateChildRecipeRelations(tx, userId, recipeId, childRecipes)
 
     return recipe
   })

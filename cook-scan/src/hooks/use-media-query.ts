@@ -18,7 +18,9 @@ export function useMediaQuery(query: string): boolean {
     return window.matchMedia(query).matches
   }
 
-  return useSyncExternalStore(subscribe, getSnapshot)
+  const getServerSnapshot = () => false
+
+  return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot)
 }
 
 /**
