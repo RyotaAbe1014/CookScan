@@ -59,9 +59,11 @@ export function ChildRecipeSelectorDialog({
     }
   }
 
-  const handleSearchSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    handleSearch(searchQuery)
+  const handleSearchKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      handleSearch(searchQuery)
+    }
   }
 
   const handleClose = () => {
@@ -112,21 +114,22 @@ export function ChildRecipeSelectorDialog({
 
           {/* Search */}
           <div className="border-b border-gray-100 px-6 py-4">
-            <form onSubmit={handleSearchSubmit} className="flex gap-2">
+            <div className="flex gap-2">
               <div className="relative flex-1">
                 <SearchIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
                 <Input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyDown={handleSearchKeyDown}
                   placeholder="レシピ名で検索..."
                   className="pl-9"
                 />
               </div>
-              <Button type="submit" variant="secondary" disabled={isLoading}>
+              <Button type="button" variant="secondary" disabled={isLoading} onClick={() => handleSearch(searchQuery)}>
                 検索
               </Button>
-            </form>
+            </div>
           </div>
 
           {/* Recipe List */}
