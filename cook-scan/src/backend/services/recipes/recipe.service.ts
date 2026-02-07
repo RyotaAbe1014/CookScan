@@ -16,6 +16,7 @@ import type {
   RecipeListOutput,
   CreateRecipeResult,
   UpdateRecipeResult,
+  ChildRecipeRelationInput,
 } from '@/backend/domain/recipes'
 
 // ===== Recipe Retrieval =====
@@ -39,6 +40,41 @@ export async function getRecipes(
   tagFilters?: Prisma.RecipeWhereInput[]
 ): Promise<RecipeListOutput[]> {
   return RecipeRepository.findRecipesByUser(userId, searchQuery, tagFilters)
+}
+
+/**
+ * 子レシピ関係の所有権・循環参照を検証して作成
+ */
+async function validateAndCreateChildRecipeRelations(
+  tx: Prisma.TransactionClient,
+  userId: string,
+  parentRecipeId: string,
+  childRecipes?: ChildRecipeRelationInput[]
+): Promise<void> {
+  if (!childRecipes || childRecipes.length === 0) return
+
+  const childRecipeIds = childRecipes.map((cr) => cr.childRecipeId)
+  const hasValidOwnership = await RecipeRelationRepository.validateChildRecipeOwnership(
+    tx,
+    userId,
+    childRecipeIds
+  )
+
+  if (!hasValidOwnership) {
+    throw new Error('無効な子レシピが含まれています')
+  }
+
+  for (const childRecipe of childRecipes) {
+    const isCircular = await RecipeRelationRepository.checkCircularReference(
+      parentRecipeId,
+      childRecipe.childRecipeId
+    )
+    if (isCircular) {
+      throw new Error('循環参照が検出されました。子レシピの設定を見直してください')
+    }
+  }
+
+  await RecipeRelationRepository.createRecipeRelations(tx, parentRecipeId, childRecipes)
 }
 
 // ===== Recipe Creation =====
@@ -80,18 +116,7 @@ export async function createRecipe(
     await RecipeRepository.createRecipeTags(tx, newRecipe.id, validTagIds)
 
     // 子レシピ関係作成
-    if (childRecipes && childRecipes.length > 0) {
-      for (const cr of childRecipes) {
-        const isCircular = await RecipeRelationRepository.checkCircularReference(
-          newRecipe.id,
-          cr.childRecipeId
-        )
-        if (isCircular) {
-          throw new Error('循環参照が検出されました。子レシピの設定を見直してください')
-        }
-      }
-      await RecipeRelationRepository.createRecipeRelations(tx, newRecipe.id, childRecipes)
-    }
+    await validateAndCreateChildRecipeRelations(tx, userId, newRecipe.id, childRecipes)
 
     return newRecipe
   })
@@ -147,18 +172,7 @@ export async function updateRecipe(
     await RecipeRepository.createRecipeTags(tx, recipeId, validTagIds)
 
     // 子レシピ関係作成
-    if (childRecipes && childRecipes.length > 0) {
-      for (const cr of childRecipes) {
-        const isCircular = await RecipeRelationRepository.checkCircularReference(
-          recipeId,
-          cr.childRecipeId
-        )
-        if (isCircular) {
-          throw new Error('循環参照が検出されました。子レシピの設定を見直してください')
-        }
-      }
-      await RecipeRelationRepository.createRecipeRelations(tx, recipeId, childRecipes)
-    }
+    await validateAndCreateChildRecipeRelations(tx, userId, recipeId, childRecipes)
 
     return recipe
   })

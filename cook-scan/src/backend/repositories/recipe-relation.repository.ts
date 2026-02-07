@@ -57,6 +57,29 @@ export async function createRecipeRelations(
 }
 
 /**
+ * 子レシピIDがすべてユーザー所有かを検証
+ */
+export async function validateChildRecipeOwnership(
+  tx: Prisma.TransactionClient,
+  userId: string,
+  childRecipeIds: string[]
+): Promise<boolean> {
+  if (childRecipeIds.length === 0) return true
+
+  const uniqueChildRecipeIds = [...new Set(childRecipeIds)]
+  const ownedRecipeCount = await tx.recipe.count({
+    where: {
+      userId,
+      id: {
+        in: uniqueChildRecipeIds,
+      },
+    },
+  })
+
+  return ownedRecipeCount === uniqueChildRecipeIds.length
+}
+
+/**
  * 親IDで子レシピ関係を全削除
  */
 export async function deleteRecipeRelationsByParent(
