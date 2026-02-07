@@ -116,6 +116,9 @@ describe('updateUserProfile', () => {
       profile: mockProfile,
     })
 
+    // UserService.updateProfile内のfindUserByAuthId用
+    vi.mocked(prisma.user.findUnique).mockResolvedValueOnce(mockProfile as any)
+
     vi.mocked(prisma.user.update).mockResolvedValueOnce({
       ...mockProfile,
       name: '新しい名前',
@@ -185,6 +188,10 @@ describe('updateUserProfile', () => {
     })
 
     const name50 = 'あ'.repeat(50)
+
+    // UserService.updateProfile内のfindUserByAuthId用
+    vi.mocked(prisma.user.findUnique).mockResolvedValueOnce(mockProfile as any)
+
     vi.mocked(prisma.user.update).mockResolvedValueOnce({
       ...mockProfile,
       name: name50,
@@ -214,6 +221,9 @@ describe('updateUserProfile', () => {
       authUser: { id: 'auth-123' } as any,
       profile: mockProfile,
     })
+
+    // UserService.updateProfile内のfindUserByAuthId用
+    vi.mocked(prisma.user.findUnique).mockResolvedValueOnce(mockProfile as any)
 
     vi.mocked(prisma.user.update).mockResolvedValueOnce({
       ...mockProfile,
@@ -287,6 +297,9 @@ describe('updateUserProfile', () => {
       authUser: { id: 'auth-123' } as any,
       profile: mockProfile,
     })
+
+    // UserService.updateProfile内のfindUserByAuthId用
+    vi.mocked(prisma.user.findUnique).mockResolvedValueOnce(mockProfile as any)
 
     // データベースエラーをシミュレート
     vi.mocked(prisma.user.update).mockRejectedValueOnce(new Error('Database error'))

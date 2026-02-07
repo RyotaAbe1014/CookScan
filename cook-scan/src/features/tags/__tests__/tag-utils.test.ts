@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { validateTagIdsForUser } from '../tag-utils'
+import { validateTagIdsForUser } from '@/backend/repositories/tag.repository'
 
 // モック: Prismaクライアント
 vi.mock('@/lib/prisma', () => ({
