@@ -51,7 +51,7 @@ export type CardHeaderColor =
   | 'blue' // 手順
   | 'teal' // メモ
   | 'red' // 削除、警告
-  | 'purple' // 構成要素（子レシピ）
+  | 'purple' // サブレシピ（子レシピ）
   | 'indigo' // 親レシピ参照
 
 const iconColors: Record<CardHeaderColor, string> = {

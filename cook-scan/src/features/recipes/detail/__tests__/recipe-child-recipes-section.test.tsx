@@ -55,8 +55,8 @@ describe('RecipeChildRecipesSection', () => {
     expect(links[1]).toHaveAttribute('href', '/recipes/child-2')
   })
 
-  it('セクションタイトルが「構成要素」と表示される', () => {
+  it('セクションタイトルが「サブレシピ」と表示される', () => {
     render(<RecipeChildRecipesSection childRecipes={mockChildRecipes} />)
-    expect(screen.getByText('構成要素')).toBeInTheDocument()
+    expect(screen.getByText('サブレシピ')).toBeInTheDocument()
   })
 })

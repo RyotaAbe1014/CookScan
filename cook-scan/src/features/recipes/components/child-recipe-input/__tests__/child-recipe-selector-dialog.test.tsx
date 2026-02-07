@@ -34,13 +34,13 @@ describe('ChildRecipeSelectorDialog', () => {
   describe('表示制御', () => {
     it('isOpen=falseの時、ダイアログが表示されない', () => {
       render(<ChildRecipeSelectorDialog {...defaultProps} isOpen={false} />)
-      expect(screen.queryByText('構成要素を追加')).not.toBeInTheDocument()
+      expect(screen.queryByText('サブレシピを追加')).not.toBeInTheDocument()
     })
 
     it('isOpen=trueの時、ダイアログが表示される', async () => {
       render(<ChildRecipeSelectorDialog {...defaultProps} />)
       await waitFor(() => {
-        expect(screen.getByText('構成要素を追加')).toBeInTheDocument()
+        expect(screen.getByText('サブレシピを追加')).toBeInTheDocument()
       })
     })
   })
@@ -113,7 +113,7 @@ describe('ChildRecipeSelectorDialog', () => {
       render(<ChildRecipeSelectorDialog {...defaultProps} />)
 
       await waitFor(() => {
-        expect(screen.getByText('構成要素を追加')).toBeInTheDocument()
+        expect(screen.getByText('サブレシピを追加')).toBeInTheDocument()
       })
 
       const cancelButton = screen.getByRole('button', { name: /キャンセル/ })
@@ -127,7 +127,7 @@ describe('ChildRecipeSelectorDialog', () => {
       const { container } = render(<ChildRecipeSelectorDialog {...defaultProps} />)
 
       await waitFor(() => {
-        expect(screen.getByText('構成要素を追加')).toBeInTheDocument()
+        expect(screen.getByText('サブレシピを追加')).toBeInTheDocument()
       })
 
       const backdrop = container.querySelector('[aria-hidden="true"]')

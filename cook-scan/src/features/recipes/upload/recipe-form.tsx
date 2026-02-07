@@ -394,12 +394,12 @@ export default function RecipeForm({ imageUrl, extractedData, tagCategories }: P
           </CardContent>
         </Card>
 
-        {/* 構成要素 */}
+        {/* サブレシピ */}
         <Card>
           <CardHeader
             icon={<FolderIcon className="h-5 w-5 text-white" />}
             iconColor="purple"
-            title="構成要素"
+            title="サブレシピ"
             actions={
               <button
                 type="button"
@@ -407,7 +407,7 @@ export default function RecipeForm({ imageUrl, extractedData, tagCategories }: P
                 className="inline-flex items-center gap-1.5 rounded-lg bg-linear-to-r from-purple-600 to-violet-600 px-3 py-2 text-sm font-semibold text-white shadow-md shadow-purple-500/30 transition-all hover:shadow-lg hover:shadow-purple-500/40"
               >
                 <PlusIcon className="h-4 w-4" stroke="currentColor" />
-                構成要素を追加
+                サブレシピを追加
               </button>
             }
           />
@@ -425,7 +425,7 @@ export default function RecipeForm({ imageUrl, extractedData, tagCategories }: P
                 ))}
               </div>
             ) : (
-              <p className="text-sm text-gray-500">構成要素が追加されていません</p>
+              <p className="text-sm text-gray-500">サブレシピが追加されていません</p>
             )}
           </CardContent>
         </Card>

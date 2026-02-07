@@ -104,9 +104,9 @@ export function ChildRecipeSelectorDialog({
         >
           {/* Header */}
           <div className="border-b border-gray-200 bg-linear-to-r from-purple-50 to-white px-6 py-5">
-            <h3 className="text-xl font-bold text-gray-900">構成要素を追加</h3>
+            <h3 className="text-xl font-bold text-gray-900">サブレシピを追加</h3>
             <p className="mt-1 text-sm text-gray-600">
-              既存のレシピから構成要素として追加するレシピを選択してください
+              既存のレシピからサブレシピとして追加するレシピを選択してください
             </p>
           </div>
 

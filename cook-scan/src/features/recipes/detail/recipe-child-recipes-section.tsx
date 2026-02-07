@@ -18,7 +18,7 @@ export function RecipeChildRecipesSection({ childRecipes }: RecipeChildRecipesSe
       <CardHeader
         icon={<FolderIcon className="h-5 w-5 text-white" />}
         iconColor="purple"
-        title="構成要素"
+        title="サブレシピ"
       />
       <CardContent>
         <div className="space-y-2">
