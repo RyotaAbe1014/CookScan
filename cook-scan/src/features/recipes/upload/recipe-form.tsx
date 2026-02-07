@@ -299,11 +299,10 @@ export default function RecipeForm({ imageUrl, extractedData, tagCategories }: P
                         {category.tags.map((tag) => (
                           <label
                             key={tag.id}
-                            className={`inline-flex cursor-pointer items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 ${
-                              selectedTagIds.includes(tag.id)
-                                ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-500/30 ring-2 ring-indigo-600'
-                                : 'bg-gray-100 text-gray-700 ring-1 ring-gray-200 hover:bg-gray-200 hover:ring-gray-300'
-                            }`}
+                            className={`inline-flex cursor-pointer items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 ${selectedTagIds.includes(tag.id)
+                              ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-500/30 ring-2 ring-indigo-600'
+                              : 'bg-gray-100 text-gray-700 ring-1 ring-gray-200 hover:bg-gray-200 hover:ring-gray-300'
+                              }`}
                           >
                             <input
                               type="checkbox"
@@ -360,40 +359,6 @@ export default function RecipeForm({ imageUrl, extractedData, tagCategories }: P
             </div>
           </CardContent>
         </Card>
-
-        {/* 調理手順 */}
-        <Card>
-          <CardHeader
-            icon={<ClipboardListIcon className="h-5 w-5 text-white" />}
-            iconColor="blue"
-            title="調理手順"
-            actions={
-              <button
-                type="button"
-                onClick={addStep}
-                className="inline-flex items-center gap-1.5 rounded-lg bg-linear-to-r from-blue-600 to-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-md shadow-blue-500/30 transition-all hover:shadow-lg hover:shadow-blue-500/40"
-              >
-                <PlusIcon className="h-4 w-4" stroke="currentColor" />
-                手順を追加
-              </button>
-            }
-          />
-          <CardContent>
-            <div className="space-y-4">
-              {steps.map((step, index) => (
-                <StepInput
-                  key={index}
-                  step={step}
-                  index={index}
-                  canDelete={steps.length > 1}
-                  onUpdate={updateStep}
-                  onRemove={removeStep}
-                />
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
         {/* サブレシピ */}
         <Card>
           <CardHeader
@@ -427,6 +392,38 @@ export default function RecipeForm({ imageUrl, extractedData, tagCategories }: P
             ) : (
               <p className="text-sm text-gray-500">サブレシピが追加されていません</p>
             )}
+          </CardContent>
+        </Card>
+        {/* 調理手順 */}
+        <Card>
+          <CardHeader
+            icon={<ClipboardListIcon className="h-5 w-5 text-white" />}
+            iconColor="blue"
+            title="調理手順"
+            actions={
+              <button
+                type="button"
+                onClick={addStep}
+                className="inline-flex items-center gap-1.5 rounded-lg bg-linear-to-r from-blue-600 to-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-md shadow-blue-500/30 transition-all hover:shadow-lg hover:shadow-blue-500/40"
+              >
+                <PlusIcon className="h-4 w-4" stroke="currentColor" />
+                手順を追加
+              </button>
+            }
+          />
+          <CardContent>
+            <div className="space-y-4">
+              {steps.map((step, index) => (
+                <StepInput
+                  key={index}
+                  step={step}
+                  index={index}
+                  canDelete={steps.length > 1}
+                  onUpdate={updateStep}
+                  onRemove={removeStep}
+                />
+              ))}
+            </div>
           </CardContent>
         </Card>
 

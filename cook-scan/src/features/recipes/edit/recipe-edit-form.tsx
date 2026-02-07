@@ -436,41 +436,6 @@ export default function RecipeEditForm({ recipe, tagCategories }: Props) {
             </div>
           </div>
         </div>
-
-        {/* 調理手順 */}
-        <div className="overflow-hidden rounded-xl bg-white shadow-lg ring-1 ring-gray-900/5">
-          <div className="flex items-center justify-between border-b border-gray-200 bg-linear-to-r from-gray-50 to-white px-6 py-4">
-            <div className="flex items-center gap-2">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-linear-to-br from-blue-500 to-indigo-600 shadow-md">
-                <ClipboardListIcon className="h-5 w-5 text-white" />
-              </div>
-              <h3 className="text-lg font-bold text-gray-900">調理手順</h3>
-            </div>
-            <button
-              type="button"
-              onClick={addStep}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-linear-to-r from-blue-600 to-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-md shadow-blue-500/30 transition-all hover:shadow-lg hover:shadow-blue-500/40"
-            >
-              <PlusIcon className="h-4 w-4" stroke="currentColor" />
-              手順を追加
-            </button>
-          </div>
-          <div className="p-6">
-            <div className="space-y-4">
-              {steps.map((step, index) => (
-                <StepInput
-                  key={index}
-                  step={step}
-                  index={index}
-                  canDelete={steps.length > 1}
-                  onUpdate={updateStep}
-                  onRemove={removeStep}
-                />
-              ))}
-            </div>
-          </div>
-        </div>
-
         {/* サブレシピ */}
         <div className="overflow-hidden rounded-xl bg-white shadow-lg ring-1 ring-gray-900/5">
           <div className="flex items-center justify-between border-b border-gray-200 bg-linear-to-r from-gray-50 to-white px-6 py-4">
@@ -507,7 +472,39 @@ export default function RecipeEditForm({ recipe, tagCategories }: Props) {
             )}
           </div>
         </div>
-
+        {/* 調理手順 */}
+        <div className="overflow-hidden rounded-xl bg-white shadow-lg ring-1 ring-gray-900/5">
+          <div className="flex items-center justify-between border-b border-gray-200 bg-linear-to-r from-gray-50 to-white px-6 py-4">
+            <div className="flex items-center gap-2">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-linear-to-br from-blue-500 to-indigo-600 shadow-md">
+                <ClipboardListIcon className="h-5 w-5 text-white" />
+              </div>
+              <h3 className="text-lg font-bold text-gray-900">調理手順</h3>
+            </div>
+            <button
+              type="button"
+              onClick={addStep}
+              className="inline-flex items-center gap-1.5 rounded-lg bg-linear-to-r from-blue-600 to-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-md shadow-blue-500/30 transition-all hover:shadow-lg hover:shadow-blue-500/40"
+            >
+              <PlusIcon className="h-4 w-4" stroke="currentColor" />
+              手順を追加
+            </button>
+          </div>
+          <div className="p-6">
+            <div className="space-y-4">
+              {steps.map((step, index) => (
+                <StepInput
+                  key={index}
+                  step={step}
+                  index={index}
+                  canDelete={steps.length > 1}
+                  onUpdate={updateStep}
+                  onRemove={removeStep}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
         <ChildRecipeSelectorDialog
           isOpen={isChildRecipeDialogOpen}
           onClose={() => setIsChildRecipeDialogOpen(false)}
