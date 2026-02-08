@@ -8,12 +8,12 @@ import { updateRecipe } from './actions'
 import { isSuccess } from '@/utils/result'
 import type { UpdateRecipeRequest } from './types'
 import type { RecipeFormTagCategory } from '@/features/recipes/types/tag'
+import { useRecipeForm } from '@/features/recipes/hooks/use-recipe-form'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Card, CardHeader, CardContent } from '@/components/ui/card'
 import { Alert } from '@/components/ui/alert'
 import { IngredientInput, StepInput, FormActions, ChildRecipeInput, ChildRecipeSelectorDialog } from '@/features/recipes/components'
-import type { ChildRecipeItem } from '@/features/recipes/components'
 import { CameraIcon } from '@/components/icons/camera-icon'
 import { InfoCircleIcon } from '@/components/icons/info-circle-icon'
 import { TagIcon } from '@/components/icons/tag-icon'
@@ -75,120 +75,60 @@ export default function RecipeEditForm({ recipe, tagCategories }: Props) {
   const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [title, setTitle] = useState(recipe.title)
-  const [sourceInfo, setSourceInfo] = useState({
-    bookName: recipe.sourceInfo[0]?.sourceName || '',
-    pageNumber: recipe.sourceInfo[0]?.pageNumber || '',
-    url: recipe.sourceInfo[0]?.sourceUrl || ''
-  })
-  const [ingredients, setIngredients] = useState<Array<{
-    id?: string
-    name: string
-    unit: string
-    notes: string
-  }>>(
-    recipe.ingredients.map(ing => ({
-      id: ing.id,
-      name: ing.name,
-      unit: ing.unit || '',
-      notes: ing.notes || ''
-    }))
-  )
-  const [steps, setSteps] = useState<Array<{
-    id?: string
-    instruction: string
-    timerSeconds?: number
-    orderIndex: number
-  }>>(
-    recipe.steps.map(step => ({
-      id: step.id,
-      instruction: step.instruction,
-      timerSeconds: step.timerSeconds || undefined,
-      orderIndex: step.orderIndex
-    }))
-  )
-  const [memo, setMemo] = useState(recipe.memo || '')
-  const [selectedTagIds, setSelectedTagIds] = useState<string[]>(
-    recipe.recipeTags.map(rt => rt.tagId)
-  )
-  const [childRecipes, setChildRecipes] = useState<ChildRecipeItem[]>(
-    recipe.childRecipes.map(rel => ({
-      childRecipeId: rel.childRecipeId,
-      childRecipeTitle: rel.childRecipe.title,
-      quantity: rel.quantity || '',
-      notes: rel.notes || '',
-    }))
-  )
   const [isChildRecipeDialogOpen, setIsChildRecipeDialogOpen] = useState(false)
 
-  const addIngredient = () => {
-    setIngredients([
-      ...ingredients,
-      { name: '', unit: '', notes: '' }
-    ])
-  }
-
-  const removeIngredient = (index: number) => {
-    if (ingredients.length > 1) {
-      setIngredients(ingredients.filter((_, i) => i !== index))
-    }
-  }
-
-  const updateIngredient = (index: number, field: 'name' | 'unit' | 'notes', value: string) => {
-    setIngredients(ingredients.map((ing, i) =>
-      i === index ? { ...ing, [field]: value } : ing
-    ))
-  }
-
-  const addStep = () => {
-    setSteps([
-      ...steps,
-      { instruction: '', timerSeconds: undefined, orderIndex: steps.length + 1 }
-    ])
-  }
-
-  const removeStep = (index: number) => {
-    if (steps.length > 1) {
-      const newSteps = steps.filter((_, i) => i !== index)
-      // 順序を再調整
-      setSteps(newSteps.map((step, i) => ({ ...step, orderIndex: i + 1 })))
-    }
-  }
-
-  const updateStep = (index: number, field: 'instruction' | 'timerSeconds', value: string) => {
-    setSteps(steps.map((step, i) =>
-      i === index
-        ? {
-          ...step,
-          [field]: field === 'timerSeconds'
-            ? (value ? parseInt(value) : undefined)
-            : value
-        }
-        : step
-    ))
-  }
-
-  const addChildRecipe = (item: ChildRecipeItem) => {
-    setChildRecipes([...childRecipes, item])
-  }
-
-  const removeChildRecipe = (index: number) => {
-    setChildRecipes(childRecipes.filter((_, i) => i !== index))
-  }
-
-  const updateChildRecipe = (index: number, field: 'quantity' | 'notes', value: string) => {
-    setChildRecipes(childRecipes.map((cr, i) =>
-      i === index ? { ...cr, [field]: value } : cr
-    ))
-  }
-
-  const toggleTag = (tagId: string) => {
-    setSelectedTagIds(prev =>
-      prev.includes(tagId)
-        ? prev.filter(id => id !== tagId)
-        : [...prev, tagId]
-    )
-  }
+  // カスタムフックで状態管理とロジックを統一
+  const {
+    title,
+    setTitle,
+    sourceInfo,
+    setSourceInfo,
+    ingredients,
+    steps,
+    memo,
+    setMemo,
+    selectedTagIds,
+    childRecipes,
+    addIngredient,
+    removeIngredient,
+    updateIngredient,
+    addStep,
+    removeStep,
+    updateStep,
+    addChildRecipe,
+    removeChildRecipe,
+    updateChildRecipe,
+    toggleTag,
+  } = useRecipeForm({
+    initialData: {
+      title: recipe.title,
+      sourceInfo: {
+        bookName: recipe.sourceInfo[0]?.sourceName || '',
+        pageNumber: recipe.sourceInfo[0]?.pageNumber || '',
+        url: recipe.sourceInfo[0]?.sourceUrl || '',
+      },
+      ingredients: recipe.ingredients.map(ing => ({
+        id: ing.id,
+        name: ing.name,
+        unit: ing.unit || '',
+        notes: ing.notes || '',
+      })),
+      steps: recipe.steps.map(step => ({
+        id: step.id,
+        instruction: step.instruction,
+        timerSeconds: step.timerSeconds || undefined,
+        orderIndex: step.orderIndex,
+      })),
+      memo: recipe.memo || '',
+      selectedTagIds: recipe.recipeTags.map(rt => rt.tagId),
+      childRecipes: recipe.childRecipes.map(rel => ({
+        childRecipeId: rel.childRecipeId,
+        childRecipeTitle: rel.childRecipe.title,
+        quantity: rel.quantity || '',
+        notes: rel.notes || '',
+      })),
+    },
+  })
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -208,11 +148,11 @@ export default function RecipeEditForm({ recipe, tagCategories }: Props) {
           unit: ing.unit || undefined,
           notes: ing.notes || undefined
         })),
-        steps: steps.map(step => ({
+        steps: steps.map((step, index) => ({
           id: step.id,
           instruction: step.instruction,
           timerSeconds: step.timerSeconds,
-          orderIndex: step.orderIndex
+          orderIndex: step.orderIndex ?? index + 1
         })),
         memo,
         tags: selectedTagIds,
@@ -248,34 +188,33 @@ export default function RecipeEditForm({ recipe, tagCategories }: Props) {
         )}
         {/* 画像プレビュー */}
         {recipe.imageUrl && (
-          <div className="overflow-hidden rounded-xl bg-white p-6 shadow-lg ring-1 ring-gray-900/5">
-            <div className="mb-4 flex items-center gap-2">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-600 shadow-md">
-                <CameraIcon className="h-5 w-5 text-white" />
+          <Card>
+            <CardContent>
+              <div className="mb-4 flex items-center gap-2">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-600 shadow-md">
+                  <CameraIcon className="h-5 w-5 text-white" />
+                </div>
+                <h3 className="text-lg font-bold text-gray-900">レシピ画像</h3>
               </div>
-              <h3 className="text-lg font-bold text-gray-900">レシピ画像</h3>
-            </div>
-            <Image
-              src={recipe.imageUrl}
-              alt="レシピ画像"
-              width={800}
-              height={256}
-              className="mx-auto max-h-64 rounded-xl object-contain shadow-md"
-            />
-          </div>
+              <Image
+                src={recipe.imageUrl}
+                alt="レシピ画像"
+                width={800}
+                height={256}
+                className="mx-auto max-h-64 rounded-xl object-contain shadow-md"
+              />
+            </CardContent>
+          </Card>
         )}
 
         {/* 基本情報 */}
-        <div className="overflow-hidden rounded-xl bg-white shadow-lg ring-1 ring-gray-900/5">
-          <div className="border-b border-gray-200 bg-linear-to-r from-gray-50 to-white px-6 py-4">
-            <div className="flex items-center gap-2">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-600 shadow-md">
-                <InfoCircleIcon className="h-5 w-5 text-white" />
-              </div>
-              <h3 className="text-lg font-bold text-gray-900">基本情報</h3>
-            </div>
-          </div>
-          <div className="p-6">
+        <Card>
+          <CardHeader
+            icon={<InfoCircleIcon className="h-5 w-5 text-white" />}
+            iconColor="emerald"
+            title="基本情報"
+          />
+          <CardContent>
             <div className="space-y-4">
               <div>
                 <label htmlFor="title" className="mb-2 flex items-center gap-1.5 text-sm font-medium text-gray-700">
@@ -347,21 +286,18 @@ export default function RecipeEditForm({ recipe, tagCategories }: Props) {
                 />
               </div>
             </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
 
         {/* タグ */}
         {tagCategories.length > 0 && (
-          <div className="overflow-hidden rounded-xl bg-white shadow-lg ring-1 ring-gray-900/5">
-            <div className="border-b border-gray-200 bg-linear-to-r from-gray-50 to-white px-6 py-4">
-              <div className="flex items-center gap-2">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-linear-to-br from-amber-500 to-orange-600 shadow-md">
-                  <TagIcon className="h-5 w-5 text-white" />
-                </div>
-                <h3 className="text-lg font-bold text-gray-900">タグ</h3>
-              </div>
-            </div>
-            <div className="p-6">
+          <Card>
+            <CardHeader
+              icon={<TagIcon className="h-5 w-5 text-white" />}
+              iconColor="amber"
+              title="タグ"
+            />
+            <CardContent>
               <div className="space-y-4">
                 {tagCategories.map((category) => (
                   <div key={category.id}>
@@ -400,8 +336,8 @@ export default function RecipeEditForm({ recipe, tagCategories }: Props) {
                   </div>
                 ))}
               </div>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
         )}
 
         {/* 材料 */}
@@ -512,14 +448,16 @@ export default function RecipeEditForm({ recipe, tagCategories }: Props) {
         />
 
         {/* ボタン */}
-        <div className="rounded-xl bg-linear-to-r from-gray-50 to-white p-6 shadow-lg ring-1 ring-gray-900/5">
-          <FormActions
-            isSubmitting={isSubmitting}
-            disabled={!title}
-            submitLabel="レシピを更新"
-            onCancel={() => router.push(`/recipes/${recipe.id}`)}
-          />
-        </div>
+        <Card>
+          <CardContent>
+            <FormActions
+              isSubmitting={isSubmitting}
+              disabled={!title}
+              submitLabel="レシピを更新"
+              onCancel={() => router.push(`/recipes/${recipe.id}`)}
+            />
+          </CardContent>
+        </Card>
       </div>
     </form>
   )

@@ -8,12 +8,12 @@ import type { ExtractedRecipeData } from './types'
 import type { RecipeFormTagCategory } from '@/features/recipes/types/tag'
 import { createRecipe } from './actions'
 import { isSuccess } from '@/utils/result'
+import { useRecipeForm } from '@/features/recipes/hooks/use-recipe-form'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Card, CardHeader, CardContent } from '@/components/ui/card'
 import { Alert } from '@/components/ui/alert'
 import { IngredientInput, StepInput, FormActions, ChildRecipeInput, ChildRecipeSelectorDialog } from '@/features/recipes/components'
-import type { ChildRecipeItem } from '@/features/recipes/components'
 import { CameraIcon } from '@/components/icons/camera-icon'
 import { InfoCircleIcon } from '@/components/icons/info-circle-icon'
 import { TagIcon } from '@/components/icons/tag-icon'
@@ -37,87 +37,45 @@ export default function RecipeForm({ imageUrl, extractedData, tagCategories }: P
   const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [title, setTitle] = useState(extractedData?.title || '')
-  const [sourceInfo, setSourceInfo] = useState({
-    bookName: extractedData?.sourceInfo?.bookName || '',
-    pageNumber: extractedData?.sourceInfo?.pageNumber || '',
-    url: extractedData?.sourceInfo?.url || '',
-  })
-  const [ingredients, setIngredients] = useState<ExtractedRecipeData['ingredients']>(
-    extractedData?.ingredients || []
-  )
-  const [steps, setSteps] = useState<ExtractedRecipeData['steps']>(extractedData?.steps || [])
-  const [memo, setMemo] = useState(extractedData?.memo || '')
-  const [selectedTagIds, setSelectedTagIds] = useState<string[]>([])
-  const [childRecipes, setChildRecipes] = useState<ChildRecipeItem[]>([])
   const [isChildRecipeDialogOpen, setIsChildRecipeDialogOpen] = useState(false)
 
-  const addIngredient = () => {
-    setIngredients([...ingredients, { name: '', unit: '', notes: '' }])
-  }
-
-  const removeIngredient = (index: number) => {
-    if (ingredients.length > 1) {
-      setIngredients(ingredients.filter((_, i) => i !== index))
-    }
-  }
-
-  const updateIngredient = (
-    index: number,
-    field: keyof ExtractedRecipeData['ingredients'][number],
-    value: string
-  ) => {
-    setIngredients(ingredients.map((ing, i) => (i === index ? { ...ing, [field]: value } : ing)))
-  }
-
-  const addStep = () => {
-    setSteps([...steps, { instruction: '', timerSeconds: undefined }])
-  }
-
-  const removeStep = (index: number) => {
-    if (steps.length > 1) {
-      setSteps(steps.filter((_, i) => i !== index))
-    }
-  }
-
-  const updateStep = (
-    index: number,
-    field: keyof ExtractedRecipeData['steps'][number],
-    value: string
-  ) => {
-    setSteps(
-      steps.map((step, i) => {
-        if (i === index) {
-          if (field === 'timerSeconds') {
-            const numValue = value === '' ? undefined : Number(value)
-            return { ...step, [field]: isNaN(numValue as number) ? undefined : numValue }
-          }
-          return { ...step, [field]: value }
-        }
-        return step
-      })
-    )
-  }
-
-  const addChildRecipe = (item: ChildRecipeItem) => {
-    setChildRecipes([...childRecipes, item])
-  }
-
-  const removeChildRecipe = (index: number) => {
-    setChildRecipes(childRecipes.filter((_, i) => i !== index))
-  }
-
-  const updateChildRecipe = (index: number, field: 'quantity' | 'notes', value: string) => {
-    setChildRecipes(childRecipes.map((cr, i) =>
-      i === index ? { ...cr, [field]: value } : cr
-    ))
-  }
-
-  const toggleTag = (tagId: string) => {
-    setSelectedTagIds((prev) =>
-      prev.includes(tagId) ? prev.filter((id) => id !== tagId) : [...prev, tagId]
-    )
-  }
+  // カスタムフックで状態管理とロジックを統一
+  const {
+    title,
+    setTitle,
+    sourceInfo,
+    setSourceInfo,
+    ingredients,
+    steps,
+    memo,
+    setMemo,
+    selectedTagIds,
+    childRecipes,
+    addIngredient,
+    removeIngredient,
+    updateIngredient,
+    addStep,
+    removeStep,
+    updateStep,
+    addChildRecipe,
+    removeChildRecipe,
+    updateChildRecipe,
+    toggleTag,
+  } = useRecipeForm({
+    initialData: {
+      title: extractedData?.title || '',
+      sourceInfo: {
+        bookName: extractedData?.sourceInfo?.bookName || '',
+        pageNumber: extractedData?.sourceInfo?.pageNumber || '',
+        url: extractedData?.sourceInfo?.url || '',
+      },
+      ingredients: extractedData?.ingredients || [],
+      steps: extractedData?.steps || [],
+      memo: extractedData?.memo || '',
+      selectedTagIds: [],
+      childRecipes: [],
+    },
+  })
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
