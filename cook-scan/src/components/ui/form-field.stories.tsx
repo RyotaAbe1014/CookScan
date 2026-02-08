@@ -106,21 +106,26 @@ export const WithTextarea: Story = {
 }
 
 export const FormExample: Story = {
-  render: () => (
-    <div className="flex w-96 flex-col gap-4">
-      <FormField label="レシピ名" htmlFor="form-name" required>
-        <Input id="form-name" placeholder="レシピ名を入力" />
-      </FormField>
-      <FormField label="カテゴリ" htmlFor="form-category" required>
-        <Select id="form-category">
-          <option value="">選択してください</option>
-          <option value="main">メイン</option>
-          <option value="side">副菜</option>
-        </Select>
-      </FormField>
-      <FormField label="説明" htmlFor="form-desc">
-        <Textarea id="form-desc" rows={3} placeholder="説明を入力..." />
-      </FormField>
-    </div>
-  ),
+  args: {
+    label: 'レシピ名',
+    htmlFor: 'form-name',
+    required: true,
+    children: (
+      <div className="flex w-96 flex-col gap-4">
+        <FormField label="レシピ名" htmlFor="form-name" required>
+          <Input id="form-name" placeholder="レシピ名を入力" />
+        </FormField>
+        <FormField label="カテゴリ" htmlFor="form-category" required>
+          <Select id="form-category">
+            <option value="">選択してください</option>
+            <option value="main">メイン</option>
+            <option value="side">副菜</option>
+          </Select>
+        </FormField>
+        <FormField label="説明" htmlFor="form-desc">
+          <Textarea id="form-desc" rows={3} placeholder="説明を入力..." />
+        </FormField>
+      </div>
+    ),
+  }
 }
