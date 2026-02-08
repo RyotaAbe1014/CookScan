@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from 'storybook'
+import type { Meta, StoryObj } from '@storybook/nextjs'
 import { Select } from './select'
 
 const meta = {

@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from 'storybook'
+import type { Meta, StoryObj } from '@storybook/nextjs'
 import { useState } from 'react'
 import { Sheet } from './sheet'
 import { Button } from './button'
@@ -57,7 +57,7 @@ export const Default: Story = {
 export const AlwaysOpen: Story = {
   args: {
     isOpen: true,
-    onClose: () => {},
+    onClose: () => { },
     children: (
       <div className="p-6">
         <h2 className="text-lg font-semibold">シートコンテンツ</h2>

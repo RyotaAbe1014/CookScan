@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from 'storybook'
+import type { Meta, StoryObj } from '@storybook/nextjs'
 import { EmptyState } from './empty-state'
 import { Button } from './button'
 import { BookOpenIcon } from '@/components/icons/book-open-icon'

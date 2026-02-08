@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from 'storybook'
+import type { Meta, StoryObj } from '@storybook/nextjs'
 import { FormField } from './form-field'
 import { Input } from './input'
 import { Select } from './select'

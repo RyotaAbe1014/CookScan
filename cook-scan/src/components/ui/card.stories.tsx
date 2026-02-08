@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from 'storybook'
+import type { Meta, StoryObj } from '@storybook/nextjs'
 import { Card, CardHeader, CardContent } from './card'
 import { BookOpenIcon } from '@/components/icons/book-open-icon'
 import { TagIcon } from '@/components/icons/tag-icon'
