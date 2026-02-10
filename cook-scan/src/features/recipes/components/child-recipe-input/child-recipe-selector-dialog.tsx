@@ -97,7 +97,7 @@ export function ChildRecipeSelectorDialog({
       className="fixed inset-0 z-50 overflow-y-auto backdrop-blur-sm"
       style={{ backgroundColor: 'rgba(0, 0, 0, 0.6)' }}
     >
-      <div className="flex min-h-screen items-center justify-center p-4">
+      <div className="flex min-h-screen items-center justify-center">
         <div className="absolute inset-0" onClick={handleClose} aria-hidden="true" />
 
         <div
@@ -150,11 +150,10 @@ export function ChildRecipeSelectorDialog({
                 {recipes.map((recipe) => (
                   <label
                     key={recipe.id}
-                    className={`flex cursor-pointer items-center gap-3 rounded-lg p-3 transition-all ${
-                      selectedRecipeId === recipe.id
-                        ? 'bg-purple-100 ring-2 ring-purple-500'
-                        : 'hover:bg-gray-50'
-                    }`}
+                    className={`flex cursor-pointer items-center gap-3 rounded-lg p-3 transition-all ${selectedRecipeId === recipe.id
+                      ? 'bg-purple-100 ring-2 ring-purple-500'
+                      : 'hover:bg-gray-50'
+                      }`}
                   >
                     <input
                       type="radio"
@@ -165,11 +164,10 @@ export function ChildRecipeSelectorDialog({
                       className="sr-only"
                     />
                     <div
-                      className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 ${
-                        selectedRecipeId === recipe.id
-                          ? 'border-purple-500 bg-purple-500'
-                          : 'border-gray-300'
-                      }`}
+                      className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 ${selectedRecipeId === recipe.id
+                        ? 'border-purple-500 bg-purple-500'
+                        : 'border-gray-300'
+                        }`}
                     >
                       {selectedRecipeId === recipe.id && (
                         <div className="h-2 w-2 rounded-full bg-white" />
