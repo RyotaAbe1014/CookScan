@@ -39,10 +39,12 @@ npm run storybook        # Storybookを起動
 npm run storybook:build  # Storybookをビルド
 ```
 
-usecase doc
+# ドキュメント
+
+## usecase doc
 - @docs/usecase/
 
-er-diagram
+## er-diagram
 - @docs/er-diagram.md
 
 # 完了の定義
