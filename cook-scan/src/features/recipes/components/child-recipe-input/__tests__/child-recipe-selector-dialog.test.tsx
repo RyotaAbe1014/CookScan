@@ -49,7 +49,7 @@ describe('ChildRecipeSelectorDialog', () => {
     it('isOpen=trueの時、ダイアログが表示される', async () => {
       render(<ChildRecipeSelectorDialog {...defaultProps} />)
       await waitFor(() => {
-        expect(screen.getByText('サブレシピを追加')).toBeInTheDocument()
+        expect(screen.getByRole('heading', { name: /サブレシピを追加/ })).toBeInTheDocument()
       })
     })
   })
@@ -72,7 +72,7 @@ describe('ChildRecipeSelectorDialog', () => {
         expect(screen.getByText('カレーソース')).toBeInTheDocument()
       })
 
-      const searchInput = screen.getByPlaceholderText('レシピ名で検索...')
+      const searchInput = screen.getByPlaceholderText('レシピを検索...')
       await user.type(searchInput, 'カレー')
 
       const searchButton = screen.getByRole('button', { name: '検索' })
@@ -122,7 +122,7 @@ describe('ChildRecipeSelectorDialog', () => {
       render(<ChildRecipeSelectorDialog {...defaultProps} />)
 
       await waitFor(() => {
-        expect(screen.getByText('サブレシピを追加')).toBeInTheDocument()
+        expect(screen.getByRole('heading', { name: /サブレシピを追加/ })).toBeInTheDocument()
       })
 
       const cancelButton = screen.getByRole('button', { name: /キャンセル/ })
@@ -136,7 +136,7 @@ describe('ChildRecipeSelectorDialog', () => {
       render(<ChildRecipeSelectorDialog {...defaultProps} />)
 
       await waitFor(() => {
-        expect(screen.getByText('サブレシピを追加')).toBeInTheDocument()
+        expect(screen.getByRole('heading', { name: /サブレシピを追加/ })).toBeInTheDocument()
       })
 
       await user.keyboard('{Escape}')
