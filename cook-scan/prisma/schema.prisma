@@ -29,6 +29,7 @@ model User {
   tags                 Tag[]
   ocrProcessingHistory OcrProcessingHistory[]
   recipeVersions       RecipeVersion[]
+  shoppingItems        ShoppingItem[]
 
   @@map("users")
 }
@@ -189,6 +190,23 @@ model RecipeVersion {
   user   User   @relation(fields: [createdBy], references: [id])
 
   @@map("recipe_versions")
+}
+
+// 買い物アイテムテーブル
+model ShoppingItem {
+  id           String   @id @default(uuid())
+  userId       String   @map("user_id")
+  name         String
+  memo         String?
+  isChecked    Boolean  @default(false) @map("is_checked")
+  displayOrder Int      @map("display_order")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("shopping_items")
 }
 
 // ソース情報テーブル

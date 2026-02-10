@@ -98,6 +98,17 @@ erDiagram
         datetime created_at
     }
 
+    shopping_items {
+        uuid id PK
+        uuid user_id FK
+        string name
+        string memo
+        boolean is_checked
+        int display_order
+        datetime created_at
+        datetime updated_at
+    }
+
     source_infos {
         uuid id PK
         uuid recipe_id FK
@@ -112,6 +123,7 @@ erDiagram
     users ||--o{ recipes : "has many"
     users ||--o{ tag_categories : "has many"
     users ||--o{ tags : "has many"
+    users ||--o{ shopping_items : "has many"
     users ||--o{ ocr_processing_history : "has many"
     users ||--o{ recipe_versions : "created by"
 
