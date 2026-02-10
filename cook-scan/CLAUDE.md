@@ -44,3 +44,10 @@ usecase doc
 
 er-diagram
 - @docs/er-diagram.md
+
+# 完了の定義
+完了の定義として以下を満たすようにしてください
+- npm run lintで全てのコードチェックがパスすること
+- npm run type-checkで全ての型チェックがパスすること
+- npm run testで全てのテストがパスすること
+- npm run buildでビルドが成功すること
