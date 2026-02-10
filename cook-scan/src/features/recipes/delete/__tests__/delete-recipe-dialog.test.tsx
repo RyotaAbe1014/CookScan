@@ -16,6 +16,15 @@ vi.mock('../actions', () => ({
   deleteRecipe: vi.fn(),
 }))
 
+// Radix Dialog Portal をインラインレンダリングに変更
+vi.mock('@radix-ui/react-dialog', async () => {
+  const actual = await vi.importActual<typeof import('@radix-ui/react-dialog')>('@radix-ui/react-dialog')
+  return {
+    ...actual,
+    Portal: ({ children }: { children: React.ReactNode }) => children,
+  }
+})
+
 import { deleteRecipe } from '../actions'
 
 describe('DeleteRecipeDialog', () => {
@@ -130,17 +139,13 @@ describe('DeleteRecipeDialog', () => {
       expect(defaultProps.onClose).toHaveBeenCalled()
     })
 
-    it('背景クリックでonClose()が呼ばれる', async () => {
+    it('ESCキーでonClose()が呼ばれる', async () => {
       // Given: ダイアログが表示されている
       const user = userEvent.setup()
-      const { container } = render(<DeleteRecipeDialog {...defaultProps} />)
+      render(<DeleteRecipeDialog {...defaultProps} />)
 
-      // When: 背景部分をクリック
-      // aria-hidden="true"の要素（背景オーバーレイ）を探す
-      const backdrop = container.querySelector('[aria-hidden="true"]')
-      if (backdrop) {
-        await user.click(backdrop)
-      }
+      // When: ESCキーを押す
+      await user.keyboard('{Escape}')
 
       // Then: onClose()が呼ばれる
       expect(defaultProps.onClose).toHaveBeenCalled()

@@ -7,6 +7,15 @@ vi.mock('@/features/recipes/child-recipes/actions', () => ({
   searchAvailableRecipes: vi.fn(),
 }))
 
+// Radix Dialog Portal をインラインレンダリングに変更
+vi.mock('@radix-ui/react-dialog', async () => {
+  const actual = await vi.importActual<typeof import('@radix-ui/react-dialog')>('@radix-ui/react-dialog')
+  return {
+    ...actual,
+    Portal: ({ children }: { children: React.ReactNode }) => children,
+  }
+})
+
 import { searchAvailableRecipes } from '@/features/recipes/child-recipes/actions'
 
 describe('ChildRecipeSelectorDialog', () => {
@@ -122,18 +131,15 @@ describe('ChildRecipeSelectorDialog', () => {
       expect(defaultProps.onClose).toHaveBeenCalled()
     })
 
-    it('背景クリックでonCloseが呼ばれる', async () => {
+    it('ESCキーでonCloseが呼ばれる', async () => {
       const user = userEvent.setup()
-      const { container } = render(<ChildRecipeSelectorDialog {...defaultProps} />)
+      render(<ChildRecipeSelectorDialog {...defaultProps} />)
 
       await waitFor(() => {
         expect(screen.getByText('サブレシピを追加')).toBeInTheDocument()
       })
 
-      const backdrop = container.querySelector('[aria-hidden="true"]')
-      if (backdrop) {
-        await user.click(backdrop)
-      }
+      await user.keyboard('{Escape}')
 
       expect(defaultProps.onClose).toHaveBeenCalled()
     })
