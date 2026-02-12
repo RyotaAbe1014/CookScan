@@ -24,7 +24,8 @@ describe('Dialog', () => {
     it('open=trueの時、コンテンツが表示される', () => {
       render(
         <Dialog open={true}>
-          <DialogContent>
+          <DialogContent aria-describedby={undefined}>
+            <DialogTitle>タイトル</DialogTitle>
             <p>ダイアログの内容</p>
           </DialogContent>
         </Dialog>,
@@ -48,7 +49,7 @@ describe('Dialog', () => {
     it('ヘッダーがborder-bクラスで表示される', () => {
       const { container } = render(
         <Dialog open={true}>
-          <DialogContent>
+          <DialogContent aria-describedby={undefined}>
             <DialogHeader>
               <DialogTitle>タイトル</DialogTitle>
             </DialogHeader>
@@ -63,7 +64,7 @@ describe('Dialog', () => {
     it('カスタムclassNameが適用される', () => {
       const { container } = render(
         <Dialog open={true}>
-          <DialogContent>
+          <DialogContent aria-describedby={undefined}>
             <DialogHeader className="bg-red-50">
               <DialogTitle>タイトル</DialogTitle>
             </DialogHeader>
@@ -79,7 +80,7 @@ describe('Dialog', () => {
     it('タイトルテキストが表示される', () => {
       render(
         <Dialog open={true}>
-          <DialogContent>
+          <DialogContent aria-describedby={undefined}>
             <DialogHeader>
               <DialogTitle>テストタイトル</DialogTitle>
             </DialogHeader>
@@ -110,7 +111,7 @@ describe('Dialog', () => {
     it('フッター内のボタンが表示される', () => {
       render(
         <Dialog open={true}>
-          <DialogContent>
+          <DialogContent aria-describedby={undefined}>
             <DialogHeader>
               <DialogTitle>タイトル</DialogTitle>
             </DialogHeader>
@@ -130,7 +131,8 @@ describe('Dialog', () => {
     it('デフォルトのmaxWidthが適用される', () => {
       const { container } = render(
         <Dialog open={true}>
-          <DialogContent>
+          <DialogContent aria-describedby={undefined}>
+            <DialogTitle>タイトル</DialogTitle>
             <p>内容</p>
           </DialogContent>
         </Dialog>,
@@ -142,7 +144,8 @@ describe('Dialog', () => {
     it('カスタムmaxWidthが適用される', () => {
       const { container } = render(
         <Dialog open={true}>
-          <DialogContent maxWidth="max-w-md">
+          <DialogContent maxWidth="max-w-md" aria-describedby={undefined}>
+            <DialogTitle>タイトル</DialogTitle>
             <p>内容</p>
           </DialogContent>
         </Dialog>,
@@ -159,7 +162,7 @@ describe('Dialog', () => {
 
       render(
         <Dialog open={true} onOpenChange={onOpenChange}>
-          <DialogContent>
+          <DialogContent aria-describedby={undefined}>
             <DialogHeader>
               <DialogTitle>タイトル</DialogTitle>
             </DialogHeader>
