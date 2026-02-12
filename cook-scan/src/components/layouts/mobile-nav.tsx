@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { HomeIcon } from '@/components/icons/home-icon'
 import { BookIcon } from '@/components/icons/book-icon'
+import { ClipboardListIcon } from '@/components/icons/clipboard-list-icon'
 import { TagIcon } from '@/components/icons/tag-icon'
 import { UserIcon } from '@/components/icons/user-icon'
 import { LogoutIcon } from '@/components/icons/logout-icon'
@@ -28,6 +29,7 @@ export function MobileNav({ onUiLinkClick, onLogoutClick, isLoggingOut }: Mobile
   }[] = [
       { href: '/dashboard', label: 'ダッシュボード', icon: HomeIcon },
       { href: '/recipes', label: 'レシピ', icon: BookIcon },
+      { href: '/shopping-list', label: '買い物リスト', icon: ClipboardListIcon },
       { href: '/tags', label: 'タグ', icon: TagIcon },
       { href: '/settings/profile', label: 'プロフィール', icon: UserIcon },
     ]
