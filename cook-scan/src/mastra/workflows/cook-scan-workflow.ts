@@ -35,7 +35,6 @@ const imageToTextStep = createStep({
         }
         );
 
-        console.log(response.text);
         return response.text;
       }));
       return {
