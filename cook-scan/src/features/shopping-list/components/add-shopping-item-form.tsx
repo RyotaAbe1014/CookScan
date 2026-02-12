@@ -56,6 +56,7 @@ export function AddShoppingItemForm() {
             type="submit"
             variant="primary"
             size="sm"
+            className="shrink-0 px-4"
             disabled={!name.trim() || isPending}
             isLoading={isPending}
           >
@@ -79,7 +80,7 @@ export function AddShoppingItemForm() {
               placeholder="メモ（任意）"
               value={memo}
               onChange={(e) => setMemo(e.target.value)}
-              size="sm"
+              size="md"
               className="text-xs"
               disabled={isPending}
             />
