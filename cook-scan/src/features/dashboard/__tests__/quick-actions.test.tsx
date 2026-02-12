@@ -78,14 +78,36 @@ describe('QuickActions', () => {
     expect(tagsLink).toHaveAttribute('href', '/tags')
   })
 
-  test('正常系：3つのアクションカードが表示される', () => {
+  test('正常系：買い物リストカードが表示される', () => {
     // Given: QuickActionsコンポーネント
     // When: レンダリングする
     render(<QuickActions />)
 
-    // Then: 3つのリンクが表示される
+    // Then: 買い物リストカードのタイトルと説明が表示される
+    expect(screen.getByText('買い物リスト')).toBeInTheDocument()
+    expect(
+      screen.getByText('必要な食材をチェック管理')
+    ).toBeInTheDocument()
+  })
+
+  test('正常系：買い物リストリンクが正しいhrefを持つ', () => {
+    // Given: QuickActionsコンポーネント
+    // When: レンダリングする
+    render(<QuickActions />)
+
+    // Then: 買い物リストリンクが/shopping-listを指している
+    const shoppingListLink = screen.getByRole('link', { name: /買い物リスト/i })
+    expect(shoppingListLink).toHaveAttribute('href', '/shopping-list')
+  })
+
+  test('正常系：4つのアクションカードが表示される', () => {
+    // Given: QuickActionsコンポーネント
+    // When: レンダリングする
+    render(<QuickActions />)
+
+    // Then: 4つのリンクが表示される
     const links = screen.getAllByRole('link')
-    expect(links.length).toBe(3)
+    expect(links.length).toBe(4)
   })
 
   test('正常系：各アクションカードにSVGアイコンが表示される', () => {

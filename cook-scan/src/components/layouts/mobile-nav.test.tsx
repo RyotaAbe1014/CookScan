@@ -30,8 +30,25 @@ describe('MobileNav', () => {
 
     expect(screen.getByText('ダッシュボード')).toBeInTheDocument()
     expect(screen.getByText('レシピ')).toBeInTheDocument()
+    expect(screen.getByText('買い物リスト')).toBeInTheDocument()
     expect(screen.getByText('タグ')).toBeInTheDocument()
     expect(screen.getByText('プロフィール')).toBeInTheDocument()
+  })
+
+  test('買い物リストリンクが正しいhrefを持つ', () => {
+    render(<MobileNav onUiLinkClick={vi.fn()} />)
+
+    const shoppingListLink = screen.getByText('買い物リスト').closest('a')
+    expect(shoppingListLink).toHaveAttribute('href', '/shopping-list')
+  })
+
+  test('買い物リストがアクティブな場合、強調表示される', () => {
+    vi.mocked(usePathname).mockReturnValue('/shopping-list')
+    render(<MobileNav onUiLinkClick={vi.fn()} />)
+
+    const shoppingListLink = screen.getByText('買い物リスト').closest('a')
+    expect(shoppingListLink).toHaveClass('bg-emerald-50')
+    expect(shoppingListLink).toHaveClass('text-emerald-600')
   })
 
   test('現在のアクティブなパスが強調表示される', () => {
