@@ -13,7 +13,7 @@ export default async function TagsPage() {
     return null
   }
 
-  const result = await getTagCategoriesWithTags(profile.id)
+  const result = await getTagCategoriesWithTags()
   const tagCategories = isSuccess(result) ? result.data.tagCategories : []
 
   return (
