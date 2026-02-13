@@ -199,7 +199,7 @@ export async function getAllTagsForRecipe(): Promise<
 /**
  * タグカテゴリとタグ、レシピタグの関連を取得（タグページ用）
  */
-export async function getTagCategoriesWithTags(userId: string): Promise<
+export async function getTagCategoriesWithTags(): Promise<
   Result<{
     tagCategories: Array<{
       id: string
@@ -219,9 +219,9 @@ export async function getTagCategoriesWithTags(userId: string): Promise<
     }>
   }>
 > {
-  return withAuth(async () => {
+  return withAuth(async (profile) => {
     try {
-      const result = await TagService.getTagCategoriesWithTags(userId)
+      const result = await TagService.getTagCategoriesWithTags(profile.id)
 
       return success(result)
     } catch (error) {
