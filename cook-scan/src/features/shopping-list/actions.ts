@@ -43,6 +43,25 @@ export async function createShoppingItem(
 }
 
 /**
+ * 買い物アイテムを一括作成
+ */
+export async function createShoppingItems(
+  items: { name: string; memo?: string }[]
+): Promise<Result<{ count: number }>> {
+  return withAuth(async (profile) => {
+    try {
+      const result = await ShoppingItemService.createShoppingItems(profile.id, { items })
+
+      revalidatePath('/shopping-list')
+      return success(result)
+    } catch (error) {
+      console.error('Failed to create shopping items:', error)
+      return failure(Errors.server('買い物リストへの追加に失敗しました'))
+    }
+  })
+}
+
+/**
  * 買い物アイテムを更新
  */
 export async function updateShoppingItem(

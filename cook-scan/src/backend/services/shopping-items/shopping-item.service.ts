@@ -6,6 +6,7 @@
 import * as ShoppingItemRepository from '@/backend/repositories/shopping-item.repository'
 import type {
   CreateShoppingItemInput,
+  CreateShoppingItemsInput,
   UpdateShoppingItemInput,
   UpdateShoppingItemCheckInput,
   ReorderShoppingItemsInput,
@@ -33,6 +34,26 @@ export async function createShoppingItem(
   const item = await ShoppingItemRepository.createShoppingItem(userId, name, maxOrder + 1, memo)
 
   return { itemId: item.id }
+}
+
+/**
+ * 買い物アイテムを一括作成
+ */
+export async function createShoppingItems(
+  userId: string,
+  input: CreateShoppingItemsInput
+): Promise<{ count: number }> {
+  const { items } = input
+
+  const maxOrder = await ShoppingItemRepository.getMaxDisplayOrder(userId)
+  const itemsWithOrder = items.map((item, index) => ({
+    name: item.name,
+    memo: item.memo,
+    displayOrder: maxOrder + 1 + index,
+  }))
+
+  const created = await ShoppingItemRepository.createShoppingItems(userId, itemsWithOrder)
+  return { count: created.length }
 }
 
 /**

@@ -101,6 +101,27 @@ export async function reorderShoppingItems(itemIds: string[]) {
 }
 
 /**
+ * 買い物アイテムを一括作成
+ */
+export async function createShoppingItems(
+  userId: string,
+  items: { name: string; displayOrder: number; memo?: string }[]
+) {
+  const creates = items.map((item) =>
+    prisma.shoppingItem.create({
+      data: {
+        userId,
+        name: item.name,
+        memo: item.memo || null,
+        isChecked: false,
+        displayOrder: item.displayOrder,
+      },
+    })
+  )
+  return prisma.$transaction(creates)
+}
+
+/**
  * チェック済みアイテムを一括削除
  */
 export async function deleteCheckedItems(userId: string) {
