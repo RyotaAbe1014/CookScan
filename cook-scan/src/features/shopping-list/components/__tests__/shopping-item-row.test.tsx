@@ -6,11 +6,10 @@ import type { ShoppingItemOutput } from '@/backend/domain/shopping-items'
 
 // モック: Server Actions
 vi.mock('@/features/shopping-list/actions', () => ({
-  updateShoppingItemCheck: vi.fn(),
   deleteShoppingItem: vi.fn(),
 }))
 
-import { updateShoppingItemCheck, deleteShoppingItem } from '@/features/shopping-list/actions'
+import { deleteShoppingItem } from '@/features/shopping-list/actions'
 
 describe('ShoppingItemRow', () => {
   const baseItem: ShoppingItemOutput = {
@@ -27,6 +26,7 @@ describe('ShoppingItemRow', () => {
   const defaultProps = {
     item: baseItem,
     onEdit: vi.fn(),
+    onToggleCheck: vi.fn(),
   }
 
   beforeEach(() => {
@@ -107,9 +107,8 @@ describe('ShoppingItemRow', () => {
   })
 
   describe('チェック操作', () => {
-    it('未チェックのアイテムをクリックするとチェック状態が更新される', async () => {
-      // Given: 未チェックのアイテムとアクションモック
-      vi.mocked(updateShoppingItemCheck).mockResolvedValueOnce({ ok: true, data: undefined })
+    it('未チェックのアイテムをクリックするとonToggleCheckが呼ばれる', async () => {
+      // Given: 未チェックのアイテム
       const user = userEvent.setup()
       render(<ShoppingItemRow {...defaultProps} />)
 
@@ -117,16 +116,13 @@ describe('ShoppingItemRow', () => {
       const checkButton = screen.getByRole('button', { name: 'チェックする' })
       await user.click(checkButton)
 
-      // Then: updateShoppingItemCheckがisChecked=trueで呼ばれる
-      await waitFor(() => {
-        expect(updateShoppingItemCheck).toHaveBeenCalledWith('item-1', true)
-      })
+      // Then: onToggleCheckがアイテムIDで呼ばれる
+      expect(defaultProps.onToggleCheck).toHaveBeenCalledWith('item-1')
     })
 
-    it('チェック済みのアイテムをクリックするとチェックが外される', async () => {
-      // Given: チェック済みのアイテムとアクションモック
+    it('チェック済みのアイテムをクリックするとonToggleCheckが呼ばれる', async () => {
+      // Given: チェック済みのアイテム
       const checkedItem = { ...baseItem, isChecked: true }
-      vi.mocked(updateShoppingItemCheck).mockResolvedValueOnce({ ok: true, data: undefined })
       const user = userEvent.setup()
       render(<ShoppingItemRow {...defaultProps} item={checkedItem} />)
 
@@ -134,10 +130,8 @@ describe('ShoppingItemRow', () => {
       const checkButton = screen.getByRole('button', { name: 'チェックを外す' })
       await user.click(checkButton)
 
-      // Then: updateShoppingItemCheckがisChecked=falseで呼ばれる
-      await waitFor(() => {
-        expect(updateShoppingItemCheck).toHaveBeenCalledWith('item-1', false)
-      })
+      // Then: onToggleCheckがアイテムIDで呼ばれる
+      expect(defaultProps.onToggleCheck).toHaveBeenCalledWith('item-1')
     })
   })
 
