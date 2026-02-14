@@ -54,7 +54,7 @@ export async function setupPassword(
   // バリデーション
   const validation = passwordSetupSchema.safeParse(data)
   if (!validation.success) {
-    return failure(Errors.validation(validation.error.errors[0].message))
+    return failure(Errors.validation(validation.error.issues[0].message))
   }
 
   const supabase = await createClient()
@@ -105,7 +105,7 @@ export async function updatePassword(formData: PasswordChangeFormData): Promise<
   // 2. バリデーション
   const validationResult = passwordChangeSchema.safeParse(formData)
   if (!validationResult.success) {
-    return failure(Errors.validation(validationResult.error.errors[0].message))
+    return failure(Errors.validation(validationResult.error.issues[0].message))
   }
 
   const { currentPassword, newPassword } = validationResult.data

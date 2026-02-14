@@ -24,7 +24,7 @@ export async function login(formData: FormData): Promise<Result<void>> {
   })
 
   if (!validationResult.success) {
-    return failure(Errors.validation(validationResult.error.errors[0].message))
+    return failure(Errors.validation(validationResult.error.issues[0].message))
   }
 
   const { email, password } = validationResult.data
