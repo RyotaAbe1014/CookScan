@@ -1,4 +1,4 @@
-import { mastra } from '@/mastra'
+import { mastra } from '@/backend/mastra'
 import { NextRequest, NextResponse } from 'next/server'
 
 const MAX_FILES = 5
