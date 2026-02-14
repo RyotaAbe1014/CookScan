@@ -107,6 +107,26 @@ describe('RecipeIngredients', () => {
       ])
     })
 
+    it('When まとめて追加中 Then 個別追加ボタンが無効化される', async () => {
+      const user = userEvent.setup()
+      let resolvePromise: (value: { ok: true; data: { count: number } }) => void
+      mockedCreateShoppingItems.mockReturnValueOnce(
+        new Promise((resolve) => {
+          resolvePromise = resolve
+        })
+      )
+
+      render(<RecipeIngredients ingredients={mockIngredients} />)
+
+      await user.click(screen.getByText('まとめて追加'))
+
+      expect(screen.getByLabelText('にんじんを買い物リストに追加')).toBeDisabled()
+      expect(screen.getByLabelText('たまねぎを買い物リストに追加')).toBeDisabled()
+      expect(screen.getByLabelText('塩を買い物リストに追加')).toBeDisabled()
+
+      resolvePromise!({ ok: true, data: { count: 3 } })
+    })
+
     it('When まとめて追加ボタンをクリックする Then 全材料が買い物リストに追加される', async () => {
       const user = userEvent.setup()
       mockedCreateShoppingItems.mockResolvedValueOnce({

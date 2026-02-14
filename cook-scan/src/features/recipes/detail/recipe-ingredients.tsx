@@ -135,7 +135,7 @@ export function RecipeIngredients({ ingredients }: RecipeIngredientsProps) {
                       size="icon"
                       className="h-8 w-8"
                       isLoading={isLoading}
-                      disabled={isAdded}
+                      disabled={isAdded || isBulkLoading}
                       onClick={() => handleAddSingle(ingredient)}
                       aria-label={`${ingredient.name}を買い物リストに追加`}
                     >
