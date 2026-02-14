@@ -12,7 +12,6 @@ export async function RecipeUploadPageContent() {
   return (
     <AuthLayoutWrapper
       title="レシピをアップロード"
-      subtitle="画像から自動抽出、または手動で入力"
       rightAction={<BackToDashboardLink />}
     >
       <PageContainer>
