@@ -5,6 +5,7 @@ vi.mock('@/backend/repositories/shopping-item.repository', () => ({
   findShoppingItemById: vi.fn(),
   getMaxDisplayOrder: vi.fn(),
   createShoppingItem: vi.fn(),
+  createShoppingItems: vi.fn(),
   updateShoppingItem: vi.fn(),
   updateShoppingItemCheck: vi.fn(),
   deleteShoppingItem: vi.fn(),
@@ -16,6 +17,7 @@ import * as ShoppingItemRepository from '@/backend/repositories/shopping-item.re
 import {
   getShoppingItems,
   createShoppingItem,
+  createShoppingItems,
   updateShoppingItem,
   updateShoppingItemCheck,
   deleteShoppingItem,
@@ -112,6 +114,55 @@ describe('shopping-item.service', () => {
         3,
         'メモ'
       )
+    })
+  })
+
+  // ===== createShoppingItems =====
+
+  describe('createShoppingItems', () => {
+    it('買い物アイテムを一括作成し、作成件数を返す', async () => {
+      vi.mocked(ShoppingItemRepository.getMaxDisplayOrder).mockResolvedValue(-1)
+      vi.mocked(ShoppingItemRepository.createShoppingItems).mockResolvedValue([
+        mockItem,
+        mockItem2,
+      ] as any)
+
+      const result = await createShoppingItems(userId, {
+        items: [{ name: '牛乳' }, { name: '卵', memo: '6個入り' }],
+      })
+
+      expect(result).toEqual({ count: 2 })
+      expect(ShoppingItemRepository.getMaxDisplayOrder).toHaveBeenCalledWith(userId)
+      expect(ShoppingItemRepository.createShoppingItems).toHaveBeenCalledWith(userId, [
+        { name: '牛乳', memo: undefined, displayOrder: 0 },
+        { name: '卵', memo: '6個入り', displayOrder: 1 },
+      ])
+    })
+
+    it('既存アイテムがある場合はdisplayOrderが最大値+1から連番になる', async () => {
+      vi.mocked(ShoppingItemRepository.getMaxDisplayOrder).mockResolvedValue(5)
+      vi.mocked(ShoppingItemRepository.createShoppingItems).mockResolvedValue([
+        mockItem,
+        mockItem2,
+      ] as any)
+
+      await createShoppingItems(userId, {
+        items: [{ name: '牛乳' }, { name: '卵' }],
+      })
+
+      expect(ShoppingItemRepository.createShoppingItems).toHaveBeenCalledWith(userId, [
+        { name: '牛乳', memo: undefined, displayOrder: 6 },
+        { name: '卵', memo: undefined, displayOrder: 7 },
+      ])
+    })
+
+    it('空配列の場合は0件を返す', async () => {
+      vi.mocked(ShoppingItemRepository.getMaxDisplayOrder).mockResolvedValue(-1)
+      vi.mocked(ShoppingItemRepository.createShoppingItems).mockResolvedValue([])
+
+      const result = await createShoppingItems(userId, { items: [] })
+
+      expect(result).toEqual({ count: 0 })
     })
   })
 

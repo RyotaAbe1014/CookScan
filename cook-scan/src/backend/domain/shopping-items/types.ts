@@ -11,6 +11,11 @@ export type CreateShoppingItemInput = {
   memo?: string
 }
 
+/** 買い物アイテム一括作成用の入力型 */
+export type CreateShoppingItemsInput = {
+  items: { name: string; memo?: string }[]
+}
+
 /** 買い物アイテム更新用の入力型 */
 export type UpdateShoppingItemInput = {
   itemId: string
