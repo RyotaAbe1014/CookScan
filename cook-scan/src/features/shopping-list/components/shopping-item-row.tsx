@@ -2,7 +2,7 @@
 
 import { useTransition } from 'react'
 import type { ShoppingItemOutput } from '@/backend/domain/shopping-items'
-import { updateShoppingItemCheck, deleteShoppingItem } from '@/features/shopping-list/actions'
+import { deleteShoppingItem } from '@/features/shopping-list/actions'
 import { isSuccess } from '@/utils/result'
 import { Button } from '@/components/ui/button'
 import { CheckIcon } from '@/components/icons/check-icon'
@@ -13,17 +13,11 @@ import { cn } from '@/lib/tailwind'
 type ShoppingItemRowProps = {
   item: ShoppingItemOutput
   onEdit: () => void
+  onToggleCheck: (itemId: string) => void
 }
 
-export function ShoppingItemRow({ item, onEdit }: ShoppingItemRowProps) {
-  const [isCheckPending, startCheckTransition] = useTransition()
+export function ShoppingItemRow({ item, onEdit, onToggleCheck }: ShoppingItemRowProps) {
   const [isDeletePending, startDeleteTransition] = useTransition()
-
-  const handleToggleCheck = () => {
-    startCheckTransition(async () => {
-      await updateShoppingItemCheck(item.id, !item.isChecked)
-    })
-  }
 
   const handleDelete = () => {
     startDeleteTransition(async () => {
@@ -39,15 +33,13 @@ export function ShoppingItemRow({ item, onEdit }: ShoppingItemRowProps) {
       {/* チェックボックス */}
       <button
         type="button"
-        onClick={handleToggleCheck}
-        disabled={isCheckPending}
+        onClick={() => onToggleCheck(item.id)}
         className={cn(
           'flex h-6 w-6 shrink-0 items-center justify-center rounded-md border-2 transition-all duration-200 cursor-pointer',
           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2',
           item.isChecked
             ? 'border-emerald-500 bg-emerald-500 text-white'
-            : 'border-gray-300 bg-white hover:border-emerald-400',
-          isCheckPending && 'opacity-50'
+            : 'border-gray-300 bg-white hover:border-emerald-400'
         )}
         aria-label={item.isChecked ? 'チェックを外す' : 'チェックする'}
       >

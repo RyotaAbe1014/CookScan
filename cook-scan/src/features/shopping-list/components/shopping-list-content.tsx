@@ -1,7 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useOptimistic, useTransition } from 'react'
+import { useRouter } from 'next/navigation'
 import type { ShoppingItemOutput } from '@/backend/domain/shopping-items'
+import { updateShoppingItemCheck } from '@/features/shopping-list/actions'
+import { isSuccess } from '@/utils/result'
 import { ShoppingListEmptyState } from './shopping-list-empty-state'
 import { ShoppingItemRow } from './shopping-item-row'
 import { AddShoppingItemForm } from './add-shopping-item-form'
@@ -14,18 +17,39 @@ type ShoppingListContentProps = {
 }
 
 export function ShoppingListContent({ items }: ShoppingListContentProps) {
+  const router = useRouter()
   const [editingItem, setEditingItem] = useState<ShoppingItemOutput | null>(null)
+  const [, startTransition] = useTransition()
+  const [optimisticItems, toggleOptimisticCheck] = useOptimistic(
+    items,
+    (state, itemId: string) =>
+      state.map((item) =>
+        item.id === itemId ? { ...item, isChecked: !item.isChecked } : item
+      )
+  )
 
-  const uncheckedItems = items.filter((item) => !item.isChecked)
-  const checkedItems = items.filter((item) => item.isChecked)
+  const handleToggleCheck = (itemId: string) => {
+    const item = optimisticItems.find((i) => i.id === itemId)
+    if (!item) return
+    startTransition(async () => {
+      toggleOptimisticCheck(itemId)
+      const result = await updateShoppingItemCheck(itemId, !item.isChecked)
+      if (!isSuccess(result)) {
+        router.refresh()
+      }
+    })
+  }
+
+  const uncheckedItems = optimisticItems.filter((item) => !item.isChecked)
+  const checkedItems = optimisticItems.filter((item) => item.isChecked)
 
   return (
     <>
-      <ShoppingListStatsBar totalCount={items.length} checkedCount={checkedItems.length} />
+      <ShoppingListStatsBar totalCount={optimisticItems.length} checkedCount={checkedItems.length} />
 
       <AddShoppingItemForm />
 
-      {items.length === 0 ? (
+      {optimisticItems.length === 0 ? (
         <ShoppingListEmptyState />
       ) : (
         <div className="space-y-6">
@@ -38,6 +62,7 @@ export function ShoppingListContent({ items }: ShoppingListContentProps) {
                     key={item.id}
                     item={item}
                     onEdit={() => setEditingItem(item)}
+                    onToggleCheck={handleToggleCheck}
                   />
                 ))}
               </ul>
@@ -60,6 +85,7 @@ export function ShoppingListContent({ items }: ShoppingListContentProps) {
                       key={item.id}
                       item={item}
                       onEdit={() => setEditingItem(item)}
+                      onToggleCheck={handleToggleCheck}
                     />
                   ))}
                 </ul>

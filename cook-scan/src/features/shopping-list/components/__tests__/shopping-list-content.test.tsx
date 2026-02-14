@@ -1,7 +1,15 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { ShoppingListContent } from '../shopping-list-content'
 import type { ShoppingItemOutput } from '@/backend/domain/shopping-items'
+
+const mockRefresh = vi.fn()
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({
+    refresh: mockRefresh,
+  }),
+}))
 
 // モック: Server Actions
 vi.mock('@/features/shopping-list/actions', () => ({
@@ -9,6 +17,8 @@ vi.mock('@/features/shopping-list/actions', () => ({
   deleteShoppingItem: vi.fn(),
   deleteCheckedItems: vi.fn(),
 }))
+
+import { updateShoppingItemCheck } from '@/features/shopping-list/actions'
 
 // Radix Dialog Portal をインラインレンダリングに変更
 vi.mock('@radix-ui/react-dialog', async () => {
@@ -114,6 +124,41 @@ describe('ShoppingListContent', () => {
 
       // Then: メモが表示される
       expect(screen.getByText('10個入り')).toBeInTheDocument()
+    })
+  })
+
+  describe('チェック操作', () => {
+    it('チェックボタンをクリックするとupdateShoppingItemCheckが呼ばれる', async () => {
+      // Given: 未チェックのアイテムを含むリスト
+      vi.mocked(updateShoppingItemCheck).mockResolvedValueOnce({ ok: true, data: undefined })
+      const user = userEvent.setup()
+      render(<ShoppingListContent items={mockItems} />)
+
+      // When: 牛乳のチェックボタンをクリック
+      const checkButtons = screen.getAllByRole('button', { name: 'チェックする' })
+      await user.click(checkButtons[0])
+
+      // Then: updateShoppingItemCheckが呼ばれる
+      expect(updateShoppingItemCheck).toHaveBeenCalledWith('item-1', true)
+    })
+
+    it('チェック更新が失敗した場合、router.refreshが呼ばれる', async () => {
+      // Given: Server Actionが失敗を返す
+      vi.mocked(updateShoppingItemCheck).mockResolvedValueOnce({
+        ok: false,
+        error: { code: 'SERVER_ERROR', message: 'エラー' },
+      })
+      const user = userEvent.setup()
+      render(<ShoppingListContent items={mockItems} />)
+
+      // When: チェックボタンをクリック
+      const checkButtons = screen.getAllByRole('button', { name: 'チェックする' })
+      await user.click(checkButtons[0])
+
+      // Then: router.refreshが呼ばれてロールバックされる
+      await waitFor(() => {
+        expect(mockRefresh).toHaveBeenCalled()
+      })
     })
   })
 
