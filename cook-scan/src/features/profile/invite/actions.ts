@@ -17,7 +17,7 @@ export async function inviteUser(email: string): Promise<Result<void>> {
   // バリデーション
   const validation = inviteSchema.safeParse({ email })
   if (!validation.success) {
-    return failure(Errors.validation(validation.error.errors[0].message))
+    return failure(Errors.validation(validation.error.issues[0].message))
   }
 
   try {

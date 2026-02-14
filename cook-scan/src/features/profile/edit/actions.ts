@@ -31,7 +31,7 @@ export async function updateUserProfile(data: { name: string }): Promise<Result<
   // バリデーション
   const validation = updateProfileInputSchema.safeParse(data)
   if (!validation.success) {
-    return failure(Errors.validation(validation.error.errors[0].message))
+    return failure(Errors.validation(validation.error.issues[0].message))
   }
 
   // 認証確認
