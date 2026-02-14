@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useTransition } from 'react'
+import { useState, useTransition } from 'react'
 import type { ShoppingItemOutput } from '@/backend/domain/shopping-items'
 import { updateShoppingItem } from '@/features/shopping-list/actions'
 import { isSuccess } from '@/utils/result'
@@ -25,18 +25,20 @@ type EditShoppingItemDialogProps = {
 }
 
 export function EditShoppingItemDialog({ item, isOpen, onClose }: EditShoppingItemDialogProps) {
-  const [name, setName] = useState('')
-  const [memo, setMemo] = useState('')
+  return (
+    <Dialog open={isOpen} onOpenChange={(open) => { if (!open) onClose() }}>
+      {item && (
+        <EditShoppingItemForm key={item.id} item={item} onClose={onClose} />
+      )}
+    </Dialog>
+  )
+}
+
+function EditShoppingItemForm({ item, onClose }: { item: ShoppingItemOutput; onClose: () => void }) {
+  const [name, setName] = useState(item.name)
+  const [memo, setMemo] = useState(item.memo || '')
   const [error, setError] = useState<string | null>(null)
   const [isPending, startTransition] = useTransition()
-
-  useEffect(() => {
-    if (item) {
-      setName(item.name)
-      setMemo(item.memo || '')
-      setError(null)
-    }
-  }, [item])
 
   const handleClose = () => {
     setError(null)
@@ -45,8 +47,6 @@ export function EditShoppingItemDialog({ item, isOpen, onClose }: EditShoppingIt
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-
-    if (!item) return
 
     const trimmedName = name.trim()
     if (!trimmedName) {
@@ -65,7 +65,6 @@ export function EditShoppingItemDialog({ item, isOpen, onClose }: EditShoppingIt
   }
 
   return (
-    <Dialog open={isOpen} onOpenChange={(open) => { if (!open) handleClose() }}>
       <DialogContent maxWidth="max-w-md">
         <DialogHeader className="bg-linear-to-r from-emerald-50 to-teal-50">
           <div className="flex items-start gap-4">
@@ -131,6 +130,5 @@ export function EditShoppingItemDialog({ item, isOpen, onClose }: EditShoppingIt
           </DialogFooter>
         </form>
       </DialogContent>
-    </Dialog>
   )
 }
