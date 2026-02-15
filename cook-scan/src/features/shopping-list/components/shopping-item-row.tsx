@@ -29,11 +29,17 @@ export function ShoppingItemRow({ item, onEdit, onToggleCheck }: ShoppingItemRow
   }
 
   return (
-    <li className="flex items-center gap-3 px-4 py-3 transition-colors duration-150 hover:bg-gray-50">
+    <li
+      className="flex cursor-pointer items-center gap-3 px-4 py-3 transition-colors duration-150 hover:bg-gray-50"
+      onClick={() => onToggleCheck(item.id)}
+    >
       {/* チェックボックス */}
       <button
         type="button"
-        onClick={() => onToggleCheck(item.id)}
+        onClick={(e) => {
+          e.stopPropagation()
+          onToggleCheck(item.id)
+        }}
         className={cn(
           'flex h-6 w-6 shrink-0 items-center justify-center rounded-md border-2 transition-all duration-200 cursor-pointer',
           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2',
@@ -69,7 +75,10 @@ export function ShoppingItemRow({ item, onEdit, onToggleCheck }: ShoppingItemRow
           type="button"
           variant="ghost"
           size="icon"
-          onClick={onEdit}
+          onClick={(e) => {
+            e.stopPropagation()
+            onEdit()
+          }}
           className="h-8 w-8"
           aria-label="編集"
         >
@@ -79,7 +88,10 @@ export function ShoppingItemRow({ item, onEdit, onToggleCheck }: ShoppingItemRow
           type="button"
           variant="danger-ghost"
           size="icon"
-          onClick={handleDelete}
+          onClick={(e) => {
+            e.stopPropagation()
+            handleDelete()
+          }}
           disabled={isDeletePending}
           isLoading={isDeletePending}
           className="h-8 w-8"

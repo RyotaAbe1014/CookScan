@@ -107,7 +107,7 @@ describe('ShoppingItemRow', () => {
   })
 
   describe('チェック操作', () => {
-    it('未チェックのアイテムをクリックするとonToggleCheckが呼ばれる', async () => {
+    it('チェックボタンをクリックするとonToggleCheckが1回だけ呼ばれる', async () => {
       // Given: 未チェックのアイテム
       const user = userEvent.setup()
       render(<ShoppingItemRow {...defaultProps} />)
@@ -116,11 +116,12 @@ describe('ShoppingItemRow', () => {
       const checkButton = screen.getByRole('button', { name: 'チェックする' })
       await user.click(checkButton)
 
-      // Then: onToggleCheckがアイテムIDで呼ばれる
+      // Then: onToggleCheckがアイテムIDで1回だけ呼ばれる（行クリックと二重発火しない）
+      expect(defaultProps.onToggleCheck).toHaveBeenCalledTimes(1)
       expect(defaultProps.onToggleCheck).toHaveBeenCalledWith('item-1')
     })
 
-    it('チェック済みのアイテムをクリックするとonToggleCheckが呼ばれる', async () => {
+    it('チェック済みのチェックボタンをクリックするとonToggleCheckが1回だけ呼ばれる', async () => {
       // Given: チェック済みのアイテム
       const checkedItem = { ...baseItem, isChecked: true }
       const user = userEvent.setup()
@@ -129,6 +130,47 @@ describe('ShoppingItemRow', () => {
       // When: チェックボタンをクリック
       const checkButton = screen.getByRole('button', { name: 'チェックを外す' })
       await user.click(checkButton)
+
+      // Then: onToggleCheckがアイテムIDで1回だけ呼ばれる
+      expect(defaultProps.onToggleCheck).toHaveBeenCalledTimes(1)
+      expect(defaultProps.onToggleCheck).toHaveBeenCalledWith('item-1')
+    })
+
+    it('アイテム名をクリックするとonToggleCheckが呼ばれる', async () => {
+      // Given: 未チェックのアイテム
+      const user = userEvent.setup()
+      render(<ShoppingItemRow {...defaultProps} />)
+
+      // When: アイテム名をクリック
+      const itemName = screen.getByText('牛乳')
+      await user.click(itemName)
+
+      // Then: onToggleCheckがアイテムIDで呼ばれる
+      expect(defaultProps.onToggleCheck).toHaveBeenCalledWith('item-1')
+    })
+
+    it('メモ部分をクリックするとonToggleCheckが呼ばれる', async () => {
+      // Given: メモ付きのアイテム
+      const itemWithMemo = { ...baseItem, memo: '低脂肪タイプ' }
+      const user = userEvent.setup()
+      render(<ShoppingItemRow {...defaultProps} item={itemWithMemo} />)
+
+      // When: メモ部分をクリック
+      const memo = screen.getByText('低脂肪タイプ')
+      await user.click(memo)
+
+      // Then: onToggleCheckがアイテムIDで呼ばれる
+      expect(defaultProps.onToggleCheck).toHaveBeenCalledWith('item-1')
+    })
+
+    it('行のどこをクリックしてもonToggleCheckが呼ばれる', async () => {
+      // Given: アイテムが用意されている
+      const user = userEvent.setup()
+      render(<ShoppingItemRow {...defaultProps} />)
+
+      // When: li要素をクリック
+      const listItem = screen.getByText('牛乳').closest('li')!
+      await user.click(listItem)
 
       // Then: onToggleCheckがアイテムIDで呼ばれる
       expect(defaultProps.onToggleCheck).toHaveBeenCalledWith('item-1')
@@ -148,6 +190,19 @@ describe('ShoppingItemRow', () => {
       // Then: onEditが呼ばれる
       expect(defaultProps.onEdit).toHaveBeenCalled()
     })
+
+    it('編集ボタンをクリックしてもonToggleCheckが呼ばれない', async () => {
+      // Given: アイテムが用意されている
+      const user = userEvent.setup()
+      render(<ShoppingItemRow {...defaultProps} />)
+
+      // When: 編集ボタンをクリック
+      const editButton = screen.getByRole('button', { name: '編集' })
+      await user.click(editButton)
+
+      // Then: onToggleCheckが呼ばれない
+      expect(defaultProps.onToggleCheck).not.toHaveBeenCalled()
+    })
   })
 
   describe('削除操作', () => {
@@ -165,6 +220,20 @@ describe('ShoppingItemRow', () => {
       await waitFor(() => {
         expect(deleteShoppingItem).toHaveBeenCalledWith('item-1')
       })
+    })
+
+    it('削除ボタンをクリックしてもonToggleCheckが呼ばれない', async () => {
+      // Given: 削除アクションモック
+      vi.mocked(deleteShoppingItem).mockResolvedValueOnce({ ok: true, data: undefined })
+      const user = userEvent.setup()
+      render(<ShoppingItemRow {...defaultProps} />)
+
+      // When: 削除ボタンをクリック
+      const deleteButton = screen.getByRole('button', { name: '削除' })
+      await user.click(deleteButton)
+
+      // Then: onToggleCheckが呼ばれない
+      expect(defaultProps.onToggleCheck).not.toHaveBeenCalled()
     })
   })
 })
