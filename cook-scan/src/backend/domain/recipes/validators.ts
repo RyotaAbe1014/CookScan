@@ -17,7 +17,7 @@ export const ingredientInputSchema = z.object({
 
 export const stepInputSchema = z.object({
   instruction: z.string().min(1, '手順を入力してください'),
-  timerSeconds: z.number().optional(),
+  timerSeconds: z.number().positive('タイマーは1秒以上を設定してください').optional(),
   orderIndex: z.number().optional(),
 })
 
