@@ -32,7 +32,6 @@ export async function findAvailableChildRecipes(
       imageUrl: true,
     },
     orderBy: { updatedAt: 'desc' },
-    take: 20,
   })
 }
 
