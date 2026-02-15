@@ -2,6 +2,8 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import RecipeUploadContent from '../recipe-upload-content'
+import type { ExtractedRecipeData } from '@/features/recipes/upload/types'
+import type { RecipeFormTagCategory } from '@/features/recipes/types/tag'
 
 // Mock child components
 vi.mock('@/features/recipes/upload/method-selector', () => ({
@@ -15,7 +17,7 @@ vi.mock('@/features/recipes/upload/method-selector', () => ({
 }))
 
 vi.mock('@/features/recipes/upload/image-upload', () => ({
-  default: ({ onUpload }: any) => (
+  default: ({ onUpload }: { onUpload: (imageUrl: string, extractedData: ExtractedRecipeData) => void }) => (
     <div data-testid="image-upload">
       <button onClick={() => {
         const mockData = {
@@ -34,7 +36,7 @@ vi.mock('@/features/recipes/upload/image-upload', () => ({
 }))
 
 vi.mock('@/features/recipes/upload/text-input', () => ({
-  TextInput: ({ handleTextInput }: any) => (
+  TextInput: ({ handleTextInput }: { handleTextInput: (extractedData: ExtractedRecipeData) => void }) => (
     <div data-testid="text-input">
       <button onClick={() => {
         const mockData = {
@@ -53,7 +55,7 @@ vi.mock('@/features/recipes/upload/text-input', () => ({
 }))
 
 vi.mock('@/features/recipes/upload/recipe-form', () => ({
-  default: ({ imageUrl, extractedData, tagCategories }: any) => (
+  default: ({ imageUrl, extractedData, tagCategories }: { imageUrl: string | null; extractedData: ExtractedRecipeData | null; tagCategories: RecipeFormTagCategory[] }) => (
     <div data-testid="recipe-form">
       <div>Image URL: {imageUrl || 'none'}</div>
       <div>Title: {extractedData?.title || 'none'}</div>

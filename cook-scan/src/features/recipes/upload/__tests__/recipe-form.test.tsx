@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import RecipeForm from '../recipe-form'
+import type { CreateRecipeRequest } from '../types'
 
 // Mock Next.js router
 const mockPush = vi.fn()
@@ -22,7 +23,7 @@ const mockCreateRecipe = vi.fn()
 const mockGetAllTagsForRecipe = vi.fn()
 
 vi.mock('../actions', () => ({
-  createRecipe: (...args: any[]) => mockCreateRecipe(...args)
+  createRecipe: (...args: [CreateRecipeRequest]) => mockCreateRecipe(...args)
 }))
 
 vi.mock('@/features/tags/actions', () => ({
