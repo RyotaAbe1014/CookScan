@@ -34,6 +34,8 @@ vi.mock('@/utils/url-validation', () => ({
   sanitizeUrl: vi.fn((url: string | null | undefined) => url ?? null),
 }))
 
+import { Prisma, Recipe } from '@prisma/client'
+import type { RecipeDetailOutput, RecipeListOutput } from '@/backend/domain/recipes'
 import { prisma } from '@/lib/prisma'
 import * as RecipeRepository from '@/backend/repositories/recipe.repository'
 import * as RecipeRelationRepository from '@/backend/repositories/recipe-relation.repository'
@@ -48,12 +50,12 @@ import {
 } from '../recipe.service'
 
 describe('recipe.service', () => {
-  const mockTx = {} as any
+  const mockTx = {} as Prisma.TransactionClient
 
   beforeEach(() => {
     vi.clearAllMocks()
 
-    vi.mocked(prisma.$transaction).mockImplementation(async (callback: any) => callback(mockTx))
+    vi.mocked(prisma.$transaction).mockImplementation(async (callback: (tx: Prisma.TransactionClient) => Promise<unknown>) => callback(mockTx))
 
     vi.mocked(TagRepository.validateTagIdsForUser).mockResolvedValue({
       validTagIds: ['tag-1'],
@@ -62,7 +64,7 @@ describe('recipe.service', () => {
 
     vi.mocked(RecipeRepository.createRecipe).mockResolvedValue({
       id: 'recipe-new',
-    } as any)
+    } as Recipe)
     vi.mocked(RecipeRepository.createIngredients).mockResolvedValue(undefined)
     vi.mocked(RecipeRepository.createSteps).mockResolvedValue(undefined)
     vi.mocked(RecipeRepository.createRecipeTags).mockResolvedValue(undefined)
@@ -71,7 +73,7 @@ describe('recipe.service', () => {
     vi.mocked(RecipeRepository.checkRecipeOwnership).mockResolvedValue(true)
     vi.mocked(RecipeRepository.updateRecipe).mockResolvedValue({
       id: 'recipe-1',
-    } as any)
+    } as Recipe)
     vi.mocked(RecipeRepository.deleteRelatedData).mockResolvedValue(undefined)
     vi.mocked(RecipeRepository.deleteRecipe).mockResolvedValue(undefined)
 
@@ -85,7 +87,7 @@ describe('recipe.service', () => {
   describe('getRecipeById', () => {
     it('正常系: レシピIDとユーザーIDでレシピを取得できる', async () => {
       const mockRecipe = { id: 'recipe-1', title: 'テストレシピ' }
-      vi.mocked(RecipeRepository.findRecipeById).mockResolvedValueOnce(mockRecipe as any)
+      vi.mocked(RecipeRepository.findRecipeById).mockResolvedValueOnce(mockRecipe as RecipeDetailOutput)
 
       const result = await getRecipeById('recipe-1', 'user-1')
 
@@ -111,7 +113,7 @@ describe('recipe.service', () => {
         { id: 'recipe-1', title: 'レシピ1' },
         { id: 'recipe-2', title: 'レシピ2' },
       ]
-      vi.mocked(RecipeRepository.findRecipesByUser).mockResolvedValueOnce(mockRecipes as any)
+      vi.mocked(RecipeRepository.findRecipesByUser).mockResolvedValueOnce(mockRecipes as RecipeListOutput[])
 
       const result = await getRecipes('user-1')
 
@@ -125,7 +127,7 @@ describe('recipe.service', () => {
 
     it('正常系: 検索クエリ付きでレシピ一覧を取得できる', async () => {
       const mockRecipes = [{ id: 'recipe-1', title: 'カレー' }]
-      vi.mocked(RecipeRepository.findRecipesByUser).mockResolvedValueOnce(mockRecipes as any)
+      vi.mocked(RecipeRepository.findRecipesByUser).mockResolvedValueOnce(mockRecipes as RecipeListOutput[])
 
       const result = await getRecipes('user-1', 'カレー')
 
@@ -138,7 +140,7 @@ describe('recipe.service', () => {
     })
 
     it('正常系: タグフィルタ付きでレシピ一覧を取得できる', async () => {
-      const tagFilters = [{ recipeTags: { some: { tagId: 'tag-1' } } }] as any
+      const tagFilters: Prisma.RecipeWhereInput[] = [{ recipeTags: { some: { tagId: 'tag-1' } } }]
       vi.mocked(RecipeRepository.findRecipesByUser).mockResolvedValueOnce([])
 
       const result = await getRecipes('user-1', undefined, tagFilters)

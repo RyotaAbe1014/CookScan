@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen, waitFor, fireEvent, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import ImageUpload from '../image-upload'
+import type { ExtractResponse } from '../types'
 
 // Mock Next.js Image
 vi.mock('next/image', () => ({
@@ -15,19 +16,19 @@ global.fetch = vi.fn()
 // Mock FileReader
 class MockFileReader {
   result: string | ArrayBuffer | null = null
-  onload: ((this: FileReader, ev: ProgressEvent<FileReader>) => any) | null = null
+  onload: ((this: FileReader, ev: ProgressEvent<FileReader>) => void) | null = null
 
   readAsDataURL(_file: Blob) {
     setTimeout(() => {
       this.result = 'data:image/png;base64,mockbase64data'
       if (this.onload) {
-        this.onload.call(this as any, { target: this } as any)
+        this.onload.call(this as unknown as FileReader, { target: this } as unknown as ProgressEvent<FileReader>)
       }
     }, 0)
   }
 }
 
-global.FileReader = MockFileReader as any
+global.FileReader = MockFileReader as unknown as typeof FileReader
 
 describe('ImageUpload', () => {
   const mockOnUpload = vi.fn()
@@ -244,7 +245,7 @@ describe('ImageUpload', () => {
     const user = userEvent.setup()
 
     // Create a promise that we control
-    let resolveUpload: (value: any) => void
+    let resolveUpload: (value: { ok: boolean; json: () => Promise<ExtractResponse> }) => void
     const uploadPromise = new Promise((resolve) => {
       resolveUpload = resolve
     })
