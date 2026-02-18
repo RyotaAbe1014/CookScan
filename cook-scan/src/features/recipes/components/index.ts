@@ -9,3 +9,9 @@ export type { FormActionsProps } from './form-actions'
 
 export { ChildRecipeInput, ChildRecipeSelectorDialog } from './child-recipe-input'
 export type { ChildRecipeItem, ChildRecipeInputProps, ChildRecipeSelectorDialogProps } from './child-recipe-input'
+
+export { BasicInfoSection } from './basic-info-section'
+export { TagSection } from './tag-section'
+export { IngredientSection } from './ingredient-section'
+export { StepSection } from './step-section'
+export { ChildRecipeSection } from './child-recipe-section'

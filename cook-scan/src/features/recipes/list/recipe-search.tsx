@@ -18,6 +18,7 @@ export function RecipeSearch({ resultCount }: Props) {
   const [query, setQuery] = useState(currentQuery)
   const [isFocused, setIsFocused] = useState(false)
 
+  // URLのクエリパラメータが外部から変わったらローカルstateを同期
   useEffect(() => {
     setQuery(currentQuery)
   }, [currentQuery])
