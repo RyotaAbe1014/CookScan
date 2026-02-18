@@ -33,9 +33,11 @@ export function useRecipeForm(options: UseRecipeFormOptions = {}) {
     }
   )
   const [ingredients, setIngredients] = useState<IngredientFormData[]>(
-    initialData.ingredients || []
+    (initialData.ingredients || []).map(ing => ({ ...ing, id: ing.id || crypto.randomUUID() }))
   )
-  const [steps, setSteps] = useState<StepFormData[]>(initialData.steps || [])
+  const [steps, setSteps] = useState<StepFormData[]>(
+    (initialData.steps || []).map(step => ({ ...step, id: step.id || crypto.randomUUID() }))
+  )
   const [memo, setMemo] = useState(initialData.memo || '')
   const [selectedTagIds, setSelectedTagIds] = useState<string[]>(
     initialData.selectedTagIds || []
@@ -46,7 +48,7 @@ export function useRecipeForm(options: UseRecipeFormOptions = {}) {
 
   // 材料の操作
   const addIngredient = () => {
-    setIngredients([...ingredients, { name: '', unit: '', notes: '' }])
+    setIngredients([...ingredients, { id: crypto.randomUUID(), name: '', unit: '', notes: '' }])
   }
 
   const removeIngredient = (index: number) => {
@@ -72,7 +74,7 @@ export function useRecipeForm(options: UseRecipeFormOptions = {}) {
       : 1
     setSteps([
       ...steps,
-      { instruction: '', timerSeconds: undefined, orderIndex: nextOrderIndex },
+      { id: crypto.randomUUID(), instruction: '', timerSeconds: undefined, orderIndex: nextOrderIndex },
     ])
   }
 

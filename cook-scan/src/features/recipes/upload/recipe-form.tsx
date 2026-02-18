@@ -9,23 +9,10 @@ import type { RecipeFormTagCategory } from '@/features/recipes/types/tag'
 import { createRecipe } from './actions'
 import { isSuccess } from '@/utils/result'
 import { useRecipeForm } from '@/features/recipes/hooks/use-recipe-form'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { Card, CardHeader, CardContent } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { Alert } from '@/components/ui/alert'
-import { IngredientInput, StepInput, FormActions, ChildRecipeInput, ChildRecipeSelectorDialog } from '@/features/recipes/components'
+import { BasicInfoSection, TagSection, IngredientSection, StepSection, ChildRecipeSection, FormActions } from '@/features/recipes/components'
 import { CameraIcon } from '@/components/icons/camera-icon'
-import { InfoCircleIcon } from '@/components/icons/info-circle-icon'
-import { TagIcon } from '@/components/icons/tag-icon'
-import { BookOpenIcon } from '@/components/icons/book-open-icon'
-import { DocumentIcon } from '@/components/icons/document-icon'
-import { LinkIcon } from '@/components/icons/link-icon'
-import { DocumentTextIcon } from '@/components/icons/document-text-icon'
-import { CheckSolidIcon } from '@/components/icons/check-solid-icon'
-import { BeakerIcon } from '@/components/icons/beaker-icon'
-import { PlusIcon } from '@/components/icons/plus-icon'
-import { ClipboardListIcon } from '@/components/icons/clipboard-list-icon'
-import { FolderIcon } from '@/components/icons/folder-icon'
 
 type Props = {
   imageUrl: string | null
@@ -139,257 +126,43 @@ export default function RecipeForm({ imageUrl, extractedData, tagCategories }: P
           </Card>
         )}
 
-        {/* 基本情報 */}
-        <Card>
-          <CardHeader
-            icon={<InfoCircleIcon className="h-5 w-5 text-white" />}
-            iconColor="emerald"
-            title="基本情報"
-          />
-          <CardContent>
-            <div className="space-y-4">
-              <div>
-                <label
-                  htmlFor="title"
-                  className="mb-2 flex items-center gap-1.5 text-sm font-medium text-gray-700"
-                >
-                  <TagIcon className="h-4 w-4 text-emerald-600" />
-                  レシピタイトル <span className="text-red-500">*</span>
-                </label>
-                <Input
-                  type="text"
-                  id="title"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  required
-                  placeholder="美味しい料理の名前を入力"
-                />
-              </div>
+        <BasicInfoSection
+          title={title}
+          onTitleChange={setTitle}
+          sourceInfo={sourceInfo}
+          onSourceInfoChange={setSourceInfo}
+          memo={memo}
+          onMemoChange={setMemo}
+        />
 
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-                <div>
-                  <label
-                    htmlFor="bookName"
-                    className="mb-2 flex items-center gap-1.5 text-sm font-medium text-gray-700"
-                  >
-                    <BookOpenIcon className="h-4 w-4 text-amber-600" />
-                    本の名前
-                  </label>
-                  <Input
-                    type="text"
-                    id="bookName"
-                    value={sourceInfo.bookName}
-                    onChange={(e) => setSourceInfo({ ...sourceInfo, bookName: e.target.value })}
-                    placeholder="料理本の名前"
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="pageNumber"
-                    className="mb-2 flex items-center gap-1.5 text-sm font-medium text-gray-700"
-                  >
-                    <DocumentIcon className="h-4 w-4 text-green-600" />
-                    ページ番号
-                  </label>
-                  <Input
-                    type="text"
-                    id="pageNumber"
-                    value={sourceInfo.pageNumber}
-                    onChange={(e) => setSourceInfo({ ...sourceInfo, pageNumber: e.target.value })}
-                    placeholder="P.123"
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="url"
-                    className="mb-2 flex items-center gap-1.5 text-sm font-medium text-gray-700"
-                  >
-                    <LinkIcon className="h-4 w-4 text-blue-600" />
-                    参照URL
-                  </label>
-                  <Input
-                    type="url"
-                    id="url"
-                    value={sourceInfo.url}
-                    onChange={(e) => setSourceInfo({ ...sourceInfo, url: e.target.value })}
-                    placeholder="https://..."
-                  />
-                </div>
-              </div>
-              <div>
-                <label
-                  htmlFor="memo"
-                  className="mb-2 flex items-center gap-1.5 text-sm font-medium text-gray-700"
-                >
-                  <DocumentTextIcon className="h-4 w-4 text-teal-600" />
-                  メモ
-                </label>
-                <Textarea
-                  id="memo"
-                  value={memo}
-                  onChange={(e) => setMemo(e.target.value)}
-                  rows={3}
-                  placeholder="このレシピについてのメモや感想..."
-                />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        <TagSection
+          tagCategories={tagCategories}
+          selectedTagIds={selectedTagIds}
+          onToggleTag={toggleTag}
+        />
 
-        {/* タグ */}
-        {tagCategories.length > 0 && (
-          <Card>
-            <CardHeader
-              icon={<TagIcon className="h-5 w-5 text-white" />}
-              iconColor="amber"
-              title="タグ"
-            />
-            <CardContent>
-              <div className="space-y-4">
-                {tagCategories.map((category) => (
-                  <div key={category.id}>
-                    <div className="mb-2 flex items-center gap-2">
-                      <div className="h-1 w-1 rounded-full bg-amber-600" />
-                      <h4 className="text-sm font-semibold text-gray-900">{category.name}</h4>
-                    </div>
-                    {category.tags.length > 0 ? (
-                      <div className="flex flex-wrap gap-2">
-                        {category.tags.map((tag) => (
-                          <label
-                            key={tag.id}
-                            className={`inline-flex cursor-pointer items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 ${selectedTagIds.includes(tag.id)
-                              ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-500/30 ring-2 ring-indigo-600'
-                              : 'bg-gray-100 text-gray-700 ring-1 ring-gray-200 hover:bg-gray-200 hover:ring-gray-300'
-                              }`}
-                          >
-                            <input
-                              type="checkbox"
-                              checked={selectedTagIds.includes(tag.id)}
-                              onChange={() => toggleTag(tag.id)}
-                              className="sr-only"
-                            />
-                            {selectedTagIds.includes(tag.id) && (
-                              <CheckSolidIcon className="h-3.5 w-3.5" />
-                            )}
-                            <span>{tag.name}</span>
-                          </label>
-                        ))}
-                      </div>
-                    ) : (
-                      <p className="text-sm text-gray-500">このカテゴリにはタグがありません</p>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        )}
+        <IngredientSection
+          ingredients={ingredients}
+          onAdd={addIngredient}
+          onUpdate={updateIngredient}
+          onRemove={removeIngredient}
+        />
 
-        {/* 材料 */}
-        <Card>
-          <CardHeader
-            icon={<BeakerIcon className="h-5 w-5 text-white" />}
-            iconColor="green"
-            title="材料"
-            actions={
-              <button
-                type="button"
-                onClick={addIngredient}
-                className="inline-flex items-center gap-1.5 rounded-lg bg-linear-to-r from-green-600 to-emerald-600 px-3 py-2 text-sm font-semibold text-white shadow-md shadow-green-500/30 transition-all hover:shadow-lg hover:shadow-green-500/40"
-              >
-                <PlusIcon className="h-4 w-4" stroke="currentColor" />
-                材料を追加
-              </button>
-            }
-          />
-          <CardContent>
-            <div className="space-y-3">
-              {ingredients.map((ingredient, index) => (
-                <IngredientInput
-                  key={index}
-                  ingredient={ingredient}
-                  index={index}
-                  canDelete={ingredients.length > 1}
-                  onUpdate={updateIngredient}
-                  onRemove={removeIngredient}
-                />
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-        {/* サブレシピ */}
-        <Card>
-          <CardHeader
-            icon={<FolderIcon className="h-5 w-5 text-white" />}
-            iconColor="purple"
-            title="サブレシピ"
-            actions={
-              <button
-                type="button"
-                onClick={() => setIsChildRecipeDialogOpen(true)}
-                className="inline-flex items-center gap-1.5 rounded-lg bg-linear-to-r from-purple-600 to-violet-600 px-3 py-2 text-sm font-semibold text-white shadow-md shadow-purple-500/30 transition-all hover:shadow-lg hover:shadow-purple-500/40"
-              >
-                <PlusIcon className="h-4 w-4" stroke="currentColor" />
-                サブレシピを追加
-              </button>
-            }
-          />
-          <CardContent>
-            {childRecipes.length > 0 ? (
-              <div className="space-y-3">
-                {childRecipes.map((item, index) => (
-                  <ChildRecipeInput
-                    key={item.childRecipeId}
-                    item={item}
-                    index={index}
-                    onUpdate={updateChildRecipe}
-                    onRemove={removeChildRecipe}
-                  />
-                ))}
-              </div>
-            ) : (
-              <p className="text-sm text-gray-500">サブレシピが追加されていません</p>
-            )}
-          </CardContent>
-        </Card>
-        {/* 調理手順 */}
-        <Card>
-          <CardHeader
-            icon={<ClipboardListIcon className="h-5 w-5 text-white" />}
-            iconColor="blue"
-            title="調理手順"
-            actions={
-              <button
-                type="button"
-                onClick={addStep}
-                className="inline-flex items-center gap-1.5 rounded-lg bg-linear-to-r from-blue-600 to-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-md shadow-blue-500/30 transition-all hover:shadow-lg hover:shadow-blue-500/40"
-              >
-                <PlusIcon className="h-4 w-4" stroke="currentColor" />
-                手順を追加
-              </button>
-            }
-          />
-          <CardContent>
-            <div className="space-y-4">
-              {steps.map((step, index) => (
-                <StepInput
-                  key={index}
-                  step={step}
-                  index={index}
-                  canDelete={steps.length > 1}
-                  onUpdate={updateStep}
-                  onRemove={removeStep}
-                />
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
-        <ChildRecipeSelectorDialog
-          isOpen={isChildRecipeDialogOpen}
-          onClose={() => setIsChildRecipeDialogOpen(false)}
+        <ChildRecipeSection
+          childRecipes={childRecipes}
+          isDialogOpen={isChildRecipeDialogOpen}
+          onOpenDialog={() => setIsChildRecipeDialogOpen(true)}
+          onCloseDialog={() => setIsChildRecipeDialogOpen(false)}
           onAdd={addChildRecipe}
-          existingChildRecipeIds={childRecipes.map(cr => cr.childRecipeId)}
+          onUpdate={updateChildRecipe}
+          onRemove={removeChildRecipe}
+        />
+
+        <StepSection
+          steps={steps}
+          onAdd={addStep}
+          onUpdate={updateStep}
+          onRemove={removeStep}
         />
 
         {/* ボタン */}

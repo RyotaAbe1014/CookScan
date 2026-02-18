@@ -1,8 +1,14 @@
+import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { checkExistingProfile } from '@/features/profile/setup/actions'
 import { ProfileSetupPageContent } from '@/features/profile/setup/profile-setup-page-content'
 import { isSuccess } from '@/utils/result'
+
+export const metadata: Metadata = {
+  title: 'プロフィール設定 | CookScan',
+  description: 'プロフィールを設定してCookScanを始めましょう',
+}
 
 export default async function ProfileSetupPage() {
   const supabase = await createClient()

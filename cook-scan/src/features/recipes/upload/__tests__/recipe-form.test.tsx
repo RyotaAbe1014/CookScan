@@ -321,19 +321,25 @@ describe('RecipeForm', () => {
 
     // Then: Server Actionが正しいデータで呼ばれ、ナビゲートする
     await waitFor(() => {
-      expect(mockCreateRecipe).toHaveBeenCalledWith({
+      expect(mockCreateRecipe).toHaveBeenCalledWith(expect.objectContaining({
         title: 'テストレシピ',
         sourceInfo: {
           bookName: 'テスト料理本',
           pageNumber: 'P.100',
           url: 'https://example.com'
         },
-        ingredients: mockExtractedData.ingredients,
-        steps: mockExtractedData.steps,
+        ingredients: expect.arrayContaining([
+          expect.objectContaining({ name: '材料1', unit: '100g', notes: 'メモ1' }),
+          expect.objectContaining({ name: '材料2', unit: '200ml', notes: '' }),
+        ]),
+        steps: expect.arrayContaining([
+          expect.objectContaining({ instruction: '手順1の説明', timerSeconds: 60 }),
+          expect.objectContaining({ instruction: '手順2の説明', timerSeconds: undefined }),
+        ]),
         memo: 'テストメモ',
         tags: [],
         childRecipes: [],
-      })
+      }))
     })
 
     expect(mockPush).toHaveBeenCalledWith('/recipes/recipe-123')

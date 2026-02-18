@@ -274,7 +274,7 @@ export default function ImageUpload({ onUpload, onUploadingChange }: Props) {
             <div className="mt-4 grid gap-3 sm:grid-cols-2">
               {selectedImages.slice(1).map((image, index) => (
                 <div
-                  key={`${image.file.name}-${index}`}
+                  key={`${image.file.name}-${image.file.size}-${image.file.lastModified}`}
                   className="overflow-hidden rounded-lg ring-1 ring-gray-900/5"
                 >
                   <Image

@@ -25,7 +25,7 @@ export const Default: Story = {
     onClose: () => { },
     children: null,
   },
-  render: () => {
+  render: function SheetStory() {
     const [isOpen, setIsOpen] = useState(false)
     return (
       <div className="p-8">
