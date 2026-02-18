@@ -25,15 +25,14 @@ type TagCategoryWithTags = {
  * フィルタ条件に基づいてレシピを取得
  */
 export async function getRecipesWithFilters(
-  userId: string,
   searchQuery: string,
   tagIds: string[]
 ): Promise<Result<RecipeListOutput[]>> {
-  return withAuth(async () => {
+  return withAuth(async (profile) => {
     const tagFilters = buildTagFilters(tagIds)
 
     try {
-      const recipes = await RecipeService.getRecipes(userId, searchQuery, tagFilters)
+      const recipes = await RecipeService.getRecipes(profile.id, searchQuery, tagFilters)
       return success(recipes)
     } catch (error) {
       console.error('Failed to fetch recipes:', error)
@@ -45,14 +44,12 @@ export async function getRecipesWithFilters(
 /**
  * ユーザー用のタグカテゴリを取得
  */
-export async function getTagCategoriesForUser(
-  userId: string
-): Promise<Result<TagCategoryWithTags[]>> {
-  return withAuth(async () => {
+export async function getTagCategoriesForUser(): Promise<Result<TagCategoryWithTags[]>> {
+  return withAuth(async (profile) => {
     try {
       const tagCategories = await prisma.tagCategory.findMany({
         where: {
-          OR: [{ isSystem: true }, { userId }],
+          OR: [{ isSystem: true }, { userId: profile.id }],
         },
         include: {
           tags: {
