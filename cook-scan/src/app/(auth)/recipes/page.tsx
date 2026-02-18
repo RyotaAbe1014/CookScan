@@ -29,8 +29,8 @@ export default async function RecipesPage({
 
   // Fetch recipes and tag categories in parallel
   const [recipesResult, tagCategoriesResult] = await Promise.all([
-    getRecipesWithFilters(profile.id, searchQuery, selectedTagIds),
-    getTagCategoriesForUser(profile.id),
+    getRecipesWithFilters(searchQuery, selectedTagIds),
+    getTagCategoriesForUser(),
   ])
 
   const recipes = isSuccess(recipesResult) ? recipesResult.data : []
