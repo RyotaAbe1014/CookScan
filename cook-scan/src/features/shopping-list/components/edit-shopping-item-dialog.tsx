@@ -93,7 +93,6 @@ function EditShoppingItemForm({ item, onClose }: { item: ShoppingItemOutput; onC
                 onChange={(e) => setName(e.target.value)}
                 placeholder="例: 牛乳"
                 disabled={isPending}
-                autoFocus
               />
             </FormField>
 
