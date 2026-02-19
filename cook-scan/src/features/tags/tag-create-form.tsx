@@ -18,10 +18,11 @@ type TagCreateFormProps = {
   categories: TagCategoryBasic[]
 }
 
-export function TagCreateForm({ categories }: TagCreateFormProps) {
-  const [activeTab, setActiveTab] = useState<'tag' | 'category'>('tag')
+type TagFormProps = {
+  categories: TagCategoryBasic[]
+}
 
-  // タグ作成フォーム
+function TagForm({ categories }: TagFormProps) {
   const [selectedCategoryId, setSelectedCategoryId] = useState(
     categories.find((c) => !c.isSystem)?.id || categories[0]?.id || ''
   )
@@ -29,12 +30,6 @@ export function TagCreateForm({ categories }: TagCreateFormProps) {
   const [tagDescription, setTagDescription] = useState('')
   const [tagSuccess, setTagSuccess] = useState<string | null>(null)
   const [isSubmittingTag, setIsSubmittingTag] = useState(false)
-
-  // カテゴリ作成フォーム
-  const [categoryName, setCategoryName] = useState('')
-  const [categoryDescription, setCategoryDescription] = useState('')
-  const [categorySuccess, setCategorySuccess] = useState<string | null>(null)
-  const [isSubmittingCategory, setIsSubmittingCategory] = useState(false)
 
   const handleTagSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -73,6 +68,85 @@ export function TagCreateForm({ categories }: TagCreateFormProps) {
     }
   }
 
+  return (
+    <form onSubmit={handleTagSubmit} className="space-y-4">
+      <div>
+        <label htmlFor="tag-category" className="block text-sm font-semibold text-neutral-900">
+          カテゴリ <span className="text-red-500">*</span>
+        </label>
+        <Select
+          id="tag-category"
+          value={selectedCategoryId}
+          onChange={(e) => setSelectedCategoryId(e.target.value)}
+          className="mt-2"
+          disabled={isSubmittingTag}
+        >
+          {categories.length === 0 ? (
+            <option value="">カテゴリがありません</option>
+          ) : (
+            categories.map((category) => (
+              <option key={category.id} value={category.id}>
+                {category.name} {category.isSystem ? '(システム)' : ''}
+              </option>
+            ))
+          )}
+        </Select>
+      </div>
+
+      <div>
+        <label htmlFor="tag-name" className="block text-sm font-semibold text-neutral-900">
+          タグ名 <span className="text-red-500">*</span>
+        </label>
+        <Input
+          type="text"
+          id="tag-name"
+          value={tagName}
+          onChange={(e) => setTagName(e.target.value)}
+          placeholder="例: 和食、イタリアン、簡単"
+          className="mt-2"
+          size="xl"
+          disabled={isSubmittingTag}
+        />
+      </div>
+
+      <div>
+        <label htmlFor="tag-description" className="block text-sm font-semibold text-neutral-900">
+          説明（任意）
+        </label>
+        <Textarea
+          id="tag-description"
+          value={tagDescription}
+          onChange={(e) => setTagDescription(e.target.value)}
+          rows={3}
+          placeholder="タグの説明を入力してください"
+          className="mt-2"
+          size="xl"
+          disabled={isSubmittingTag}
+        />
+      </div>
+
+      {tagSuccess && <Alert variant="success">{tagSuccess}</Alert>}
+
+      <Button
+        type="submit"
+        disabled={categories.length === 0}
+        isLoading={isSubmittingTag}
+        size="lg"
+        className="w-full"
+      >
+        <PlusIcon className="h-5 w-5" stroke="currentColor" />
+        {isSubmittingTag ? '作成中...' : 'タグを作成'}
+      </Button>
+    </form>
+  )
+}
+
+function CategoryForm() {
+  const [categoryName, setCategoryName] = useState('')
+  const [categoryDescription, setCategoryDescription] = useState('')
+  const [categorySuccess, setCategorySuccess] = useState<string | null>(null)
+  const [isSubmittingCategory, setIsSubmittingCategory] = useState(false)
+
   const handleCategorySubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setCategorySuccess(null)
@@ -104,8 +178,55 @@ export function TagCreateForm({ categories }: TagCreateFormProps) {
     }
   }
 
-  // ユーザーが作成可能なカテゴリ（システムカテゴリ + 自分のカテゴリ）
-  const availableCategories = categories
+  return (
+    <form onSubmit={handleCategorySubmit} className="space-y-4">
+      <div>
+        <label htmlFor="category-name" className="block text-sm font-semibold text-neutral-900">
+          カテゴリ名 <span className="text-red-500">*</span>
+        </label>
+        <Input
+          type="text"
+          id="category-name"
+          value={categoryName}
+          onChange={(e) => setCategoryName(e.target.value)}
+          placeholder="例: 料理ジャンル、調理時間、難易度"
+          className="mt-2"
+          size="xl"
+          disabled={isSubmittingCategory}
+        />
+      </div>
+
+      <div>
+        <label
+          htmlFor="category-description"
+          className="block text-sm font-semibold text-neutral-900"
+        >
+          説明（任意）
+        </label>
+        <Textarea
+          id="category-description"
+          value={categoryDescription}
+          onChange={(e) => setCategoryDescription(e.target.value)}
+          rows={3}
+          placeholder="カテゴリの説明を入力してください"
+          className="mt-2"
+          size="xl"
+          disabled={isSubmittingCategory}
+        />
+      </div>
+
+      {categorySuccess && <Alert variant="success">{categorySuccess}</Alert>}
+
+      <Button type="submit" isLoading={isSubmittingCategory} size="lg" className="w-full">
+        <PlusIcon className="h-5 w-5" stroke="currentColor" />
+        {isSubmittingCategory ? '作成中...' : 'カテゴリを作成'}
+      </Button>
+    </form>
+  )
+}
+
+export function TagCreateForm({ categories }: TagCreateFormProps) {
+  const [activeTab, setActiveTab] = useState<'tag' | 'category'>('tag')
 
   return (
     <div className="overflow-hidden rounded-xl bg-white shadow-md">
@@ -148,119 +269,9 @@ export function TagCreateForm({ categories }: TagCreateFormProps) {
       {/* タブコンテンツ */}
       <div className="p-8">
         {activeTab === 'tag' ? (
-          <form onSubmit={handleTagSubmit} className="space-y-4">
-            <div>
-              <label htmlFor="tag-category" className="block text-sm font-semibold text-neutral-900">
-                カテゴリ <span className="text-red-500">*</span>
-              </label>
-              <Select
-                id="tag-category"
-                value={selectedCategoryId}
-                onChange={(e) => setSelectedCategoryId(e.target.value)}
-                className="mt-2"
-                disabled={isSubmittingTag}
-              >
-                {availableCategories.length === 0 ? (
-                  <option value="">カテゴリがありません</option>
-                ) : (
-                  availableCategories.map((category) => (
-                    <option key={category.id} value={category.id}>
-                      {category.name} {category.isSystem ? '(システム)' : ''}
-                    </option>
-                  ))
-                )}
-              </Select>
-            </div>
-
-            <div>
-              <label htmlFor="tag-name" className="block text-sm font-semibold text-neutral-900">
-                タグ名 <span className="text-red-500">*</span>
-              </label>
-              <Input
-                type="text"
-                id="tag-name"
-                value={tagName}
-                onChange={(e) => setTagName(e.target.value)}
-                placeholder="例: 和食、イタリアン、簡単"
-                className="mt-2"
-                size="xl"
-                disabled={isSubmittingTag}
-              />
-            </div>
-
-            <div>
-              <label htmlFor="tag-description" className="block text-sm font-semibold text-neutral-900">
-                説明（任意）
-              </label>
-              <Textarea
-                id="tag-description"
-                value={tagDescription}
-                onChange={(e) => setTagDescription(e.target.value)}
-                rows={3}
-                placeholder="タグの説明を入力してください"
-                className="mt-2"
-                size="xl"
-                disabled={isSubmittingTag}
-              />
-            </div>
-
-            {tagSuccess && <Alert variant="success">{tagSuccess}</Alert>}
-
-            <Button
-              type="submit"
-              disabled={availableCategories.length === 0}
-              isLoading={isSubmittingTag}
-              size="lg"
-              className="w-full"
-            >
-              <PlusIcon className="h-5 w-5" stroke="currentColor" />
-              {isSubmittingTag ? '作成中...' : 'タグを作成'}
-            </Button>
-          </form>
+          <TagForm categories={categories} />
         ) : (
-          <form onSubmit={handleCategorySubmit} className="space-y-4">
-            <div>
-              <label htmlFor="category-name" className="block text-sm font-semibold text-neutral-900">
-                カテゴリ名 <span className="text-red-500">*</span>
-              </label>
-              <Input
-                type="text"
-                id="category-name"
-                value={categoryName}
-                onChange={(e) => setCategoryName(e.target.value)}
-                placeholder="例: 料理ジャンル、調理時間、難易度"
-                className="mt-2"
-                size="xl"
-                disabled={isSubmittingCategory}
-              />
-            </div>
-
-            <div>
-              <label
-                htmlFor="category-description"
-                className="block text-sm font-semibold text-neutral-900"
-              >
-                説明（任意）
-              </label>
-              <Textarea
-                id="category-description"
-                value={categoryDescription}
-                onChange={(e) => setCategoryDescription(e.target.value)}
-                rows={3}
-                placeholder="カテゴリの説明を入力してください"
-                className="mt-2"
-                size="xl"
-                disabled={isSubmittingCategory}
-              />
-            </div>
-
-            {categorySuccess && <Alert variant="success">{categorySuccess}</Alert>}
-
-            <Button type="submit" isLoading={isSubmittingCategory} size="lg" className="w-full">
-              <PlusIcon className="h-5 w-5" stroke="currentColor" />
-              {isSubmittingCategory ? '作成中...' : 'カテゴリを作成'}
-            </Button>
-          </form>
+          <CategoryForm />
         )}
       </div>
     </div>
