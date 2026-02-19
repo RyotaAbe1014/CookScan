@@ -161,8 +161,8 @@ describe('recipe.service', () => {
       const input = {
         title: '新しいレシピ',
         sourceInfo: null,
-        ingredients: [{ name: '卵', unit: '2個', notes: null }],
-        steps: [{ orderIndex: 1, instruction: '卵を割る', timerSeconds: null }],
+        ingredients: [{ name: '卵', unit: '2個', notes: undefined }],
+        steps: [{ orderIndex: 1, instruction: '卵を割る', timerSeconds: undefined }],
         memo: 'メモ',
         tags: ['tag-1'],
         childRecipes: undefined,
@@ -336,7 +336,7 @@ describe('recipe.service', () => {
         ingredients: [],
         steps: [],
         memo: '',
-        tags: undefined,
+        tags: [] as string[],
         childRecipes: undefined,
       }
 
@@ -359,8 +359,8 @@ describe('recipe.service', () => {
         recipeId: 'recipe-1',
         title: '更新レシピ',
         sourceInfo: null,
-        ingredients: [{ name: '塩', unit: '少々', notes: null }],
-        steps: [{ orderIndex: 1, instruction: '塩を振る', timerSeconds: null }],
+        ingredients: [{ name: '塩', unit: '少々', notes: undefined }],
+        steps: [{ orderIndex: 1, instruction: '塩を振る', timerSeconds: undefined }],
         memo: '更新メモ',
         tags: ['tag-1'],
         childRecipes: undefined,

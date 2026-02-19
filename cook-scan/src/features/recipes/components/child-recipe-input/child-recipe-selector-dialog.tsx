@@ -107,7 +107,7 @@ export function ChildRecipeSelectorDialog({
             <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-1">
               レシピ一覧
             </div>
-            <div className="h-[240px] overflow-y-auto border rounded-xl bg-gray-50/50 p-2 space-y-2 relative scrollbar-thin scrollbar-thumb-gray-200 scrollbar-track-transparent">
+            <div className="h-[240px] overflow-y-auto border rounded-xl bg-gray-50/50 p-2 space-y-2 relative scrollbar-thin scrollbar-thumb-gray-200 scrollbar-track-transparent" role="listbox" aria-label="レシピ一覧">
               {isLoading ? (
                 <div className="flex flex-col items-center justify-center h-full gap-2 text-purple-600/80">
                   <SpinnerIcon className="h-8 w-8 animate-spin" />
@@ -126,7 +126,16 @@ export function ChildRecipeSelectorDialog({
                 recipes.map((recipe) => (
                   <div
                     key={recipe.id}
+                    role="option"
+                    tabIndex={0}
+                    aria-selected={selectedRecipeId === recipe.id}
                     onClick={() => setSelectedRecipeId(recipe.id)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault()
+                        setSelectedRecipeId(recipe.id)
+                      }
+                    }}
                     className={cn(
                       "group flex items-center p-3 rounded-lg border cursor-pointer transition-all duration-200 ease-out",
                       selectedRecipeId === recipe.id
@@ -164,10 +173,11 @@ export function ChildRecipeSelectorDialog({
               : "opacity-0 max-h-0 pt-0 -translate-y-4 pointer-events-none"
           )}>
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700 ml-1">
+              <label htmlFor="child-recipe-quantity" className="text-sm font-medium text-gray-700 ml-1">
                 分量 <span className="text-xs text-muted-foreground font-normal">(任意)</span>
               </label>
               <Input
+                id="child-recipe-quantity"
                 placeholder="例: 200g"
                 value={quantity}
                 onChange={(e) => setQuantity(e.target.value)}
@@ -175,10 +185,11 @@ export function ChildRecipeSelectorDialog({
               />
             </div>
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700 ml-1">
+              <label htmlFor="child-recipe-notes" className="text-sm font-medium text-gray-700 ml-1">
                 メモ <span className="text-xs text-muted-foreground font-normal">(任意)</span>
               </label>
               <Input
+                id="child-recipe-notes"
                 placeholder="例: 細かく刻む"
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}

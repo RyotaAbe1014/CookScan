@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { SearchIcon } from '@/components/icons/search-icon'
 import { CloseIcon } from '@/components/icons/close-icon'
@@ -16,12 +16,14 @@ export function RecipeSearch({ resultCount }: Props) {
   const currentQuery = searchParams.get('q') || ''
 
   const [query, setQuery] = useState(currentQuery)
+  const [prevCurrentQuery, setPrevCurrentQuery] = useState(currentQuery)
   const [isFocused, setIsFocused] = useState(false)
 
   // URLのクエリパラメータが外部から変わったらローカルstateを同期
-  useEffect(() => {
+  if (prevCurrentQuery !== currentQuery) {
+    setPrevCurrentQuery(currentQuery)
     setQuery(currentQuery)
-  }, [currentQuery])
+  }
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()

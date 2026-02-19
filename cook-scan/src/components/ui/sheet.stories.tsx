@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs'
 import { useState } from 'react'
+import Link from 'next/link'
 import { Sheet } from './sheet'
 import { Button } from './button'
 import { CloseIcon } from '@/components/icons/close-icon'
@@ -39,18 +40,18 @@ export const Default: Story = {
               </button>
             </div>
             <nav className="flex flex-col gap-2 p-4">
-              <a href="#" className="rounded-md px-3 py-2 text-sm hover:bg-muted">
+              <Link href="/dashboard" className="rounded-md px-3 py-2 text-sm hover:bg-muted">
                 ダッシュボード
-              </a>
-              <a href="#" className="rounded-md px-3 py-2 text-sm hover:bg-muted">
+              </Link>
+              <Link href="/recipes" className="rounded-md px-3 py-2 text-sm hover:bg-muted">
                 レシピ一覧
-              </a>
-              <a href="#" className="rounded-md px-3 py-2 text-sm hover:bg-muted">
+              </Link>
+              <Link href="/tags" className="rounded-md px-3 py-2 text-sm hover:bg-muted">
                 タグ管理
-              </a>
-              <a href="#" className="rounded-md px-3 py-2 text-sm hover:bg-muted">
+              </Link>
+              <Link href="/settings/profile" className="rounded-md px-3 py-2 text-sm hover:bg-muted">
                 設定
-              </a>
+              </Link>
             </nav>
           </div>
         </Sheet>

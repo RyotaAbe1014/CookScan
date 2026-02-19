@@ -31,7 +31,15 @@ export function ShoppingItemRow({ item, onEdit, onToggleCheck }: ShoppingItemRow
   return (
     <li
       className="flex cursor-pointer items-center gap-3 px-4 py-3 transition-colors duration-150 hover:bg-gray-50"
+      role="button"
+      tabIndex={0}
       onClick={() => onToggleCheck(item.id)}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault()
+          onToggleCheck(item.id)
+        }
+      }}
     >
       {/* チェックボックス */}
       <button
