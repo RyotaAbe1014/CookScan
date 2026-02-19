@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useReducer } from 'react'
 import { toast } from 'sonner'
 import { createTagCategory, createTag } from './actions'
 import { isSuccess } from '@/utils/result'
@@ -22,18 +22,51 @@ type TagFormProps = {
   categories: TagCategoryBasic[]
 }
 
+type TagFormState = {
+  selectedCategoryId: string
+  tagName: string
+  tagDescription: string
+  tagSuccess: string | null
+  isSubmittingTag: boolean
+}
+
+type TagFormAction =
+  | { type: 'SET_CATEGORY'; payload: string }
+  | { type: 'SET_NAME'; payload: string }
+  | { type: 'SET_DESCRIPTION'; payload: string }
+  | { type: 'SUBMIT_START' }
+  | { type: 'SUBMIT_SUCCESS' }
+  | { type: 'SUBMIT_ERROR' }
+
+function tagFormReducer(state: TagFormState, action: TagFormAction): TagFormState {
+  switch (action.type) {
+    case 'SET_CATEGORY':
+      return { ...state, selectedCategoryId: action.payload }
+    case 'SET_NAME':
+      return { ...state, tagName: action.payload }
+    case 'SET_DESCRIPTION':
+      return { ...state, tagDescription: action.payload }
+    case 'SUBMIT_START':
+      return { ...state, isSubmittingTag: true, tagSuccess: null }
+    case 'SUBMIT_SUCCESS':
+      return { ...state, isSubmittingTag: false, tagSuccess: 'タグを作成しました', tagName: '', tagDescription: '' }
+    case 'SUBMIT_ERROR':
+      return { ...state, isSubmittingTag: false }
+  }
+}
+
 function TagForm({ categories }: TagFormProps) {
-  const [selectedCategoryId, setSelectedCategoryId] = useState(
-    categories.find((c) => !c.isSystem)?.id || categories[0]?.id || ''
-  )
-  const [tagName, setTagName] = useState('')
-  const [tagDescription, setTagDescription] = useState('')
-  const [tagSuccess, setTagSuccess] = useState<string | null>(null)
-  const [isSubmittingTag, setIsSubmittingTag] = useState(false)
+  const [state, dispatch] = useReducer(tagFormReducer, {
+    selectedCategoryId: categories.find((c) => !c.isSystem)?.id || categories[0]?.id || '',
+    tagName: '',
+    tagDescription: '',
+    tagSuccess: null,
+    isSubmittingTag: false,
+  })
+  const { selectedCategoryId, tagName, tagDescription, tagSuccess, isSubmittingTag } = state
 
   const handleTagSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setTagSuccess(null)
 
     if (!tagName.trim()) {
       toast.error('タグ名を入力してください')
@@ -45,7 +78,7 @@ function TagForm({ categories }: TagFormProps) {
       return
     }
 
-    setIsSubmittingTag(true)
+    dispatch({ type: 'SUBMIT_START' })
 
     try {
       const result = await createTag(
@@ -55,16 +88,14 @@ function TagForm({ categories }: TagFormProps) {
       )
 
       if (isSuccess(result)) {
-        setTagSuccess('タグを作成しました')
-        setTagName('')
-        setTagDescription('')
+        dispatch({ type: 'SUBMIT_SUCCESS' })
       } else {
         toast.error(result.error.message)
+        dispatch({ type: 'SUBMIT_ERROR' })
       }
     } catch {
       toast.error('タグの作成中にエラーが発生しました')
-    } finally {
-      setIsSubmittingTag(false)
+      dispatch({ type: 'SUBMIT_ERROR' })
     }
   }
 
@@ -77,7 +108,7 @@ function TagForm({ categories }: TagFormProps) {
         <Select
           id="tag-category"
           value={selectedCategoryId}
-          onChange={(e) => setSelectedCategoryId(e.target.value)}
+          onChange={(e) => dispatch({ type: 'SET_CATEGORY', payload: e.target.value })}
           className="mt-2"
           disabled={isSubmittingTag}
         >
@@ -101,7 +132,7 @@ function TagForm({ categories }: TagFormProps) {
           type="text"
           id="tag-name"
           value={tagName}
-          onChange={(e) => setTagName(e.target.value)}
+          onChange={(e) => dispatch({ type: 'SET_NAME', payload: e.target.value })}
           placeholder="例: 和食、イタリアン、簡単"
           className="mt-2"
           size="xl"
@@ -116,7 +147,7 @@ function TagForm({ categories }: TagFormProps) {
         <Textarea
           id="tag-description"
           value={tagDescription}
-          onChange={(e) => setTagDescription(e.target.value)}
+          onChange={(e) => dispatch({ type: 'SET_DESCRIPTION', payload: e.target.value })}
           rows={3}
           placeholder="タグの説明を入力してください"
           className="mt-2"
