@@ -1,25 +1,13 @@
 'use server'
 
-import { prisma } from '@/lib/prisma'
 import { buildTagFilters } from './utils'
 import * as RecipeService from '@/backend/services/recipes'
+import * as TagService from '@/backend/services/tags'
 import type { Result } from '@/utils/result'
 import { success, failure, Errors } from '@/utils/result'
 import { withAuth } from '@/utils/server-action'
 import type { RecipeListOutput } from '@/backend/domain/recipes'
-
-type TagCategoryWithTags = {
-  id: string
-  name: string
-  description: string | null
-  isSystem: boolean
-  userId: string | null
-  tags: {
-    id: string
-    name: string
-    description: string | null
-  }[]
-}
+import type { TagsForRecipeOutput } from '@/backend/domain/tags'
 
 /**
  * フィルタ条件に基づいてレシピを取得
@@ -44,21 +32,10 @@ export async function getRecipesWithFilters(
 /**
  * ユーザー用のタグカテゴリを取得
  */
-export async function getTagCategoriesForUser(): Promise<Result<TagCategoryWithTags[]>> {
+export async function getTagCategoriesForUser(): Promise<Result<TagsForRecipeOutput>> {
   return withAuth(async (profile) => {
     try {
-      const tagCategories = await prisma.tagCategory.findMany({
-        where: {
-          OR: [{ isSystem: true }, { userId: profile.id }],
-        },
-        include: {
-          tags: {
-            orderBy: { name: 'asc' },
-          },
-        },
-        orderBy: { createdAt: 'asc' },
-      })
-
+      const tagCategories = await TagService.getAllTagsForRecipe(profile.id)
       return success(tagCategories)
     } catch (error) {
       console.error('Failed to fetch tag categories:', error)

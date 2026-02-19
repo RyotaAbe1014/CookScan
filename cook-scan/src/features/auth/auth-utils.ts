@@ -1,5 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
-import { prisma } from '@/lib/prisma'
+import * as UserService from '@/backend/services/users'
 
 // Prisma User model type (defined locally to avoid Prisma client generation issues)
 export type UserProfile = {
@@ -20,14 +20,12 @@ export async function checkUserProfile() {
     return { hasAuth: false, hasProfile: false }
   }
 
-  const profile = await prisma.user.findUnique({
-    where: { authId: user.id }
-  })
+  const { exists, profile } = await UserService.checkExistingProfile(user.id)
 
   return {
     hasAuth: true,
-    hasProfile: !!profile,
+    hasProfile: exists,
     authUser: user,
-    profile
+    profile,
   }
 }
