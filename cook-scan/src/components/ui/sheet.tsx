@@ -59,6 +59,7 @@ export function Sheet({ isOpen, onClose, children, className }: SheetProps) {
           isOpen ? "translate-x-0" : "translate-x-full",
           className
         )}
+        role="presentation"
         onClick={(e) => e.stopPropagation()}
       >
         {children}
