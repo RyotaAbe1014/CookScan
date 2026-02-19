@@ -19,10 +19,11 @@ export function IngredientInputMobile({
       <div className="space-y-3 pl-2">
         {/* Row 1: Name */}
         <div>
-          <label className="mb-1.5 block text-xs font-semibold tracking-wide text-gray-500 uppercase">
+          <label htmlFor={`ingredient-name-${index}`} className="mb-1.5 block text-xs font-semibold tracking-wide text-gray-500 uppercase">
             材料名
           </label>
           <Input
+            id={`ingredient-name-${index}`}
             type="text"
             placeholder="例: 鶏もも肉"
             value={ingredient.name}
@@ -35,10 +36,11 @@ export function IngredientInputMobile({
 
         {/* Row 2: Unit */}
         <div>
-          <label className="mb-1.5 block text-xs font-semibold tracking-wide text-gray-500 uppercase">
+          <label htmlFor={`ingredient-unit-${index}`} className="mb-1.5 block text-xs font-semibold tracking-wide text-gray-500 uppercase">
             分量
           </label>
           <Input
+            id={`ingredient-unit-${index}`}
             type="text"
             placeholder="例: 300g、大さじ2、適量"
             value={ingredient.unit ?? ''}
@@ -50,10 +52,11 @@ export function IngredientInputMobile({
 
         {/* Row 3: Notes */}
         <div>
-          <label className="mb-1.5 block text-xs font-semibold tracking-wide text-gray-500 uppercase">
+          <label htmlFor={`ingredient-notes-${index}`} className="mb-1.5 block text-xs font-semibold tracking-wide text-gray-500 uppercase">
             メモ
           </label>
           <Input
+            id={`ingredient-notes-${index}`}
             type="text"
             placeholder="下処理や代替食材などのメモ..."
             value={ingredient.notes ?? ''}

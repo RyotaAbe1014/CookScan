@@ -42,10 +42,11 @@ export function StepInputMobile({
 
       {/* Instruction textarea (full width) */}
       <div className="mb-4">
-        <label className="mb-1.5 block text-xs font-semibold tracking-wide text-gray-500 uppercase">
+        <label htmlFor={`step-instruction-${index}`} className="mb-1.5 block text-xs font-semibold tracking-wide text-gray-500 uppercase">
           手順の説明
         </label>
         <Textarea
+          id={`step-instruction-${index}`}
           placeholder="この手順で行うことを詳しく書いてください..."
           value={step.instruction}
           onChange={(e) => onUpdate(index, 'instruction', e.target.value)}
@@ -58,12 +59,13 @@ export function StepInputMobile({
 
       {/* Timer input (full width) */}
       <div className="rounded-xl bg-linear-to-r from-indigo-50 to-blue-50 p-3 ring-1 ring-indigo-100">
-        <label className="mb-2 flex items-center gap-2 text-xs font-semibold tracking-wide text-emerald-600 uppercase">
+        <label htmlFor={`step-timer-${index}`} className="mb-2 flex items-center gap-2 text-xs font-semibold tracking-wide text-emerald-600 uppercase">
           <ClockIcon className="h-4 w-4" stroke="currentColor" />
           タイマー設定
         </label>
         <div className="flex items-center gap-3">
           <Input
+            id={`step-timer-${index}`}
             type="number"
             placeholder="例: 180"
             value={step.timerSeconds ?? ''}

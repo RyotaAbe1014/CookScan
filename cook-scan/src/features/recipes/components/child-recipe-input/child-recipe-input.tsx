@@ -23,8 +23,9 @@ export function ChildRecipeInput({ item, index, onUpdate, onRemove }: ChildRecip
       </div>
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <div>
-          <label className="mb-1 block text-xs font-medium text-gray-600">分量</label>
+          <label htmlFor={`child-recipe-quantity-${index}`} className="mb-1 block text-xs font-medium text-gray-600">分量</label>
           <Input
+            id={`child-recipe-quantity-${index}`}
             type="text"
             value={item.quantity}
             onChange={(e) => onUpdate(index, 'quantity', e.target.value)}
@@ -32,8 +33,9 @@ export function ChildRecipeInput({ item, index, onUpdate, onRemove }: ChildRecip
           />
         </div>
         <div>
-          <label className="mb-1 block text-xs font-medium text-gray-600">メモ</label>
+          <label htmlFor={`child-recipe-notes-${index}`} className="mb-1 block text-xs font-medium text-gray-600">メモ</label>
           <Input
+            id={`child-recipe-notes-${index}`}
             type="text"
             value={item.notes}
             onChange={(e) => onUpdate(index, 'notes', e.target.value)}
