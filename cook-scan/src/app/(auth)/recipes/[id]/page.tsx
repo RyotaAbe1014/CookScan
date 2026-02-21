@@ -11,7 +11,7 @@ export default async function RecipeDetailPage({ params }: RecipeDetailPageProps
   const { id } = await params
 
   return (
-    <AuthLayoutWrapper title="レシピ詳細" rightAction={<BackToRecipesLink />}>
+    <AuthLayoutWrapper title="レシピ詳細" rightAction={<BackToRecipesLink />} showTimerBanner={false}>
       <PageContainer>
         <RecipeDetailServerContent recipeId={id} />
       </PageContainer>

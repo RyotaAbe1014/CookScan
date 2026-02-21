@@ -26,6 +26,11 @@ vi.mock('@/features/auth/actions', () => ({
   logout: vi.fn(),
 }))
 
+// モック: ActiveTimerBanner
+vi.mock('@/features/recipes/list/active-timer-banner', () => ({
+  ActiveTimerBanner: () => null,
+}))
+
 describe('AuthLayoutWrapper', () => {
   beforeEach(() => {
     vi.mocked(usePathname).mockReturnValue('/')
