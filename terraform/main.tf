@@ -2,7 +2,7 @@ terraform {
   required_providers {
     vercel = {
       source  = "vercel/vercel"
-      version = "~> 4.2.0"
+      version = "~> 4.6.0"
     }
   }
 
@@ -33,7 +33,7 @@ resource "vercel_project" "cook-scan" {
   install_command  = "npm install"
   dev_command      = "npm run dev"
   root_directory   = "cook-scan"
-  node_version = "22.x"
+  node_version     = "22.x"
   resource_config = {
     function_default_regions = ["hnd1"]
   }
@@ -41,13 +41,13 @@ resource "vercel_project" "cook-scan" {
 
 resource "vercel_project_domain" "cook-scan" {
   project_id = vercel_project.cook-scan.id
-  domain = "cookscan.aberyouta.jp"
+  domain     = "cookscan.aberyouta.jp"
 }
 
 resource "vercel_project_domain" "cook-scan-redirect" {
   project_id = vercel_project.cook-scan.id
-  domain = "cook-scan.vercel.app"
+  domain     = "cook-scan.vercel.app"
 
-  redirect = vercel_project_domain.cook-scan.id
+  redirect             = vercel_project_domain.cook-scan.id
   redirect_status_code = 307
 }
