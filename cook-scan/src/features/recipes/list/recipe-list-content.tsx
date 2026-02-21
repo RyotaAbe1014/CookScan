@@ -5,7 +5,6 @@ import { TagFilter } from './tag-filter'
 import { RecipeStatsBar } from './recipe-stats-bar'
 import { RecipeEmptyState } from './recipe-empty-state'
 import { RecipeGrid } from './recipe-grid'
-import { ActiveTimerBanner } from './active-timer-banner'
 
 type TagCategory = {
   id: string
@@ -33,8 +32,6 @@ export function RecipeListContent({
 
   return (
     <>
-      <ActiveTimerBanner />
-
       <RecipeStatsBar recipeCount={recipes.length} />
 
       <Suspense fallback={null}>

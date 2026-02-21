@@ -26,6 +26,11 @@ vi.mock('@/features/auth/actions', () => ({
   logout: vi.fn(),
 }))
 
+// モック: ActiveTimerBanner
+vi.mock('@/features/recipes/list/active-timer-banner', () => ({
+  ActiveTimerBanner: () => <div data-testid="active-timer-banner" />,
+}))
+
 describe('AuthLayoutWrapper', () => {
   beforeEach(() => {
     vi.mocked(usePathname).mockReturnValue('/')
@@ -162,6 +167,32 @@ describe('AuthLayoutWrapper', () => {
     expect(screen.getByText('サブタイトル')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'アクション' })).toBeInTheDocument()
     expect(screen.getByText('メインコンテンツ')).toBeInTheDocument()
+  })
+
+  test('正常系：showTimerBannerがデフォルト（true）の場合、ActiveTimerBannerが表示される', () => {
+    // Given: showTimerBannerを指定しないAuthLayoutWrapperが用意されている
+    // When: レンダリングする
+    render(
+      <AuthLayoutWrapper title="タイトル">
+        <div>コンテンツ</div>
+      </AuthLayoutWrapper>
+    )
+
+    // Then: ActiveTimerBannerが表示される
+    expect(screen.getByTestId('active-timer-banner')).toBeInTheDocument()
+  })
+
+  test('正常系：showTimerBanner={false}の場合、ActiveTimerBannerが表示されない', () => {
+    // Given: showTimerBanner={false}のAuthLayoutWrapperが用意されている
+    // When: レンダリングする
+    render(
+      <AuthLayoutWrapper title="タイトル" showTimerBanner={false}>
+        <div>コンテンツ</div>
+      </AuthLayoutWrapper>
+    )
+
+    // Then: ActiveTimerBannerが表示されない
+    expect(screen.queryByTestId('active-timer-banner')).not.toBeInTheDocument()
   })
 
   test('正常系：複数の子要素を受け入れる', () => {
