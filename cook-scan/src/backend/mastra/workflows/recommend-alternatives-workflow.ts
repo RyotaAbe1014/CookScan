@@ -4,7 +4,7 @@ import { z } from "zod";
 
 
 
-export const recommendAlternativesStep = createStep({
+const recommendAlternativesStep = createStep({
   id: 'recommend-alternatives',
   description: 'Recommend alternatives',
   inputSchema: z.object({

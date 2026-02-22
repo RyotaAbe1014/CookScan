@@ -15,4 +15,3 @@ export function FormActions(props: FormActionsProps) {
   return <DesktopFormActions {...props} />
 }
 
-export type { FormActionsProps } from './types'

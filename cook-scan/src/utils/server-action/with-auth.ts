@@ -1,5 +1,5 @@
 import type { Result } from '@/utils/result'
-import { failure, success, Errors } from '@/utils/result'
+import { failure, Errors } from '@/utils/result'
 import { checkUserProfile, type UserProfile } from '@/features/auth/auth-utils'
 
 /**
@@ -33,33 +33,3 @@ export async function withAuth<T>(
   return action(profile)
 }
 
-/**
- * 認証必須のServer Actionラッパー（try-catch付き）
- * エラーを自動的にResult型に変換
- *
- * @example
- * ```ts
- * export async function getRecipes(): Promise<Result<Recipe[]>> {
- *   return withAuthSafe(
- *     async (profile) => {
- *       return await prisma.recipe.findMany({ where: { userId: profile.id } })
- *     },
- *     'レシピの取得に失敗しました'
- *   )
- * }
- * ```
- */
-export async function withAuthSafe<T>(
-  action: (profile: UserProfile) => Promise<T>,
-  errorMessage = 'エラーが発生しました'
-): Promise<Result<T>> {
-  return withAuth(async (profile) => {
-    try {
-      const data = await action(profile)
-      return success(data)
-    } catch (error) {
-      console.error('Server Action error:', error)
-      return failure(Errors.server(errorMessage))
-    }
-  })
-}

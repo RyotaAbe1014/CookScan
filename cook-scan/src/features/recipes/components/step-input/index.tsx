@@ -15,4 +15,3 @@ export function StepInput(props: StepInputProps) {
   return <DesktopStepInput {...props} />
 }
 
-export type { StepInputProps, Step } from './types'

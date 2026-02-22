@@ -1,1 +1,1 @@
-export { withAuth, withAuthSafe } from './with-auth'
+export { withAuth } from './with-auth'

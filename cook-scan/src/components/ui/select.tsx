@@ -29,7 +29,7 @@ const selectVariants = cva(
   }
 )
 
-export type SelectProps = Omit<SelectHTMLAttributes<HTMLSelectElement>, 'size'> &
+type SelectProps = Omit<SelectHTMLAttributes<HTMLSelectElement>, 'size'> &
   VariantProps<typeof selectVariants>
 
 const Select = forwardRef<HTMLSelectElement, SelectProps>(
@@ -47,4 +47,4 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
 )
 Select.displayName = 'Select'
 
-export { Select, selectVariants }
+export { Select }

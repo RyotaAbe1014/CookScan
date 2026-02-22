@@ -15,4 +15,3 @@ export function IngredientInput(props: IngredientInputProps) {
   return <DesktopIngredientInput {...props} />
 }
 
-export type { IngredientInputProps, Ingredient } from './types'
