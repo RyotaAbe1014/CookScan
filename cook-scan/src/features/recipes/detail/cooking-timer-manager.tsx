@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useAtomValue, useSetAtom } from 'jotai'
 import { Card, CardHeader, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -29,7 +29,7 @@ function formatTime(seconds: number): string {
 }
 
 export function CookingTimerManager({ recipeId }: CookingTimerManagerProps) {
-  const [tick, setTick] = useState(0)
+  const [, setTick] = useState(0)
   const timerStates = useAtomValue(recipeTimerStatesAtomFamily(recipeId))
   const stopAllTimers = useSetAtom(stopAllTimersAtomFamily(recipeId))
 
@@ -44,7 +44,7 @@ export function CookingTimerManager({ recipeId }: CookingTimerManagerProps) {
     return () => clearInterval(interval)
   }, [timerStates])
 
-  const activeTimers = useMemo(() => {
+  const activeTimers = (() => {
     if (timerStates.size === 0) return []
 
     const timers: ActiveTimer[] = []
@@ -68,7 +68,7 @@ export function CookingTimerManager({ recipeId }: CookingTimerManagerProps) {
     // ステップ番号順にソート
     timers.sort((a, b) => a.stepNumber - b.stepNumber)
     return timers
-  }, [timerStates, tick])
+  })()
 
   const handleStopAll = () => {
     stopAllTimers()
