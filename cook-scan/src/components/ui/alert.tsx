@@ -64,7 +64,7 @@ const AlertIcons = {
   info: <InfoSolidIcon />,
 }
 
-export type AlertProps = HTMLAttributes<HTMLDivElement> &
+type AlertProps = HTMLAttributes<HTMLDivElement> &
   VariantProps<typeof alertVariants> & {
     /** アイコンを非表示にする */
     hideIcon?: boolean
@@ -93,4 +93,4 @@ const Alert = forwardRef<HTMLDivElement, AlertProps>(
 )
 Alert.displayName = 'Alert'
 
-export { Alert, alertVariants }
+export { Alert }

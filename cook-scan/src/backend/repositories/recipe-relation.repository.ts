@@ -79,18 +79,6 @@ export async function validateChildRecipeOwnership(
 }
 
 /**
- * 親IDで子レシピ関係を全削除
- */
-export async function deleteRecipeRelationsByParent(
-  tx: Prisma.TransactionClient,
-  parentRecipeId: string
-) {
-  await tx.recipeRelation.deleteMany({
-    where: { parentRecipeId },
-  })
-}
-
-/**
  * 循環参照チェック（BFS）
  * parentRecipeId -> childRecipeId を追加した場合に循環が生じるかを検出
  */

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import type { IngredientFormData, StepFormData, SourceInfoFormData } from '@/types/forms'
 import type { ChildRecipeItem } from '@/features/recipes/components'
 
-export type RecipeFormState = {
+type RecipeFormState = {
   title: string
   sourceInfo: SourceInfoFormData
   ingredients: IngredientFormData[]
@@ -12,7 +12,7 @@ export type RecipeFormState = {
   childRecipes: ChildRecipeItem[]
 }
 
-export type UseRecipeFormOptions = {
+type UseRecipeFormOptions = {
   initialData?: Partial<RecipeFormState>
 }
 

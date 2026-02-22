@@ -8,11 +8,3 @@ export type Step = {
   createdAt: Date
   updatedAt: Date
 }
-
-// UI表示用のStep型（一部のフィールドのみ）
-export type StepDisplay = {
-  id: string
-  orderIndex: number
-  instruction: string
-  timerSeconds: number | null
-}

@@ -144,28 +144,6 @@ export async function deleteShoppingItem(itemId: string): Promise<Result<void>> 
 }
 
 /**
- * 買い物アイテムの並び順を更新
- */
-export async function reorderShoppingItems(itemIds: string[]): Promise<Result<void>> {
-  return withAuth(async (profile) => {
-    try {
-      await ShoppingItemService.reorderShoppingItems(profile.id, { itemIds })
-
-      revalidatePath('/shopping-list')
-      return success(undefined)
-    } catch (error) {
-      console.error('Failed to reorder shopping items:', error)
-      if (error instanceof Error) {
-        if (error.message.includes('無効なアイテム')) {
-          return failure(Errors.validation(error.message))
-        }
-      }
-      return failure(Errors.server('並び替えに失敗しました'))
-    }
-  })
-}
-
-/**
  * チェック済みアイテムを一括削除
  */
 export async function deleteCheckedItems(): Promise<Result<void>> {

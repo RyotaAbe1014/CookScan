@@ -3,7 +3,7 @@
  */
 
 // タグの基本型
-export type Tag = {
+type Tag = {
   id: string
   name: string
   description: string | null
@@ -13,7 +13,7 @@ export type Tag = {
 }
 
 // タグカテゴリの基本型
-export type TagCategory = {
+type TagCategory = {
   id: string
   name: string
   description: string | null
@@ -30,16 +30,3 @@ export type TagCategoryWithTags = TagCategory & {
 
 // セレクトボックス等で使用するシンプルなカテゴリ型
 export type TagCategoryBasic = Pick<TagCategory, 'id' | 'name' | 'description' | 'isSystem'>
-
-// レシピに紐付いたタグの型
-export type RecipeTagWithDetails = {
-  tagId: string
-  tag: {
-    id: string
-    name: string
-    category: {
-      id: string
-      name: string
-    }
-  }
-}

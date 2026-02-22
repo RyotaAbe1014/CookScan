@@ -6,8 +6,6 @@ import { cn } from '@/lib/tailwind'
 
 const Dialog = DialogPrimitive.Root
 
-const DialogTrigger = DialogPrimitive.Trigger
-
 function DialogContent({
   children,
   className,
@@ -76,15 +74,11 @@ function DialogFooter({ children, className }: { children: React.ReactNode; clas
   )
 }
 
-const DialogClose = DialogPrimitive.Close
-
 export {
   Dialog,
-  DialogTrigger,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogDescription,
   DialogFooter,
-  DialogClose,
 }

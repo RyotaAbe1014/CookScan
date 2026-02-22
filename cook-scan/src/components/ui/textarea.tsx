@@ -29,7 +29,7 @@ const textareaVariants = cva(
   }
 )
 
-export type TextareaProps = Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, 'size'> &
+type TextareaProps = Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, 'size'> &
   VariantProps<typeof textareaVariants>
 
 const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
@@ -45,4 +45,4 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
 )
 Textarea.displayName = 'Textarea'
 
-export { Textarea, textareaVariants }
+export { Textarea }

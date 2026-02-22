@@ -1,9 +1,9 @@
-export type RecipeSearchParams = {
+type RecipeSearchParams = {
   tag?: string | string[]
   q?: string
 }
 
-export type ParsedRecipeSearchParams = {
+type ParsedRecipeSearchParams = {
   tagIds: string[]
   searchQuery: string
 }

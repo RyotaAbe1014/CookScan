@@ -21,7 +21,7 @@ const cardVariants = cva(
   }
 )
 
-export type CardProps = HTMLAttributes<HTMLDivElement> &
+type CardProps = HTMLAttributes<HTMLDivElement> &
   VariantProps<typeof cardVariants>
 
 const Card = forwardRef<HTMLDivElement, CardProps>(
@@ -44,7 +44,7 @@ Card.displayName = 'Card'
 /**
  * アイコンバッジのカラープリセット（単色ベース）
  */
-export type CardHeaderColor =
+type CardHeaderColor =
   | 'emerald' // 基本情報、画像など
   | 'amber' // タグ、カテゴリ、ソース情報
   | 'green' // 材料
@@ -65,7 +65,7 @@ const iconColors: Record<CardHeaderColor, string> = {
   indigo: 'bg-indigo-500',
 }
 
-export type CardHeaderProps = HTMLAttributes<HTMLDivElement> & {
+type CardHeaderProps = HTMLAttributes<HTMLDivElement> & {
   /** アイコンバッジに表示するアイコン（SVG要素） */
   icon?: ReactNode
   /** アイコンバッジのグラデーションカラー */
@@ -129,7 +129,7 @@ const cardContentVariants = cva('', {
   },
 })
 
-export type CardContentProps = HTMLAttributes<HTMLDivElement> &
+type CardContentProps = HTMLAttributes<HTMLDivElement> &
   VariantProps<typeof cardContentVariants>
 
 const CardContent = forwardRef<HTMLDivElement, CardContentProps>(
@@ -145,4 +145,4 @@ const CardContent = forwardRef<HTMLDivElement, CardContentProps>(
 )
 CardContent.displayName = 'CardContent'
 
-export { Card, cardVariants, CardHeader, CardContent, cardContentVariants }
+export { Card, CardHeader, CardContent }

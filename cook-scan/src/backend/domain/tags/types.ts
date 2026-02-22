@@ -34,27 +34,6 @@ export type UpdateTagCategoryInput = {
 
 // ===== Output Types =====
 
-/** タグの出力型 */
-export type TagOutput = {
-  id: string
-  name: string
-  description: string | null
-  isSystem: boolean
-  userId: string | null
-  categoryId: string
-  recipeTags?: Array<{ recipeId: string }>
-}
-
-/** タグカテゴリの出力型 */
-export type TagCategoryOutput = {
-  id: string
-  name: string
-  description: string | null
-  isSystem: boolean
-  userId: string | null
-  tags?: TagOutput[]
-}
-
 /** レシピ用のタグ選択データ */
 export type TagsForRecipeOutput = Array<{
   id: string

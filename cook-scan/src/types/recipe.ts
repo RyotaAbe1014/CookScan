@@ -80,6 +80,3 @@ export type RecipeMinimal = {
   id: string
   title: string
 }
-
-// 後方互換性のため、Recipe型をRecipeWithRelationsのエイリアスとして定義
-export type Recipe = RecipeWithRelations

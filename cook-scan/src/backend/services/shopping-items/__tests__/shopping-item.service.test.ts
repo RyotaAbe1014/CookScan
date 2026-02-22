@@ -51,12 +51,6 @@ describe('shopping-item.service', () => {
     updatedAt: new Date(),
   }
 
-  const mockOtherUserItem = {
-    ...mockItem,
-    id: 'item-other',
-    userId: otherUserId,
-  }
-
   beforeEach(() => {
     vi.clearAllMocks()
   })
