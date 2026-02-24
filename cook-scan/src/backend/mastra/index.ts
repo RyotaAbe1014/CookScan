@@ -11,7 +11,7 @@ import { recommendAlternativesWorkflow } from './workflows/recommend-alternative
 
 const storage = new PostgresStore({
   id: "pg-storage",
-  connectionString: process.env.DIRECT_URL,
+  connectionString: process.env.DATABASE_URL,
 });
 
 export const mastra = new Mastra({
