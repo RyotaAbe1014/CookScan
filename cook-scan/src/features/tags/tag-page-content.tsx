@@ -1,6 +1,5 @@
 import { TagCreateForm } from './tag-create-form'
 import { CategoryItem } from './category-item'
-import { TagInfoBanner } from './tag-info-banner'
 import { TagEmptyState } from './tag-empty-state'
 import type { TagCategoryWithTags } from '@/types/tag'
 import { TagIcon } from '@/components/icons/tag-icon'
@@ -13,7 +12,6 @@ type TagPageContentProps = {
 export function TagPageContent({ tagCategories, currentUserId }: TagPageContentProps) {
   return (
     <div className="space-y-8">
-      <TagInfoBanner />
       <TagCreateForm categories={tagCategories} />
 
       {/* タグ一覧セクション */}
