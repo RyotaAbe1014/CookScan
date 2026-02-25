@@ -16,9 +16,6 @@ vi.mock('./category-item', () => ({
   ),
 }))
 
-vi.mock('./tag-info-banner', () => ({
-  TagInfoBanner: () => <div data-testid="tag-info-banner">TagInfoBanner</div>,
-}))
 
 vi.mock('./tag-empty-state', () => ({
   TagEmptyState: () => <div data-testid="tag-empty-state">TagEmptyState</div>,
@@ -44,17 +41,6 @@ describe('TagPageContent', () => {
         recipeTags: [] as { recipeId: string }[],
       },
     ],
-  })
-
-  test('正常系：タグ情報バナーが表示される', () => {
-    // Given: カテゴリが1つ存在する
-    const categories = [createMockCategory('cat-1', 'Category 1')]
-
-    // When: タグページコンテンツが描画される
-    render(<TagPageContent tagCategories={categories} currentUserId={mockUserId} />)
-
-    // Then: タグ情報バナーが表示される
-    expect(screen.getByTestId('tag-info-banner')).toBeDefined()
   })
 
   test('正常系：タグ作成フォームがカテゴリと共に表示される', () => {
