@@ -52,6 +52,7 @@ model Recipe {
   ocrProcessingHistory OcrProcessingHistory?
   recipeVersions       RecipeVersion[]
   sourceInfo           SourceInfo[]
+  recipeShare          RecipeShare?
 
   // 自己結合(多対多)
   childRecipes  RecipeRelation[] @relation("ParentRecipe")
@@ -224,4 +225,19 @@ model SourceInfo {
   recipe Recipe @relation(fields: [recipeId], references: [id])
 
   @@map("source_infos")
+}
+
+// レシピ共有テーブル
+model RecipeShare {
+  id         String   @id @default(uuid())
+  recipeId   String   @unique @map("recipe_id")
+  shareToken String   @unique @map("share_token")
+  isActive   Boolean  @default(true) @map("is_active")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  recipe Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+
+  @@map("recipe_shares")
 }

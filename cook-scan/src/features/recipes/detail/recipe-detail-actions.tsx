@@ -10,6 +10,7 @@ import { DownloadIcon } from '@/components/icons/download-icon'
 import { TrashIcon } from '@/components/icons/trash-icon'
 import { ExclamationTriangleIcon } from '@/components/icons/exclamation-triangle-icon'
 import DeleteRecipeDialog from '@/features/recipes/delete/delete-recipe-dialog'
+import { RecipeShareButton } from '@/features/recipes/share/recipe-share-button'
 
 type Props = {
   recipe: RecipeMinimal
@@ -75,6 +76,7 @@ export function RecipeDetailActions({ recipe }: Props) {
   return (
     <>
       <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+        <RecipeShareButton recipeId={recipe.id} />
         <Link
           href={`/recipes/${recipe.id}/edit`}
           className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3 py-2 text-xs font-semibold text-white shadow-lg shadow-emerald-500/30 transition-all hover:shadow-xl hover:shadow-emerald-500/40 sm:gap-2 sm:px-4 sm:text-sm"
