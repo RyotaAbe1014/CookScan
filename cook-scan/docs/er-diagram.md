@@ -120,6 +120,15 @@ erDiagram
         datetime updated_at
     }
 
+    recipe_shares {
+        uuid id PK
+        uuid recipe_id FK,UK
+        string share_token UK
+        boolean is_active
+        datetime created_at
+        datetime updated_at
+    }
+
     users ||--o{ recipes : "has many"
     users ||--o{ tag_categories : "has many"
     users ||--o{ tags : "has many"
@@ -133,6 +142,7 @@ erDiagram
     recipes ||--o| ocr_processing_history : "has one"
     recipes ||--o{ recipe_versions : "has many"
     recipes ||--o{ source_infos : "has many"
+    recipes ||--o| recipe_shares : "has one"
     recipes ||--o{ recipe_relations : "parent of"
     recipes ||--o{ recipe_relations : "child of"
 
