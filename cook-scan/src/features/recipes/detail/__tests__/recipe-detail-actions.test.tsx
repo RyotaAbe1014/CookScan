@@ -21,6 +21,10 @@ vi.mock('@/features/recipes/share/recipe-share-button', () => ({
   RecipeShareButton: () => <button>共有</button>,
 }))
 
+vi.mock('../add-to-meal-plan-dialog', () => ({
+  AddToMealPlanDialog: () => <div>AddToMealPlanDialog</div>,
+}))
+
 import { domToJpeg } from 'modern-screenshot'
 
 describe('RecipeDetailActions', () => {
@@ -47,7 +51,8 @@ describe('RecipeDetailActions', () => {
     // Given: RecipeDetailActionsが表示されている
     render(<RecipeDetailActions recipe={recipe} initialShareInfo={null} />)
 
-    // Then: 編集・ダウンロード・削除ボタンが表示される
+    // Then: 献立に追加・編集・ダウンロード・削除ボタンが表示される
+    expect(screen.getByRole('button', { name: /献立に追加/ })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: /編集/ })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /ダウンロード/ })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /削除/ })).toBeInTheDocument()

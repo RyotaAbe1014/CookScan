@@ -8,9 +8,12 @@ import { Button } from '@/components/ui/button'
 import { PencilIcon } from '@/components/icons/pencil-icon'
 import { DownloadIcon } from '@/components/icons/download-icon'
 import { TrashIcon } from '@/components/icons/trash-icon'
+import { CalendarIcon } from '@/components/icons/calendar-icon'
 import { ExclamationTriangleIcon } from '@/components/icons/exclamation-triangle-icon'
+import { CheckCircleIcon } from '@/components/icons/check-circle-icon'
 import DeleteRecipeDialog from '@/features/recipes/delete/delete-recipe-dialog'
 import { RecipeShareButton } from '@/features/recipes/share/recipe-share-button'
+import { AddToMealPlanDialog } from './add-to-meal-plan-dialog'
 
 type Props = {
   recipe: RecipeMinimal
@@ -19,9 +22,14 @@ type Props = {
 
 export function RecipeDetailActions({ recipe, initialShareInfo }: Props) {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+  const [isMealPlanDialogOpen, setIsMealPlanDialogOpen] = useState(false)
   const [isDownloading, setIsDownloading] = useState(false)
   const [downloadError, setDownloadError] = useState(false)
+  const [mealPlanSuccess, setMealPlanSuccess] = useState(false)
+  const [mealPlanError, setMealPlanError] = useState(false)
   const errorTimeoutRef = useRef<number | null>(null)
+  const successTimeoutRef = useRef<number | null>(null)
+  const mealPlanErrorTimeoutRef = useRef<number | null>(null)
 
   const handleDeleteClick = () => {
     setIsDeleteDialogOpen(true)
@@ -29,6 +37,26 @@ export function RecipeDetailActions({ recipe, initialShareInfo }: Props) {
 
   const handleCloseDialog = () => {
     setIsDeleteDialogOpen(false)
+  }
+
+  const handleMealPlanSuccess = () => {
+    setMealPlanSuccess(true)
+    if (successTimeoutRef.current) {
+      window.clearTimeout(successTimeoutRef.current)
+    }
+    successTimeoutRef.current = window.setTimeout(() => {
+      setMealPlanSuccess(false)
+    }, 3000)
+  }
+
+  const handleMealPlanError = () => {
+    setMealPlanError(true)
+    if (mealPlanErrorTimeoutRef.current) {
+      window.clearTimeout(mealPlanErrorTimeoutRef.current)
+    }
+    mealPlanErrorTimeoutRef.current = window.setTimeout(() => {
+      setMealPlanError(false)
+    }, 3000)
   }
 
   const showDownloadError = () => {
@@ -71,6 +99,12 @@ export function RecipeDetailActions({ recipe, initialShareInfo }: Props) {
       if (errorTimeoutRef.current) {
         window.clearTimeout(errorTimeoutRef.current)
       }
+      if (successTimeoutRef.current) {
+        window.clearTimeout(successTimeoutRef.current)
+      }
+      if (mealPlanErrorTimeoutRef.current) {
+        window.clearTimeout(mealPlanErrorTimeoutRef.current)
+      }
     }
   }, [])
 
@@ -78,6 +112,16 @@ export function RecipeDetailActions({ recipe, initialShareInfo }: Props) {
     <>
       <div className="flex flex-wrap items-center gap-2 sm:gap-3">
         <RecipeShareButton recipeId={recipe.id} initialShareInfo={initialShareInfo} />
+        <Button
+          type="button"
+          variant="secondary"
+          size="sm"
+          onClick={() => setIsMealPlanDialogOpen(true)}
+          className="border border-gray-200"
+        >
+          <CalendarIcon className="h-4 w-4" />
+          献立に追加
+        </Button>
         <Link
           href={`/recipes/${recipe.id}/edit`}
           className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3 py-2 text-xs font-semibold text-white shadow-lg shadow-emerald-500/30 transition-all hover:shadow-xl hover:shadow-emerald-500/40 sm:gap-2 sm:px-4 sm:text-sm"
@@ -115,11 +159,37 @@ export function RecipeDetailActions({ recipe, initialShareInfo }: Props) {
         onClose={handleCloseDialog}
       />
 
+      <AddToMealPlanDialog
+        open={isMealPlanDialogOpen}
+        onOpenChange={setIsMealPlanDialogOpen}
+        recipeId={recipe.id}
+        onSuccess={handleMealPlanSuccess}
+        onError={handleMealPlanError}
+      />
+
       {downloadError && (
         <div className="fixed inset-x-0 bottom-6 z-50 flex justify-center px-4">
           <div className="flex items-center gap-2 rounded-full bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-lg">
             <ExclamationTriangleIcon className="h-4 w-4" />
             保存できませんでした
+          </div>
+        </div>
+      )}
+
+      {mealPlanSuccess && (
+        <div className="fixed inset-x-0 bottom-6 z-50 flex justify-center px-4">
+          <div className="flex items-center gap-2 rounded-full bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-lg">
+            <CheckCircleIcon className="h-4 w-4" />
+            献立に追加しました
+          </div>
+        </div>
+      )}
+
+      {mealPlanError && (
+        <div className="fixed inset-x-0 bottom-6 z-50 flex justify-center px-4">
+          <div className="flex items-center gap-2 rounded-full bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-lg">
+            <ExclamationTriangleIcon className="h-4 w-4" />
+            献立への追加に失敗しました
           </div>
         </div>
       )}
