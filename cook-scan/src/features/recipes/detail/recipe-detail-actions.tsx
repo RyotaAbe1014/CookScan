@@ -14,9 +14,10 @@ import { RecipeShareButton } from '@/features/recipes/share/recipe-share-button'
 
 type Props = {
   recipe: RecipeMinimal
+  initialShareInfo: { shareToken: string; isActive: boolean } | null
 }
 
-export function RecipeDetailActions({ recipe }: Props) {
+export function RecipeDetailActions({ recipe, initialShareInfo }: Props) {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [isDownloading, setIsDownloading] = useState(false)
   const [downloadError, setDownloadError] = useState(false)
@@ -76,7 +77,7 @@ export function RecipeDetailActions({ recipe }: Props) {
   return (
     <>
       <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-        <RecipeShareButton recipeId={recipe.id} />
+        <RecipeShareButton recipeId={recipe.id} initialShareInfo={initialShareInfo} />
         <Link
           href={`/recipes/${recipe.id}/edit`}
           className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3 py-2 text-xs font-semibold text-white shadow-lg shadow-emerald-500/30 transition-all hover:shadow-xl hover:shadow-emerald-500/40 sm:gap-2 sm:px-4 sm:text-sm"

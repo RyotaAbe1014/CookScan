@@ -24,9 +24,10 @@ const CookingTimerManager = dynamic(
 
 type RecipeDetailContentProps = {
   recipe: RecipeWithRelations
+  initialShareInfo: { shareToken: string; isActive: boolean } | null
 }
 
-export function RecipeDetailContent({ recipe }: RecipeDetailContentProps) {
+export function RecipeDetailContent({ recipe, initialShareInfo }: RecipeDetailContentProps) {
   const memo = formatMemo(recipe.memo)
   const sourceInfo = getSourceInfo(recipe.sourceInfo)
   const cleanupOldTimerStates = useSetAtom(cleanupOldTimerStatesAtom)
@@ -76,7 +77,7 @@ export function RecipeDetailContent({ recipe }: RecipeDetailContentProps) {
 
       {/* アクションボタン（キャプチャ対象外） */}
       <div className="flex justify-center">
-        <RecipeDetailActions recipe={recipe} />
+        <RecipeDetailActions recipe={recipe} initialShareInfo={initialShareInfo} />
       </div>
     </div>
   )

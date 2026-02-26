@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useMemo } from 'react'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -11,11 +11,12 @@ import {
 } from '@/components/ui/dialog'
 import { LinkIcon } from '@/components/icons/link-icon'
 import { CheckIcon } from '@/components/icons/check-icon'
-import { createShareLink, removeShareLink, getShareInfo } from './actions'
+import { createShareLink, removeShareLink } from './actions'
 import { isSuccess } from '@/utils/result'
 
 type Props = {
   recipeId: string
+  initialShareInfo: { shareToken: string; isActive: boolean } | null
 }
 
 type ShareState = {
@@ -23,26 +24,14 @@ type ShareState = {
   isActive: boolean
 }
 
-export function RecipeShareButton({ recipeId }: Props) {
+export function RecipeShareButton({ recipeId, initialShareInfo }: Props) {
   const [isOpen, setIsOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [shareState, setShareState] = useState<ShareState>({ token: null, isActive: false })
+  const [shareState, setShareState] = useState<ShareState>(() => ({
+    token: initialShareInfo?.shareToken ?? null,
+    isActive: initialShareInfo?.isActive ?? false,
+  }))
   const [copied, setCopied] = useState(false)
-
-  useEffect(() => {
-    if (!isOpen) return
-
-    const fetchShareInfo = async () => {
-      const result = await getShareInfo(recipeId)
-      if (isSuccess(result) && result.data && result.data.isActive) {
-        setShareState({ token: result.data.shareToken, isActive: true })
-      } else {
-        setShareState({ token: null, isActive: false })
-      }
-    }
-
-    fetchShareInfo()
-  }, [isOpen, recipeId])
 
   const handleCreateShare = async () => {
     setIsLoading(true)
