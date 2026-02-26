@@ -2,15 +2,18 @@
 
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
+import { toast } from 'sonner'
 import { domToJpeg } from 'modern-screenshot'
 import type { RecipeMinimal } from '@/types/recipe'
 import { Button } from '@/components/ui/button'
 import { PencilIcon } from '@/components/icons/pencil-icon'
 import { DownloadIcon } from '@/components/icons/download-icon'
 import { TrashIcon } from '@/components/icons/trash-icon'
+import { CalendarIcon } from '@/components/icons/calendar-icon'
 import { ExclamationTriangleIcon } from '@/components/icons/exclamation-triangle-icon'
 import DeleteRecipeDialog from '@/features/recipes/delete/delete-recipe-dialog'
 import { RecipeShareButton } from '@/features/recipes/share/recipe-share-button'
+import { AddToMealPlanDialog } from './add-to-meal-plan-dialog'
 
 type Props = {
   recipe: RecipeMinimal
@@ -19,6 +22,7 @@ type Props = {
 
 export function RecipeDetailActions({ recipe, initialShareInfo }: Props) {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+  const [isMealPlanDialogOpen, setIsMealPlanDialogOpen] = useState(false)
   const [isDownloading, setIsDownloading] = useState(false)
   const [downloadError, setDownloadError] = useState(false)
   const errorTimeoutRef = useRef<number | null>(null)
@@ -29,6 +33,14 @@ export function RecipeDetailActions({ recipe, initialShareInfo }: Props) {
 
   const handleCloseDialog = () => {
     setIsDeleteDialogOpen(false)
+  }
+
+  const handleMealPlanSuccess = () => {
+    toast.success('献立に追加しました')
+  }
+
+  const handleMealPlanError = () => {
+    toast.error('献立への追加に失敗しました')
   }
 
   const showDownloadError = () => {
@@ -78,6 +90,16 @@ export function RecipeDetailActions({ recipe, initialShareInfo }: Props) {
     <>
       <div className="flex flex-wrap items-center gap-2 sm:gap-3">
         <RecipeShareButton recipeId={recipe.id} initialShareInfo={initialShareInfo} />
+        <Button
+          type="button"
+          variant="secondary"
+          size="sm"
+          onClick={() => setIsMealPlanDialogOpen(true)}
+          className="border border-gray-200"
+        >
+          <CalendarIcon className="h-4 w-4" />
+          献立に追加
+        </Button>
         <Link
           href={`/recipes/${recipe.id}/edit`}
           className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3 py-2 text-xs font-semibold text-white shadow-lg shadow-emerald-500/30 transition-all hover:shadow-xl hover:shadow-emerald-500/40 sm:gap-2 sm:px-4 sm:text-sm"
@@ -113,6 +135,14 @@ export function RecipeDetailActions({ recipe, initialShareInfo }: Props) {
         recipeTitle={recipe.title}
         isOpen={isDeleteDialogOpen}
         onClose={handleCloseDialog}
+      />
+
+      <AddToMealPlanDialog
+        open={isMealPlanDialogOpen}
+        onOpenChange={setIsMealPlanDialogOpen}
+        recipeId={recipe.id}
+        onSuccess={handleMealPlanSuccess}
+        onError={handleMealPlanError}
       />
 
       {downloadError && (
