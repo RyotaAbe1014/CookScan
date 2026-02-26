@@ -21,10 +21,18 @@ export function getWeekStart(date: Date): string {
 }
 
 /**
+ * YYYY-MM-DD文字列をローカルタイムゾーンのDateに変換する
+ */
+export function parseLocalDate(dateStr: string): Date {
+  const [year, month, day] = dateStr.split('-').map(Number)
+  return new Date(year, month - 1, day)
+}
+
+/**
  * weekStart文字列から各曜日の日付を生成
  */
 export function getWeekDates(weekStart: string): Date[] {
-  const start = new Date(weekStart)
+  const start = parseLocalDate(weekStart)
   return Array.from({ length: 7 }, (_, i) => {
     const d = new Date(start)
     d.setDate(start.getDate() + i)

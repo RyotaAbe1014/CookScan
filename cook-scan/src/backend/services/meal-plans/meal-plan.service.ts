@@ -122,26 +122,42 @@ export async function generateShoppingList(
     throw new Error('献立プランにレシピが登録されていません')
   }
 
-  // 全食材を収集し、名前ベースで重複除去
-  const ingredientMap = new Map<string, { name: string; memo?: string }>()
+  // 全食材を収集し、名前ベースで重複除去（分量はmemoに結合）
+  const ingredientMap = new Map<string, { name: string; memos: string[] }>()
   for (const item of plan.items) {
     for (const ing of item.recipe.ingredients) {
       const key = ing.name.trim().toLowerCase()
-      if (!ingredientMap.has(key)) {
-        const memo = [ing.unit, ing.notes].filter(Boolean).join(' ')
+      const memo = [ing.unit, ing.notes].filter(Boolean).join(' ')
+      const existing = ingredientMap.get(key)
+      if (existing) {
+        if (memo && !existing.memos.includes(memo)) {
+          existing.memos.push(memo)
+        }
+      } else {
         ingredientMap.set(key, {
           name: ing.name,
-          memo: memo || undefined,
+          memos: memo ? [memo] : [],
         })
       }
     }
   }
 
-  const ingredients = Array.from(ingredientMap.values())
+  // 既存の買い物リストと重複する食材を除外
+  const existingItems = await ShoppingItemRepository.findShoppingItemsByUser(userId)
+  const existingNames = new Set(existingItems.map((item) => item.name.trim().toLowerCase()))
+
+  const ingredients = Array.from(ingredientMap.values()).filter(
+    (item) => !existingNames.has(item.name.trim().toLowerCase())
+  )
+
+  if (ingredients.length === 0) {
+    return { count: 0 }
+  }
+
   const maxOrder = await ShoppingItemRepository.getMaxDisplayOrder(userId)
   const itemsWithOrder = ingredients.map((item, index) => ({
     name: item.name,
-    memo: item.memo,
+    memo: item.memos.length > 0 ? item.memos.join(', ') : undefined,
     displayOrder: maxOrder + 1 + index,
   }))
 

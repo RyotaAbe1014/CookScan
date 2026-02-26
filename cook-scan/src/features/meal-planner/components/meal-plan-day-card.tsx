@@ -6,12 +6,12 @@ import { PlusIcon } from '@/components/icons/plus-icon'
 import { TrashIcon } from '@/components/icons/trash-icon'
 import { isSuccess } from '@/utils/result'
 import { removeMealPlanItem } from '../actions'
-import { DAY_LABELS, getWeekDates, formatShortDate } from '../utils'
+import { DAY_LABELS, formatShortDate } from '../utils'
 import type { MealPlanItemOutput } from '@/backend/domain/meal-plans'
 
 type MealPlanDayCardProps = {
   dayOfWeek: number
-  weekStart: string
+  date: Date
   items: MealPlanItemOutput[]
   onAddRecipe: (dayOfWeek: number) => void
   onItemRemoved: () => void
@@ -19,14 +19,12 @@ type MealPlanDayCardProps = {
 
 export function MealPlanDayCard({
   dayOfWeek,
-  weekStart,
+  date,
   items,
   onAddRecipe,
   onItemRemoved,
 }: MealPlanDayCardProps) {
   const [isPending, startTransition] = useTransition()
-  const dates = getWeekDates(weekStart)
-  const date = dates[dayOfWeek]
   const isToday = new Date().toDateString() === date.toDateString()
   const isSaturday = dayOfWeek === 5
   const isSunday = dayOfWeek === 6

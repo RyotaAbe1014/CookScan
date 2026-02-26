@@ -36,7 +36,7 @@ const mockItems: MealPlanItemOutput[] = [
 describe('MealPlanDayCard', () => {
   const defaultProps = {
     dayOfWeek: 0,
-    weekStart: '2026-03-02',
+    date: new Date(2026, 2, 2), // 2026-03-02 月曜日
     items: mockItems,
     onAddRecipe: vi.fn(),
     onItemRemoved: vi.fn(),
@@ -79,7 +79,7 @@ describe('MealPlanDayCard', () => {
 
   test('正常系：追加ボタンをクリックするとonAddRecipeが曜日番号付きで呼ばれる', async () => {
     const user = userEvent.setup()
-    render(<MealPlanDayCard {...defaultProps} dayOfWeek={2} />)
+    render(<MealPlanDayCard {...defaultProps} dayOfWeek={2} date={new Date(2026, 2, 4)} />)
 
     await user.click(screen.getByRole('button', { name: /追加/ }))
 
@@ -87,13 +87,13 @@ describe('MealPlanDayCard', () => {
   })
 
   test('正常系：土曜日のカードが表示される', () => {
-    render(<MealPlanDayCard {...defaultProps} dayOfWeek={5} items={[]} />)
+    render(<MealPlanDayCard {...defaultProps} dayOfWeek={5} date={new Date(2026, 2, 7)} items={[]} />)
 
     expect(screen.getByText('土')).toBeInTheDocument()
   })
 
   test('正常系：日曜日のカードが表示される', () => {
-    render(<MealPlanDayCard {...defaultProps} dayOfWeek={6} items={[]} />)
+    render(<MealPlanDayCard {...defaultProps} dayOfWeek={6} date={new Date(2026, 2, 8)} items={[]} />)
 
     expect(screen.getByText('日')).toBeInTheDocument()
   })

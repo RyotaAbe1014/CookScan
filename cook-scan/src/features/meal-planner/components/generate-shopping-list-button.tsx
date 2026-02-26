@@ -1,10 +1,9 @@
 'use client'
 
-import { useTransition } from 'react'
+import { useState, useTransition } from 'react'
 import { Button } from '@/components/ui/button'
 import { ClipboardListIcon } from '@/components/icons/clipboard-list-icon'
 import { Alert } from '@/components/ui/alert'
-import { useState } from 'react'
 import { isSuccess } from '@/utils/result'
 import { generateShoppingList } from '../actions'
 

@@ -7,7 +7,7 @@ import { WeekNavigator } from './week-navigator'
 import { MealPlanDayCard } from './meal-plan-day-card'
 import { AddRecipeDialog } from './add-recipe-dialog'
 import { GenerateShoppingListButton } from './generate-shopping-list-button'
-import { getWeekStart } from '../utils'
+import { getWeekStart, getWeekDates } from '../utils'
 import type { MealPlanOutput } from '@/backend/domain/meal-plans'
 import type { RecipeListOutput } from '@/backend/domain/recipes'
 
@@ -56,6 +56,7 @@ export function MealPlannerContent({
   }
 
   const items = plan?.items ?? []
+  const weekDates = getWeekDates(weekStart)
 
   return (
     <div className="space-y-6">
@@ -67,11 +68,11 @@ export function MealPlannerContent({
       />
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {Array.from({ length: 7 }, (_, dayOfWeek) => (
+        {weekDates.map((date, dayOfWeek) => (
           <MealPlanDayCard
             key={dayOfWeek}
             dayOfWeek={dayOfWeek}
-            weekStart={weekStart}
+            date={date}
             items={items.filter((item) => item.dayOfWeek === dayOfWeek)}
             onAddRecipe={handleAddRecipe}
             onItemRemoved={handleItemChanged}

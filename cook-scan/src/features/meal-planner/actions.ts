@@ -35,6 +35,10 @@ export async function addMealPlanItem(
   recipeId: string
 ): Promise<Result<MealPlanItemOutput>> {
   return withAuth(async (profile) => {
+    if (dayOfWeek < 0 || dayOfWeek > 6 || !Number.isInteger(dayOfWeek)) {
+      return failure(Errors.validation('曜日の値が不正です'))
+    }
+
     try {
       const item = await MealPlanService.addMealPlanItem(profile.id, {
         weekStart,

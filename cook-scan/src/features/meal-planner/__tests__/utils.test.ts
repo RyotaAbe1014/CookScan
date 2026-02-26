@@ -3,7 +3,7 @@ import {
   getWeekStart,
   getWeekDates,
   formatShortDate,
-  DAY_LABELS,
+  parseLocalDate,
 } from "../utils";
 
 describe("getWeekStart", () => {
@@ -80,6 +80,21 @@ describe("getWeekStart", () => {
   test("YYYY-MM-DD形式の文字列を返す", () => {
     const result = getWeekStart(new Date(2026, 0, 5));
     expect(result).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+  });
+});
+
+describe("parseLocalDate", () => {
+  test("YYYY-MM-DD文字列をローカルタイムゾーンのDateに変換する", () => {
+    const result = parseLocalDate("2026-03-02");
+    expect(result.getFullYear()).toBe(2026);
+    expect(result.getMonth()).toBe(2); // 0-indexed
+    expect(result.getDate()).toBe(2);
+  });
+
+  test("UTCではなくローカルタイムゾーンで解釈される", () => {
+    const result = parseLocalDate("2026-03-02");
+    expect(result.getHours()).toBe(0);
+    expect(result.getMinutes()).toBe(0);
   });
 });
 
