@@ -17,6 +17,10 @@ vi.mock('@/features/recipes/delete/delete-recipe-dialog', () => ({
   default: () => <div>DeleteRecipeDialog</div>,
 }))
 
+vi.mock('@/features/recipes/share/recipe-share-button', () => ({
+  RecipeShareButton: () => <button>共有</button>,
+}))
+
 import { domToJpeg } from 'modern-screenshot'
 
 describe('RecipeDetailActions', () => {
@@ -41,7 +45,7 @@ describe('RecipeDetailActions', () => {
 
   it('正常系：アクションボタンが表示される', () => {
     // Given: RecipeDetailActionsが表示されている
-    render(<RecipeDetailActions recipe={recipe} />)
+    render(<RecipeDetailActions recipe={recipe} initialShareInfo={null} />)
 
     // Then: 編集・ダウンロード・削除ボタンが表示される
     expect(screen.getByRole('link', { name: /編集/ })).toBeInTheDocument()
@@ -68,7 +72,7 @@ describe('RecipeDetailActions', () => {
         return element
       })
 
-    render(<RecipeDetailActions recipe={recipe} />)
+    render(<RecipeDetailActions recipe={recipe} initialShareInfo={null} />)
 
     try {
       // When: ユーザーがダウンロードボタンをクリックする
@@ -91,7 +95,7 @@ describe('RecipeDetailActions', () => {
     const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
     vi.mocked(domToJpeg).mockRejectedValueOnce(new Error('capture failed'))
     const user = userEvent.setup()
-    render(<RecipeDetailActions recipe={recipe} />)
+    render(<RecipeDetailActions recipe={recipe} initialShareInfo={null} />)
 
     // When: ユーザーがダウンロードボタンをクリックする
     await user.click(screen.getByRole('button', { name: /ダウンロード/ }))

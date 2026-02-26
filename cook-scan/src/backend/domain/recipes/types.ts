@@ -153,3 +153,27 @@ export type CreateRecipeResult = {
 export type UpdateRecipeResult = {
   recipeId: string
 }
+
+// ===== Share Types (共有機能用) =====
+
+/** 共有レシピの出力型（基本情報のみ） */
+export type SharedRecipeOutput = {
+  title: string
+  imageUrl: string | null
+  ingredients: Array<{
+    name: string
+    unit: string | null
+    notes: string | null
+  }>
+  steps: Array<{
+    orderIndex: number
+    instruction: string
+    timerSeconds: number | null
+  }>
+}
+
+/** 共有情報の出力型 */
+export type ShareInfoOutput = {
+  shareToken: string
+  isActive: boolean
+}
