@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { useTransition } from 'react'
 import { Button } from '@/components/ui/button'
 import { PlusIcon } from '@/components/icons/plus-icon'
@@ -96,9 +97,12 @@ export function MealPlanDayCard({
                 key={item.id}
                 className="flex items-center justify-between rounded-lg bg-gray-50 px-3 py-2"
               >
-                <span className="text-sm font-medium text-neutral-800">
+                <Link
+                  href={`/recipes/${item.recipe.id}`}
+                  className="text-sm font-medium text-neutral-800 hover:underline"
+                >
                   {item.recipe.title}
-                </span>
+                </Link>
                 <Button
                   variant="danger-ghost"
                   size="sm"
