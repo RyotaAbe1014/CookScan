@@ -36,7 +36,7 @@ describe("getWeekStart", () => {
     const results: string[] = [];
 
     for (let i = 0; i < 5; i++) {
-      const current = new Date(weekStart);
+      const current = parseLocalDate(weekStart);
       current.setDate(current.getDate() + 7);
       weekStart = getWeekStart(current);
       results.push(weekStart);
@@ -56,7 +56,7 @@ describe("getWeekStart", () => {
     const results: string[] = [];
 
     for (let i = 0; i < 3; i++) {
-      const current = new Date(weekStart);
+      const current = parseLocalDate(weekStart);
       current.setDate(current.getDate() - 7);
       weekStart = getWeekStart(current);
       results.push(weekStart);
