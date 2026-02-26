@@ -5,17 +5,17 @@ export async function GET() {
   const AWS_REGION = "ap-northeast-1";
   const S3_BUCKET_NAME = "cookscan-s3-bucket";
 
-  const isVercel = process.env.VERCEL === "1";
+  const useOidc = !!process.env.AWS_ROLE_ARN;
 
   const debug = {
-    isVercel,
+    useOidc,
     hasRoleArn: !!process.env.AWS_ROLE_ARN,
     roleArnPrefix: process.env.AWS_ROLE_ARN?.substring(0, 20) ?? "not set",
     vercelEnv: process.env.VERCEL_ENV ?? "not set",
   };
 
   let credentials: S3.S3ClientConfig["credentials"] | undefined;
-  if (isVercel) {
+  if (useOidc) {
     try {
       const { getVercelOidcToken } = await import("@vercel/functions/oidc");
       const token = await getVercelOidcToken();
