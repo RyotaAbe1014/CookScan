@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
+import { toast } from 'sonner'
 import { domToJpeg } from 'modern-screenshot'
 import type { RecipeMinimal } from '@/types/recipe'
 import { Button } from '@/components/ui/button'
@@ -10,7 +11,6 @@ import { DownloadIcon } from '@/components/icons/download-icon'
 import { TrashIcon } from '@/components/icons/trash-icon'
 import { CalendarIcon } from '@/components/icons/calendar-icon'
 import { ExclamationTriangleIcon } from '@/components/icons/exclamation-triangle-icon'
-import { CheckCircleIcon } from '@/components/icons/check-circle-icon'
 import DeleteRecipeDialog from '@/features/recipes/delete/delete-recipe-dialog'
 import { RecipeShareButton } from '@/features/recipes/share/recipe-share-button'
 import { AddToMealPlanDialog } from './add-to-meal-plan-dialog'
@@ -25,11 +25,7 @@ export function RecipeDetailActions({ recipe, initialShareInfo }: Props) {
   const [isMealPlanDialogOpen, setIsMealPlanDialogOpen] = useState(false)
   const [isDownloading, setIsDownloading] = useState(false)
   const [downloadError, setDownloadError] = useState(false)
-  const [mealPlanSuccess, setMealPlanSuccess] = useState(false)
-  const [mealPlanError, setMealPlanError] = useState(false)
   const errorTimeoutRef = useRef<number | null>(null)
-  const successTimeoutRef = useRef<number | null>(null)
-  const mealPlanErrorTimeoutRef = useRef<number | null>(null)
 
   const handleDeleteClick = () => {
     setIsDeleteDialogOpen(true)
@@ -40,23 +36,11 @@ export function RecipeDetailActions({ recipe, initialShareInfo }: Props) {
   }
 
   const handleMealPlanSuccess = () => {
-    setMealPlanSuccess(true)
-    if (successTimeoutRef.current) {
-      window.clearTimeout(successTimeoutRef.current)
-    }
-    successTimeoutRef.current = window.setTimeout(() => {
-      setMealPlanSuccess(false)
-    }, 3000)
+    toast.success('献立に追加しました')
   }
 
   const handleMealPlanError = () => {
-    setMealPlanError(true)
-    if (mealPlanErrorTimeoutRef.current) {
-      window.clearTimeout(mealPlanErrorTimeoutRef.current)
-    }
-    mealPlanErrorTimeoutRef.current = window.setTimeout(() => {
-      setMealPlanError(false)
-    }, 3000)
+    toast.error('献立への追加に失敗しました')
   }
 
   const showDownloadError = () => {
@@ -98,12 +82,6 @@ export function RecipeDetailActions({ recipe, initialShareInfo }: Props) {
     return () => {
       if (errorTimeoutRef.current) {
         window.clearTimeout(errorTimeoutRef.current)
-      }
-      if (successTimeoutRef.current) {
-        window.clearTimeout(successTimeoutRef.current)
-      }
-      if (mealPlanErrorTimeoutRef.current) {
-        window.clearTimeout(mealPlanErrorTimeoutRef.current)
       }
     }
   }, [])
@@ -172,24 +150,6 @@ export function RecipeDetailActions({ recipe, initialShareInfo }: Props) {
           <div className="flex items-center gap-2 rounded-full bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-lg">
             <ExclamationTriangleIcon className="h-4 w-4" />
             保存できませんでした
-          </div>
-        </div>
-      )}
-
-      {mealPlanSuccess && (
-        <div className="fixed inset-x-0 bottom-6 z-50 flex justify-center px-4">
-          <div className="flex items-center gap-2 rounded-full bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-lg">
-            <CheckCircleIcon className="h-4 w-4" />
-            献立に追加しました
-          </div>
-        </div>
-      )}
-
-      {mealPlanError && (
-        <div className="fixed inset-x-0 bottom-6 z-50 flex justify-center px-4">
-          <div className="flex items-center gap-2 rounded-full bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-lg">
-            <ExclamationTriangleIcon className="h-4 w-4" />
-            献立への追加に失敗しました
           </div>
         </div>
       )}
