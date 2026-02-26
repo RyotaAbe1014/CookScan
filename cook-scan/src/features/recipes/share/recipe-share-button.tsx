@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -18,37 +18,38 @@ type Props = {
   recipeId: string
 }
 
+type ShareState = {
+  token: string | null
+  isActive: boolean
+}
+
 export function RecipeShareButton({ recipeId }: Props) {
   const [isOpen, setIsOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [shareToken, setShareToken] = useState<string | null>(null)
-  const [isActive, setIsActive] = useState(false)
+  const [shareState, setShareState] = useState<ShareState>({ token: null, isActive: false })
   const [copied, setCopied] = useState(false)
 
-  const fetchShareInfo = useCallback(async () => {
-    const result = await getShareInfo(recipeId)
-    if (isSuccess(result) && result.data && result.data.isActive) {
-      setShareToken(result.data.shareToken)
-      setIsActive(true)
-    } else {
-      setShareToken(null)
-      setIsActive(false)
-    }
-  }, [recipeId])
-
   useEffect(() => {
-    if (isOpen) {
-      fetchShareInfo()
+    if (!isOpen) return
+
+    const fetchShareInfo = async () => {
+      const result = await getShareInfo(recipeId)
+      if (isSuccess(result) && result.data && result.data.isActive) {
+        setShareState({ token: result.data.shareToken, isActive: true })
+      } else {
+        setShareState({ token: null, isActive: false })
+      }
     }
-  }, [isOpen, fetchShareInfo])
+
+    fetchShareInfo()
+  }, [isOpen, recipeId])
 
   const handleCreateShare = async () => {
     setIsLoading(true)
     try {
       const result = await createShareLink(recipeId)
       if (isSuccess(result)) {
-        setShareToken(result.data.shareToken)
-        setIsActive(true)
+        setShareState({ token: result.data.shareToken, isActive: true })
       }
     } finally {
       setIsLoading(false)
@@ -60,17 +61,20 @@ export function RecipeShareButton({ recipeId }: Props) {
     try {
       const result = await removeShareLink(recipeId)
       if (isSuccess(result)) {
-        setShareToken(null)
-        setIsActive(false)
+        setShareState({ token: null, isActive: false })
       }
     } finally {
       setIsLoading(false)
     }
   }
 
-  const shareUrl = shareToken ? `${window.location.origin}/shared/${shareToken}` : ''
+  const shareUrl = useMemo(() => {
+    if (!shareState.token || typeof window === 'undefined') return ''
+    return `${window.location.origin}/shared/${shareState.token}`
+  }, [shareState.token])
 
   const handleCopy = async () => {
+    if (!shareUrl) return
     await navigator.clipboard.writeText(shareUrl)
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
@@ -99,7 +103,7 @@ export function RecipeShareButton({ recipeId }: Props) {
           </DialogHeader>
 
           <div className="px-6 py-4">
-            {isActive && shareToken ? (
+            {shareState.isActive && shareState.token ? (
               <div className="space-y-4">
                 <div className="flex items-center gap-2">
                   <input

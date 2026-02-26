@@ -30,7 +30,7 @@ export function SharedRecipeContent({ recipe }: Props) {
       )}
 
       {/* 材料 */}
-      {recipe.ingredients.length > 0 && (
+      {recipe.ingredients.length > 0 ? (
         <section>
           <h2 className="mb-4 text-lg font-bold text-gray-900">材料</h2>
           <div className="rounded-xl border border-gray-200 bg-white">
@@ -46,10 +46,10 @@ export function SharedRecipeContent({ recipe }: Props) {
             </ul>
           </div>
         </section>
-      )}
+      ) : null}
 
       {/* 手順 */}
-      {recipe.steps.length > 0 && (
+      {recipe.steps.length > 0 ? (
         <section>
           <h2 className="mb-4 text-lg font-bold text-gray-900">手順</h2>
           <ol className="space-y-4">
@@ -70,7 +70,7 @@ export function SharedRecipeContent({ recipe }: Props) {
             ))}
           </ol>
         </section>
-      )}
+      ) : null}
 
       {/* フッター */}
       <div className="border-t border-gray-200 pt-4 text-center text-xs text-gray-400">
