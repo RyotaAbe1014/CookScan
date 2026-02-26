@@ -100,14 +100,34 @@ describe('QuickActions', () => {
     expect(shoppingListLink).toHaveAttribute('href', '/shopping-list')
   })
 
-  test('正常系：4つのアクションカードが表示される', () => {
+  test('正常系：5つのアクションカードが表示される', () => {
     // Given: QuickActionsコンポーネント
     // When: レンダリングする
     render(<QuickActions />)
 
-    // Then: 4つのリンクが表示される
+    // Then: 5つのリンクが表示される
     const links = screen.getAllByRole('link')
-    expect(links.length).toBe(4)
+    expect(links.length).toBe(5)
+  })
+
+  test('正常系：献立プランナーカードが表示される', () => {
+    // Given: QuickActionsコンポーネント
+    // When: レンダリングする
+    render(<QuickActions />)
+
+    // Then: 献立プランナーカードのタイトルと説明が表示される
+    expect(screen.getByText('献立プランナー')).toBeInTheDocument()
+    expect(screen.getByText('1週間の献立を計画・管理')).toBeInTheDocument()
+  })
+
+  test('正常系：献立プランナーリンクが正しいhrefを持つ', () => {
+    // Given: QuickActionsコンポーネント
+    // When: レンダリングする
+    render(<QuickActions />)
+
+    // Then: 献立プランナーリンクが/meal-plannerを指している
+    const mealPlannerLink = screen.getByRole('link', { name: /献立プランナー/i })
+    expect(mealPlannerLink).toHaveAttribute('href', '/meal-planner')
   })
 
   test('正常系：各アクションカードにSVGアイコンが表示される', () => {

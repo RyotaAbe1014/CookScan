@@ -1,9 +1,11 @@
 import Link from 'next/link'
+import type { Route } from 'next'
 import { CameraIcon } from '@/components/icons/camera-icon'
 import { ChevronRightIcon } from '@/components/icons/chevron-right-icon'
 import { ClipboardListIcon } from '@/components/icons/clipboard-list-icon'
 import { EmptyIcon } from '@/components/icons/empty-icon'
 import { TagIcon } from '@/components/icons/tag-icon'
+import { CalendarIcon } from '@/components/icons/calendar-icon'
 
 export function QuickActions() {
   return (
@@ -94,6 +96,28 @@ export function QuickActions() {
               <div className="flex-1">
                 <h3 className="mb-1 font-semibold text-neutral-900">買い物リスト</h3>
                 <p className="text-sm text-slate-600">必要な食材をチェック管理</p>
+              </div>
+              <ChevronRightIcon className="h-5 w-5 shrink-0 text-slate-400 transition-transform duration-200 group-hover:translate-x-1" />
+            </div>
+          </Link>
+
+          {/* 献立プランナー */}
+          <Link
+            href={'/meal-planner' as Route}
+            className="group relative overflow-hidden rounded-xl bg-white p-6 shadow-md ring-1 ring-slate-200 transition-all duration-200 hover:-translate-y-1 hover:shadow-lg"
+            style={{
+              animation: 'fadeInUp 0.5s ease-out',
+              animationDelay: '200ms',
+              animationFillMode: 'both',
+            }}
+          >
+            <div className="flex items-center gap-4">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-violet-100 transition-transform duration-200 group-hover:scale-110">
+                <CalendarIcon className="h-6 w-6 text-violet-600" strokeWidth={2} />
+              </div>
+              <div className="flex-1">
+                <h3 className="mb-1 font-semibold text-neutral-900">献立プランナー</h3>
+                <p className="text-sm text-slate-600">1週間の献立を計画・管理</p>
               </div>
               <ChevronRightIcon className="h-5 w-5 shrink-0 text-slate-400 transition-transform duration-200 group-hover:translate-x-1" />
             </div>
