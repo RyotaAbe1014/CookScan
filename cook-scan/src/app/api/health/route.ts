@@ -7,8 +7,27 @@ export async function GET() {
 
   const isVercel = process.env.VERCEL === "1";
 
+  const debug = {
+    isVercel,
+    hasRoleArn: !!process.env.AWS_ROLE_ARN,
+    roleArnPrefix: process.env.AWS_ROLE_ARN?.substring(0, 20) ?? "not set",
+    vercelEnv: process.env.VERCEL_ENV ?? "not set",
+  };
+
   let credentials: S3.S3ClientConfig["credentials"] | undefined;
   if (isVercel) {
+    try {
+      const { getVercelOidcToken } = await import("@vercel/functions/oidc");
+      const token = await getVercelOidcToken();
+      console.log("OIDC token obtained, length:", token?.length);
+    } catch (oidcError) {
+      console.error("OIDC token fetch failed:", oidcError);
+      return NextResponse.json(
+        { status: "error", message: "OIDC token fetch failed", debug },
+        { status: 500 },
+      );
+    }
+
     const { awsCredentialsProvider } = await import(
       "@vercel/oidc-aws-credentials-provider"
     );
@@ -16,7 +35,6 @@ export async function GET() {
       roleArn: process.env.AWS_ROLE_ARN!,
     });
   }
-  // ローカルでは credentials を指定しない → aws configure の設定が使われる
 
   const s3client = new S3.S3Client({
     region: AWS_REGION,
@@ -32,6 +50,7 @@ export async function GET() {
     return NextResponse.json({
       status: "ok",
       objectCount: result.KeyCount ?? 0,
+      debug,
     });
   } catch (error) {
     console.error("S3 access failed:", error);
@@ -39,6 +58,7 @@ export async function GET() {
       {
         status: "error",
         message: error instanceof Error ? error.message : "Unknown error",
+        debug,
       },
       { status: 500 },
     );
