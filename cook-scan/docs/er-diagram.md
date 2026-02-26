@@ -129,12 +129,29 @@ erDiagram
         datetime updated_at
     }
 
+    meal_plans {
+        uuid id PK
+        uuid user_id FK
+        datetime week_start
+        datetime created_at
+        datetime updated_at
+    }
+
+    meal_plan_items {
+        uuid id PK
+        uuid meal_plan_id FK
+        uuid recipe_id FK
+        int day_of_week
+        datetime created_at
+    }
+
     users ||--o{ recipes : "has many"
     users ||--o{ tag_categories : "has many"
     users ||--o{ tags : "has many"
     users ||--o{ shopping_items : "has many"
     users ||--o{ ocr_processing_history : "has many"
     users ||--o{ recipe_versions : "created by"
+    users ||--o{ meal_plans : "has many"
 
     recipes ||--o{ ingredients : "has many"
     recipes ||--o{ steps : "has many"
@@ -145,6 +162,9 @@ erDiagram
     recipes ||--o| recipe_shares : "has one"
     recipes ||--o{ recipe_relations : "parent of"
     recipes ||--o{ recipe_relations : "child of"
+    recipes ||--o{ meal_plan_items : "has many"
+
+    meal_plans ||--o{ meal_plan_items : "has many"
 
     tag_categories ||--o{ tags : "has many"
     tags ||--o{ recipe_tags : "has many"
