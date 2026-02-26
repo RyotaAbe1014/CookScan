@@ -4,6 +4,7 @@
  */
 
 import * as MealPlanRepository from '@/backend/repositories/meal-plan.repository'
+import * as RecipeRepository from '@/backend/repositories/recipe.repository'
 import * as ShoppingItemRepository from '@/backend/repositories/shopping-item.repository'
 import type {
   MealPlanOutput,
@@ -12,6 +13,14 @@ import type {
   RemoveMealPlanItemInput,
   GenerateShoppingListInput,
 } from '@/backend/domain/meal-plans'
+
+/**
+ * YYYY-MM-DD文字列をローカルタイムゾーンのDateに変換する
+ */
+function parseLocalDate(dateStr: string): Date {
+  const [year, month, day] = dateStr.split('-').map(Number)
+  return new Date(year, month - 1, day)
+}
 
 function toMealPlanItemOutput(item: {
   id: string
@@ -54,7 +63,7 @@ export async function getMealPlan(
 ): Promise<MealPlanOutput | null> {
   const plan = await MealPlanRepository.findMealPlanByWeek(
     userId,
-    new Date(weekStart)
+    parseLocalDate(weekStart)
   )
   if (!plan) return null
 
@@ -72,9 +81,14 @@ export async function addMealPlanItem(
   userId: string,
   input: AddMealPlanItemInput
 ): Promise<MealPlanItemOutput> {
+  const isOwner = await RecipeRepository.checkRecipeOwnership(input.recipeId, userId)
+  if (!isOwner) {
+    throw new Error('このレシピを追加する権限がありません')
+  }
+
   const plan = await MealPlanRepository.upsertMealPlan(
     userId,
-    new Date(input.weekStart)
+    parseLocalDate(input.weekStart)
   )
 
   const item = await MealPlanRepository.createMealPlanItem(
@@ -115,7 +129,7 @@ export async function generateShoppingList(
 ): Promise<{ count: number }> {
   const plan = await MealPlanRepository.findMealPlanByWeek(
     userId,
-    new Date(input.weekStart)
+    parseLocalDate(input.weekStart)
   )
 
   if (!plan || plan.items.length === 0) {

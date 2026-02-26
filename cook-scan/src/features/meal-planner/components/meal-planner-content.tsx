@@ -7,7 +7,7 @@ import { WeekNavigator } from './week-navigator'
 import { MealPlanDayCard } from './meal-plan-day-card'
 import { AddRecipeDialog } from './add-recipe-dialog'
 import { GenerateShoppingListButton } from './generate-shopping-list-button'
-import { getWeekStart, getWeekDates } from '../utils'
+import { getWeekStart, getWeekDates, parseLocalDate } from '../utils'
 import type { MealPlanOutput } from '@/backend/domain/meal-plans'
 import type { RecipeListOutput } from '@/backend/domain/recipes'
 
@@ -31,7 +31,7 @@ export function MealPlannerContent({
 
   const navigateWeek = useCallback(
     (offset: number) => {
-      const current = new Date(weekStart)
+      const current = parseLocalDate(weekStart)
       current.setDate(current.getDate() + offset * 7)
       const newWeekStart = getWeekStart(current)
       setWeekStart(newWeekStart)
