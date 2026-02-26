@@ -19,7 +19,9 @@ import {
   getWeekDates,
   formatShortDate,
   DAY_LABELS,
+  WEEK_DIRECTION,
 } from '@/features/meal-planner/utils'
+import type { WeekDirection } from '@/features/meal-planner/utils'
 
 type AddToMealPlanDialogProps = {
   open: boolean
@@ -43,7 +45,7 @@ export function AddToMealPlanDialog({
   const today = new Date()
   const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`
 
-  function navigateWeek(direction: -1 | 1) {
+  function navigateWeek(direction: WeekDirection) {
     const current = parseLocalDate(weekStart)
     current.setDate(current.getDate() + direction * 7)
     setWeekStart(getWeekStart(current))
@@ -78,7 +80,7 @@ export function AddToMealPlanDialog({
               type="button"
               variant="ghost"
               size="icon"
-              onClick={() => navigateWeek(-1)}
+              onClick={() => navigateWeek(WEEK_DIRECTION.PREVIOUS)}
               disabled={isPending}
             >
               <ChevronLeftIcon className="h-5 w-5" />
@@ -88,7 +90,7 @@ export function AddToMealPlanDialog({
               type="button"
               variant="ghost"
               size="icon"
-              onClick={() => navigateWeek(1)}
+              onClick={() => navigateWeek(WEEK_DIRECTION.NEXT)}
               disabled={isPending}
             >
               <ChevronRightIcon className="h-5 w-5" />

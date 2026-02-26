@@ -7,7 +7,7 @@ import { WeekNavigator } from './week-navigator'
 import { MealPlanDayCard } from './meal-plan-day-card'
 import { AddRecipeDialog } from './add-recipe-dialog'
 import { GenerateShoppingListButton } from './generate-shopping-list-button'
-import { getWeekStart, getWeekDates, parseLocalDate } from '../utils'
+import { getWeekStart, getWeekDates, parseLocalDate, WEEK_DIRECTION } from '../utils'
 import type { MealPlanOutput } from '@/backend/domain/meal-plans'
 import type { RecipeListOutput } from '@/backend/domain/recipes'
 
@@ -62,8 +62,8 @@ export function MealPlannerContent({
     <div className="space-y-6">
       <WeekNavigator
         weekStart={weekStart}
-        onPrevWeek={() => navigateWeek(-1)}
-        onNextWeek={() => navigateWeek(1)}
+        onPrevWeek={() => navigateWeek(WEEK_DIRECTION.PREVIOUS)}
+        onNextWeek={() => navigateWeek(WEEK_DIRECTION.NEXT)}
         onToday={handleToday}
       />
 

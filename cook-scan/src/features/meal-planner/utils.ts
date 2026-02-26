@@ -4,6 +4,13 @@
 
 export const DAY_LABELS = ['月', '火', '水', '木', '金', '土', '日'] as const
 
+export const WEEK_DIRECTION = {
+  PREVIOUS: -1,
+  NEXT: 1,
+} as const
+
+export type WeekDirection = (typeof WEEK_DIRECTION)[keyof typeof WEEK_DIRECTION]
+
 /**
  * 指定日付の週の月曜日をYYYY-MM-DD文字列で返す
  * ローカルタイムゾーンベースで計算する
