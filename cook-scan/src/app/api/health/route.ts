@@ -23,12 +23,24 @@ export async function GET() {
     ...(credentials && { credentials }),
   });
 
-  const result = await s3client.send(
-    new S3.ListObjectsV2Command({
-      Bucket: S3_BUCKET_NAME,
-    }),
-  );
-  console.log(result);
-
-  return NextResponse.json({ status: "ok" });
+  try {
+    const result = await s3client.send(
+      new S3.ListObjectsV2Command({
+        Bucket: S3_BUCKET_NAME,
+      }),
+    );
+    return NextResponse.json({
+      status: "ok",
+      objectCount: result.KeyCount ?? 0,
+    });
+  } catch (error) {
+    console.error("S3 access failed:", error);
+    return NextResponse.json(
+      {
+        status: "error",
+        message: error instanceof Error ? error.message : "Unknown error",
+      },
+      { status: 500 },
+    );
+  }
 }
