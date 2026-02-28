@@ -87,6 +87,7 @@ resource "aws_s3_bucket_cors_configuration" "s3_cors" {
     allowed_methods = ["PUT"]
     allowed_origins = [
       "https://cookscan.aberyouta.jp",
+      "https://*.vercel.app",
       "http://localhost:3000",
     ]
     max_age_seconds = 3600
