@@ -78,6 +78,21 @@ resource "aws_s3_bucket" "s3_bucket" {
   force_destroy = false
 }
 
+# S3 CORS設定（ブラウザからのPresigned URLアップロード用）
+resource "aws_s3_bucket_cors_configuration" "s3_cors" {
+  bucket = aws_s3_bucket.s3_bucket.id
+
+  cors_rule {
+    allowed_headers = ["*"]
+    allowed_methods = ["PUT"]
+    allowed_origins = [
+      "https://cookscan.aberyouta.jp",
+      "http://localhost:3000",
+    ]
+    max_age_seconds = 3600
+  }
+}
+
 # Vercel　OIDC
 resource "aws_iam_openid_connect_provider" "default" {
   # プロバイダの URL

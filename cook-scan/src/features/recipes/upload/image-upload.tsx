@@ -12,6 +12,7 @@ import { CloseIcon } from '@/components/icons/close-icon'
 import { ReloadIcon } from '@/components/icons/reload-icon'
 import { LightningBoltIcon } from '@/components/icons/lightning-bolt-icon'
 import { PhotographIcon } from '@/components/icons/photograph-icon'
+import { uploadFilesToS3 } from '@/lib/aws/s3-upload'
 
 type Props = {
   onUpload: (imageUrl: string, extractedData: ExtractedRecipeData) => void
@@ -141,12 +142,22 @@ export default function ImageUpload({ onUpload, onUploadingChange }: Props) {
     setIsUploading(true)
     onUploadingChange(true)
     try {
+      // S3にアップロード
+      const uploadResult = await uploadFilesToS3(selectedImages.map(({ file }) => file))
+      if (!uploadResult.success) {
+        setError(uploadResult.error)
+        setIsUploading(false)
+        onUploadingChange(false)
+        return
+      }
+
+      // TODO: S3のkeysを使ってextract APIを呼び出す
       const formData = new FormData()
       selectedImages.forEach(({ file }) => {
         formData.append('file', file)
       })
 
-      const res = await fetch('/recipes/extract/file', {
+      const res = await fetch('/api/recipes/extract/file', {
         method: 'POST',
         body: formData,
       })

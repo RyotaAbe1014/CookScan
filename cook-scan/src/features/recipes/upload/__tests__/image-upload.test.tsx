@@ -482,11 +482,31 @@ describe('ImageUpload', () => {
     })
   })
 
-  it('複数ファイルアップロード：FormDataに複数ファイルが正しく追加される', async () => {
+  it('複数ファイルアップロード：S3にアップロード後、extract APIが呼ばれる', async () => {
     // Given: 3つのファイルが選択されている
     const user = userEvent.setup()
     const mockFetch = global.fetch as ReturnType<typeof vi.fn>
 
+    // 1. presign API
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({
+        success: true,
+        result: {
+          jobId: 'test-job-id',
+          files: [
+            { key: 'uploads/user/job/0', presignedUrl: 'https://s3.example.com/0' },
+            { key: 'uploads/user/job/1', presignedUrl: 'https://s3.example.com/1' },
+            { key: 'uploads/user/job/2', presignedUrl: 'https://s3.example.com/2' },
+          ]
+        }
+      })
+    })
+    // 2-4. S3 PUT (3ファイル分)
+    mockFetch.mockResolvedValueOnce({ ok: true })
+    mockFetch.mockResolvedValueOnce({ ok: true })
+    mockFetch.mockResolvedValueOnce({ ok: true })
+    // 5. extract API
     mockFetch.mockResolvedValueOnce({
       ok: true,
       json: async () => ({
@@ -518,22 +538,26 @@ describe('ImageUpload', () => {
     const uploadButton = screen.getByRole('button', { name: /レシピを抽出/ })
     await user.click(uploadButton)
 
-    // Then: APIが正しく呼ばれる
+    // Then: presign APIが正しく呼ばれる
     await waitFor(() => {
       expect(mockFetch).toHaveBeenCalledWith(
-        '/recipes/extract/file',
+        '/api/recipes/presign',
+        expect.objectContaining({
+          method: 'POST',
+          body: JSON.stringify({ fileCount: 3 }),
+        })
+      )
+    })
+
+    // Then: extract APIも呼ばれる
+    await waitFor(() => {
+      expect(mockFetch).toHaveBeenCalledWith(
+        '/api/recipes/extract/file',
         expect.objectContaining({
           method: 'POST',
           body: expect.any(FormData)
         })
       )
     })
-
-    // Then: FormDataに3つのファイルが追加されている
-    const callArgs = mockFetch.mock.calls[0]
-    const formData = callArgs[1].body as FormData
-    const uploadedFiles = formData.getAll('file')
-
-    expect(uploadedFiles).toHaveLength(3)
   })
 })

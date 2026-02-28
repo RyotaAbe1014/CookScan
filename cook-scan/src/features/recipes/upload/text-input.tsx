@@ -36,7 +36,7 @@ export const TextInput = ({ handleTextInput }: Props) => {
     setError(null)
 
     try {
-      const res = await fetch('/recipes/extract/text', {
+      const res = await fetch('/api/recipes/extract/text', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
