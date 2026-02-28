@@ -13,6 +13,8 @@ const storage = new PostgresStore({
   id: "pg-storage",
   connectionString: process.env.DATABASE_URL,
   schemaName: "mastra",
+  max: 3,
+  idleTimeoutMillis: 30000,
 });
 
 export const mastra = new Mastra({
