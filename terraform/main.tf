@@ -109,31 +109,15 @@ resource "aws_sqs_queue_policy" "cookscan_sqs_queue_policy" {
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [{
-      Sid    = "Cejuwdam"
+      Sid    = "AllowVercelOIDCRole"
       Effect = "Allow"
       Principal = {
-        Service = "s3.amazonaws.com"
+        AWS = aws_iam_role.vercel_oidc_role.arn
       }
       Action   = "SQS:SendMessage"
       Resource = aws_sqs_queue.cookscan_sqs_queue.arn
-      Condition = {
-        ArnLike = {
-          "aws:SourceArn" = aws_s3_bucket.s3_bucket.arn
-        }
-      }
     }]
   })
-}
-
-# S3 Notificationを設定(S3 → SQS)
-resource "aws_s3_bucket_notification" "cookscan_aws_s3_bucket_notification" {
-  bucket = aws_s3_bucket.s3_bucket.id
-
-  queue {
-    queue_arn     = aws_sqs_queue.cookscan_sqs_queue.arn
-    events        = ["s3:ObjectCreated:*"]
-    filter_prefix = "uploads/"
-  }
 }
 
 # Vercel　OIDC
@@ -174,8 +158,8 @@ resource "aws_iam_role" "vercel_oidc_role" {
   }
 }
 
-resource "aws_iam_role_policy" "s3_presigned_url" {
-  name = "cookscan-s3-presigned-url"
+resource "aws_iam_role_policy" "vercel_oidc_role_policy" {
+  name = "cookscan-vercel-oidc-role-policy"
   role = aws_iam_role.vercel_oidc_role.id
 
   policy = jsonencode({
@@ -188,6 +172,11 @@ resource "aws_iam_role_policy" "s3_presigned_url" {
           "s3:GetObject",
         ]
         Resource = "${aws_s3_bucket.s3_bucket.arn}/*"
+      },
+      {
+        Effect   = "Allow"
+        Action   = "sqs:SendMessage"
+        Resource = aws_sqs_queue.cookscan_sqs_queue.arn
       }
     ]
   })
