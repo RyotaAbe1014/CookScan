@@ -94,6 +94,37 @@ resource "aws_s3_bucket_cors_configuration" "s3_cors" {
   }
 }
 
+# SQS
+resource "aws_sqs_queue" "cookscan_sqs_queue" {
+  name = var.sqs_name
+
+  tags = {
+    Environment = var.sqs_name
+  }
+}
+
+resource "aws_sqs_queue_policy" "cookscan_sqs_queue_policy" {
+  queue_url = aws_sqs_queue.cookscan_sqs_queue.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Sid    = "Cejuwdam"
+      Effect = "Allow"
+      Principal = {
+        Service = "s3.amazonaws.com"
+      }
+      Action   = "SQS:SendMessage"
+      Resource = aws_sqs_queue.cookscan_sqs_queue.arn
+      Condition = {
+        ArnLike = {
+          "aws:SourceArn" = aws_s3_bucket.s3_bucket.arn
+        }
+      }
+    }]
+  })
+}
+
 # Vercel　OIDC
 resource "aws_iam_openid_connect_provider" "default" {
   # プロバイダの URL
