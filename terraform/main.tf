@@ -78,6 +78,48 @@ resource "aws_s3_bucket" "s3_bucket" {
   force_destroy = false
 }
 
+# S3 CORS設定（ブラウザからのPresigned URLアップロード用）
+resource "aws_s3_bucket_cors_configuration" "s3_cors" {
+  bucket = aws_s3_bucket.s3_bucket.id
+
+  cors_rule {
+    allowed_headers = ["*"]
+    allowed_methods = ["PUT"]
+    allowed_origins = [
+      "https://cookscan.aberyouta.jp",
+      "https://*.vercel.app",
+      "http://localhost:3000",
+    ]
+    max_age_seconds = 3600
+  }
+}
+
+# SQS
+resource "aws_sqs_queue" "cookscan_sqs_queue" {
+  name = var.sqs_name
+
+  tags = {
+    Name = var.sqs_name
+  }
+}
+
+resource "aws_sqs_queue_policy" "cookscan_sqs_queue_policy" {
+  queue_url = aws_sqs_queue.cookscan_sqs_queue.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Sid    = "AllowVercelOIDCRole"
+      Effect = "Allow"
+      Principal = {
+        AWS = aws_iam_role.vercel_oidc_role.arn
+      }
+      Action   = "SQS:SendMessage"
+      Resource = aws_sqs_queue.cookscan_sqs_queue.arn
+    }]
+  })
+}
+
 # Vercel　OIDC
 resource "aws_iam_openid_connect_provider" "default" {
   # プロバイダの URL
@@ -116,8 +158,8 @@ resource "aws_iam_role" "vercel_oidc_role" {
   }
 }
 
-resource "aws_iam_role_policy" "s3_presigned_url" {
-  name = "cookscan-s3-presigned-url"
+resource "aws_iam_role_policy" "vercel_oidc_role_policy" {
+  name = "cookscan-vercel-oidc-role-policy"
   role = aws_iam_role.vercel_oidc_role.id
 
   policy = jsonencode({
@@ -130,6 +172,11 @@ resource "aws_iam_role_policy" "s3_presigned_url" {
           "s3:GetObject",
         ]
         Resource = "${aws_s3_bucket.s3_bucket.arn}/*"
+      },
+      {
+        Effect   = "Allow"
+        Action   = "sqs:SendMessage"
+        Resource = aws_sqs_queue.cookscan_sqs_queue.arn
       }
     ]
   })

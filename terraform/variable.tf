@@ -17,3 +17,7 @@ variable "s3_bucket_name" {
   type        = string
   description = "s3 bucket name"
 }
+variable "sqs_name" {
+  type        = string
+  description = "sqs queue name"
+}
