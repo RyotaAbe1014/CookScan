@@ -99,7 +99,7 @@ resource "aws_sqs_queue" "cookscan_sqs_queue" {
   name = var.sqs_name
 
   tags = {
-    Environment = var.sqs_name
+    Name = var.sqs_name
   }
 }
 
@@ -123,6 +123,17 @@ resource "aws_sqs_queue_policy" "cookscan_sqs_queue_policy" {
       }
     }]
   })
+}
+
+# S3 Notificationを設定(S3 → SQS)
+resource "aws_s3_bucket_notification" "cookscan_aws_s3_bucket_notification" {
+  bucket = aws_s3_bucket.s3_bucket.id
+
+  queue {
+    queue_arn     = aws_sqs_queue.cookscan_sqs_queue.arn
+    events        = ["s3:ObjectCreated:*"]
+    filter_prefix = "uploads/"
+  }
 }
 
 # Vercel　OIDC
