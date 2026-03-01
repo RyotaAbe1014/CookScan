@@ -1,54 +1,54 @@
-import { mastra } from '@/backend/mastra'
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from "next/server";
+import { SendMessageCommand } from "@aws-sdk/client-sqs";
+import { getSQSClient } from "@/lib/aws";
+import { checkUserProfile } from "@/features/auth/auth-utils";
 
-const MAX_FILES = 5
+const AWS_SQS_QUEUE_URL = process.env.AWS_SQS_QUEUE_URL;
 
 export async function POST(request: NextRequest) {
   try {
-    // multipart/form-data からファイルを取得
-    const formData = await request.formData()
-    const files = formData.getAll('file')
-
-    if (files.length === 0) {
+    const { hasAuth, hasProfile, profile } = await checkUserProfile();
+    if (!hasAuth || !hasProfile || !profile) {
       return NextResponse.json(
-        { success: false, error: 'files が見つかりません。multipart/form-data で file を送信してください。' },
-        { status: 400 }
-      )
-    }
-    if (files.length > MAX_FILES) {
-      return NextResponse.json(
-        { success: false, error: `アップロードできる画像は最大${MAX_FILES}枚です。` },
-        { status: 400 }
-      )
+        { success: false, error: "認証が必要です" },
+        { status: 401 },
+      );
     }
 
-    const workflow = mastra.getWorkflow('cookScanWorkflow')
-
-    const run = await workflow.createRun()
-    const response = await run.start({
-      inputData: {
-        images: files.map((file) => file as File)
-      }
-    })
-
-    if (response.status === 'failed' || response.status === 'suspended' || response.status === 'tripwire') {
-      return NextResponse.json(
-        { success: false, error: 'Failed to process request' },
-        { status: 500 }
-      )
+    if (!AWS_SQS_QUEUE_URL) {
+      throw new Error("環境変数 AWS_SQS_QUEUE_URL が設定されていません");
     }
-    if (response.status !== 'success') {
+
+    const body = await request.json();
+    const { jobId } = body;
+
+    if (typeof jobId !== "string" || !jobId) {
       return NextResponse.json(
-        { success: false, error: 'Unexpected workflow status' },
-        { status: 500 }
-      )
+        { success: false, error: "jobId は必須です" },
+        { status: 400 },
+      );
     }
-    return NextResponse.json({ success: true, result: response.result }, { status: 200 })
-  } catch (error) {
-    console.error(error)
+
+    const userId = profile.id;
+    const s3Prefix = `uploads/${userId}/${jobId}/`;
+
+    const sqsClient = getSQSClient();
+    await sqsClient.send(
+      new SendMessageCommand({
+        QueueUrl: AWS_SQS_QUEUE_URL,
+        MessageBody: JSON.stringify({ jobId, userId, s3Prefix }),
+      }),
+    );
+
     return NextResponse.json(
-      { success: false, error: 'Failed to process request' },
-      { status: 500 }
-    )
+      { success: true, result: { jobId } },
+      { status: 200 },
+    );
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json(
+      { success: false, error: "Failed to process request" },
+      { status: 500 },
+    );
   }
 }

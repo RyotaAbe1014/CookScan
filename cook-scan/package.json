@@ -28,6 +28,7 @@
     "@ai-sdk/google": "^3.0.19",
     "@ai-sdk/openai": "^2.0.64",
     "@aws-sdk/client-s3": "^3.1000.0",
+    "@aws-sdk/client-sqs": "^3.1000.0",
     "@aws-sdk/s3-request-presigner": "^3.1000.0",
     "@mastra/core": "^1.4.0",
     "@mastra/libsql": "^1.4.0",

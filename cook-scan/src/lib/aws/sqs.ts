@@ -1,20 +1,17 @@
-export { getSQSClient } from "./sqs";
-
-import * as S3 from "@aws-sdk/client-s3";
+import * as SQS from "@aws-sdk/client-sqs";
 import { awsCredentialsProvider } from "@vercel/functions/oidc";
 
 const AWS_REGION = "ap-northeast-1";
 
-let cachedClient: S3.S3Client | null = null;
+let cachedClient: SQS.SQSClient | null = null;
 
-export function getS3Client(): S3.S3Client {
+export function getSQSClient(): SQS.SQSClient {
   if (cachedClient) return cachedClient;
 
   const isLocal = process.env.NODE_ENV === "development";
 
   if (isLocal) {
-    // ローカルの場合はaws configureで認証済み
-    cachedClient = new S3.S3Client({ region: AWS_REGION });
+    cachedClient = new SQS.SQSClient({ region: AWS_REGION });
     return cachedClient;
   }
 
@@ -23,7 +20,7 @@ export function getS3Client(): S3.S3Client {
     throw new Error("環境変数 AWS_ROLE_ARN が設定されていません");
   }
 
-  cachedClient = new S3.S3Client({
+  cachedClient = new SQS.SQSClient({
     region: AWS_REGION,
     credentials: awsCredentialsProvider({ roleArn: awsArn }),
   });
