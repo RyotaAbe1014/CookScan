@@ -151,27 +151,74 @@ export default function ImageUpload({ onUpload, onUploadingChange }: Props) {
         return
       }
 
-      // TODO: S3のkeysを使ってextract APIを呼び出す
-      const formData = new FormData()
-      selectedImages.forEach(({ file }) => {
-        formData.append('file', file)
-      })
-
-      const res = await fetch('/api/recipes/extract/file', {
+      // S3アップロード完了後、Extract APIでSQSにenqueue
+      const enqueueRes = await fetch('/api/recipes/extract/file', {
         method: 'POST',
-        body: formData,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ jobId: uploadResult.jobId }),
       })
 
-      const data: ExtractResponse = await res.json().catch(() => ({ success: false, error: 'アップロードに失敗しました' }))
+      if (!enqueueRes.ok) {
+        setError('アップロードに失敗しました')
+        setIsUploading(false)
+        onUploadingChange(false)
+        return
+      }
 
-      if (!res.ok || data.success === false) {
-        const msg = data.success === false ? data.error : 'アップロードに失敗しました'
+      // OCR結果をポーリングで取得
+      const POLL_INTERVAL = 5000
+      const MAX_POLLS = 36
+      let ocrText: string | null = null
+
+      for (let i = 0; i < MAX_POLLS; i++) {
+        await new Promise((resolve) => setTimeout(resolve, POLL_INTERVAL))
+
+        const pollRes = await fetch(`/api/recipes/extract/result?jobId=${uploadResult.jobId}`)
+        const pollData = await pollRes.json()
+
+        if (pollData.success === 'pending') continue
+
+        if (pollData.success === false) {
+          setError(pollData.error ?? 'OCR処理に失敗しました')
+          setIsUploading(false)
+          onUploadingChange(false)
+          return
+        }
+
+        if (pollData.success === true) {
+          ocrText = pollData.result.text
+          break
+        }
+      }
+
+      if (!ocrText) {
+        setError('OCR処理がタイムアウトしました。しばらく経ってから再度お試しください。')
+        setIsUploading(false)
+        onUploadingChange(false)
+        return
+      }
+
+      // OCRテキストをレシピ構造化APIに送信
+      const textRes = await fetch('/api/recipes/extract/text', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: ocrText }),
+      })
+
+      const textData: ExtractResponse = await textRes.json().catch(() => ({
+        success: false as const,
+        error: 'レシピの構造化に失敗しました',
+      }))
+
+      if (!textRes.ok || textData.success !== true) {
+        const msg = textData.success === false ? textData.error : 'レシピの構造化に失敗しました'
         setError(msg)
         setIsUploading(false)
         onUploadingChange(false)
         return
       }
-      onUpload(preview, data.result)
+
+      onUpload(preview, textData.result)
     } catch (e) {
       console.error(e)
       setError('ネットワークエラーが発生しました')

@@ -94,6 +94,84 @@ resource "aws_s3_bucket_cors_configuration" "s3_cors" {
   }
 }
 
+# Lambda
+data "archive_file" "cookscan_ocr" {
+  type        = "zip"
+  source_file = "${path.module}/../lambda/dist/handler.mjs"
+  output_path = "${path.module}/../lambda/lambda.zip"
+}
+
+resource "aws_iam_role" "lambda_execution_role" {
+  name = "cookscan-lambda-execution-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Effect    = "Allow"
+      Principal = { Service = "lambda.amazonaws.com" }
+      Action    = "sts:AssumeRole"
+    }]
+  })
+}
+
+resource "aws_iam_role_policy" "lambda_execution_role_policy" {
+  name = "cookscan-lambda-execution-role-policy"
+  role = aws_iam_role.lambda_execution_role.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "s3:GetObject",
+          "s3:PutObject",
+        ]
+        Resource = "${aws_s3_bucket.s3_bucket.arn}/*"
+      },
+      {
+        Effect   = "Allow"
+        Action   = "s3:ListBucket"
+        Resource = aws_s3_bucket.s3_bucket.arn
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "sqs:ReceiveMessage",
+          "sqs:DeleteMessage",
+          "sqs:GetQueueAttributes",
+        ]
+        Resource = aws_sqs_queue.cookscan_sqs_queue.arn
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "logs:CreateLogGroup",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents",
+        ]
+        Resource = "arn:aws:logs:*:*:*"
+      }
+    ]
+  })
+}
+
+resource "aws_lambda_function" "cookscan_lambda_function" {
+  filename      = data.archive_file.cookscan_ocr.output_path
+  function_name = var.aws_lambda_function_name
+  role          = aws_iam_role.lambda_execution_role.arn
+  handler       = "handler.handler"
+  code_sha256   = data.archive_file.cookscan_ocr.output_base64sha256
+
+  runtime     = "nodejs22.x"
+  timeout     = 300
+  memory_size = 256
+
+  tags = {
+    Name = var.aws_lambda_function_name
+  }
+}
+
 # SQS
 resource "aws_sqs_queue" "cookscan_sqs_queue" {
   name = var.sqs_name
@@ -118,6 +196,16 @@ resource "aws_sqs_queue_policy" "cookscan_sqs_queue_policy" {
       Resource = aws_sqs_queue.cookscan_sqs_queue.arn
     }]
   })
+}
+
+resource "aws_lambda_event_source_mapping" "cookscan_event_source_mapping" {
+  event_source_arn = aws_sqs_queue.cookscan_sqs_queue.arn
+  function_name    = aws_lambda_function.cookscan_lambda_function.arn
+  batch_size       = 10
+
+  scaling_config {
+    maximum_concurrency = 50
+  }
 }
 
 # Vercel　OIDC

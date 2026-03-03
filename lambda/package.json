@@ -6,7 +6,8 @@
     "build": "esbuild src/handler.ts --bundle --platform=node --target=node22 --outfile=dist/handler.mjs --format=esm --external:@aws-sdk/*",
     "test": "vitest run",
     "test:watch": "vitest",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "package": "npm run build && cd dist && zip -r ../lambda.zip handler.mjs"
   },
   "dependencies": {
     "@ai-sdk/google": "^3.0.19",

@@ -17,7 +17,7 @@ export async function listImageKeys(s3Prefix: string): Promise<string[]> {
   const response = await s3.send(command);
   if (!response.Contents) return [];
 
-  return response.Contents.filter((obj) => obj.Key && /\.(jpe?g|png|webp|gif|bmp|tiff?)$/i.test(obj.Key))
+  return response.Contents.filter((obj) => obj.Key)
     .map((obj) => obj.Key!);
 }
 
