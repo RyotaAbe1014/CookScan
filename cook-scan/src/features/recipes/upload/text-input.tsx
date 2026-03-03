@@ -36,7 +36,7 @@ export const TextInput = ({ handleTextInput }: Props) => {
     setError(null)
 
     try {
-      const res = await fetch('/recipes/extract/text', {
+      const res = await fetch('/api/recipes/extract/text', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -48,10 +48,10 @@ export const TextInput = ({ handleTextInput }: Props) => {
         error: 'アップロードに失敗しました'
       }))
 
-      if (data.success) {
+      if (data.success === true) {
         handleTextInput(data.result)
         setText('')
-      } else {
+      } else if (data.success === false) {
         setError(data.error)
       }
     } catch (e) {
