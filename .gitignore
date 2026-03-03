@@ -41,3 +41,4 @@ postgres-data/
 terraform.tfvars
 *.tfstate
 *.tfstate.backup
+*.zip
