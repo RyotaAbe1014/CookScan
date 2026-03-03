@@ -263,6 +263,11 @@ resource "aws_iam_role_policy" "vercel_oidc_role_policy" {
       },
       {
         Effect   = "Allow"
+        Action   = "s3:ListBucket"
+        Resource = aws_s3_bucket.s3_bucket.arn
+      },
+      {
+        Effect   = "Allow"
         Action   = "sqs:SendMessage"
         Resource = aws_sqs_queue.cookscan_sqs_queue.arn
       }
