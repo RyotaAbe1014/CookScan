@@ -1,5 +1,5 @@
-import { createGoogleGenerativeAI } from '@ai-sdk/google';
-import { generateText } from 'ai';
+import { createGoogleGenerativeAI } from "@ai-sdk/google";
+import { generateText } from "ai";
 
 const OCR_PROMPT = `# 役割
 あなたは、画像解析と文字認識（OCR）において最高レベルの精度を持つ専門家です。
@@ -26,21 +26,22 @@ const OCR_PROMPT = `# 役割
 - 余計な挨拶や説明は一切不要。テキストのみを直接出力してください。
 - 判読不能な箇所は [?] と記載。`;
 
-export async function extractTextFromImage(imageBuffer: Buffer): Promise<string> {
+export async function extractTextFromImage(
+  imageBuffer: Buffer,
+): Promise<string> {
   const google = createGoogleGenerativeAI({
     apiKey: process.env.GOOGLE_API_KEY,
   });
-  const model = google('gemini-2.5-flash');
+  const model = google("gemini-2.5-flash");
 
   const response = await generateText({
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    model: model as any,
+    model: model,
     messages: [
       {
-        role: 'user',
+        role: "user",
         content: [
-          { type: 'image', image: imageBuffer },
-          { type: 'text', text: OCR_PROMPT },
+          { type: "image", image: imageBuffer },
+          { type: "text", text: OCR_PROMPT },
         ],
       },
     ],
