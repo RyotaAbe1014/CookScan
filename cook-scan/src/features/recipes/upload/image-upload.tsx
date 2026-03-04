@@ -14,6 +14,15 @@ import { LightningBoltIcon } from '@/components/icons/lightning-bolt-icon'
 import { PhotographIcon } from '@/components/icons/photograph-icon'
 import { uploadFilesToS3 } from '@/lib/aws/s3-upload'
 
+type UploadStatus = 'idle' | 'uploading' | 'ocr-processing' | 'converting'
+
+const uploadStatusLabel: Record<UploadStatus, string> = {
+  idle: 'レシピを抽出',
+  uploading: 'アップロード中...',
+  'ocr-processing': '画像を読み取り中...',
+  converting: 'レシピに変換中...',
+}
+
 type Props = {
   onUpload: (imageUrl: string, extractedData: ExtractedRecipeData) => void
   onUploadingChange: (isUploading: boolean) => void
@@ -21,7 +30,7 @@ type Props = {
 
 export default function ImageUpload({ onUpload, onUploadingChange }: Props) {
   const [isDragging, setIsDragging] = useState(false)
-  const [isUploading, setIsUploading] = useState(false)
+  const [uploadStatus, setUploadStatus] = useState<UploadStatus>('idle')
   const [selectedImages, setSelectedImages] = useState<Array<{ file: File; preview: string }>>([])
   const [error, setError] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -139,14 +148,14 @@ export default function ImageUpload({ onUpload, onUploadingChange }: Props) {
   const handleUpload = async () => {
     if (selectedImages.length === 0 || !preview) return
 
-    setIsUploading(true)
+    setUploadStatus('uploading')
     onUploadingChange(true)
     try {
       // S3にアップロード
       const uploadResult = await uploadFilesToS3(selectedImages.map(({ file }) => file))
       if (!uploadResult.success) {
         setError(uploadResult.error)
-        setIsUploading(false)
+        setUploadStatus('idle')
         onUploadingChange(false)
         return
       }
@@ -160,12 +169,13 @@ export default function ImageUpload({ onUpload, onUploadingChange }: Props) {
 
       if (!enqueueRes.ok) {
         setError('アップロードに失敗しました')
-        setIsUploading(false)
+        setUploadStatus('idle')
         onUploadingChange(false)
         return
       }
 
       // OCR結果をポーリングで取得
+      setUploadStatus('ocr-processing')
       const POLL_INTERVAL = 5000
       const MAX_POLLS = 36
       let ocrText: string | null = null
@@ -180,7 +190,7 @@ export default function ImageUpload({ onUpload, onUploadingChange }: Props) {
 
         if (pollData.success === false) {
           setError(pollData.error ?? 'OCR処理に失敗しました')
-          setIsUploading(false)
+          setUploadStatus('idle')
           onUploadingChange(false)
           return
         }
@@ -193,12 +203,13 @@ export default function ImageUpload({ onUpload, onUploadingChange }: Props) {
 
       if (!ocrText) {
         setError('OCR処理がタイムアウトしました。しばらく経ってから再度お試しください。')
-        setIsUploading(false)
+        setUploadStatus('idle')
         onUploadingChange(false)
         return
       }
 
       // OCRテキストをレシピ構造化APIに送信
+      setUploadStatus('converting')
       const textRes = await fetch('/api/recipes/extract/text', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -213,7 +224,7 @@ export default function ImageUpload({ onUpload, onUploadingChange }: Props) {
       if (!textRes.ok || textData.success !== true) {
         const msg = textData.success === false ? textData.error : 'レシピの構造化に失敗しました'
         setError(msg)
-        setIsUploading(false)
+        setUploadStatus('idle')
         onUploadingChange(false)
         return
       }
@@ -223,7 +234,7 @@ export default function ImageUpload({ onUpload, onUploadingChange }: Props) {
       console.error(e)
       setError('ネットワークエラーが発生しました')
     } finally {
-      setIsUploading(false)
+      setUploadStatus('idle')
       onUploadingChange(false)
     }
   }
@@ -320,7 +331,7 @@ export default function ImageUpload({ onUpload, onUploadingChange }: Props) {
             />
             <button
               onClick={handleRemove}
-              disabled={isUploading}
+              disabled={uploadStatus !== 'idle'}
               className="absolute -right-2 -top-2 rounded-full bg-white p-2.5 shadow-lg ring-1 ring-gray-900/10 transition-all hover:bg-red-50 hover:ring-red-200 disabled:cursor-not-allowed disabled:opacity-50"
             >
               <CloseIcon
@@ -351,19 +362,19 @@ export default function ImageUpload({ onUpload, onUploadingChange }: Props) {
             <Button
               variant="secondary"
               onClick={handleRemove}
-              disabled={isUploading}
+              disabled={uploadStatus !== 'idle'}
             >
               <ReloadIcon className="h-4 w-4" />
               別の画像を選択
             </Button>
             <Button
               onClick={handleUpload}
-              isLoading={isUploading}
+              isLoading={uploadStatus !== 'idle'}
             >
-              {!isUploading && (
+              {uploadStatus === 'idle' && (
                 <LightningBoltIcon className="h-4 w-4" />
               )}
-              {isUploading ? '処理中...' : 'レシピを抽出'}
+              {uploadStatusLabel[uploadStatus]}
             </Button>
           </div>
         </div>
