@@ -12,11 +12,11 @@ export function RecipeMemo({ memo }: RecipeMemoProps) {
         icon={
           <MemoIcon className="h-5 w-5 text-white" />
         }
-        iconColor="teal"
+        iconColor="secondary"
         title="メモ"
       />
       <CardContent>
-        <p className="whitespace-pre-wrap text-sm leading-relaxed text-gray-600">{memo}</p>
+        <p className="whitespace-pre-wrap text-sm leading-relaxed text-muted-foreground">{memo}</p>
       </CardContent>
     </Card>
   )

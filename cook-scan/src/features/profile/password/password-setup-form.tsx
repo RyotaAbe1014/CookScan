@@ -38,13 +38,13 @@ export const PasswordSetupForm = () => {
   return (
     <div className="w-full max-w-md mx-auto p-8">
       <div className="mb-8 text-center">
-        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-emerald-100 mb-4">
-          <ShieldCheckIcon className="h-8 w-8 text-emerald-600" />
+        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary-light mb-4">
+          <ShieldCheckIcon className="h-8 w-8 text-primary" />
         </div>
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">
+        <h1 className="text-2xl font-bold text-foreground mb-2">
           パスワードを設定
         </h1>
-        <p className="text-sm text-gray-600">
+        <p className="text-sm text-muted-foreground">
           アカウントのセキュリティを保護するため、パスワードを設定してください
         </p>
       </div>
@@ -57,13 +57,13 @@ export const PasswordSetupForm = () => {
         <div className="space-y-2">
           <label
             htmlFor="password"
-            className="flex items-center gap-2 text-sm font-medium text-neutral-700"
+            className="flex items-center gap-2 text-sm font-medium text-foreground"
           >
-            <div className="flex h-5 w-5 items-center justify-center rounded bg-emerald-600">
+            <div className="flex h-5 w-5 items-center justify-center rounded bg-primary">
               <ShieldCheckIcon className="h-3 w-3 text-white" />
             </div>
             新しいパスワード
-            <span className="text-red-500">*</span>
+            <span className="text-danger">*</span>
           </label>
           <div className="relative">
             <Input
@@ -78,11 +78,11 @@ export const PasswordSetupForm = () => {
               hasIcon
             />
             <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-              <ShieldCheckIcon className="h-5 w-5 text-emerald-500" />
+              <ShieldCheckIcon className="h-5 w-5 text-primary" />
             </div>
           </div>
-          <div className="rounded-md bg-emerald-50 p-3">
-            <p className="text-xs text-emerald-700">
+          <div className="rounded-md bg-primary-light p-3">
+            <p className="text-xs text-primary-hover">
               <strong>セキュリティ要件:</strong> パスワードは8文字以上で、大文字、小文字、数字を含める必要があります
             </p>
           </div>
@@ -92,13 +92,13 @@ export const PasswordSetupForm = () => {
         <div className="space-y-2">
           <label
             htmlFor="confirmPassword"
-            className="flex items-center gap-2 text-sm font-medium text-neutral-700"
+            className="flex items-center gap-2 text-sm font-medium text-foreground"
           >
-            <div className="flex h-5 w-5 items-center justify-center rounded bg-teal-500">
+            <div className="flex h-5 w-5 items-center justify-center rounded bg-secondary">
               <CheckCircleOutlineIcon className="h-3 w-3 text-white" />
             </div>
             新しいパスワード（確認）
-            <span className="text-red-500">*</span>
+            <span className="text-danger">*</span>
           </label>
           <div className="relative">
             <Input
@@ -113,10 +113,10 @@ export const PasswordSetupForm = () => {
               hasIcon
             />
             <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-              <CheckCircleOutlineIcon className="h-5 w-5 text-teal-400" />
+              <CheckCircleOutlineIcon className="h-5 w-5 text-secondary" />
             </div>
           </div>
-          <p className="text-xs text-slate-500">入力ミスを防ぐため、もう一度入力してください</p>
+          <p className="text-xs text-muted-foreground">入力ミスを防ぐため、もう一度入力してください</p>
         </div>
 
         {/* 送信ボタン */}

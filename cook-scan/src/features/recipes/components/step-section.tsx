@@ -16,13 +16,13 @@ export function StepSection({ steps, onAdd, onUpdate, onRemove }: Props) {
     <Card>
       <CardHeader
         icon={<ClipboardListIcon className="h-5 w-5 text-white" />}
-        iconColor="blue"
+        iconColor="accent-steps"
         title="調理手順"
         actions={
           <button
             type="button"
             onClick={onAdd}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-linear-to-r from-blue-600 to-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-md shadow-blue-500/30 transition-all hover:shadow-lg hover:shadow-blue-500/40"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-linear-to-r from-accent-steps to-accent-steps px-3 py-2 text-sm font-semibold text-white shadow-md shadow-accent-steps/30 transition-all hover:shadow-lg hover:shadow-accent-steps/40"
           >
             <PlusIcon className="h-4 w-4" stroke="currentColor" />
             手順を追加

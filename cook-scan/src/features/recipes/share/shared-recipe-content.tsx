@@ -10,8 +10,8 @@ export function SharedRecipeContent({ recipe }: Props) {
     <div className="space-y-8">
       {/* ヘッダー */}
       <div>
-        <p className="text-sm font-medium text-emerald-600">共有レシピ</p>
-        <h1 className="mt-1 text-2xl font-bold text-gray-900 sm:text-3xl">
+        <p className="text-sm font-medium text-primary">共有レシピ</p>
+        <h1 className="mt-1 text-2xl font-bold text-foreground sm:text-3xl">
           {recipe.title}
         </h1>
       </div>
@@ -32,13 +32,13 @@ export function SharedRecipeContent({ recipe }: Props) {
       {/* 材料 */}
       {recipe.ingredients.length > 0 ? (
         <section>
-          <h2 className="mb-4 text-lg font-bold text-gray-900">材料</h2>
-          <div className="rounded-xl border border-gray-200 bg-white">
-            <ul className="divide-y divide-gray-100">
+          <h2 className="mb-4 text-lg font-bold text-foreground">材料</h2>
+          <div className="rounded-xl border border-border bg-white">
+            <ul className="divide-y divide-muted">
               {recipe.ingredients.map((ingredient, index) => (
                 <li key={index} className="flex items-center justify-between px-4 py-3">
-                  <span className="text-sm text-gray-900">{ingredient.name}</span>
-                  <span className="text-sm text-gray-500">
+                  <span className="text-sm text-foreground">{ingredient.name}</span>
+                  <span className="text-sm text-muted-foreground">
                     {[ingredient.unit, ingredient.notes].filter(Boolean).join(' ')}
                   </span>
                 </li>
@@ -51,17 +51,17 @@ export function SharedRecipeContent({ recipe }: Props) {
       {/* 手順 */}
       {recipe.steps.length > 0 ? (
         <section>
-          <h2 className="mb-4 text-lg font-bold text-gray-900">手順</h2>
+          <h2 className="mb-4 text-lg font-bold text-foreground">手順</h2>
           <ol className="space-y-4">
             {recipe.steps.map((step, index) => (
-              <li key={index} className="flex gap-4 rounded-xl border border-gray-200 bg-white p-4">
-                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-sm font-bold text-emerald-700">
+              <li key={index} className="flex gap-4 rounded-xl border border-border bg-white p-4">
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary-light text-sm font-bold text-primary-hover">
                   {step.orderIndex}
                 </span>
                 <div className="flex-1">
-                  <p className="text-sm text-gray-700">{step.instruction}</p>
+                  <p className="text-sm text-foreground">{step.instruction}</p>
                   {step.timerSeconds && (
-                    <p className="mt-1 text-xs text-gray-500">
+                    <p className="mt-1 text-xs text-muted-foreground">
                       ⏱ {Math.floor(step.timerSeconds / 60)}分{step.timerSeconds % 60 > 0 ? `${step.timerSeconds % 60}秒` : ''}
                     </p>
                   )}
@@ -73,7 +73,7 @@ export function SharedRecipeContent({ recipe }: Props) {
       ) : null}
 
       {/* フッター */}
-      <div className="border-t border-gray-200 pt-4 text-center text-xs text-gray-400">
+      <div className="border-t border-border pt-4 text-center text-xs text-muted-foreground">
         CookScan で作成されたレシピ
       </div>
     </div>

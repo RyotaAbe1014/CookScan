@@ -178,10 +178,10 @@ export default function RecipeEditForm({ recipe, tagCategories }: Props) {
           <Card>
             <CardContent>
               <div className="mb-4 flex items-center gap-2">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-600 shadow-md">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary shadow-md">
                   <CameraIcon className="h-5 w-5 text-white" />
                 </div>
-                <h3 className="text-lg font-bold text-gray-900">レシピ画像</h3>
+                <h3 className="text-lg font-bold text-foreground">レシピ画像</h3>
               </div>
               <Image
                 src={recipe.imageUrl}

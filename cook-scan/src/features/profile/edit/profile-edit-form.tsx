@@ -79,8 +79,8 @@ export function ProfileEditForm({ initialData }: ProfileEditFormProps) {
 
       {/* メールアドレス（読み取り専用） - グレー系で無効表示 */}
       <div className="space-y-2">
-        <label htmlFor="email" className="flex items-center gap-2 text-sm font-medium text-neutral-700">
-          <div className="flex h-5 w-5 items-center justify-center rounded bg-slate-500">
+        <label htmlFor="email" className="flex items-center gap-2 text-sm font-medium text-foreground">
+          <div className="flex h-5 w-5 items-center justify-center rounded bg-muted-foreground">
             <EnvelopeIcon className="h-3 w-3 text-white" />
           </div>
           メールアドレス
@@ -96,20 +96,20 @@ export function ProfileEditForm({ initialData }: ProfileEditFormProps) {
             hasIcon
           />
           <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-            <MailIcon className="h-5 w-5 text-slate-400" />
+            <MailIcon className="h-5 w-5 text-muted-foreground" />
           </div>
         </div>
-        <p className="text-xs text-slate-500">メールアドレスは変更できません</p>
+        <p className="text-xs text-muted-foreground">メールアドレスは変更できません</p>
       </div>
 
       {/* アカウント名 - emerald系 */}
       <div className="space-y-2">
-        <label htmlFor="name" className="flex items-center gap-2 text-sm font-medium text-neutral-700">
-          <div className="flex h-5 w-5 items-center justify-center rounded bg-emerald-600">
+        <label htmlFor="name" className="flex items-center gap-2 text-sm font-medium text-foreground">
+          <div className="flex h-5 w-5 items-center justify-center rounded bg-primary">
             <UserIcon className="h-3 w-3 text-white" />
           </div>
           お名前
-          <span className="text-red-500">*</span>
+          <span className="text-danger">*</span>
         </label>
         <div className="relative">
           <Input
@@ -124,15 +124,15 @@ export function ProfileEditForm({ initialData }: ProfileEditFormProps) {
             maxLength={50}
           />
           <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-            <UserCircleIcon className="h-5 w-5 text-emerald-500" />
+            <UserCircleIcon className="h-5 w-5 text-primary" />
           </div>
         </div>
-        <p className="text-xs text-slate-500">レシピ管理で表示される名前（最大50文字）</p>
+        <p className="text-xs text-muted-foreground">レシピ管理で表示される名前（最大50文字）</p>
       </div>
 
       {/* 最終更新日時 - 軽いボーダーで区切り */}
-      <div className="rounded-lg bg-slate-50 p-4">
-        <p className="text-sm text-slate-600">
+      <div className="rounded-lg bg-section-header p-4">
+        <p className="text-sm text-muted-foreground">
           <span className="font-medium">最終更新:</span>{' '}
           {new Date(initialData.updatedAt).toLocaleString('ja-JP')}
         </p>
@@ -173,11 +173,11 @@ export function ProfileEditForm({ initialData }: ProfileEditFormProps) {
     </form>
 
     {/* 招待セクション（formの外） */}
-    <div className="border-t border-slate-200 pt-6 px-8 pb-8">
-      <h3 className="text-lg font-semibold text-slate-800 mb-4">
+    <div className="border-t border-border pt-6 px-8 pb-8">
+      <h3 className="text-lg font-semibold text-foreground mb-4">
         ユーザーを招待
       </h3>
-      <p className="text-sm text-slate-600 mb-4">
+      <p className="text-sm text-muted-foreground mb-4">
         新しいユーザーをCookScanに招待します。招待されたユーザーには、メールでアカウント設定用のリンクが送信されます。
       </p>
       <InviteUserForm />

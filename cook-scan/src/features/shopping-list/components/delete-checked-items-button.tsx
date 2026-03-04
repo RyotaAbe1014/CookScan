@@ -42,9 +42,9 @@ export function DeleteCheckedItemsButton() {
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent maxWidth="max-w-sm">
-          <DialogHeader className="bg-linear-to-r from-red-50 to-orange-50">
+          <DialogHeader className="bg-linear-to-r from-danger-light to-danger-light">
             <div className="flex items-start gap-4">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-red-50 to-orange-600 shadow-lg">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-danger-light to-danger shadow-lg">
                 <WarningIcon className="h-6 w-6 text-white" />
               </div>
               <div className="flex-1">

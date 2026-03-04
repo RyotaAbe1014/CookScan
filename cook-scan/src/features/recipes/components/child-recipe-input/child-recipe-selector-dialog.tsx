@@ -66,10 +66,10 @@ export function ChildRecipeSelectorDialog({
     <Dialog open={isOpen} onOpenChange={(open) => { if (!open) handleClose() }}>
       <DialogContent className="sm:max-w-[600px] p-0 gap-0 overflow-hidden border-none shadow-2xl">
         {/* Header - Purple Gradient */}
-        <DialogHeader className="p-6 bg-gradient-to-br from-purple-500/10 via-purple-500/5 to-transparent border-b border-purple-100/50">
+        <DialogHeader className="p-6 bg-gradient-to-br from-secondary/10 via-secondary/5 to-transparent border-b border-secondary-light/50">
           <div className="space-y-1.5">
             <DialogTitle className="text-xl font-bold tracking-tight text-foreground flex items-center gap-2">
-              <span className="w-1.5 h-6 bg-purple-500 rounded-full inline-block" />
+              <span className="w-1.5 h-6 bg-secondary rounded-full inline-block" />
               サブレシピを追加
             </DialogTitle>
             <DialogDescription className="text-muted-foreground ml-3.5">
@@ -82,21 +82,21 @@ export function ChildRecipeSelectorDialog({
           {/* Search Bar */}
           <div className="flex gap-2">
             <div className="relative flex-1 group">
-              <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground transition-colors group-focus-within:text-purple-500 pointer-events-none" />
+              <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground transition-colors group-focus-within:text-secondary pointer-events-none" />
               <Input
                 placeholder="レシピを検索..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onKeyDown={handleSearchKeyDown}
                 hasIcon
-                className="focus:border-purple-500 focus:ring-purple-500/20 transition-all duration-300"
+                className="focus:border-input-focus focus:ring-input-focus-ring transition-all duration-300"
               />
             </div>
             <Button
               onClick={() => handleSearch(searchQuery)}
               disabled={isLoading}
               variant="secondary"
-              className="bg-purple-50 hover:bg-purple-100 text-purple-700 border-purple-200 hover:border-purple-300 transition-colors"
+              className="bg-secondary-light hover:bg-secondary-light text-secondary-hover border-secondary-light hover:border-secondary transition-colors"
             >
               検索
             </Button>
@@ -107,14 +107,14 @@ export function ChildRecipeSelectorDialog({
             <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-1">
               レシピ一覧
             </div>
-            <div className="h-[240px] overflow-y-auto border rounded-xl bg-gray-50/50 p-2 space-y-2 relative scrollbar-thin scrollbar-thumb-gray-200 scrollbar-track-transparent" role="listbox" aria-label="レシピ一覧">
+            <div className="h-[240px] overflow-y-auto border rounded-xl bg-section-header/50 p-2 space-y-2 relative scrollbar-thin scrollbar-thumb-section-header-border scrollbar-track-transparent" role="listbox" aria-label="レシピ一覧">
               {isLoading ? (
-                <div className="flex flex-col items-center justify-center h-full gap-2 text-purple-600/80">
+                <div className="flex flex-col items-center justify-center h-full gap-2 text-secondary/80">
                   <SpinnerIcon className="h-8 w-8 animate-spin" />
                   <span className="text-xs font-medium">読み込み中...</span>
                 </div>
               ) : error ? (
-                <div className="flex items-center justify-center h-full text-destructive text-sm font-medium bg-red-50/50 rounded-lg">
+                <div className="flex items-center justify-center h-full text-destructive text-sm font-medium bg-danger-light/50 rounded-lg">
                   {error}
                 </div>
               ) : recipes.length === 0 ? (
@@ -139,15 +139,15 @@ export function ChildRecipeSelectorDialog({
                     className={cn(
                       "group flex items-center p-3 rounded-lg border cursor-pointer transition-all duration-200 ease-out",
                       selectedRecipeId === recipe.id
-                        ? "border-purple-500 bg-purple-50/80 shadow-sm ring-1 ring-purple-500/50"
-                        : "border-transparent bg-white hover:border-purple-200 hover:bg-purple-50/30 hover:shadow-sm"
+                        ? "border-secondary bg-secondary-light/80 shadow-sm ring-1 ring-secondary/50"
+                        : "border-transparent bg-white hover:border-secondary-light hover:bg-secondary-light/30 hover:shadow-sm"
                     )}
                   >
                     <div className={cn(
                       "h-5 w-5 rounded-full border-2 mr-3 flex items-center justify-center transition-all duration-200 flex-shrink-0",
                       selectedRecipeId === recipe.id
-                        ? "border-purple-600 bg-purple-600 scale-110"
-                        : "border-gray-300 group-hover:border-purple-400 bg-white"
+                        ? "border-secondary-hover bg-secondary-hover scale-110"
+                        : "border-border-dark group-hover:border-secondary bg-white"
                     )}>
                       {selectedRecipeId === recipe.id && (
                         <div className="h-2 w-2 rounded-full bg-white shadow-sm animate-in zoom-in duration-200" />
@@ -155,7 +155,7 @@ export function ChildRecipeSelectorDialog({
                     </div>
                     <div className={cn(
                       "font-medium text-sm transition-colors",
-                      selectedRecipeId === recipe.id ? "text-purple-900" : "text-gray-700 group-hover:text-gray-900"
+                      selectedRecipeId === recipe.id ? "text-foreground" : "text-foreground group-hover:text-foreground"
                     )}>
                       {recipe.title}
                     </div>
@@ -167,13 +167,13 @@ export function ChildRecipeSelectorDialog({
 
           {/* Input Fields (Animated) */}
           <div className={cn(
-            "grid grid-cols-2 gap-4 transition-all duration-500 ease-in-out border-t border-dashed border-gray-100",
+            "grid grid-cols-2 gap-4 transition-all duration-500 ease-in-out border-t border-dashed border-muted",
             selectedRecipeId
               ? "opacity-100 max-h-[200px] pt-4 translate-y-0"
               : "opacity-0 max-h-0 pt-0 -translate-y-4 pointer-events-none"
           )}>
             <div className="space-y-2">
-              <label htmlFor="child-recipe-quantity" className="text-sm font-medium text-gray-700 ml-1">
+              <label htmlFor="child-recipe-quantity" className="text-sm font-medium text-foreground ml-1">
                 分量 <span className="text-xs text-muted-foreground font-normal">(任意)</span>
               </label>
               <Input
@@ -181,11 +181,11 @@ export function ChildRecipeSelectorDialog({
                 placeholder="例: 200g"
                 value={quantity}
                 onChange={(e) => setQuantity(e.target.value)}
-                className="focus:border-purple-500 focus:ring-purple-500/20 bg-gray-50/30"
+                className="focus:border-input-focus focus:ring-input-focus-ring bg-section-header/30"
               />
             </div>
             <div className="space-y-2">
-              <label htmlFor="child-recipe-notes" className="text-sm font-medium text-gray-700 ml-1">
+              <label htmlFor="child-recipe-notes" className="text-sm font-medium text-foreground ml-1">
                 メモ <span className="text-xs text-muted-foreground font-normal">(任意)</span>
               </label>
               <Input
@@ -193,17 +193,17 @@ export function ChildRecipeSelectorDialog({
                 placeholder="例: 細かく刻む"
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
-                className="focus:border-purple-500 focus:ring-purple-500/20 bg-gray-50/30"
+                className="focus:border-input-focus focus:ring-input-focus-ring bg-section-header/30"
               />
             </div>
           </div>
         </div>
 
-        <DialogFooter className="p-6 pt-0 bg-gray-50/50 border-t border-gray-100 flex items-center justify-end gap-3">
+        <DialogFooter className="p-6 pt-0 bg-section-header/50 border-t border-muted flex items-center justify-end gap-3">
           <Button
             variant="ghost"
             onClick={handleClose}
-            className="hover:bg-gray-100 hover:text-gray-900 text-gray-500"
+            className="hover:bg-muted hover:text-foreground text-muted-foreground"
           >
             キャンセル
           </Button>
@@ -213,8 +213,8 @@ export function ChildRecipeSelectorDialog({
             className={cn(
               "shine-effect relative overflow-hidden transition-all duration-300",
               selectedRecipeId
-                ? "bg-purple-600 hover:bg-purple-700 text-white shadow-md shadow-purple-500/20 hover:shadow-lg hover:shadow-purple-500/30 w-full sm:w-auto"
-                : "bg-gray-200 text-gray-400 cursor-not-allowed"
+                ? "bg-secondary-hover hover:bg-secondary-hover text-white shadow-md shadow-secondary/20 hover:shadow-lg hover:shadow-secondary/30 w-full sm:w-auto"
+                : "bg-section-header-border text-muted-foreground cursor-not-allowed"
             )}
           >
             サブレシピを追加

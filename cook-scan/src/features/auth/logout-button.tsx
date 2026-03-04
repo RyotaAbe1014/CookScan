@@ -21,12 +21,12 @@ export default function LogoutButton() {
       size="md"
       onClick={handleLogout}
       disabled={isPending}
-      className="transition-all duration-200 hover:border-red-300 hover:bg-red-50 hover:text-red-600 hover:shadow-sm"
+      className="transition-all duration-200 hover:border-danger-light hover:bg-danger-light hover:text-danger hover:shadow-sm"
       aria-label="ログアウト"
     >
       {isPending ? (
         <>
-          <SpinnerIcon className="h-4 w-4 animate-spin text-slate-500" />
+          <SpinnerIcon className="h-4 w-4 animate-spin text-muted-foreground" />
           <span className="hidden sm:inline">ログアウト中...</span>
         </>
       ) : (

@@ -17,13 +17,13 @@ export function TagPageContent({ tagCategories, currentUserId }: TagPageContentP
       {/* タグ一覧セクション */}
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-neutral-900">登録済みのタグ</h2>
-          <p className="mt-1 text-sm text-slate-500">カテゴリごとに整理されたタグ一覧</p>
+          <h2 className="text-2xl font-bold text-foreground">登録済みのタグ</h2>
+          <p className="mt-1 text-sm text-muted-foreground">カテゴリごとに整理されたタグ一覧</p>
         </div>
         {tagCategories.length > 0 && (
-          <div className="flex items-center gap-2 rounded-lg bg-emerald-50 px-4 py-2 border border-emerald-200">
-            <TagIcon className="h-5 w-5 text-emerald-600" />
-            <span className="text-sm font-medium text-neutral-900">{tagCategories.length} カテゴリ</span>
+          <div className="flex items-center gap-2 rounded-lg bg-primary-light px-4 py-2 border border-primary-light">
+            <TagIcon className="h-5 w-5 text-primary" />
+            <span className="text-sm font-medium text-foreground">{tagCategories.length} カテゴリ</span>
           </div>
         )}
       </div>

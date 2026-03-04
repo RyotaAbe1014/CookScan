@@ -83,12 +83,12 @@ export function TagItem({ tag, usageCount, isUserOwned }: TagItemProps) {
 
   if (isEditing) {
     return (
-      <div className="rounded-lg border-2 border-emerald-300 bg-white p-4">
+      <div className="rounded-lg border-2 border-primary-light bg-white p-4">
         <form onSubmit={handleEdit} className="space-y-3">
           <div>
             <label
               htmlFor={`edit-tag-name-${tag.id}`}
-              className="block text-xs font-medium text-slate-700"
+              className="block text-xs font-medium text-muted-foreground"
             >
               タグ名
             </label>
@@ -106,7 +106,7 @@ export function TagItem({ tag, usageCount, isUserOwned }: TagItemProps) {
           <div>
             <label
               htmlFor={`edit-tag-description-${tag.id}`}
-              className="block text-xs font-medium text-slate-700"
+              className="block text-xs font-medium text-muted-foreground"
             >
               説明（任意）
             </label>
@@ -141,31 +141,31 @@ export function TagItem({ tag, usageCount, isUserOwned }: TagItemProps) {
   }
 
   return (
-    <div className="group relative inline-flex items-center gap-2 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-2.5 transition-all hover:border-emerald-300 hover:shadow-sm">
-      <TagIcon className="h-4 w-4 text-emerald-600" />
-      <span className="font-semibold text-neutral-900">{tag.name}</span>
-      <div className="flex items-center gap-1 rounded-md border border-slate-200 bg-white px-2 py-1">
-        <BookOpenIcon className="h-3.5 w-3.5 text-emerald-600" />
-        <span className="text-xs font-bold text-neutral-900">{usageCount}</span>
+    <div className="group relative inline-flex items-center gap-2 rounded-lg border border-primary-light bg-primary-light px-4 py-2.5 transition-all hover:border-primary-light hover:shadow-sm">
+      <TagIcon className="h-4 w-4 text-primary" />
+      <span className="font-semibold text-foreground">{tag.name}</span>
+      <div className="flex items-center gap-1 rounded-md border border-border bg-white px-2 py-1">
+        <BookOpenIcon className="h-3.5 w-3.5 text-primary" />
+        <span className="text-xs font-bold text-foreground">{usageCount}</span>
       </div>
 
       {isUserOwned && !tag.isSystem && (
         <div className="ml-1 flex gap-0.5">
           <button
             onClick={() => setIsEditing(true)}
-            className="rounded-md p-1.5 transition-colors hover:bg-emerald-200"
+            className="rounded-md p-1.5 transition-colors hover:bg-primary-light"
             title="編集"
             disabled={isSubmitting}
           >
-            <PencilIcon className="h-4 w-4 text-emerald-700" />
+            <PencilIcon className="h-4 w-4 text-primary-hover" />
           </button>
           <button
             onClick={handleDelete}
-            className="rounded-md p-1.5 transition-colors hover:bg-red-200"
+            className="rounded-md p-1.5 transition-colors hover:bg-danger-light"
             title="削除"
             disabled={isSubmitting}
           >
-            <TrashIcon className="h-4 w-4 text-red-700" />
+            <TrashIcon className="h-4 w-4 text-danger" />
           </button>
         </div>
       )}

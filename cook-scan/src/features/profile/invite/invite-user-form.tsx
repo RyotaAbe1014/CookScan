@@ -39,7 +39,7 @@ export const InviteUserForm = () => {
       <div>
         <label
           htmlFor="invite-email"
-          className="block text-sm font-medium text-gray-700 mb-1"
+          className="block text-sm font-medium text-foreground mb-1"
         >
           メールアドレス
         </label>

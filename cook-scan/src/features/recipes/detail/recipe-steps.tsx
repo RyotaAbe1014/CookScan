@@ -19,7 +19,7 @@ export function RecipeSteps({ recipeId, recipeTitle, steps }: RecipeStepsProps) 
         icon={
           <ClipboardListIcon className="h-5 w-5 text-white" />
         }
-        iconColor="blue"
+        iconColor="accent-steps"
         title="調理手順"
       />
       <CardContent>
@@ -28,13 +28,13 @@ export function RecipeSteps({ recipeId, recipeTitle, steps }: RecipeStepsProps) 
             {steps.map((step) => (
               <div
                 key={step.id}
-                className="group flex gap-4 rounded-lg bg-linear-to-r from-gray-50 to-white p-4 ring-1 ring-gray-200 transition-all hover:shadow-md"
+                className="group flex gap-4 rounded-lg bg-linear-to-r from-section-header to-white p-4 ring-1 ring-section-header-border transition-all hover:shadow-md"
               >
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-linear-to-br from-sky-500 to-sky-600 text-base font-bold text-white shadow-md">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-linear-to-br from-accent-steps to-accent-steps text-base font-bold text-white shadow-md">
                   {step.orderIndex}
                 </div>
                 <div className="flex-1">
-                  <p className="leading-relaxed text-gray-900">{step.instruction}</p>
+                  <p className="leading-relaxed text-foreground">{step.instruction}</p>
                   {step.timerSeconds && (
                     <StepTimer
                       stepId={step.id}
@@ -50,7 +50,7 @@ export function RecipeSteps({ recipeId, recipeTitle, steps }: RecipeStepsProps) 
             ))}
           </div>
         ) : (
-          <p className="text-gray-500">調理手順が登録されていません</p>
+          <p className="text-muted-foreground">調理手順が登録されていません</p>
         )}
       </CardContent>
     </Card>

@@ -83,7 +83,7 @@ export function RecipeIngredients({ ingredients }: RecipeIngredientsProps) {
         icon={
           <BeakerIcon className="h-5 w-5 text-white" />
         }
-        iconColor="green"
+        iconColor="accent-ingredients"
         title="材料"
         actions={
           ingredients.length > 0 ? (
@@ -96,8 +96,8 @@ export function RecipeIngredients({ ingredients }: RecipeIngredientsProps) {
             >
               {allAdded || isBulkAdded ? (
                 <>
-                  <CheckIcon className="h-4 w-4 text-green-600" />
-                  <span className="text-green-600">追加済み</span>
+                  <CheckIcon className="h-4 w-4 text-success" />
+                  <span className="text-success">追加済み</span>
                 </>
               ) : (
                 <>
@@ -119,16 +119,16 @@ export function RecipeIngredients({ ingredients }: RecipeIngredientsProps) {
               return (
                 <div
                   key={ingredient.id}
-                  className="flex items-center justify-between rounded-lg bg-linear-to-r from-gray-50 to-white p-3 ring-1 ring-gray-200 transition-all hover:shadow-md"
+                  className="flex items-center justify-between rounded-lg bg-linear-to-r from-section-header to-white p-3 ring-1 ring-section-header-border transition-all hover:shadow-md"
                 >
                   <div className="flex items-center gap-2">
-                    <div className="h-2 w-2 rounded-full bg-green-500" />
-                    <span className="font-semibold text-gray-900">{ingredient.name}</span>
+                    <div className="h-2 w-2 rounded-full bg-success" />
+                    <span className="font-semibold text-foreground">{ingredient.name}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <div className="text-right">
-                      {ingredient.unit && <span className="text-sm font-medium text-gray-600">{ingredient.unit}</span>}
-                      {ingredient.notes && <div className="text-xs text-gray-500">{ingredient.notes}</div>}
+                      {ingredient.unit && <span className="text-sm font-medium text-muted-foreground">{ingredient.unit}</span>}
+                      {ingredient.notes && <div className="text-xs text-muted-foreground">{ingredient.notes}</div>}
                     </div>
                     <Button
                       variant={isAdded ? 'ghost' : 'ghost'}
@@ -141,9 +141,9 @@ export function RecipeIngredients({ ingredients }: RecipeIngredientsProps) {
                     >
                       {!isLoading && (
                         isAdded ? (
-                          <CheckIcon className="h-4 w-4 text-green-600" />
+                          <CheckIcon className="h-4 w-4 text-success" />
                         ) : (
-                          <ShoppingCartIcon className="h-4 w-4 text-gray-400 hover:text-green-600" />
+                          <ShoppingCartIcon className="h-4 w-4 text-muted-foreground hover:text-success" />
                         )
                       )}
                     </Button>
@@ -153,7 +153,7 @@ export function RecipeIngredients({ ingredients }: RecipeIngredientsProps) {
             })}
           </div>
         ) : (
-          <p className="text-gray-500">材料が登録されていません</p>
+          <p className="text-muted-foreground">材料が登録されていません</p>
         )}
       </CardContent>
     </Card>

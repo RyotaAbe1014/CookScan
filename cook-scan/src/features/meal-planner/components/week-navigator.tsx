@@ -28,7 +28,7 @@ export function WeekNavigator({
         <ChevronLeftIcon className="h-5 w-5" />
       </Button>
       <div className="flex items-center gap-3">
-        <span className="text-lg font-semibold text-neutral-900">
+        <span className="text-lg font-semibold text-foreground">
           {startDate} 〜 {endDate}
         </span>
         <Button variant="secondary" size="sm" onClick={onToday}>

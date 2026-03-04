@@ -42,35 +42,35 @@ export function MealPlanDayCard({
   return (
     <div
       className={`rounded-xl border bg-white shadow-sm ${
-        isToday ? 'ring-2 ring-emerald-500' : ''
+        isToday ? 'ring-2 ring-primary' : ''
       }`}
     >
       <div
         className={`flex items-center justify-between rounded-t-xl px-4 py-3 ${
           isSunday
-            ? 'bg-red-50'
+            ? 'bg-danger-light'
             : isSaturday
-              ? 'bg-blue-50'
-              : 'bg-gray-50'
+              ? 'bg-accent-steps-light'
+              : 'bg-section-header'
         }`}
       >
         <div className="flex items-center gap-2">
           <span
             className={`text-sm font-bold ${
               isSunday
-                ? 'text-red-600'
+                ? 'text-danger'
                 : isSaturday
-                  ? 'text-blue-600'
-                  : 'text-neutral-700'
+                  ? 'text-accent-steps'
+                  : 'text-foreground'
             }`}
           >
             {DAY_LABELS[dayOfWeek]}
           </span>
-          <span className="text-sm text-neutral-500">
+          <span className="text-sm text-muted-foreground">
             {formatShortDate(date)}
           </span>
           {isToday && (
-            <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-700">
+            <span className="rounded-full bg-primary-light px-2 py-0.5 text-xs font-medium text-primary-hover">
               今日
             </span>
           )}
@@ -87,7 +87,7 @@ export function MealPlanDayCard({
 
       <div className="min-h-[60px] p-3">
         {items.length === 0 ? (
-          <p className="py-2 text-center text-sm text-neutral-400">
+          <p className="py-2 text-center text-sm text-muted-foreground">
             レシピなし
           </p>
         ) : (
@@ -95,11 +95,11 @@ export function MealPlanDayCard({
             {items.map((item) => (
               <li
                 key={item.id}
-                className="flex items-center justify-between rounded-lg bg-gray-50 px-3 py-2"
+                className="flex items-center justify-between rounded-lg bg-section-header px-3 py-2"
               >
                 <Link
                   href={`/recipes/${item.recipe.id}`}
-                  className="text-sm font-medium text-neutral-800 hover:underline"
+                  className="text-sm font-medium text-foreground hover:underline"
                 >
                   {item.recipe.title}
                 </Link>

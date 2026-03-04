@@ -42,27 +42,25 @@ Card.displayName = 'Card'
  * ============================================================================= */
 
 /**
- * アイコンバッジのカラープリセット（単色ベース）
+ * アイコンバッジのカラープリセット（デザイントークンベース）
  */
 type CardHeaderColor =
-  | 'emerald' // 基本情報、画像など
-  | 'amber' // タグ、カテゴリ、ソース情報
-  | 'green' // 材料
-  | 'blue' // 手順
-  | 'teal' // メモ
-  | 'red' // 削除、警告
-  | 'purple' // サブレシピ（子レシピ）
-  | 'indigo' // 親レシピ参照
+  | 'primary'        // 基本情報、画像など
+  | 'secondary'      // メモ、サブレシピ、親レシピ参照
+  | 'accent-steps'   // 調理手順
+  | 'accent-ingredients' // 材料
+  | 'accent-tags'    // タグ、カテゴリ、ソース情報
+  | 'warning'        // タイマー、警告
+  | 'danger'         // 削除
 
 const iconColors: Record<CardHeaderColor, string> = {
-  emerald: 'bg-emerald-600',
-  amber: 'bg-amber-500',
-  green: 'bg-emerald-500',
-  blue: 'bg-sky-500',
-  teal: 'bg-teal-500',
-  red: 'bg-red-500',
-  purple: 'bg-purple-500',
-  indigo: 'bg-indigo-500',
+  'primary': 'bg-primary',
+  'secondary': 'bg-secondary',
+  'accent-steps': 'bg-accent-steps',
+  'accent-ingredients': 'bg-accent-ingredients',
+  'accent-tags': 'bg-accent-tags',
+  'warning': 'bg-warning',
+  'danger': 'bg-danger',
 }
 
 type CardHeaderProps = HTMLAttributes<HTMLDivElement> & {
@@ -77,12 +75,12 @@ type CardHeaderProps = HTMLAttributes<HTMLDivElement> & {
 }
 
 const CardHeader = forwardRef<HTMLDivElement, CardHeaderProps>(
-  ({ className, icon, iconColor = 'emerald', title, actions, children, ...props }, ref) => {
+  ({ className, icon, iconColor = 'primary', title, actions, children, ...props }, ref) => {
     return (
       <div
         ref={ref}
         className={cn(
-          'border-b border-gray-200 bg-linear-to-r from-gray-50 to-white px-6 py-4',
+          'border-b border-section-header-border bg-linear-to-r from-section-header to-white px-6 py-4',
           className
         )}
         {...props}

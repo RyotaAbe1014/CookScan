@@ -42,7 +42,7 @@ export const WithHeader: Story = {
     <Card className="w-96">
       <CardHeader
         icon={<BookOpenIcon className="h-5 w-5 text-white" />}
-        iconColor="emerald"
+        iconColor="primary"
         title="レシピ詳細"
       />
       <CardContent>
@@ -56,7 +56,7 @@ export const IconColors: Story = {
   render: () => (
     <div className="flex flex-col gap-4">
       {(
-        ['emerald', 'amber', 'green', 'blue', 'teal', 'red', 'purple', 'indigo'] as const
+        ['primary', 'secondary', 'accent-steps', 'accent-ingredients', 'accent-tags', 'warning', 'danger'] as const
       ).map((color) => (
         <Card key={color} className="w-96">
           <CardHeader
@@ -75,7 +75,7 @@ export const WithHeaderActions: Story = {
     <Card className="w-96">
       <CardHeader
         icon={<ClockIcon className="h-5 w-5 text-white" />}
-        iconColor="blue"
+        iconColor="accent-steps"
         title="調理手順"
         actions={
           <button className="rounded-md bg-primary px-3 py-1 text-xs text-white">

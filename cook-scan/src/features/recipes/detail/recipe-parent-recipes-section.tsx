@@ -17,7 +17,7 @@ export function RecipeParentRecipesSection({ parentRecipes }: RecipeParentRecipe
     <Card className="mb-6">
       <CardHeader
         icon={<LinkIcon className="h-5 w-5 text-white" />}
-        iconColor="indigo"
+        iconColor="secondary"
         title="このレシピを使用しているレシピ"
       />
       <CardContent>
@@ -26,15 +26,15 @@ export function RecipeParentRecipesSection({ parentRecipes }: RecipeParentRecipe
             <Link
               key={relation.id}
               href={`/recipes/${relation.parentRecipeId}`}
-              className="flex items-center justify-between rounded-lg bg-linear-to-r from-indigo-50 to-white p-3 ring-1 ring-indigo-200 transition-all hover:shadow-md"
+              className="flex items-center justify-between rounded-lg bg-linear-to-r from-primary-light to-white p-3 ring-1 ring-primary-light transition-all hover:shadow-md"
             >
               <div className="flex items-center gap-2">
-                <div className="h-2 w-2 rounded-full bg-indigo-500" />
-                <span className="font-semibold text-gray-900">
+                <div className="h-2 w-2 rounded-full bg-primary" />
+                <span className="font-semibold text-foreground">
                   {relation.parentRecipe.title}
                 </span>
               </div>
-              <ChevronRightIcon className="h-4 w-4 text-gray-400" />
+              <ChevronRightIcon className="h-4 w-4 text-muted-foreground" />
             </Link>
           ))}
         </div>
