@@ -97,8 +97,13 @@ export async function findRecipesByUser(
 /**
  * レシピの存在確認（ユーザー所有権チェック）
  */
-export async function checkRecipeOwnership(recipeId: string, userId: string): Promise<boolean> {
-  const recipe = await prisma.recipe.findFirst({
+export async function checkRecipeOwnership(
+  recipeId: string,
+  userId: string,
+  tx?: Prisma.TransactionClient
+): Promise<boolean> {
+  const client = tx ?? prisma
+  const recipe = await client.recipe.findFirst({
     where: {
       id: recipeId,
       userId,

@@ -80,7 +80,7 @@ async function validateAndCreateChildRecipeRelations(
 // ===== Recipe Creation =====
 
 /**
- * レシピを作成（トランザクション管理）
+ * レシピを作成
  */
 export async function createRecipe(
   userId: string,
@@ -127,7 +127,7 @@ export async function createRecipe(
 // ===== Recipe Update =====
 
 /**
- * レシピを更新（トランザクション管理）
+ * レシピを更新
  */
 export async function updateRecipe(
   userId: string,
@@ -135,21 +135,20 @@ export async function updateRecipe(
 ): Promise<UpdateRecipeResult> {
   const { recipeId, title, sourceInfo, ingredients, steps, memo, tags, childRecipes } = input
 
-  // 所有権チェック
-  const hasOwnership = await RecipeRepository.checkRecipeOwnership(recipeId, userId)
-  if (!hasOwnership) {
-    throw new Error('レシピが見つかりません')
-  }
-
-  // タグのバリデーション
+  // タグのバリデーション（トランザクション外で実施。txを使わないため）
   const { validTagIds, isValid } = await TagRepository.validateTagIdsForUser(tags ?? [], userId)
 
   if (!isValid) {
     throw new Error('無効なタグが含まれています')
   }
 
-  // トランザクション実行
   const updatedRecipe = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
+    // 所有権チェック
+    const hasOwnership = await RecipeRepository.checkRecipeOwnership(recipeId, userId, tx)
+    if (!hasOwnership) {
+      throw new Error('レシピが見つかりません')
+    }
+
     // レシピ基本情報を更新
     const recipe = await RecipeRepository.updateRecipe(tx, recipeId, title, memo)
 
@@ -183,17 +182,15 @@ export async function updateRecipe(
 // ===== Recipe Deletion =====
 
 /**
- * レシピを削除（トランザクション管理）
+ * レシピを削除
  */
 export async function deleteRecipe(userId: string, recipeId: string): Promise<void> {
-  // 所有権チェック
-  const hasOwnership = await RecipeRepository.checkRecipeOwnership(recipeId, userId)
-  if (!hasOwnership) {
-    throw new Error('レシピが見つかりません')
-  }
-
-  // トランザクション実行
   await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
+    const hasOwnership = await RecipeRepository.checkRecipeOwnership(recipeId, userId, tx)
+    if (!hasOwnership) {
+      throw new Error('レシピが見つかりません')
+    }
+
     await RecipeRepository.deleteRecipe(tx, recipeId)
   })
 }
