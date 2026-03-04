@@ -2,8 +2,6 @@
 import { Mastra } from '@mastra/core/mastra';
 import { PinoLogger } from '@mastra/loggers';
 import { PostgresStore } from "@mastra/pg";
-import { cookScanWorkflow } from './workflows/cook-scan-workflow';
-import { imageToTextAgent } from './agents/image-to-text-agent';
 import { convertTextToRecipeAgent } from './agents/convert-text-to-recipe-agent';
 import { textToRecipeWorkflow } from './workflows/text-to-recipe';
 import { recommendAlternativesAgent } from './agents/recommend-alternative-agent';
@@ -18,8 +16,8 @@ const storage = new PostgresStore({
 });
 
 export const mastra = new Mastra({
-  workflows: { cookScanWorkflow, textToRecipeWorkflow, recommendAlternativesWorkflow },
-  agents: { imageToTextAgent, convertTextToRecipeAgent, recommendAlternativesAgent },
+  workflows: { textToRecipeWorkflow, recommendAlternativesWorkflow },
+  agents: { convertTextToRecipeAgent, recommendAlternativesAgent },
   storage: storage,
   logger: new PinoLogger({
     name: 'Mastra',

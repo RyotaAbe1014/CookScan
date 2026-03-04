@@ -29,7 +29,7 @@
 
 3. **OCR処理（バックエンドワーカー）**
    - SQSからメッセージを受信
-   - S3から画像を読み取り、cookScanWorkflow (Gemini 2.5 Flash) でOCR
+   - S3から画像を読み取り、OCR処理を実行
    - 結果を S3 `results/{userId}/{jobId}/ocr-result.json` に書き込み
 
 4. **ポーリング**
@@ -49,14 +49,6 @@
    - 出力: title, ingredients[], steps[], memo
 
 #### AI エージェントの役割
-
-**imageToTextAgent (OCR専門)**
-- 完全性重視: 1文字も省略しない
-- ブロック単位で読み取り (上→下、左→右)
-- 2カラムは左カラムを先に処理
-- 画像注釈を区別
-- 単位・記号をそのまま保持
-- 読み取り不能箇所は [?]
 
 **convertTextToRecipeAgent (レシピ抽出専門)**
 - **厳守ルール: 元のテキストを改変しない**
@@ -177,7 +169,7 @@ sequenceDiagram
 
     SQS->>Worker: ReceiveMessage
     Worker->>S3: GetObject (images)
-    Worker->>Worker: OCR処理 (Gemini 2.5 Flash)
+    Worker->>Worker: OCR処理
     Worker->>S3: PutObject<br/>results/{userId}/{jobId}/ocr-result.json
 
     loop 5秒間隔ポーリング (最大36回)
@@ -348,10 +340,6 @@ const handleUpload = async () => {
 - Mastra textToRecipeWorkflow を実行
 
 #### Mastra Framework
-
-**cookScanWorkflow** (OCRワーカーで実行)
-- **ファイル**: `/src/mastra/workflows/cook-scan-workflow.ts`
-- imageToTextStep → 画像からテキスト抽出 (Gemini 2.5 Flash)
 
 **textToRecipeWorkflow**
 - **ファイル**: `/src/mastra/workflows/text-to-recipe.ts`
@@ -560,9 +548,7 @@ OCR処理結果をポーリング取得
    - `/src/app/api/recipes/extract/text/route.ts`
 
 5. **Mastra ワークフロー**
-   - `/src/mastra/workflows/cook-scan-workflow.ts`
    - `/src/mastra/workflows/text-to-recipe.ts`
 
 6. **AI エージェント**
-   - `/src/mastra/agents/image-to-text-agent.ts`
    - `/src/mastra/agents/convert-text-to-recipe-agent.ts`
