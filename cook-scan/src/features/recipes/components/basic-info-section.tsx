@@ -23,7 +23,7 @@ export function BasicInfoSection({ title, onTitleChange, sourceInfo, onSourceInf
     <Card>
       <CardHeader
         icon={<InfoCircleIcon className="h-5 w-5 text-white" />}
-        iconColor="emerald"
+        iconColor="primary"
         title="基本情報"
       />
       <CardContent>
@@ -31,10 +31,10 @@ export function BasicInfoSection({ title, onTitleChange, sourceInfo, onSourceInf
           <div>
             <label
               htmlFor="title"
-              className="mb-2 flex items-center gap-1.5 text-sm font-medium text-gray-700"
+              className="mb-2 flex items-center gap-1.5 text-sm font-medium text-foreground"
             >
-              <TagIcon className="h-4 w-4 text-emerald-600" />
-              レシピタイトル <span className="text-red-500">*</span>
+              <TagIcon className="h-4 w-4 text-primary" />
+              レシピタイトル <span className="text-danger">*</span>
             </label>
             <Input
               type="text"
@@ -50,9 +50,9 @@ export function BasicInfoSection({ title, onTitleChange, sourceInfo, onSourceInf
             <div>
               <label
                 htmlFor="bookName"
-                className="mb-2 flex items-center gap-1.5 text-sm font-medium text-gray-700"
+                className="mb-2 flex items-center gap-1.5 text-sm font-medium text-foreground"
               >
-                <BookOpenIcon className="h-4 w-4 text-amber-600" />
+                <BookOpenIcon className="h-4 w-4 text-warning" />
                 本の名前
               </label>
               <Input
@@ -66,9 +66,9 @@ export function BasicInfoSection({ title, onTitleChange, sourceInfo, onSourceInf
             <div>
               <label
                 htmlFor="pageNumber"
-                className="mb-2 flex items-center gap-1.5 text-sm font-medium text-gray-700"
+                className="mb-2 flex items-center gap-1.5 text-sm font-medium text-foreground"
               >
-                <DocumentIcon className="h-4 w-4 text-green-600" />
+                <DocumentIcon className="h-4 w-4 text-success" />
                 ページ番号
               </label>
               <Input
@@ -82,9 +82,9 @@ export function BasicInfoSection({ title, onTitleChange, sourceInfo, onSourceInf
             <div>
               <label
                 htmlFor="url"
-                className="mb-2 flex items-center gap-1.5 text-sm font-medium text-gray-700"
+                className="mb-2 flex items-center gap-1.5 text-sm font-medium text-foreground"
               >
-                <LinkIcon className="h-4 w-4 text-blue-600" />
+                <LinkIcon className="h-4 w-4 text-accent-steps" />
                 参照URL
               </label>
               <Input
@@ -99,9 +99,9 @@ export function BasicInfoSection({ title, onTitleChange, sourceInfo, onSourceInf
           <div>
             <label
               htmlFor="memo"
-              className="mb-2 flex items-center gap-1.5 text-sm font-medium text-gray-700"
+              className="mb-2 flex items-center gap-1.5 text-sm font-medium text-foreground"
             >
-              <DocumentTextIcon className="h-4 w-4 text-teal-600" />
+              <DocumentTextIcon className="h-4 w-4 text-secondary-hover" />
               メモ
             </label>
             <Textarea

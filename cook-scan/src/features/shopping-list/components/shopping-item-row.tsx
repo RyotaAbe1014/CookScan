@@ -30,7 +30,7 @@ export function ShoppingItemRow({ item, onEdit, onToggleCheck }: ShoppingItemRow
 
   return (
     <li
-      className="flex cursor-pointer items-center gap-3 px-4 py-3 transition-colors duration-150 hover:bg-gray-50"
+      className="flex cursor-pointer items-center gap-3 px-4 py-3 transition-colors duration-150 hover:bg-section-header"
       role="button"
       tabIndex={0}
       onClick={() => onToggleCheck(item.id)}
@@ -52,8 +52,8 @@ export function ShoppingItemRow({ item, onEdit, onToggleCheck }: ShoppingItemRow
           'flex h-6 w-6 shrink-0 items-center justify-center rounded-md border-2 transition-all duration-200 cursor-pointer',
           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2',
           item.isChecked
-            ? 'border-emerald-500 bg-emerald-500 text-white'
-            : 'border-gray-300 bg-white hover:border-emerald-400'
+            ? 'border-primary bg-primary text-white'
+            : 'border-border-dark bg-white hover:border-primary'
         )}
         aria-label={item.isChecked ? 'チェックを外す' : 'チェックする'}
       >

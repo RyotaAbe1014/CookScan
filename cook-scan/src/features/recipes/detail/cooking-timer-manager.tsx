@@ -79,14 +79,14 @@ export function CookingTimerManager({ recipeId }: CookingTimerManagerProps) {
   }
 
   return (
-    <Card className="sticky top-4 z-10 overflow-hidden border-2 border-orange-300/60 shadow-xl shadow-orange-200/20 backdrop-blur-sm">
+    <Card className="sticky top-4 z-10 overflow-hidden border-2 border-warning/60 shadow-xl shadow-warning/20 backdrop-blur-sm">
       {/* Decorative header background */}
-      <div className="absolute left-0 right-0 top-0 h-24 bg-linear-to-br from-orange-400/10 via-amber-400/5 to-transparent" />
+      <div className="absolute left-0 right-0 top-0 h-24 bg-linear-to-br from-warning/10 via-warning/5 to-transparent" />
 
       <CardHeader
         icon={
           <div className="relative">
-            <div className="absolute inset-0 animate-ping rounded-full bg-orange-300/50" />
+            <div className="absolute inset-0 animate-ping rounded-full bg-warning/50" />
             <ClockIcon
               className="relative h-5 w-5 animate-spin text-white"
               style={{ animationDuration: '3s' }}
@@ -94,10 +94,10 @@ export function CookingTimerManager({ recipeId }: CookingTimerManagerProps) {
             />
           </div>
         }
-        iconColor="amber"
+        iconColor="warning"
         title="調理タイマー"
         actions={
-          <span className="animate-pulse rounded-full bg-orange-600 px-2.5 py-0.5 text-xs font-bold text-white shadow-sm">
+          <span className="animate-pulse rounded-full bg-warning px-2.5 py-0.5 text-xs font-bold text-white shadow-sm">
             {activeTimers.length}件実行中
           </span>
         }
@@ -113,27 +113,27 @@ export function CookingTimerManager({ recipeId }: CookingTimerManagerProps) {
               <div
                 key={timer.stepId}
                 className={`group relative overflow-hidden rounded-2xl border-2 p-4 shadow-lg transition-all duration-300 hover:scale-[1.02] hover:shadow-xl ${isUrgent
-                    ? 'animate-pulse border-red-400 bg-linear-to-r from-red-50 to-orange-50 shadow-red-200/40'
+                    ? 'animate-pulse border-danger bg-linear-to-r from-danger-light to-warning-light shadow-danger/40'
                     : isNearlyDone
-                      ? 'border-orange-400 bg-linear-to-r from-orange-50 to-amber-50 shadow-orange-200/30'
-                      : 'border-orange-200/60 bg-linear-to-r from-amber-50/50 to-white shadow-orange-100/20'
+                      ? 'border-warning bg-linear-to-r from-warning-light to-warning-light shadow-warning/30'
+                      : 'border-warning/60 bg-linear-to-r from-warning-light/50 to-white shadow-warning/20'
                   }`}
               >
                 {/* Decorative gradient overlay */}
-                <div className="absolute inset-0 bg-linear-to-br from-orange-400/5 via-transparent to-amber-400/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                <div className="absolute inset-0 bg-linear-to-br from-warning/5 via-transparent to-warning/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
                 <div className="relative flex items-start gap-4">
                   {/* Step number badge */}
                   <div className="relative shrink-0">
-                    <div className="absolute inset-0 animate-pulse rounded-xl bg-orange-400/20 blur-sm" />
-                    <div className="relative flex h-12 w-12 items-center justify-center rounded-xl bg-linear-to-br from-orange-500 to-orange-600 shadow-lg shadow-orange-600/30">
+                    <div className="absolute inset-0 animate-pulse rounded-xl bg-warning/20 blur-sm" />
+                    <div className="relative flex h-12 w-12 items-center justify-center rounded-xl bg-linear-to-br from-warning to-warning shadow-lg shadow-warning/30">
                       <span className="text-lg font-bold text-white">{timer.stepNumber}</span>
                     </div>
                   </div>
 
                   <div className="min-w-0 flex-1 space-y-3">
                     {/* Instruction text */}
-                    <p className="text-sm font-semibold leading-snug text-slate-800">
+                    <p className="text-sm font-semibold leading-snug text-foreground">
                       {timer.instruction}
                     </p>
 
@@ -144,15 +144,15 @@ export function CookingTimerManager({ recipeId }: CookingTimerManagerProps) {
                         <div className="flex items-baseline gap-2">
                           <span
                             className={`font-mono text-3xl font-bold tabular-nums tracking-tight transition-colors ${isUrgent
-                                ? 'text-red-600'
+                                ? 'text-danger-hover'
                                 : isNearlyDone
-                                  ? 'text-orange-700'
-                                  : 'text-orange-600'
+                                  ? 'text-warning'
+                                  : 'text-warning'
                               }`}
                           >
                             {formatTime(timer.remainingSeconds)}
                           </span>
-                          <span className="text-xs font-medium text-orange-600/70">
+                          <span className="text-xs font-medium text-warning/70">
                             残り
                           </span>
                         </div>
@@ -161,11 +161,11 @@ export function CookingTimerManager({ recipeId }: CookingTimerManagerProps) {
                         <div className="flex items-center gap-1.5">
                           <div
                             className={`h-2 w-2 animate-pulse rounded-full shadow-sm ${isUrgent
-                                ? 'bg-red-500 shadow-red-300'
-                                : 'bg-orange-500 shadow-orange-300'
+                                ? 'bg-danger shadow-danger/50'
+                                : 'bg-warning shadow-warning/50'
                               }`}
                           />
-                          <span className="text-xs font-medium text-orange-700">
+                          <span className="text-xs font-medium text-warning">
                             {isUrgent ? '完了間近' : '調理中'}
                           </span>
                         </div>
@@ -173,17 +173,17 @@ export function CookingTimerManager({ recipeId }: CookingTimerManagerProps) {
 
                       {/* Enhanced progress bar */}
                       <div className="relative">
-                        <div className="h-3 overflow-hidden rounded-full bg-orange-100 shadow-inner">
+                        <div className="h-3 overflow-hidden rounded-full bg-warning-light shadow-inner">
                           <div
                             className={`h-full rounded-full shadow-sm transition-all duration-1000 ease-linear ${isUrgent
-                                ? 'bg-linear-to-r from-red-500 to-orange-600'
-                                : 'bg-linear-to-r from-orange-500 to-amber-500'
+                                ? 'bg-linear-to-r from-danger to-danger'
+                                : 'bg-linear-to-r from-warning to-warning'
                               }`}
                             style={{ width: `${progress}%` }}
                           />
                         </div>
                         {/* Progress percentage */}
-                        <div className="mt-1 flex justify-between text-xs font-medium text-orange-600/60">
+                        <div className="mt-1 flex justify-between text-xs font-medium text-warning/60">
                           <span>0:00</span>
                           <span>{Math.round(progress)}%</span>
                           <span>{formatTime(timer.totalSeconds)}</span>
@@ -202,7 +202,7 @@ export function CookingTimerManager({ recipeId }: CookingTimerManagerProps) {
               variant="danger"
               size="md"
               onClick={handleStopAll}
-              className="w-full bg-linear-to-r from-red-600 to-orange-600 font-semibold shadow-lg shadow-red-600/20 transition-all hover:scale-[1.02] hover:shadow-xl hover:shadow-red-600/30"
+              className="w-full bg-linear-to-r from-danger-hover to-danger font-semibold shadow-lg shadow-danger/20 transition-all hover:scale-[1.02] hover:shadow-xl hover:shadow-danger/30"
               aria-label="すべてのタイマーを停止"
             >
               <StopCircleIcon className="h-5 w-5" strokeWidth={2.5} />

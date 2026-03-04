@@ -12,7 +12,7 @@ export function IngredientInput({
   onRemove,
 }: IngredientInputProps) {
   return (
-    <div className="group flex gap-3 rounded-lg bg-linear-to-r from-gray-50 to-white p-3 ring-1 ring-gray-200 transition-all hover:shadow-md">
+    <div className="group flex gap-3 rounded-lg bg-linear-to-r from-section-header to-white p-3 ring-1 ring-section-header-border transition-all hover:shadow-md">
       <div className="flex-1">
         <Input
           type="text"
@@ -47,7 +47,7 @@ export function IngredientInput({
         type="button"
         onClick={() => onRemove(index)}
         disabled={!canDelete}
-        className="rounded-lg p-2 text-gray-400 transition-all hover:bg-red-50 hover:text-red-500 disabled:cursor-not-allowed disabled:opacity-50"
+        className="rounded-lg p-2 text-muted-foreground transition-all hover:bg-danger-light hover:text-danger disabled:cursor-not-allowed disabled:opacity-50"
         aria-label="材料を削除"
       >
         <TrashIcon className="h-5 w-5" stroke="currentColor" />

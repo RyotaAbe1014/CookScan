@@ -11,15 +11,15 @@ export function QuickActions() {
   return (
     <div className="mb-8">
       <div className="mb-6 flex items-center gap-3">
-        <div className="h-1 w-12 rounded-full bg-emerald-600" />
-        <h2 className="text-2xl font-bold text-neutral-900">クイックアクション</h2>
+        <div className="h-1 w-12 rounded-full bg-primary" />
+        <h2 className="text-2xl font-bold text-foreground">クイックアクション</h2>
       </div>
 
       <div className="space-y-4">
         {/* Hero Card - レシピをスキャン */}
         <Link
           href="/recipes/upload"
-          className="group relative block overflow-hidden rounded-2xl bg-emerald-600 p-8 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl sm:p-10"
+          className="group relative block overflow-hidden rounded-2xl bg-primary p-8 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl sm:p-10"
           style={{
             animation: 'fadeInUp 0.5s ease-out',
             animationDelay: '0ms',
@@ -28,8 +28,8 @@ export function QuickActions() {
         >
           {/* 背景装飾 */}
           <div className="pointer-events-none absolute inset-0">
-            <div className="absolute -right-20 -top-20 h-80 w-80 rounded-full bg-emerald-500/30" />
-            <div className="absolute -bottom-20 -left-20 h-60 w-60 rounded-full bg-teal-400/20" />
+            <div className="absolute -right-20 -top-20 h-80 w-80 rounded-full bg-primary/30" />
+            <div className="absolute -bottom-20 -left-20 h-60 w-60 rounded-full bg-secondary/20" />
           </div>
 
           <div className="relative flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
@@ -44,13 +44,13 @@ export function QuickActions() {
               <h3 className="mb-3 text-2xl font-bold text-white sm:text-3xl">
                 レシピをスキャンする
               </h3>
-              <p className="max-w-md text-base text-emerald-50 sm:text-lg">
+              <p className="max-w-md text-base text-primary-light sm:text-lg">
                 料理本やレシピカードを撮影して、AIが自動でデジタル化します
               </p>
             </div>
 
             <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl bg-white shadow-lg transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3">
-              <CameraIcon className="h-8 w-8 text-emerald-600" strokeWidth={2} />
+              <CameraIcon className="h-8 w-8 text-primary" strokeWidth={2} />
             </div>
           </div>
         </Link>
@@ -60,7 +60,7 @@ export function QuickActions() {
           {/* マイレシピ */}
           <Link
             href="/recipes"
-            className="group relative overflow-hidden rounded-xl bg-white p-6 shadow-md ring-1 ring-slate-200 transition-all duration-200 hover:-translate-y-1 hover:shadow-lg"
+            className="group relative overflow-hidden rounded-xl bg-white p-6 shadow-md ring-1 ring-border transition-all duration-200 hover:-translate-y-1 hover:shadow-lg"
             style={{
               animation: 'fadeInUp 0.5s ease-out',
               animationDelay: '100ms',
@@ -68,21 +68,21 @@ export function QuickActions() {
             }}
           >
             <div className="flex items-center gap-4">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-teal-100 transition-transform duration-200 group-hover:scale-110">
-                <EmptyIcon className="h-6 w-6 text-teal-600" strokeWidth={2} />
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-secondary-light transition-transform duration-200 group-hover:scale-110">
+                <EmptyIcon className="h-6 w-6 text-secondary-hover" strokeWidth={2} />
               </div>
               <div className="flex-1">
-                <h3 className="mb-1 font-semibold text-neutral-900">マイレシピ</h3>
-                <p className="text-sm text-slate-600">保存したレシピを閲覧・編集</p>
+                <h3 className="mb-1 font-semibold text-foreground">マイレシピ</h3>
+                <p className="text-sm text-muted-foreground">保存したレシピを閲覧・編集</p>
               </div>
-              <ChevronRightIcon className="h-5 w-5 shrink-0 text-slate-400 transition-transform duration-200 group-hover:translate-x-1" />
+              <ChevronRightIcon className="h-5 w-5 shrink-0 text-muted-foreground transition-transform duration-200 group-hover:translate-x-1" />
             </div>
           </Link>
 
           {/* 買い物リスト */}
           <Link
             href="/shopping-list"
-            className="group relative overflow-hidden rounded-xl bg-white p-6 shadow-md ring-1 ring-slate-200 transition-all duration-200 hover:-translate-y-1 hover:shadow-lg"
+            className="group relative overflow-hidden rounded-xl bg-white p-6 shadow-md ring-1 ring-border transition-all duration-200 hover:-translate-y-1 hover:shadow-lg"
             style={{
               animation: 'fadeInUp 0.5s ease-out',
               animationDelay: '150ms',
@@ -90,21 +90,21 @@ export function QuickActions() {
             }}
           >
             <div className="flex items-center gap-4">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-sky-100 transition-transform duration-200 group-hover:scale-110">
-                <ClipboardListIcon className="h-6 w-6 text-sky-600" strokeWidth={2} />
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-accent-steps-light transition-transform duration-200 group-hover:scale-110">
+                <ClipboardListIcon className="h-6 w-6 text-accent-steps" strokeWidth={2} />
               </div>
               <div className="flex-1">
-                <h3 className="mb-1 font-semibold text-neutral-900">買い物リスト</h3>
-                <p className="text-sm text-slate-600">必要な食材をチェック管理</p>
+                <h3 className="mb-1 font-semibold text-foreground">買い物リスト</h3>
+                <p className="text-sm text-muted-foreground">必要な食材をチェック管理</p>
               </div>
-              <ChevronRightIcon className="h-5 w-5 shrink-0 text-slate-400 transition-transform duration-200 group-hover:translate-x-1" />
+              <ChevronRightIcon className="h-5 w-5 shrink-0 text-muted-foreground transition-transform duration-200 group-hover:translate-x-1" />
             </div>
           </Link>
 
           {/* 献立プランナー */}
           <Link
             href={'/meal-planner' as Route}
-            className="group relative overflow-hidden rounded-xl bg-white p-6 shadow-md ring-1 ring-slate-200 transition-all duration-200 hover:-translate-y-1 hover:shadow-lg"
+            className="group relative overflow-hidden rounded-xl bg-white p-6 shadow-md ring-1 ring-border transition-all duration-200 hover:-translate-y-1 hover:shadow-lg"
             style={{
               animation: 'fadeInUp 0.5s ease-out',
               animationDelay: '200ms',
@@ -112,21 +112,21 @@ export function QuickActions() {
             }}
           >
             <div className="flex items-center gap-4">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-violet-100 transition-transform duration-200 group-hover:scale-110">
-                <CalendarIcon className="h-6 w-6 text-violet-600" strokeWidth={2} />
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-secondary-light transition-transform duration-200 group-hover:scale-110">
+                <CalendarIcon className="h-6 w-6 text-secondary-hover" strokeWidth={2} />
               </div>
               <div className="flex-1">
-                <h3 className="mb-1 font-semibold text-neutral-900">献立プランナー</h3>
-                <p className="text-sm text-slate-600">1週間の献立を計画・管理</p>
+                <h3 className="mb-1 font-semibold text-foreground">献立プランナー</h3>
+                <p className="text-sm text-muted-foreground">1週間の献立を計画・管理</p>
               </div>
-              <ChevronRightIcon className="h-5 w-5 shrink-0 text-slate-400 transition-transform duration-200 group-hover:translate-x-1" />
+              <ChevronRightIcon className="h-5 w-5 shrink-0 text-muted-foreground transition-transform duration-200 group-hover:translate-x-1" />
             </div>
           </Link>
 
           {/* タグ管理 */}
           <Link
             href="/tags"
-            className="group relative overflow-hidden rounded-xl bg-white p-6 shadow-md ring-1 ring-slate-200 transition-all duration-200 hover:-translate-y-1 hover:shadow-lg"
+            className="group relative overflow-hidden rounded-xl bg-white p-6 shadow-md ring-1 ring-border transition-all duration-200 hover:-translate-y-1 hover:shadow-lg"
             style={{
               animation: 'fadeInUp 0.5s ease-out',
               animationDelay: '200ms',
@@ -134,14 +134,14 @@ export function QuickActions() {
             }}
           >
             <div className="flex items-center gap-4">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-amber-100 transition-transform duration-200 group-hover:scale-110">
-                <TagIcon className="h-6 w-6 text-amber-600" strokeWidth={2} />
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-warning-light transition-transform duration-200 group-hover:scale-110">
+                <TagIcon className="h-6 w-6 text-warning" strokeWidth={2} />
               </div>
               <div className="flex-1">
-                <h3 className="mb-1 font-semibold text-neutral-900">タグ管理</h3>
-                <p className="text-sm text-slate-600">カテゴリを作成してレシピを整理</p>
+                <h3 className="mb-1 font-semibold text-foreground">タグ管理</h3>
+                <p className="text-sm text-muted-foreground">カテゴリを作成してレシピを整理</p>
               </div>
-              <ChevronRightIcon className="h-5 w-5 shrink-0 text-slate-400 transition-transform duration-200 group-hover:translate-x-1" />
+              <ChevronRightIcon className="h-5 w-5 shrink-0 text-muted-foreground transition-transform duration-200 group-hover:translate-x-1" />
             </div>
           </Link>
         </div>

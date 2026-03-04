@@ -31,20 +31,20 @@ export const LoginForm = () => {
   return (
     <>
       {/* Card - フラットデザインを重視 */}
-      <div className="overflow-hidden rounded-2xl bg-white shadow-lg ring-1 ring-slate-200">
+      <div className="overflow-hidden rounded-2xl bg-white shadow-lg ring-1 ring-border">
         <div className="px-8 pb-8 pt-10 sm:px-10 sm:pb-10 sm:pt-12">
           {/* Header with icon */}
           <div className="mb-8 text-center">
-            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-xl bg-emerald-600 shadow-md shadow-emerald-600/20 transition-all duration-200 hover:shadow-lg hover:shadow-emerald-600/30">
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-xl bg-primary shadow-md shadow-primary/20 transition-all duration-200 hover:shadow-lg hover:shadow-primary/30">
               <BookIcon className="h-8 w-8 text-white" />
             </div>
-            <h2 className="text-3xl font-bold tracking-tight text-neutral-900 sm:text-4xl">
+            <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
               CookScan
             </h2>
-            <p className="mt-3 text-base text-slate-600">
+            <p className="mt-3 text-base text-muted-foreground">
               レシピをスキャンして
               <br />
-              <span className="font-semibold text-emerald-600">あなただけの料理コレクション</span>
+              <span className="font-semibold text-primary">あなただけの料理コレクション</span>
               を作りましょう
             </p>
           </div>
@@ -60,7 +60,7 @@ export const LoginForm = () => {
                 htmlFor="email"
                 required
                 icon={<MailIcon className="h-4 w-4" />}
-                iconColorClass="text-emerald-500"
+                iconColorClass="text-primary"
               >
                 <Input
                   id="email"
@@ -81,7 +81,7 @@ export const LoginForm = () => {
                 htmlFor="password"
                 required
                 icon={<LockIcon className="h-4 w-4" />}
-                iconColorClass="text-emerald-500"
+                iconColorClass="text-primary"
               >
                 <Input
                   id="password"
@@ -119,10 +119,10 @@ export const LoginForm = () => {
               {/* Divider */}
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-slate-200" />
+                  <div className="w-full border-t border-border" />
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="bg-white px-3 text-slate-500">または</span>
+                  <span className="bg-white px-3 text-muted-foreground">または</span>
                 </div>
               </div>
 
@@ -131,7 +131,7 @@ export const LoginForm = () => {
                 disabled={true}
                 isLoading={isPending}
                 variant="secondary"
-                className="w-full hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-700"
+                className="w-full hover:border-primary-light hover:bg-primary-light hover:text-primary-hover"
               >
                 {isPending ? (
                   '登録中...'
@@ -147,7 +147,7 @@ export const LoginForm = () => {
         </div >
 
         {/* Footer decoration */}
-        <div className="bg-linear-to-r from-emerald-600 to-teal-500 px-8 py-4 sm:px-10">
+        <div className="bg-linear-to-r from-primary to-secondary px-8 py-4 sm:px-10">
           <p className="text-center text-xs font-medium text-white">
             安全に保存されるあなたのレシピコレクション
           </p>
@@ -155,9 +155,9 @@ export const LoginForm = () => {
       </div>
 
       {/* Additional info */}
-      <p className="mt-6 text-center text-sm text-slate-600">
+      <p className="mt-6 text-center text-sm text-muted-foreground">
         AIがレシピを自動抽出
-        <span className="mx-1 text-emerald-500">•</span>
+        <span className="mx-1 text-primary">•</span>
         簡単に整理・検索
       </p>
     </>

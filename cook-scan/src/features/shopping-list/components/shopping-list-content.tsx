@@ -55,8 +55,8 @@ export function ShoppingListContent({ items }: ShoppingListContentProps) {
         <div className="space-y-6">
           {/* 未チェックアイテム */}
           {uncheckedItems.length > 0 && (
-            <div className="rounded-xl bg-white shadow-card ring-1 ring-gray-900/5">
-              <ul className="divide-y divide-gray-100">
+            <div className="rounded-xl bg-white shadow-card ring-1 ring-card-border">
+              <ul className="divide-y divide-muted">
                 {uncheckedItems.map((item) => (
                   <ShoppingItemRow
                     key={item.id}
@@ -78,8 +78,8 @@ export function ShoppingListContent({ items }: ShoppingListContentProps) {
                 </h3>
                 <DeleteCheckedItemsButton />
               </div>
-              <div className="rounded-xl bg-white/60 shadow-sm ring-1 ring-gray-900/5">
-                <ul className="divide-y divide-gray-100">
+              <div className="rounded-xl bg-white/60 shadow-sm ring-1 ring-card-border">
+                <ul className="divide-y divide-muted">
                   {checkedItems.map((item) => (
                     <ShoppingItemRow
                       key={item.id}

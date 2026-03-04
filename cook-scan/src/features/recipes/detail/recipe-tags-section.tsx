@@ -20,7 +20,7 @@ export function RecipeTagsSection({ recipeTags }: RecipeTagsSectionProps) {
         icon={
           <TagIcon className="h-5 w-5 text-white" />
         }
-        iconColor="amber"
+        iconColor="accent-tags"
         title="タグ"
       />
       <CardContent>
@@ -28,14 +28,14 @@ export function RecipeTagsSection({ recipeTags }: RecipeTagsSectionProps) {
           {[...tagsByCategory.entries()].map(([categoryId, category]) => (
             <div key={categoryId}>
               <div className="mb-2 flex items-center gap-2">
-                <div className="h-1 w-1 rounded-full bg-amber-600" />
-                <h4 className="text-sm font-semibold text-gray-900">{category.name}</h4>
+                <div className="h-1 w-1 rounded-full bg-warning" />
+                <h4 className="text-sm font-semibold text-foreground">{category.name}</h4>
               </div>
               <div className="flex flex-wrap gap-2">
                 {category.tags.map((tag) => (
                   <span
                     key={tag.id}
-                    className="inline-flex items-center gap-1.5 rounded-lg bg-amber-100 px-3 py-2 text-sm font-medium text-amber-900 ring-1 ring-amber-300"
+                    className="inline-flex items-center gap-1.5 rounded-lg bg-warning-light px-3 py-2 text-sm font-medium text-warning ring-1 ring-warning-light"
                   >
                     <TagIcon className="h-3.5 w-3.5" />
                     {tag.name}

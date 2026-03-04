@@ -102,8 +102,8 @@ function TagForm({ categories }: TagFormProps) {
   return (
     <form onSubmit={handleTagSubmit} className="space-y-4">
       <div>
-        <label htmlFor="tag-category" className="block text-sm font-semibold text-neutral-900">
-          カテゴリ <span className="text-red-500">*</span>
+        <label htmlFor="tag-category" className="block text-sm font-semibold text-foreground">
+          カテゴリ <span className="text-danger">*</span>
         </label>
         <Select
           id="tag-category"
@@ -125,8 +125,8 @@ function TagForm({ categories }: TagFormProps) {
       </div>
 
       <div>
-        <label htmlFor="tag-name" className="block text-sm font-semibold text-neutral-900">
-          タグ名 <span className="text-red-500">*</span>
+        <label htmlFor="tag-name" className="block text-sm font-semibold text-foreground">
+          タグ名 <span className="text-danger">*</span>
         </label>
         <Input
           type="text"
@@ -141,7 +141,7 @@ function TagForm({ categories }: TagFormProps) {
       </div>
 
       <div>
-        <label htmlFor="tag-description" className="block text-sm font-semibold text-neutral-900">
+        <label htmlFor="tag-description" className="block text-sm font-semibold text-foreground">
           説明（任意）
         </label>
         <Textarea
@@ -212,8 +212,8 @@ function CategoryForm() {
   return (
     <form onSubmit={handleCategorySubmit} className="space-y-4">
       <div>
-        <label htmlFor="category-name" className="block text-sm font-semibold text-neutral-900">
-          カテゴリ名 <span className="text-red-500">*</span>
+        <label htmlFor="category-name" className="block text-sm font-semibold text-foreground">
+          カテゴリ名 <span className="text-danger">*</span>
         </label>
         <Input
           type="text"
@@ -230,7 +230,7 @@ function CategoryForm() {
       <div>
         <label
           htmlFor="category-description"
-          className="block text-sm font-semibold text-neutral-900"
+          className="block text-sm font-semibold text-foreground"
         >
           説明（任意）
         </label>
@@ -262,19 +262,19 @@ export function TagCreateForm({ categories }: TagCreateFormProps) {
   return (
     <div className="overflow-hidden rounded-xl bg-white shadow-md">
       {/* タブヘッダー */}
-      <div className="border-b border-slate-200 bg-white">
+      <div className="border-b border-border bg-white">
         <nav className="-mb-px flex" aria-label="Tabs">
           <button
             onClick={() => setActiveTab('tag')}
             className={`group relative w-1/2 border-b-2 px-6 py-4 text-sm font-medium transition-all ${
               activeTab === 'tag'
-                ? 'border-emerald-600 text-emerald-600'
-                : 'border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-700'
+                ? 'border-primary text-primary'
+                : 'border-transparent text-muted-foreground hover:border-border-dark hover:text-muted-foreground'
             }`}
           >
             <span className="flex items-center justify-center gap-2">
               <TagIcon
-                className={`h-5 w-5 ${activeTab === 'tag' ? 'text-emerald-600' : 'text-slate-400'}`}
+                className={`h-5 w-5 ${activeTab === 'tag' ? 'text-primary' : 'text-muted-foreground'}`}
               />
               タグを作成
             </span>
@@ -283,13 +283,13 @@ export function TagCreateForm({ categories }: TagCreateFormProps) {
             onClick={() => setActiveTab('category')}
             className={`group relative w-1/2 border-b-2 px-6 py-4 text-sm font-medium transition-all ${
               activeTab === 'category'
-                ? 'border-emerald-600 text-emerald-600'
-                : 'border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-700'
+                ? 'border-primary text-primary'
+                : 'border-transparent text-muted-foreground hover:border-border-dark hover:text-muted-foreground'
             }`}
           >
             <span className="flex items-center justify-center gap-2">
               <FolderIcon
-                className={`h-5 w-5 ${activeTab === 'category' ? 'text-emerald-600' : 'text-slate-400'}`}
+                className={`h-5 w-5 ${activeTab === 'category' ? 'text-primary' : 'text-muted-foreground'}`}
               />
               カテゴリを作成
             </span>

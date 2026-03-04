@@ -30,13 +30,13 @@ export function ChildRecipeSection({
       <Card>
         <CardHeader
           icon={<FolderIcon className="h-5 w-5 text-white" />}
-          iconColor="purple"
+          iconColor="secondary"
           title="サブレシピ"
           actions={
             <button
               type="button"
               onClick={onOpenDialog}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-linear-to-r from-purple-600 to-violet-600 px-3 py-2 text-sm font-semibold text-white shadow-md shadow-purple-500/30 transition-all hover:shadow-lg hover:shadow-purple-500/40"
+              className="inline-flex items-center gap-1.5 rounded-lg bg-linear-to-r from-secondary to-secondary px-3 py-2 text-sm font-semibold text-white shadow-md shadow-secondary/30 transition-all hover:shadow-lg hover:shadow-secondary/40"
             >
               <PlusIcon className="h-4 w-4" stroke="currentColor" />
               サブレシピを追加
@@ -57,7 +57,7 @@ export function ChildRecipeSection({
               ))}
             </div>
           ) : (
-            <p className="text-sm text-gray-500">サブレシピが追加されていません</p>
+            <p className="text-sm text-muted-foreground">サブレシピが追加されていません</p>
           )}
         </CardContent>
       </Card>

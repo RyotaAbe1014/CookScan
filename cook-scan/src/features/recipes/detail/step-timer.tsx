@@ -73,15 +73,15 @@ export function StepTimer({
   const getContainerClass = () => {
     const baseClass = 'transition-all duration-300'
     if (isFinished) {
-      return `${baseClass} bg-linear-to-br from-emerald-500 to-teal-600 shadow-lg`
+      return `${baseClass} bg-linear-to-br from-primary to-secondary-hover shadow-lg`
     }
     if (isPaused) {
-      return `${baseClass} bg-linear-to-br from-amber-500 to-orange-500 shadow-md`
+      return `${baseClass} bg-linear-to-br from-warning to-warning shadow-md`
     }
     if (isRunning) {
-      return `${baseClass} bg-linear-to-br from-sky-500 to-sky-600 shadow-xl animate-pulse`
+      return `${baseClass} bg-linear-to-br from-accent-steps to-accent-steps shadow-xl animate-pulse`
     }
-    return `${baseClass} bg-slate-100 ring-1 ring-slate-200`
+    return `${baseClass} bg-muted ring-1 ring-border`
   }
 
   // 初期状態かどうか
@@ -98,11 +98,11 @@ export function StepTimer({
         className="mb-3 flex items-center justify-center gap-2"
       >
         <ClockIcon
-          className={`h-5 w-5 ${isInitial ? 'text-slate-600' : 'text-white'}`}
+          className={`h-5 w-5 ${isInitial ? 'text-muted-foreground' : 'text-white'}`}
           stroke="currentColor"
         />
         <span
-          className={`font-mono text-2xl font-bold tracking-wider ${isInitial ? 'text-slate-700' : 'text-white'}`}
+          className={`font-mono text-2xl font-bold tracking-wider ${isInitial ? 'text-muted-foreground' : 'text-white'}`}
         >
           {formatTime(remainingSeconds)}
         </span>
@@ -135,7 +135,7 @@ export function StepTimer({
             variant="primary"
             size="sm"
             onClick={handleStart}
-            className="bg-sky-600 shadow-md transition-transform hover:scale-105 hover:bg-sky-700"
+            className="bg-accent-steps shadow-md transition-transform hover:scale-105 hover:bg-accent-steps"
             aria-label="タイマーを開始"
           >
             <PlayIcon className="h-4 w-4" />
@@ -149,7 +149,7 @@ export function StepTimer({
               variant="secondary"
               size="sm"
               onClick={pause}
-              className="bg-white/90 text-gray-800 shadow-md backdrop-blur-sm transition-transform hover:scale-105 hover:bg-white"
+              className="bg-white/90 text-foreground shadow-md backdrop-blur-sm transition-transform hover:scale-105 hover:bg-white"
               aria-label="タイマーを一時停止"
             >
               <PauseIcon className="h-4 w-4" />
@@ -159,7 +159,7 @@ export function StepTimer({
               variant="secondary"
               size="sm"
               onClick={reset}
-              className="bg-white/90 text-gray-800 shadow-md backdrop-blur-sm transition-transform hover:scale-105 hover:bg-white"
+              className="bg-white/90 text-foreground shadow-md backdrop-blur-sm transition-transform hover:scale-105 hover:bg-white"
               aria-label="タイマーをリセット"
             >
               <ReloadIcon className="h-4 w-4" />
@@ -174,7 +174,7 @@ export function StepTimer({
               variant="secondary"
               size="sm"
               onClick={resume}
-              className="bg-white/90 text-gray-800 shadow-md backdrop-blur-sm transition-transform hover:scale-105 hover:bg-white"
+              className="bg-white/90 text-foreground shadow-md backdrop-blur-sm transition-transform hover:scale-105 hover:bg-white"
               aria-label="タイマーを再開"
             >
               <PlayIcon className="h-4 w-4" />
@@ -184,7 +184,7 @@ export function StepTimer({
               variant="secondary"
               size="sm"
               onClick={reset}
-              className="bg-white/90 text-gray-800 shadow-md backdrop-blur-sm transition-transform hover:scale-105 hover:bg-white"
+              className="bg-white/90 text-foreground shadow-md backdrop-blur-sm transition-transform hover:scale-105 hover:bg-white"
               aria-label="タイマーをリセット"
             >
               <ReloadIcon className="h-4 w-4" />
@@ -198,7 +198,7 @@ export function StepTimer({
             variant="secondary"
             size="sm"
             onClick={reset}
-            className="bg-white/90 text-gray-800 shadow-md backdrop-blur-sm transition-transform hover:scale-105 hover:bg-white"
+            className="bg-white/90 text-foreground shadow-md backdrop-blur-sm transition-transform hover:scale-105 hover:bg-white"
             aria-label="タイマーをリセット"
           >
             <ReloadIcon className="h-4 w-4" />

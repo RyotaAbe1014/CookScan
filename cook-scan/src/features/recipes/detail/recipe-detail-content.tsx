@@ -47,11 +47,11 @@ export function RecipeDetailContent({ recipe, initialShareInfo }: RecipeDetailCo
       <div id="recipe-detail-capture" className="space-y-8">
         {/* 料理名と登録日 */}
         <div className="mb-8">
-          <h1 className="bg-emerald-600 bg-clip-text text-2xl font-bold tracking-tight text-transparent sm:text-3xl">
+          <h1 className="bg-primary bg-clip-text text-2xl font-bold tracking-tight text-transparent sm:text-3xl">
             {recipe.title}
           </h1>
-          <p className="mt-2 flex items-center gap-1.5 text-sm text-gray-600">
-            <InfoCircleIcon className="h-4 w-4 text-emerald-500" />
+          <p className="mt-2 flex items-center gap-1.5 text-sm text-muted-foreground">
+            <InfoCircleIcon className="h-4 w-4 text-primary" />
             作成日: {new Date(recipe.createdAt).toLocaleDateString('ja-JP')}
           </p>
         </div>

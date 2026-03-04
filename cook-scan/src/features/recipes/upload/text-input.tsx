@@ -71,31 +71,31 @@ export const TextInput = ({ handleTextInput }: Props) => {
       {/* ヘッダー */}
       <div className="mb-6 text-center">
         <div className="mb-3 flex items-center justify-center gap-2">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-linear-to-br from-emerald-500 to-teal-600 shadow-md">
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-linear-to-br from-primary to-secondary-hover shadow-md">
             <DocumentTextIcon className="h-5 w-5 text-white" />
           </div>
-          <h2 className="text-xl font-bold text-gray-900">テキストからレシピを作成</h2>
+          <h2 className="text-xl font-bold text-foreground">テキストからレシピを作成</h2>
         </div>
-        <p className="text-sm leading-relaxed text-gray-600">
+        <p className="text-sm leading-relaxed text-muted-foreground">
           レシピのテキストを貼り付けると、AIが自動で構造化されたレシピに変換します
         </p>
       </div>
 
       {/* メインカード */}
-      <div className="overflow-hidden rounded-xl bg-white shadow-lg ring-1 ring-gray-900/5">
+      <div className="overflow-hidden rounded-xl bg-white shadow-lg ring-1 ring-card-border">
         {/* カードヘッダー（グラデーション背景） */}
-        <div className="border-b border-gray-200 bg-linear-to-r from-gray-50 to-white px-6 py-4">
+        <div className="border-b border-border bg-linear-to-r from-section-header to-white px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-linear-to-br from-emerald-500 to-teal-600">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-linear-to-br from-primary to-secondary-hover">
                 <DocumentTextIcon className="h-4 w-4 text-white" />
               </div>
-              <span className="text-sm font-semibold text-gray-700">レシピテキスト</span>
+              <span className="text-sm font-semibold text-foreground">レシピテキスト</span>
             </div>
             {charCount > 0 && (
               <div className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold shadow-sm transition-all ${isValid
-                  ? 'bg-green-50 text-green-700 ring-1 ring-green-200'
-                  : 'bg-amber-50 text-amber-700 ring-1 ring-amber-200'
+                  ? 'bg-success-light text-success ring-1 ring-success'
+                  : 'bg-warning-light text-warning ring-1 ring-warning'
                 }`}>
                 <span>{charCount}文字</span>
                 {isValid ? (
@@ -122,7 +122,7 @@ export const TextInput = ({ handleTextInput }: Props) => {
                 disabled={isLoading}
               />
               {!isValid && charCount > 0 && (
-                <p className="mt-2 flex items-center gap-1.5 text-xs text-amber-600">
+                <p className="mt-2 flex items-center gap-1.5 text-xs text-warning">
                   <InfoCircleIcon className="h-3.5 w-3.5" />
                   あと{minChars - charCount}文字入力してください
                 </p>
@@ -130,14 +130,14 @@ export const TextInput = ({ handleTextInput }: Props) => {
             </div>
 
             {/* ヘルプテキスト */}
-            <div className="rounded-lg bg-linear-to-r from-emerald-50 to-teal-50 p-4 ring-1 ring-emerald-100">
+            <div className="rounded-lg bg-linear-to-r from-primary-light to-secondary-light p-4 ring-1 ring-primary-light">
               <div className="flex gap-3">
                 <div className="flex-shrink-0">
-                  <InfoSolidIcon className="h-5 w-5 text-emerald-600" />
+                  <InfoSolidIcon className="h-5 w-5 text-primary" />
                 </div>
                 <div className="flex-1">
-                  <h4 className="text-sm font-semibold text-emerald-900">ヒント</h4>
-                  <p className="mt-1 text-sm leading-relaxed text-emerald-700">
+                  <h4 className="text-sm font-semibold text-primary-hover">ヒント</h4>
+                  <p className="mt-1 text-sm leading-relaxed text-primary-hover">
                     材料リストと調理手順が含まれたテキストを貼り付けてください。
                     書籍のレシピ、Webサイトからコピーしたテキスト、手書きメモの内容など、どんな形式でも構いません。
                   </p>

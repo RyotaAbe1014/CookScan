@@ -94,15 +94,15 @@ describe('CardHeader', () => {
     expect(screen.getByRole('heading', { name: 'タイトル' })).toBeInTheDocument()
   })
 
-  test('正常系：デフォルトのiconColor（indigo）が適用される', () => {
+  test('正常系：デフォルトのiconColor（primary）が適用される', () => {
     // Given: iconColorを指定しないヘッダーが用意されている
     const icon = <svg data-testid="icon" />
 
     // When: デフォルトでレンダリングする
     const { container } = render(<CardHeader icon={icon} title="タイトル" />)
 
-    // Then: emeraldの単色クラスが適用される
-    const iconWrapper = container.querySelector('.bg-emerald-600')
+    // Then: primaryの単色クラスが適用される
+    const iconWrapper = container.querySelector('.bg-primary')
     expect(iconWrapper).toBeInTheDocument()
   })
 
@@ -110,40 +110,40 @@ describe('CardHeader', () => {
     // Given: 各iconColorが用意されている
     const icon = <svg data-testid="icon" />
 
-    // When: amber iconColorでレンダリングする
+    // When: accent-tags iconColorでレンダリングする
     const { container: amberContainer } = render(
-      <CardHeader icon={icon} iconColor="amber" title="Amber" />
+      <CardHeader icon={icon} iconColor="accent-tags" title="AccentTags" />
     )
-    // Then: amberの単色が適用される
-    expect(amberContainer.querySelector('.bg-amber-500')).toBeInTheDocument()
+    // Then: accent-tagsの単色が適用される
+    expect(amberContainer.querySelector('.bg-accent-tags')).toBeInTheDocument()
 
-    // When: green iconColorでレンダリングする
+    // When: accent-ingredients iconColorでレンダリングする
     const { container: greenContainer } = render(
-      <CardHeader icon={icon} iconColor="green" title="Green" />
+      <CardHeader icon={icon} iconColor="accent-ingredients" title="AccentIngredients" />
     )
-    // Then: greenの単色が適用される
-    expect(greenContainer.querySelector('.bg-emerald-500')).toBeInTheDocument()
+    // Then: accent-ingredientsの単色が適用される
+    expect(greenContainer.querySelector('.bg-accent-ingredients')).toBeInTheDocument()
 
-    // When: blue iconColorでレンダリングする
+    // When: accent-steps iconColorでレンダリングする
     const { container: blueContainer } = render(
-      <CardHeader icon={icon} iconColor="blue" title="Blue" />
+      <CardHeader icon={icon} iconColor="accent-steps" title="AccentSteps" />
     )
-    // Then: blueの単色が適用される
-    expect(blueContainer.querySelector('.bg-sky-500')).toBeInTheDocument()
+    // Then: accent-stepsの単色が適用される
+    expect(blueContainer.querySelector('.bg-accent-steps')).toBeInTheDocument()
 
-    // When: purple iconColorでレンダリングする
-    const { container: purpleContainer } = render(
-      <CardHeader icon={icon} iconColor="teal" title="Teal" />
+    // When: secondary iconColorでレンダリングする
+    const { container: secondaryContainer } = render(
+      <CardHeader icon={icon} iconColor="secondary" title="Secondary" />
     )
-    // Then: tealの単色が適用される
-    expect(purpleContainer.querySelector('.bg-teal-500')).toBeInTheDocument()
+    // Then: secondaryの単色が適用される
+    expect(secondaryContainer.querySelector('.bg-secondary')).toBeInTheDocument()
 
-    // When: red iconColorでレンダリングする
+    // When: danger iconColorでレンダリングする
     const { container: redContainer } = render(
-      <CardHeader icon={icon} iconColor="red" title="Red" />
+      <CardHeader icon={icon} iconColor="danger" title="Danger" />
     )
-    // Then: redの単色が適用される
-    expect(redContainer.querySelector('.bg-red-500')).toBeInTheDocument()
+    // Then: dangerの単色が適用される
+    expect(redContainer.querySelector('.bg-danger')).toBeInTheDocument()
   })
 
   test('正常系：アクション要素が表示される', () => {
@@ -185,7 +185,7 @@ describe('CardHeader', () => {
     render(
       <CardHeader
         icon={icon}
-        iconColor="green"
+        iconColor="accent-ingredients"
         title="完全なヘッダー"
         actions={actions}
       />
@@ -282,7 +282,7 @@ describe('Card組み合わせ', () => {
       <Card data-testid="full-card">
         <CardHeader
           icon={icon}
-          iconColor="blue"
+          iconColor="accent-steps"
           title="フルカード"
           actions={<button>編集</button>}
         />

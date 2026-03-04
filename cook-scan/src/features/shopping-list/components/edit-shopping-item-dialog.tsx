@@ -66,9 +66,9 @@ function EditShoppingItemForm({ item, onClose }: { item: ShoppingItemOutput; onC
 
   return (
       <DialogContent maxWidth="max-w-md">
-        <DialogHeader className="bg-linear-to-r from-emerald-50 to-teal-50">
+        <DialogHeader className="bg-linear-to-r from-primary-light to-secondary-light">
           <div className="flex items-start gap-4">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-emerald-500 to-teal-600 shadow-lg">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-primary to-secondary-hover shadow-lg">
               <PencilIcon className="h-6 w-6 text-white" />
             </div>
             <div className="flex-1">
