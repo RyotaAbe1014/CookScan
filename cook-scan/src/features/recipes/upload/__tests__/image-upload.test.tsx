@@ -268,7 +268,7 @@ describe('ImageUpload', () => {
 
     // During upload, buttons should be disabled
     await waitFor(() => {
-      expect(screen.getByText('処理中...')).toBeInTheDocument()
+      expect(screen.getByText('アップロード中...')).toBeInTheDocument()
     })
 
     const secondaryButton = screen.getByRole('button', { name: /別の画像を選択/ })
@@ -506,7 +506,17 @@ describe('ImageUpload', () => {
     mockFetch.mockResolvedValueOnce({ ok: true })
     mockFetch.mockResolvedValueOnce({ ok: true })
     mockFetch.mockResolvedValueOnce({ ok: true })
-    // 5. extract API
+    // 5. extract/file API (SQSエンキュー)
+    mockFetch.mockResolvedValueOnce({ ok: true })
+    // 6. extract/result ポーリング
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({
+        success: true,
+        result: { text: 'OCRテキスト結果' }
+      })
+    })
+    // 7. extract/text API (レシピ構造化)
     mockFetch.mockResolvedValueOnce({
       ok: true,
       json: async () => ({
@@ -555,9 +565,14 @@ describe('ImageUpload', () => {
         '/api/recipes/extract/file',
         expect.objectContaining({
           method: 'POST',
-          body: expect.any(FormData)
+          body: JSON.stringify({ jobId: 'test-job-id' })
         })
       )
-    })
-  })
+    }, { timeout: 10000 })
+
+    // onUploadが最終的に呼ばれる（ポーリング〜構造化完了後）
+    await waitFor(() => {
+      expect(mockOnUpload).toHaveBeenCalled()
+    }, { timeout: 10000 })
+  }, 15000)
 })
