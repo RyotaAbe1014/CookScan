@@ -12,12 +12,12 @@ async function processMessage(body: SQSMessageBody): Promise<void> {
       throw new Error(`No images found under prefix: ${s3Prefix}`);
     }
 
-    const texts: string[] = [];
-    for (const key of imageKeys) {
-      const buffer = await getImageBuffer(key);
-      const text = await extractTextFromImage(buffer);
-      texts.push(text);
-    }
+    const texts = await Promise.all(
+      imageKeys.map(async (key) => {
+        const buffer = await getImageBuffer(key);
+        return extractTextFromImage(buffer);
+      })
+    );
 
     const result: OcrResult = {
       status: 'success',
