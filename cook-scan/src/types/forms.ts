@@ -68,13 +68,6 @@ export type ExtractedRecipeData = {
 
 // 抽出APIのレスポンス型
 export type ExtractResponse =
-  | { success: true; result: ExtractedRecipeData }
-  | { success: false; error: string }
-  | { success: 'pending' }
-
-// 更新APIのレスポンス型
-export type UpdateRecipeResponse = {
-  success: boolean
-  recipeId?: string
-  error?: string
-}
+  | { status: 'success'; result: ExtractedRecipeData }
+  | { status: 'error'; error: string }
+  | { status: 'pending' }

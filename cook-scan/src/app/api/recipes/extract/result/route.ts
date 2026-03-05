@@ -39,7 +39,7 @@ export async function GET(request: NextRequest) {
     const response = await s3Client.send(command);
     const body = await response.Body?.transformToString();
     if (!body) {
-      return NextResponse.json({ success: "pending" }, { status: 202 });
+      return NextResponse.json({ status: "pending" }, { status: 202 });
     }
     const ocrResult = JSON.parse(body) as {
       status: string;
@@ -51,13 +51,13 @@ export async function GET(request: NextRequest) {
 
     if (ocrResult.status === "error" || ocrResult.error) {
       return NextResponse.json(
-        { success: false, error: ocrResult.error ?? "OCR処理に失敗しました" },
+        { status: "error", error: ocrResult.error ?? "OCR処理に失敗しました" },
         { status: 200 },
       );
     }
 
     return NextResponse.json(
-      { success: true, result: { text: ocrResult.result?.text } },
+      { status: "success", result: { text: ocrResult.result?.text } },
       { status: 200 },
     );
   } catch (error: unknown) {
@@ -67,12 +67,12 @@ export async function GET(request: NextRequest) {
       "name" in error &&
       (error as { name: string }).name === "NoSuchKey"
     ) {
-      return NextResponse.json({ success: "pending" }, { status: 202 });
+      return NextResponse.json({ status: "pending" }, { status: 202 });
     }
 
     console.error(error);
     return NextResponse.json(
-      { success: false, error: "Failed to fetch OCR result" },
+      { status: "error", error: "Failed to fetch OCR result" },
       { status: 500 },
     );
   }

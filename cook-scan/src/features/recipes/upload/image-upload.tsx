@@ -186,16 +186,16 @@ export default function ImageUpload({ onUpload, onUploadingChange }: Props) {
         const pollRes = await fetch(`/api/recipes/extract/result?jobId=${uploadResult.jobId}`)
         const pollData = await pollRes.json()
 
-        if (pollData.success === 'pending') continue
+        if (pollData.status === 'pending') continue
 
-        if (pollData.success === false) {
+        if (pollData.status === 'error') {
           setError(pollData.error ?? 'OCR処理に失敗しました')
           setUploadStatus('idle')
           onUploadingChange(false)
           return
         }
 
-        if (pollData.success === true) {
+        if (pollData.status === 'success') {
           ocrText = pollData.result.text
           break
         }
@@ -217,12 +217,12 @@ export default function ImageUpload({ onUpload, onUploadingChange }: Props) {
       })
 
       const textData: ExtractResponse = await textRes.json().catch(() => ({
-        success: false as const,
+        status: 'error' as const,
         error: 'レシピの構造化に失敗しました',
       }))
 
-      if (!textRes.ok || textData.success !== true) {
-        const msg = textData.success === false ? textData.error : 'レシピの構造化に失敗しました'
+      if (!textRes.ok || textData.status !== 'success') {
+        const msg = textData.status === 'error' ? textData.error : 'レシピの構造化に失敗しました'
         setError(msg)
         setUploadStatus('idle')
         onUploadingChange(false)

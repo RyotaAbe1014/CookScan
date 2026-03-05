@@ -1,11 +1,7 @@
-export type Step = {
-  id?: string
-  instruction: string
-  timerSeconds?: number
-}
+import type { StepFormData } from '@/types/forms'
 
 export type StepInputProps = {
-  step: Step
+  step: StepFormData
   index: number
   canDelete: boolean
   onUpdate: (index: number, field: 'instruction' | 'timerSeconds', value: string) => void

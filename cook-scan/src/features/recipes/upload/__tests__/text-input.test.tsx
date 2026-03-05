@@ -117,7 +117,7 @@ describe('TextInput', () => {
 
     ;(global.fetch as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
       ok: true,
-      json: async () => ({ success: false, error: 'APIエラーが発生しました' })
+      json: async () => ({ status: 'error', error: 'APIエラーが発生しました' })
     })
 
     render(<TextInput handleTextInput={mockHandleTextInput} />)
@@ -167,7 +167,7 @@ describe('TextInput', () => {
 
     ;(global.fetch as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
       ok: true,
-      json: async () => ({ success: true, result: mockExtractedData })
+      json: async () => ({ status: 'success', result: mockExtractedData })
     })
 
     render(<TextInput handleTextInput={mockHandleTextInput} />)

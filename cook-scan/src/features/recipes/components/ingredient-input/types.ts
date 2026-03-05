@@ -1,12 +1,7 @@
-export type Ingredient = {
-  id?: string
-  name: string
-  unit?: string
-  notes?: string
-}
+import type { IngredientFormData } from '@/types/forms'
 
 export type IngredientInputProps = {
-  ingredient: Ingredient
+  ingredient: IngredientFormData
   index: number
   canDelete: boolean
   onUpdate: (index: number, field: 'name' | 'unit' | 'notes', value: string) => void

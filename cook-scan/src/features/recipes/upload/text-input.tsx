@@ -44,14 +44,14 @@ export const TextInput = ({ handleTextInput }: Props) => {
         body: JSON.stringify({ text }),
       })
       const data: ExtractResponse = await res.json().catch(() => ({
-        success: false,
+        status: 'error' as const,
         error: 'アップロードに失敗しました'
       }))
 
-      if (data.success === true) {
+      if (data.status === 'success') {
         handleTextInput(data.result)
         setText('')
-      } else if (data.success === false) {
+      } else if (data.status === 'error') {
         setError(data.error)
       }
     } catch (e) {

@@ -369,7 +369,7 @@ describe('recipe.service', () => {
       const result = await updateRecipe('user-1', input)
 
       expect(result).toEqual({ recipeId: 'recipe-1' })
-      expect(RecipeRepository.checkRecipeOwnership).toHaveBeenCalledWith('recipe-1', 'user-1')
+      expect(RecipeRepository.checkRecipeOwnership).toHaveBeenCalledWith('recipe-1', 'user-1', mockTx)
       expect(RecipeRepository.updateRecipe).toHaveBeenCalledWith(mockTx, 'recipe-1', '更新レシピ', '更新メモ')
       expect(RecipeRepository.deleteRelatedData).toHaveBeenCalledWith(mockTx, 'recipe-1')
       expect(RecipeRepository.createIngredients).toHaveBeenCalledWith(mockTx, 'recipe-1', input.ingredients)
@@ -452,7 +452,7 @@ describe('recipe.service', () => {
       }
 
       await expect(updateRecipe('user-1', input)).rejects.toThrow('レシピが見つかりません')
-      expect(prisma.$transaction).not.toHaveBeenCalled()
+      expect(prisma.$transaction).toHaveBeenCalled()
     })
 
     it('エラー: 無効なタグが含まれる場合はエラーを投げる', async () => {
@@ -534,7 +534,7 @@ describe('recipe.service', () => {
     it('正常系: レシピを削除できる', async () => {
       await deleteRecipe('user-1', 'recipe-1')
 
-      expect(RecipeRepository.checkRecipeOwnership).toHaveBeenCalledWith('recipe-1', 'user-1')
+      expect(RecipeRepository.checkRecipeOwnership).toHaveBeenCalledWith('recipe-1', 'user-1', mockTx)
       expect(prisma.$transaction).toHaveBeenCalled()
       expect(RecipeRepository.deleteRecipe).toHaveBeenCalledWith(mockTx, 'recipe-1')
     })
@@ -543,7 +543,7 @@ describe('recipe.service', () => {
       vi.mocked(RecipeRepository.checkRecipeOwnership).mockResolvedValueOnce(false)
 
       await expect(deleteRecipe('user-1', 'recipe-1')).rejects.toThrow('レシピが見つかりません')
-      expect(prisma.$transaction).not.toHaveBeenCalled()
+      expect(prisma.$transaction).toHaveBeenCalled()
     })
   })
 })
