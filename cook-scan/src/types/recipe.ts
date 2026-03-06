@@ -47,8 +47,8 @@ export type RecipeWithRelations = {
   userId: string
   title: string
   parentRecipeId?: string | null
-  imageUrl?: string | null
-  memo?: string | null
+  imageUrl: string | null
+  memo: string | null
   createdAt: Date
   updatedAt: Date
   ingredients: Ingredient[]

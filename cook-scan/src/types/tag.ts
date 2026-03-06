@@ -30,3 +30,15 @@ export type TagCategoryWithTags = TagCategory & {
 
 // セレクトボックス等で使用するシンプルなカテゴリ型
 export type TagCategoryBasic = Pick<TagCategory, 'id' | 'name' | 'description' | 'isSystem'>
+
+// レシピフォームで使用するタグカテゴリの型
+export type RecipeFormTagCategory = {
+  id: string
+  name: string
+  description: string | null
+  tags: Array<{
+    id: string
+    name: string
+    description: string | null
+  }>
+}

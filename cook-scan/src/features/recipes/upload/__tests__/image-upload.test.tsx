@@ -278,7 +278,7 @@ describe('ImageUpload', () => {
     await act(async () => {
       resolveUpload!({
         ok: true,
-        json: async () => ({ success: true, result: { title: 'Test', sourceInfo: null, ingredients: [], steps: [], tags: [] } })
+        json: async () => ({ status: 'success', result: { title: 'Test', sourceInfo: null, ingredients: [], steps: [], tags: [] } })
       })
       // Wait for promise to resolve
       await uploadPromise
@@ -512,7 +512,7 @@ describe('ImageUpload', () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       json: async () => ({
-        success: true,
+        status: 'success',
         result: { text: 'OCRテキスト結果' }
       })
     })
@@ -520,7 +520,7 @@ describe('ImageUpload', () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       json: async () => ({
-        success: true,
+        status: 'success',
         result: {
           title: 'Test Recipe',
           sourceInfo: null,
