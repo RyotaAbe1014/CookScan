@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useTransition } from 'react'
+import { useState, useMemo, useTransition } from 'react'
 import {
   Dialog,
   DialogContent,
@@ -36,9 +36,10 @@ export function AddRecipeDialog({
   const [search, setSearch] = useState('')
   const [isPending, startTransition] = useTransition()
 
-  const filtered = recipes.filter((r) =>
-    r.title.toLowerCase().includes(search.toLowerCase())
-  )
+  const filtered = useMemo(() => {
+    const query = search.toLowerCase()
+    return recipes.filter((r) => r.title.toLowerCase().includes(query))
+  }, [recipes, search])
 
   function handleSelect(recipeId: string) {
     if (dayOfWeek === null) return
