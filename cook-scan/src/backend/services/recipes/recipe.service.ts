@@ -135,18 +135,17 @@ export async function updateRecipe(
 ): Promise<UpdateRecipeResult> {
   const { recipeId, title, sourceInfo, ingredients, steps, memo, tags, childRecipes } = input
 
-  // タグのバリデーション（トランザクション外で実施。txを使わないため）
-  const { validTagIds, isValid } = await TagRepository.validateTagIdsForUser(tags ?? [], userId)
-
-  if (!isValid) {
-    throw new Error('無効なタグが含まれています')
-  }
-
   const updatedRecipe = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
     // 所有権チェック
     const hasOwnership = await RecipeRepository.checkRecipeOwnership(recipeId, userId, tx)
     if (!hasOwnership) {
       throw new Error('レシピが見つかりません')
+    }
+
+    // タグのバリデーション
+    const { validTagIds, isValid } = await TagRepository.validateTagIdsForUser(tags ?? [], userId)
+    if (!isValid) {
+      throw new Error('無効なタグが含まれています')
     }
 
     // レシピ基本情報を更新

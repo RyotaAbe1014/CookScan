@@ -234,7 +234,7 @@ export async function updateRecipe(
 // ===== Delete Operations (Transaction用) =====
 
 /**
- * レシピに関連するデータをすべて削除
+ * レシピに関連するデータをすべて削除（更新時に使用）
  */
 export async function deleteRelatedData(tx: Prisma.TransactionClient, recipeId: string) {
   // 材料を削除
@@ -265,27 +265,19 @@ export async function deleteRelatedData(tx: Prisma.TransactionClient, recipeId: 
 
 /**
  * レシピを削除（関連データも含む）
+ * Ingredient, Step, SourceInfo, RecipeVersion, OcrProcessingHistoryはonDelete: Cascadeで自動削除される。
+ * RecipeRelationとRecipeTagは手動削除が必要。
  */
 export async function deleteRecipe(tx: Prisma.TransactionClient, recipeId: string) {
-  // 関連データを削除
-  await deleteRelatedData(tx, recipeId)
+  // RecipeTagを削除（Cascadeで自動削除されるが、制約順序のため明示的に削除）
+  await tx.recipeTag.deleteMany({ where: { recipeId } })
 
-  // 子レシピ関係を削除（子として参照されている場合）
+  // 子レシピ関係を削除（親として・子として）
   await tx.recipeRelation.deleteMany({
-    where: { childRecipeId: recipeId },
+    where: { OR: [{ parentRecipeId: recipeId }, { childRecipeId: recipeId }] },
   })
 
-  // レシピバージョンを削除
-  await tx.recipeVersion.deleteMany({
-    where: { recipeId },
-  })
-
-  // OCR処理履歴を削除
-  await tx.ocrProcessingHistory.deleteMany({
-    where: { recipeId },
-  })
-
-  // レシピ本体を削除
+  // レシピ本体を削除（Ingredient, Step, SourceInfo, RecipeVersion, OcrProcessingHistoryはCascadeで自動削除）
   await tx.recipe.delete({
     where: { id: recipeId },
   })

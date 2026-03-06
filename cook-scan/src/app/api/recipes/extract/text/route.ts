@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
 
     if (!text || typeof text !== 'string') {
       return NextResponse.json(
-        { status: 'error', error:'textは必須です' },
+        { success: false, error: 'textは必須です' },
         { status: 400 }
       )
     }
@@ -25,22 +25,22 @@ export async function POST(request: NextRequest) {
 
     if (response.status === 'failed' || response.status === 'suspended' || response.status === 'tripwire') {
       return NextResponse.json(
-        { status: 'error', error:'Failed to process request' },
+        { success: false, error: 'Failed to process request' },
         { status: 500 }
       )
     }
     if (response.status !== 'success') {
       return NextResponse.json(
-        { status: 'error', error:'Unexpected workflow status' },
+        { success: false, error: 'Unexpected workflow status' },
         { status: 500 }
       )
     }
 
-    return NextResponse.json({ status: 'success', result: response.result }, { status: 200 })
+    return NextResponse.json({ success: true, result: response.result }, { status: 200 })
   } catch (error) {
     console.error(error)
     return NextResponse.json(
-      { status: 'error', error:'Failed to process request' },
+      { success: false, error: 'Failed to process request' },
       { status: 500 }
     )
   }
