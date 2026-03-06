@@ -2,10 +2,11 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, test, expect, vi } from 'vitest'
 import { WeekNavigator } from '../week-navigator'
+import { getWeekDates } from '../../utils'
 
 describe('WeekNavigator', () => {
   const defaultProps = {
-    weekStart: '2026-03-02',
+    weekDates: getWeekDates('2026-03-02'),
     onPrevWeek: vi.fn(),
     onNextWeek: vi.fn(),
     onToday: vi.fn(),
@@ -62,7 +63,7 @@ describe('WeekNavigator', () => {
 
   test('正常系：月をまたぐ週も正しく表示される', () => {
     // Given: 2026-02-23（月）〜 2026-03-01（日）
-    render(<WeekNavigator {...defaultProps} weekStart="2026-02-23" />)
+    render(<WeekNavigator {...defaultProps} weekDates={getWeekDates('2026-02-23')} />)
 
     // Then: 月をまたいだ日付範囲が表示される
     expect(screen.getByText('2/23 〜 3/1')).toBeInTheDocument()
