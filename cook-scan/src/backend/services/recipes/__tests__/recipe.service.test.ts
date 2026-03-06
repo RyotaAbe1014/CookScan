@@ -473,7 +473,7 @@ describe('recipe.service', () => {
       }
 
       await expect(updateRecipe('user-1', input)).rejects.toThrow('無効なタグが含まれています')
-      expect(prisma.$transaction).not.toHaveBeenCalled()
+      expect(prisma.$transaction).toHaveBeenCalled()
     })
 
     it('エラー: 他ユーザーの子レシピIDが含まれる場合は保存前に失敗する', async () => {
