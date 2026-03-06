@@ -90,7 +90,7 @@ model Ingredient {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   // Relations
-  recipe Recipe @relation(fields: [recipeId], references: [id])
+  recipe Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
 
   @@map("ingredients")
 }
@@ -106,7 +106,7 @@ model Step {
   updatedAt    DateTime @updatedAt @map("updated_at")
 
   // Relations
-  recipe Recipe @relation(fields: [recipeId], references: [id])
+  recipe Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
 
   @@map("steps")
 }
@@ -174,7 +174,7 @@ model OcrProcessingHistory {
 
   // Relations
   user   User   @relation(fields: [userId], references: [id])
-  recipe Recipe @relation(fields: [recipeId], references: [id])
+  recipe Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
 
   @@map("ocr_processing_history")
 }
@@ -190,7 +190,7 @@ model RecipeVersion {
   createdAt     DateTime @default(now()) @map("created_at")
 
   // Relations
-  recipe Recipe @relation(fields: [recipeId], references: [id])
+  recipe Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
   user   User   @relation(fields: [createdBy], references: [id])
 
   @@map("recipe_versions")
@@ -225,7 +225,7 @@ model SourceInfo {
   updatedAt  DateTime @updatedAt @map("updated_at")
 
   // Relations
-  recipe Recipe @relation(fields: [recipeId], references: [id])
+  recipe Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
 
   @@map("source_infos")
 }
