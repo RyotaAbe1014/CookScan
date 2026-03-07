@@ -18,6 +18,7 @@ import {
   parseLocalDate,
   getWeekDates,
   formatShortDate,
+  formatDateToYYYYMMDD,
   DAY_LABELS,
   WEEK_DIRECTION,
 } from '@/features/meal-planner/utils'
@@ -42,8 +43,7 @@ export function AddToMealPlanDialog({
   const [isPending, startTransition] = useTransition()
 
   const weekDates = getWeekDates(weekStart)
-  const today = new Date()
-  const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`
+  const todayStr = formatDateToYYYYMMDD(new Date())
 
   function navigateWeek(direction: WeekDirection) {
     const current = parseLocalDate(weekStart)
@@ -99,7 +99,7 @@ export function AddToMealPlanDialog({
 
           <div className="grid grid-cols-7 gap-1">
             {DAY_LABELS.map((label, i) => {
-              const dateStr = `${weekDates[i].getFullYear()}-${String(weekDates[i].getMonth() + 1).padStart(2, '0')}-${String(weekDates[i].getDate()).padStart(2, '0')}`
+              const dateStr = formatDateToYYYYMMDD(weekDates[i])
               const isToday = dateStr === todayStr
               return (
                 <button

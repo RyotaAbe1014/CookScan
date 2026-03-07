@@ -27,8 +27,6 @@ export function MealPlannerContent({
   const [dialogOpen, setDialogOpen] = useState(false)
   const [selectedDay, setSelectedDay] = useState<number | null>(null)
 
-  const plan = initialPlan
-
   const navigateWeek = useCallback(
     (offset: number) => {
       const current = parseLocalDate(weekStart)
@@ -55,13 +53,13 @@ export function MealPlannerContent({
     router.refresh()
   }
 
-  const items = plan?.items ?? []
+  const items = initialPlan?.items ?? []
   const weekDates = getWeekDates(weekStart)
 
   return (
     <div className="space-y-6">
       <WeekNavigator
-        weekStart={weekStart}
+        weekDates={weekDates}
         onPrevWeek={() => navigateWeek(WEEK_DIRECTION.PREVIOUS)}
         onNextWeek={() => navigateWeek(WEEK_DIRECTION.NEXT)}
         onToday={handleToday}
