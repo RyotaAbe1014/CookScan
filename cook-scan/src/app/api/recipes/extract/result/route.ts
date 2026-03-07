@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { GetObjectCommand } from "@aws-sdk/client-s3";
-import { getS3Client } from "@/lib/aws";
+import { getS3Client } from "@/lib/aws/s3";
 import { checkUserProfile } from "@/features/auth/auth-utils";
 
 const S3_BUCKET_NAME = process.env.S3_BUCKET_NAME;

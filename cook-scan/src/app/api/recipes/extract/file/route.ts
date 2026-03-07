@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { SendMessageCommand } from "@aws-sdk/client-sqs";
-import { getSQSClient } from "@/lib/aws";
+import { getSQSClient } from "@/lib/aws/sqs";
 import { checkUserProfile } from "@/features/auth/auth-utils";
 
 const AWS_SQS_QUEUE_URL = process.env.AWS_SQS_QUEUE_URL;

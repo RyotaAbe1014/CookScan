@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import * as S3 from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { getS3Client } from "@/lib/aws";
+import { getS3Client } from "@/lib/aws/s3";
 import { checkUserProfile } from "@/features/auth/auth-utils";
 import { randomUUID } from "crypto";
 

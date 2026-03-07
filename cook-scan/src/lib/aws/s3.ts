@@ -1,5 +1,3 @@
-export { getSQSClient } from "./sqs";
-
 import * as S3 from "@aws-sdk/client-s3";
 import { awsCredentialsProvider } from "@vercel/functions/oidc";
 
