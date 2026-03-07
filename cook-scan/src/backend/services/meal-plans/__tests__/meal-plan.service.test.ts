@@ -28,16 +28,149 @@ import {
   generateShoppingList,
 } from '../meal-plan.service'
 
-const mockItem = (overrides?: Partial<{ id: string; dayOfWeek: number; recipeId: string }>) => ({
-  id: overrides?.id ?? 'item-1',
-  dayOfWeek: overrides?.dayOfWeek ?? 0,
-  recipe: {
-    id: overrides?.recipeId ?? 'recipe-1',
-    title: 'テストレシピ',
-    imageUrl: null,
-    ingredients: [{ id: 'ing-1', name: '卵', unit: '2個', notes: null }],
-  },
-})
+type MealPlanWithItems = NonNullable<
+  Awaited<ReturnType<typeof MealPlanRepository.findMealPlanByWeek>>
+>
+type UpsertedMealPlan = Awaited<ReturnType<typeof MealPlanRepository.upsertMealPlan>>
+type MealPlanItemWithRecipe = Awaited<ReturnType<typeof MealPlanRepository.createMealPlanItem>>
+type MealPlanItemWithMealPlan = NonNullable<
+  Awaited<ReturnType<typeof MealPlanRepository.findMealPlanItemById>>
+>
+type MealPlanRecord = MealPlanItemWithMealPlan['mealPlan']
+type MealPlanIngredient = MealPlanItemWithRecipe['recipe']['ingredients'][number]
+type ShoppingItemRecord = Awaited<
+  ReturnType<typeof ShoppingItemRepository.findShoppingItemsByUser>
+>[number]
+
+const BASE_DATE = new Date(2026, 2, 2)
+const BASE_UPDATED_AT = new Date(2026, 2, 3)
+
+function createIngredient(
+  overrides: Partial<MealPlanIngredient> & Pick<MealPlanIngredient, 'name'>
+): MealPlanIngredient {
+  return {
+    id: overrides.id ?? 'ing-1',
+    recipeId: overrides.recipeId ?? 'recipe-1',
+    name: overrides.name,
+    unit: overrides.unit ?? null,
+    notes: overrides.notes ?? null,
+    createdAt: overrides.createdAt ?? BASE_DATE,
+    updatedAt: overrides.updatedAt ?? BASE_UPDATED_AT,
+  }
+}
+
+function createRecipe(
+  overrides: Partial<MealPlanItemWithRecipe['recipe']> = {}
+): MealPlanItemWithRecipe['recipe'] {
+  const recipeId = overrides.id ?? 'recipe-1'
+
+  return {
+    id: recipeId,
+    userId: overrides.userId ?? 'user-1',
+    title: overrides.title ?? 'テストレシピ',
+    imageUrl: overrides.imageUrl ?? null,
+    memo: overrides.memo ?? null,
+    createdAt: overrides.createdAt ?? BASE_DATE,
+    updatedAt: overrides.updatedAt ?? BASE_UPDATED_AT,
+    ingredients: overrides.ingredients ?? [
+      createIngredient({
+        id: 'ing-1',
+        recipeId,
+        name: '卵',
+        unit: '2個',
+        notes: null,
+      }),
+    ],
+  }
+}
+
+function createMealPlanItem(
+  overrides: Partial<MealPlanItemWithRecipe> = {}
+): MealPlanItemWithRecipe {
+  const mealPlanId = overrides.mealPlanId ?? 'plan-1'
+  const recipeId = overrides.recipeId ?? overrides.recipe?.id ?? 'recipe-1'
+
+  return {
+    id: overrides.id ?? 'item-1',
+    mealPlanId,
+    recipeId,
+    dayOfWeek: overrides.dayOfWeek ?? 0,
+    createdAt: overrides.createdAt ?? BASE_DATE,
+    recipe: overrides.recipe ?? createRecipe({ id: recipeId }),
+  }
+}
+
+function createMealPlan(
+  overrides: Partial<MealPlanWithItems> = {}
+): MealPlanWithItems {
+  const planId = overrides.id ?? 'plan-1'
+
+  return {
+    id: planId,
+    userId: overrides.userId ?? 'user-1',
+    weekStart: overrides.weekStart ?? BASE_DATE,
+    createdAt: overrides.createdAt ?? BASE_DATE,
+    updatedAt: overrides.updatedAt ?? BASE_UPDATED_AT,
+    items: overrides.items ?? [createMealPlanItem({ mealPlanId: planId })],
+  }
+}
+
+function createUpsertedMealPlan(
+  overrides: Partial<UpsertedMealPlan> = {}
+): UpsertedMealPlan {
+  const planId = overrides.id ?? 'plan-1'
+
+  return {
+    id: planId,
+    userId: overrides.userId ?? 'user-1',
+    weekStart: overrides.weekStart ?? BASE_DATE,
+    createdAt: overrides.createdAt ?? BASE_DATE,
+    updatedAt: overrides.updatedAt ?? BASE_UPDATED_AT,
+    items: overrides.items ?? [],
+  }
+}
+
+function createMealPlanRecord(
+  overrides: Partial<MealPlanRecord> = {}
+): MealPlanRecord {
+  return {
+    id: overrides.id ?? 'plan-1',
+    userId: overrides.userId ?? 'user-1',
+    weekStart: overrides.weekStart ?? BASE_DATE,
+    createdAt: overrides.createdAt ?? BASE_DATE,
+    updatedAt: overrides.updatedAt ?? BASE_UPDATED_AT,
+  }
+}
+
+function createMealPlanItemLookup(
+  overrides: Partial<MealPlanItemWithMealPlan> = {}
+): MealPlanItemWithMealPlan {
+  const mealPlanId = overrides.mealPlanId ?? 'plan-1'
+
+  return {
+    id: overrides.id ?? 'item-1',
+    mealPlanId,
+    recipeId: overrides.recipeId ?? 'recipe-1',
+    dayOfWeek: overrides.dayOfWeek ?? 0,
+    createdAt: overrides.createdAt ?? BASE_DATE,
+    mealPlan: overrides.mealPlan ?? createMealPlanRecord({ id: mealPlanId }),
+  }
+}
+
+function createShoppingItemRecord(
+  overrides: Partial<ShoppingItemRecord> & Pick<ShoppingItemRecord, 'name'>
+): ShoppingItemRecord {
+  return {
+    id: overrides.id ?? 'shopping-1',
+    userId: overrides.userId ?? 'user-1',
+    name: overrides.name,
+    memo: overrides.memo ?? null,
+    isChecked: overrides.isChecked ?? false,
+    displayOrder: overrides.displayOrder ?? 0,
+    createdAt: overrides.createdAt ?? BASE_DATE,
+    updatedAt: overrides.updatedAt ?? BASE_UPDATED_AT,
+  }
+}
 
 describe('meal-plan.service', () => {
   beforeEach(() => {
@@ -48,12 +181,11 @@ describe('meal-plan.service', () => {
 
   describe('getMealPlan', () => {
     it('正常系: 週の献立プランを取得できる', async () => {
-      const mockPlan = {
-        id: 'plan-1',
+      const mockPlan = createMealPlan({
         weekStart: new Date(2026, 2, 2),
-        items: [mockItem()],
-      }
-      vi.mocked(MealPlanRepository.findMealPlanByWeek).mockResolvedValueOnce(mockPlan as never)
+        items: [createMealPlanItem()],
+      })
+      vi.mocked(MealPlanRepository.findMealPlanByWeek).mockResolvedValueOnce(mockPlan)
 
       const result = await getMealPlan('user-1', '2026-03-02')
 
@@ -91,8 +223,12 @@ describe('meal-plan.service', () => {
   describe('addMealPlanItem', () => {
     it('正常系: 献立プランにアイテムを追加できる', async () => {
       vi.mocked(RecipeRepository.checkRecipeOwnership).mockResolvedValueOnce(true)
-      vi.mocked(MealPlanRepository.upsertMealPlan).mockResolvedValueOnce({ id: 'plan-1' } as never)
-      vi.mocked(MealPlanRepository.createMealPlanItem).mockResolvedValueOnce(mockItem() as never)
+      vi.mocked(MealPlanRepository.upsertMealPlan).mockResolvedValueOnce(
+        createUpsertedMealPlan({ id: 'plan-1' })
+      )
+      vi.mocked(MealPlanRepository.createMealPlanItem).mockResolvedValueOnce(
+        createMealPlanItem()
+      )
 
       const result = await addMealPlanItem('user-1', {
         weekStart: '2026-03-02',
@@ -134,10 +270,11 @@ describe('meal-plan.service', () => {
 
   describe('removeMealPlanItem', () => {
     it('正常系: 献立プランからアイテムを削除できる', async () => {
-      vi.mocked(MealPlanRepository.findMealPlanItemById).mockResolvedValueOnce({
-        id: 'item-1',
-        mealPlan: { userId: 'user-1' },
-      } as never)
+      vi.mocked(MealPlanRepository.findMealPlanItemById).mockResolvedValueOnce(
+        createMealPlanItemLookup({
+          mealPlan: createMealPlanRecord({ userId: 'user-1' }),
+        })
+      )
 
       await removeMealPlanItem('user-1', { itemId: 'item-1' })
 
@@ -155,10 +292,11 @@ describe('meal-plan.service', () => {
     })
 
     it('エラー: 他ユーザーのアイテムは削除できない', async () => {
-      vi.mocked(MealPlanRepository.findMealPlanItemById).mockResolvedValueOnce({
-        id: 'item-1',
-        mealPlan: { userId: 'other-user' },
-      } as never)
+      vi.mocked(MealPlanRepository.findMealPlanItemById).mockResolvedValueOnce(
+        createMealPlanItemLookup({
+          mealPlan: createMealPlanRecord({ userId: 'other-user' }),
+        })
+      )
 
       await expect(
         removeMealPlanItem('user-1', { itemId: 'item-1' })
@@ -171,35 +309,52 @@ describe('meal-plan.service', () => {
   // ===== generateShoppingList =====
 
   describe('generateShoppingList', () => {
-    const mockPlanWithItems = (items: Array<{
-      ingredients: Array<{ id: string; name: string; unit: string | null; notes: string | null }>
-    }>) => ({
-      id: 'plan-1',
-      weekStart: new Date(2026, 2, 2),
-      items: items.map((item, i) => ({
-        id: `item-${i}`,
-        dayOfWeek: i,
-        recipe: {
-          id: `recipe-${i}`,
-          title: `レシピ${i}`,
-          imageUrl: null,
-          ingredients: item.ingredients,
-        },
-      })),
-    })
+    const mockPlanWithItems = (
+      items: Array<{
+        ingredients: Array<Partial<MealPlanIngredient> & Pick<MealPlanIngredient, 'name'>>
+      }>
+    ): MealPlanWithItems =>
+      createMealPlan({
+        weekStart: new Date(2026, 2, 2),
+        items: items.map((item, i) => {
+          const recipeId = `recipe-${i}`
+
+          return createMealPlanItem({
+            id: `item-${i}`,
+            mealPlanId: 'plan-1',
+            recipeId,
+            dayOfWeek: i,
+            recipe: createRecipe({
+              id: recipeId,
+              title: `レシピ${i}`,
+              ingredients: item.ingredients.map((ingredient, index) =>
+                createIngredient({
+                  id: ingredient.id ?? `ing-${i}-${index}`,
+                  recipeId,
+                  name: ingredient.name,
+                  unit: ingredient.unit ?? null,
+                  notes: ingredient.notes ?? null,
+                  createdAt: ingredient.createdAt ?? BASE_DATE,
+                  updatedAt: ingredient.updatedAt ?? BASE_UPDATED_AT,
+                })
+              ),
+            }),
+          })
+        }),
+      })
 
     it('正常系: 献立プランから買い物リストを生成できる', async () => {
       const plan = mockPlanWithItems([
         { ingredients: [{ id: 'ing-1', name: '卵', unit: '2個', notes: null }] },
         { ingredients: [{ id: 'ing-2', name: '牛乳', unit: '200ml', notes: null }] },
       ])
-      vi.mocked(MealPlanRepository.findMealPlanByWeek).mockResolvedValueOnce(plan as never)
+      vi.mocked(MealPlanRepository.findMealPlanByWeek).mockResolvedValueOnce(plan)
       vi.mocked(ShoppingItemRepository.findShoppingItemsByUser).mockResolvedValueOnce([])
       vi.mocked(ShoppingItemRepository.getMaxDisplayOrder).mockResolvedValueOnce(0)
       vi.mocked(ShoppingItemRepository.createShoppingItems).mockResolvedValueOnce([
-        { id: 's-1' },
-        { id: 's-2' },
-      ] as never)
+        createShoppingItemRecord({ id: 's-1', name: '卵', displayOrder: 1 }),
+        createShoppingItemRecord({ id: 's-2', name: '牛乳', displayOrder: 2 }),
+      ])
 
       const result = await generateShoppingList('user-1', { weekStart: '2026-03-02' })
 
@@ -215,10 +370,12 @@ describe('meal-plan.service', () => {
         { ingredients: [{ id: 'ing-1', name: '卵', unit: '2個', notes: null }] },
         { ingredients: [{ id: 'ing-2', name: '卵', unit: '3個', notes: null }] },
       ])
-      vi.mocked(MealPlanRepository.findMealPlanByWeek).mockResolvedValueOnce(plan as never)
+      vi.mocked(MealPlanRepository.findMealPlanByWeek).mockResolvedValueOnce(plan)
       vi.mocked(ShoppingItemRepository.findShoppingItemsByUser).mockResolvedValueOnce([])
       vi.mocked(ShoppingItemRepository.getMaxDisplayOrder).mockResolvedValueOnce(0)
-      vi.mocked(ShoppingItemRepository.createShoppingItems).mockResolvedValueOnce([{ id: 's-1' }] as never)
+      vi.mocked(ShoppingItemRepository.createShoppingItems).mockResolvedValueOnce([
+        createShoppingItemRecord({ id: 's-1', name: '卵', displayOrder: 1 }),
+      ])
 
       const result = await generateShoppingList('user-1', { weekStart: '2026-03-02' })
 
@@ -235,12 +392,14 @@ describe('meal-plan.service', () => {
           { id: 'ing-2', name: '牛乳', unit: '200ml', notes: null },
         ]},
       ])
-      vi.mocked(MealPlanRepository.findMealPlanByWeek).mockResolvedValueOnce(plan as never)
+      vi.mocked(MealPlanRepository.findMealPlanByWeek).mockResolvedValueOnce(plan)
       vi.mocked(ShoppingItemRepository.findShoppingItemsByUser).mockResolvedValueOnce([
-        { name: '卵' },
-      ] as never)
+        createShoppingItemRecord({ name: '卵' }),
+      ])
       vi.mocked(ShoppingItemRepository.getMaxDisplayOrder).mockResolvedValueOnce(5)
-      vi.mocked(ShoppingItemRepository.createShoppingItems).mockResolvedValueOnce([{ id: 's-1' }] as never)
+      vi.mocked(ShoppingItemRepository.createShoppingItems).mockResolvedValueOnce([
+        createShoppingItemRecord({ id: 's-1', name: '牛乳', displayOrder: 6 }),
+      ])
 
       const result = await generateShoppingList('user-1', { weekStart: '2026-03-02' })
 
@@ -254,10 +413,10 @@ describe('meal-plan.service', () => {
       const plan = mockPlanWithItems([
         { ingredients: [{ id: 'ing-1', name: '卵', unit: '2個', notes: null }] },
       ])
-      vi.mocked(MealPlanRepository.findMealPlanByWeek).mockResolvedValueOnce(plan as never)
+      vi.mocked(MealPlanRepository.findMealPlanByWeek).mockResolvedValueOnce(plan)
       vi.mocked(ShoppingItemRepository.findShoppingItemsByUser).mockResolvedValueOnce([
-        { name: '卵' },
-      ] as never)
+        createShoppingItemRecord({ name: '卵' }),
+      ])
 
       const result = await generateShoppingList('user-1', { weekStart: '2026-03-02' })
 
@@ -274,11 +433,12 @@ describe('meal-plan.service', () => {
     })
 
     it('エラー: 献立プランにアイテムがない場合はエラーを投げる', async () => {
-      vi.mocked(MealPlanRepository.findMealPlanByWeek).mockResolvedValueOnce({
-        id: 'plan-1',
-        weekStart: new Date(2026, 2, 2),
-        items: [],
-      } as never)
+      vi.mocked(MealPlanRepository.findMealPlanByWeek).mockResolvedValueOnce(
+        createMealPlan({
+          weekStart: new Date(2026, 2, 2),
+          items: [],
+        })
+      )
 
       await expect(
         generateShoppingList('user-1', { weekStart: '2026-03-02' })
@@ -289,10 +449,12 @@ describe('meal-plan.service', () => {
       const plan = mockPlanWithItems([
         { ingredients: [{ id: 'ing-1', name: '鶏肉', unit: '300g', notes: '皮なし' }] },
       ])
-      vi.mocked(MealPlanRepository.findMealPlanByWeek).mockResolvedValueOnce(plan as never)
+      vi.mocked(MealPlanRepository.findMealPlanByWeek).mockResolvedValueOnce(plan)
       vi.mocked(ShoppingItemRepository.findShoppingItemsByUser).mockResolvedValueOnce([])
       vi.mocked(ShoppingItemRepository.getMaxDisplayOrder).mockResolvedValueOnce(0)
-      vi.mocked(ShoppingItemRepository.createShoppingItems).mockResolvedValueOnce([{ id: 's-1' }] as never)
+      vi.mocked(ShoppingItemRepository.createShoppingItems).mockResolvedValueOnce([
+        createShoppingItemRecord({ id: 's-1', name: '鶏肉', displayOrder: 1 }),
+      ])
 
       await generateShoppingList('user-1', { weekStart: '2026-03-02' })
 

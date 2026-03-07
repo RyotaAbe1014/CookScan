@@ -18,6 +18,7 @@ import type {
   UpdateRecipeResult,
   ChildRecipeRelationInput,
 } from '@/backend/domain/recipes'
+import type { RecipeBasic } from '@/types/recipe'
 
 // ===== Recipe Retrieval =====
 
@@ -40,6 +41,16 @@ export async function getRecipes(
   tagFilters?: Prisma.RecipeWhereInput[]
 ): Promise<RecipeListOutput[]> {
   return RecipeRepository.findRecipesByUser(userId, searchQuery, tagFilters)
+}
+
+/**
+ * ユーザーの最近追加したレシピ一覧を取得
+ */
+export async function getRecentRecipes(
+  userId: string,
+  limit = 3
+): Promise<RecipeBasic[]> {
+  return RecipeRepository.findRecentRecipesByUser(userId, limit)
 }
 
 /**
