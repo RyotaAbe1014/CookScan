@@ -1,3 +1,5 @@
+import type { RecipeBasic } from '@/types/recipe'
+import { RecentRecipesSection } from '@/features/recipes/list/recent-recipes-section'
 import { WelcomeSection } from './welcome-section'
 import { QuickActions } from './quick-actions'
 
@@ -8,12 +10,14 @@ type Profile = {
 
 type DashboardContentProps = {
   profile: Profile
+  recentRecipes: RecipeBasic[]
 }
 
-export function DashboardContent({ profile }: DashboardContentProps) {
+export function DashboardContent({ profile, recentRecipes }: DashboardContentProps) {
   return (
     <div className="space-y-8">
       <WelcomeSection profile={profile} />
+      <RecentRecipesSection recipes={recentRecipes} />
       <QuickActions />
     </div>
   )

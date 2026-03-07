@@ -12,6 +12,7 @@ import type {
   RecipeDetailOutput,
   RecipeListOutput,
 } from '@/backend/domain/recipes'
+import type { RecipeBasic } from '@/types/recipe'
 
 // ===== Find Operations =====
 
@@ -91,6 +92,40 @@ export async function findRecipesByUser(
       },
     },
     orderBy: { createdAt: 'desc' },
+  })
+}
+
+/**
+ * ユーザーの最近追加したレシピを取得
+ */
+export async function findRecentRecipesByUser(
+  userId: string,
+  limit: number
+): Promise<RecipeBasic[]> {
+  return prisma.recipe.findMany({
+    where: { userId },
+    select: {
+      id: true,
+      title: true,
+      imageUrl: true,
+      createdAt: true,
+      ingredients: {
+        select: { id: true },
+      },
+      recipeTags: {
+        select: {
+          tagId: true,
+          tag: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+        },
+      },
+    },
+    orderBy: { createdAt: 'desc' },
+    take: limit,
   })
 }
 

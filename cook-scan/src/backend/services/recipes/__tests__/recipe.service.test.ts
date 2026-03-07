@@ -9,6 +9,7 @@ vi.mock('@/lib/prisma', () => ({
 vi.mock('@/backend/repositories/recipe.repository', () => ({
   findRecipeById: vi.fn(),
   findRecipesByUser: vi.fn(),
+  findRecentRecipesByUser: vi.fn(),
   createRecipe: vi.fn(),
   createIngredients: vi.fn(),
   createSteps: vi.fn(),
@@ -35,7 +36,11 @@ vi.mock('@/utils/url-validation', () => ({
 }))
 
 import { Prisma, Recipe } from '@prisma/client'
-import type { RecipeDetailOutput, RecipeListOutput } from '@/backend/domain/recipes'
+import type {
+  RecipeDetailOutput,
+  RecipeListOutput,
+} from '@/backend/domain/recipes'
+import type { RecipeBasic } from '@/types/recipe'
 import { prisma } from '@/lib/prisma'
 import * as RecipeRepository from '@/backend/repositories/recipe.repository'
 import * as RecipeRelationRepository from '@/backend/repositories/recipe-relation.repository'
@@ -44,6 +49,7 @@ import { sanitizeUrl } from '@/utils/url-validation'
 import {
   getRecipeById,
   getRecipes,
+  getRecentRecipes,
   createRecipe,
   updateRecipe,
   deleteRecipe,
@@ -151,6 +157,35 @@ describe('recipe.service', () => {
         undefined,
         tagFilters
       )
+    })
+  })
+
+  // ===== getRecentRecipes =====
+
+  describe('getRecentRecipes', () => {
+    it('正常系: 最新3件のレシピを取得できる', async () => {
+      const mockRecipes = [
+        { id: 'recipe-3', title: 'レシピ3', createdAt: new Date('2024-03-03') },
+        { id: 'recipe-2', title: 'レシピ2', createdAt: new Date('2024-03-02') },
+        { id: 'recipe-1', title: 'レシピ1', createdAt: new Date('2024-03-01') },
+      ]
+      vi.mocked(RecipeRepository.findRecentRecipesByUser).mockResolvedValueOnce(
+        mockRecipes as RecipeBasic[]
+      )
+
+      const result = await getRecentRecipes('user-1')
+
+      expect(result).toEqual(mockRecipes)
+      expect(RecipeRepository.findRecentRecipesByUser).toHaveBeenCalledWith('user-1', 3)
+    })
+
+    it('正常系: 指定件数で最近追加したレシピを取得できる', async () => {
+      vi.mocked(RecipeRepository.findRecentRecipesByUser).mockResolvedValueOnce([])
+
+      const result = await getRecentRecipes('user-1', 5)
+
+      expect(result).toEqual([])
+      expect(RecipeRepository.findRecentRecipesByUser).toHaveBeenCalledWith('user-1', 5)
     })
   })
 
