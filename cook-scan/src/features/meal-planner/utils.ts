@@ -12,15 +12,21 @@ export const WEEK_DIRECTION = {
 export type WeekDirection = (typeof WEEK_DIRECTION)[keyof typeof WEEK_DIRECTION]
 
 /**
+ * Date#getDay() を献立プラン用の曜日番号に変換する
+ * 月曜=0 ... 日曜=6
+ */
+export function getMealPlanDayOfWeek(date: Date): number {
+  const day = date.getDay()
+  return day === 0 ? 6 : day - 1
+}
+
+/**
  * 指定日付の週の月曜日をYYYY-MM-DD文字列で返す
  * ローカルタイムゾーンベースで計算する
  */
 export function getWeekStart(date: Date): string {
   const d = new Date(date)
-  const day = d.getDay()
-  // 日曜(0)なら-6、それ以外は1を引く
-  const diff = day === 0 ? -6 : 1 - day
-  d.setDate(d.getDate() + diff)
+  d.setDate(d.getDate() - getMealPlanDayOfWeek(d))
   const year = d.getFullYear()
   const month = String(d.getMonth() + 1).padStart(2, '0')
   const dayOfMonth = String(d.getDate()).padStart(2, '0')

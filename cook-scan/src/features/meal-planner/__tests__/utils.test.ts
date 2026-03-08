@@ -1,10 +1,33 @@
 import { describe, test, expect } from "vitest";
 import {
+  getMealPlanDayOfWeek,
   getWeekStart,
   getWeekDates,
   formatShortDate,
   parseLocalDate,
 } from "../utils";
+
+describe("getMealPlanDayOfWeek", () => {
+  test("月曜日を渡すと0を返す", () => {
+    const result = getMealPlanDayOfWeek(new Date(2026, 2, 2));
+    expect(result).toBe(0);
+  });
+
+  test("日曜日を渡すと6を返す", () => {
+    const result = getMealPlanDayOfWeek(new Date(2026, 2, 8));
+    expect(result).toBe(6);
+  });
+
+  test("週境界でもアプリの曜日番号を返す", () => {
+    const saturday = getMealPlanDayOfWeek(new Date(2026, 2, 7));
+    const sunday = getMealPlanDayOfWeek(new Date(2026, 2, 8));
+    const monday = getMealPlanDayOfWeek(new Date(2026, 2, 9));
+
+    expect(saturday).toBe(5);
+    expect(sunday).toBe(6);
+    expect(monday).toBe(0);
+  });
+});
 
 describe("getWeekStart", () => {
   test("月曜日を渡すとその日を返す", () => {
