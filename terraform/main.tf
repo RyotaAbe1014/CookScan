@@ -34,10 +34,10 @@ resource "vercel_project" "cook-scan" {
     repo = "RyotaAbe1014/CookScan"
   }
   team_id          = var.team_id
-  build_command    = "npm run db:generate && next build"
+  build_command    = "pnpm run db:generate && next build"
   output_directory = ".next"
-  install_command  = "npm install"
-  dev_command      = "npm run dev"
+  install_command  = "pnpm install"
+  dev_command      = "pnpm run dev"
   root_directory   = "cook-scan"
   node_version     = "22.x"
   resource_config = {

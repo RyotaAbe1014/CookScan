@@ -14,8 +14,8 @@
       "cd cook-scan && eslint --fix"
     ],
     "cook-scan/prisma/schema.prisma": [
-      "cd cook-scan && npm run db:format",
-      "cd cook-scan && npm run db:validate"
+      "cd cook-scan && pnpm run db:format",
+      "cd cook-scan && pnpm run db:validate"
     ]
   }
 }
