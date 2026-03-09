@@ -11,19 +11,19 @@
 
 ## 開発
 ```bash
-npm run build            # ビルド
+pnpm run build            # ビルド
 ```
 
 ## コード品質
 ```bash
-npm run lint             # ESLintでコードチェック
-npm run type-check       # TypeScriptの型チェック
+pnpm run lint             # ESLintでコードチェック
+pnpm run type-check       # TypeScriptの型チェック
 ```
 
 ## テスト
 ```bash
-npm run test             # テスト実行（watch mode）
-npm run test:run         # テスト実行（1回のみ）
+pnpm run test             # テスト実行（watch mode）
+pnpm run test:run         # テスト実行（1回のみ）
 ```
 
 # セキュリティルール

@@ -16,7 +16,7 @@
 ### 前提条件
 
 - Node.js 22+
-- npm
+- pnpm
 
 ### 環境設定
 
@@ -28,7 +28,7 @@ cd cook-scan
 
 2. **依存関係をインストール**
 ```bash
-npm install
+pnpm install
 ```
 
 3. **環境変数を設定**
@@ -44,22 +44,22 @@ GOOGLE_API_KEY=YOUR_GOOGLE_KEY
 
 4. **Prisma Clientを生成**
 ```bash
-npm run db:generate
+pnpm run db:generate
 ```
 
 5. **マイグレーションを適用**
 ```bash
-npm run db:migrate -- --create-only
+pnpm run db:migrate -- --create-only
 ```
 
 6. **マイグレーションをデプロイ**
 ```bash
-npm run db:deploy
+pnpm run db:deploy
 ```
 
 6. **開発サーバーを起動**
 ```bash
-npm run dev
+pnpm run dev
 ```
 
 アプリケーションは http://localhost:3000 で利用できます。
@@ -67,26 +67,26 @@ npm run dev
 ## 開発用コマンド
 
 ### アプリケーション
-- `npm run dev` - 開発サーバー起動（.envを読み込み）
-- `npm run build` - 本番ビルド（.envを読み込み）
-- `npm run start` - 本番サーバー起動
-- `npm run lint` - Lintチェック実行（src）
+- `pnpm run dev` - 開発サーバー起動（.envを読み込み）
+- `pnpm run build` - 本番ビルド（.envを読み込み）
+- `pnpm run start` - 本番サーバー起動
+- `pnpm run lint` - Lintチェック実行（src）
 
 ### テスト
-- `npm run test` - Vitest起動
-- `npm run test:run` - テストを1回実行
-- `npm run test:coverage` - カバレッジ取得
-- `npm run test:watch` - Watchモード
-- `npm run test:ui` - Vitest UI
+- `pnpm run test` - Vitest起動
+- `pnpm run test:run` - テストを1回実行
+- `pnpm run test:coverage` - カバレッジ取得
+- `pnpm run test:watch` - Watchモード
+- `pnpm run test:ui` - Vitest UI
 
 ### データベース
-- `npm run db:generate` - Prisma Client生成
-- `npm run db:format` - スキーマ整形
-- `npm run db:validate` - スキーマ検証
-- `npm run db:status` - マイグレーション状態確認
-- `npm run db:migrate` - マイグレーション適用
-- `npm run db:seed` - シード投入
-- `npm run db:studio` - Prisma Studioを開く
+- `pnpm run db:generate` - Prisma Client生成
+- `pnpm run db:format` - スキーマ整形
+- `pnpm run db:validate` - スキーマ検証
+- `pnpm run db:status` - マイグレーション状態確認
+- `pnpm run db:migrate` - マイグレーション適用
+- `pnpm run db:seed` - シード投入
+- `pnpm run db:studio` - Prisma Studioを開く
 
 ## プロジェクト構成
 
@@ -103,9 +103,9 @@ cook-scan/
 
 ### マイグレーションが失敗する
 1. `.env` の接続情報が正しいか確認
-2. `npm run db:status` で状態を確認
-3. `npm run db:generate` でClientを再生成
+2. `pnpm run db:status` で状態を確認
+3. `pnpm run db:generate` でClientを再生成
 
 ### ビルドエラー
-1. `npm run db:generate` でPrisma Clientを再生成
+1. `pnpm run db:generate` でPrisma Clientを再生成
 2. node_modulesを削除して再インストール
