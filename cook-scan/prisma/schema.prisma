@@ -281,7 +281,7 @@ model RecipeShare {
 model RecipeDevelopmentSession {
   id        String   @id @default(uuid())
   userId    String   @map("user_id")
-  threadId  String
+  threadId  String   @unique
   title     String
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
