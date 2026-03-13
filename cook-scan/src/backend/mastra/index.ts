@@ -4,8 +4,6 @@ import { PinoLogger } from '@mastra/loggers';
 import { PostgresStore } from "@mastra/pg";
 import { convertTextToRecipeAgent } from './agents/convert-text-to-recipe-agent';
 import { textToRecipeWorkflow } from './workflows/text-to-recipe';
-import { recommendAlternativesAgent } from './agents/recommend-alternative-agent';
-import { recommendAlternativesWorkflow } from './workflows/recommend-alternatives-workflow';
 
 const storage = new PostgresStore({
   id: "pg-storage",
@@ -16,8 +14,8 @@ const storage = new PostgresStore({
 });
 
 export const mastra = new Mastra({
-  workflows: { textToRecipeWorkflow, recommendAlternativesWorkflow },
-  agents: { convertTextToRecipeAgent, recommendAlternativesAgent },
+  workflows: { textToRecipeWorkflow },
+  agents: { convertTextToRecipeAgent },
   storage: storage,
   logger: new PinoLogger({
     name: 'Mastra',
