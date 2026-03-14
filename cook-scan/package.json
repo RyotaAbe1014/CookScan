@@ -83,5 +83,11 @@
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
+  },
+  "pnpm": {
+    "overrides": {
+      "undici": ">=7.24.0",
+      "flatted": ">=3.4.0"
+    }
   }
 }
