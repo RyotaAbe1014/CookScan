@@ -58,7 +58,7 @@ export function Header({ title, subtitle, rightAction }: HeaderProps) {
           {/* Mobile Menu Button - Visible only on mobile */}
           <button
             onClick={() => setIsOpen(true)}
-            className="flex items-center justify-center rounded-lg p-2 text-slate-500 transition-colors hover:bg-slate-100 sm:hidden"
+            className="flex items-center justify-center rounded-lg p-2 text-slate-500 transition-colors hover:bg-slate-100"
             aria-label="メニューを開く"
           >
             <MenuIcon className="h-6 w-6" />
