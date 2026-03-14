@@ -1,4 +1,5 @@
 import { Agent } from '@mastra/core/agent';
+import { Memory } from '@mastra/memory';
 import { openaiGpt } from '../models/openai';
 
 export const convertTextToRecipeAgent = new Agent({
