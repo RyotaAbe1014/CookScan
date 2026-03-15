@@ -1,21 +1,19 @@
-import { Card, CardHeader, CardContent } from '@/components/ui/card'
-import type { SourceInfoDisplay } from '@/types/sourceInfo'
-import { isValidHttpUrl } from '@/utils/url-validation'
-import { BookOpenIcon } from '@/components/icons/book-open-icon'
-import { DocumentIcon } from '@/components/icons/document-icon'
-import { LinkIcon } from '@/components/icons/link-icon'
+import { Card, CardHeader, CardContent } from "@/components/ui/card";
+import type { SourceInfoDisplay } from "@/types/sourceInfo";
+import { isValidHttpUrl } from "@/utils/url-validation";
+import { BookOpenIcon } from "@/components/icons/book-open-icon";
+import { DocumentIcon } from "@/components/icons/document-icon";
+import { LinkIcon } from "@/components/icons/link-icon";
 
 type RecipeSourceInfoProps = {
-  sourceInfo: SourceInfoDisplay
-}
+  sourceInfo: SourceInfoDisplay;
+};
 
 export function RecipeSourceInfo({ sourceInfo }: RecipeSourceInfoProps) {
   return (
     <Card className="mb-6">
       <CardHeader
-        icon={
-          <BookOpenIcon className="h-5 w-5 text-white" />
-        }
+        icon={<BookOpenIcon className="h-5 w-5 text-white" />}
         iconColor="accent-tags"
         title="ソース情報"
       />
@@ -62,5 +60,5 @@ export function RecipeSourceInfo({ sourceInfo }: RecipeSourceInfoProps) {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

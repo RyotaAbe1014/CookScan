@@ -1,6 +1,6 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
+import { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -8,14 +8,14 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
-} from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { SearchIcon } from '@/components/icons/search-icon'
-import { SpinnerIcon } from '@/components/icons/spinner-icon'
-import { useRecipeSearch } from './hooks/use-recipe-search'
-import type { ChildRecipeSelectorDialogProps, ChildRecipeItem } from './types'
-import { cn } from '@/lib/tailwind'
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { SearchIcon } from "@/components/icons/search-icon";
+import { SpinnerIcon } from "@/components/icons/spinner-icon";
+import { useRecipeSearch } from "./hooks/use-recipe-search";
+import type { ChildRecipeSelectorDialogProps, ChildRecipeItem } from "./types";
+import { cn } from "@/lib/tailwind";
 
 export function ChildRecipeSelectorDialog({
   isOpen,
@@ -24,9 +24,9 @@ export function ChildRecipeSelectorDialog({
   parentRecipeId,
   existingChildRecipeIds,
 }: ChildRecipeSelectorDialogProps) {
-  const [selectedRecipeId, setSelectedRecipeId] = useState<string | null>(null)
-  const [quantity, setQuantity] = useState('')
-  const [notes, setNotes] = useState('')
+  const [selectedRecipeId, setSelectedRecipeId] = useState<string | null>(null);
+  const [quantity, setQuantity] = useState("");
+  const [notes, setNotes] = useState("");
 
   const {
     searchQuery,
@@ -37,33 +37,38 @@ export function ChildRecipeSelectorDialog({
     handleSearch,
     handleSearchKeyDown,
     reset,
-  } = useRecipeSearch(parentRecipeId, existingChildRecipeIds, isOpen)
+  } = useRecipeSearch(parentRecipeId, existingChildRecipeIds, isOpen);
 
   const handleClose = () => {
-    reset()
-    setSelectedRecipeId(null)
-    setQuantity('')
-    setNotes('')
-    onClose()
-  }
+    reset();
+    setSelectedRecipeId(null);
+    setQuantity("");
+    setNotes("");
+    onClose();
+  };
 
   const handleAdd = () => {
-    if (!selectedRecipeId) return
-    const selectedRecipe = recipes.find((r) => r.id === selectedRecipeId)
-    if (!selectedRecipe) return
+    if (!selectedRecipeId) return;
+    const selectedRecipe = recipes.find((r) => r.id === selectedRecipeId);
+    if (!selectedRecipe) return;
 
     const item: ChildRecipeItem = {
       childRecipeId: selectedRecipe.id,
       childRecipeTitle: selectedRecipe.title,
       quantity,
       notes,
-    }
-    onAdd(item)
-    handleClose()
-  }
+    };
+    onAdd(item);
+    handleClose();
+  };
 
   return (
-    <Dialog open={isOpen} onOpenChange={(open) => { if (!open) handleClose() }}>
+    <Dialog
+      open={isOpen}
+      onOpenChange={(open) => {
+        if (!open) handleClose();
+      }}
+    >
       <DialogContent className="sm:max-w-[600px] p-0 gap-0 overflow-hidden border-none shadow-2xl">
         {/* Header - Purple Gradient */}
         <DialogHeader className="p-6 bg-gradient-to-br from-secondary/10 via-secondary/5 to-transparent border-b border-secondary-light/50">
@@ -107,7 +112,11 @@ export function ChildRecipeSelectorDialog({
             <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-1">
               レシピ一覧
             </div>
-            <div className="h-[240px] overflow-y-auto border rounded-xl bg-section-header/50 p-2 space-y-2 relative scrollbar-thin scrollbar-thumb-section-header-border scrollbar-track-transparent" role="listbox" aria-label="レシピ一覧">
+            <div
+              className="h-[240px] overflow-y-auto border rounded-xl bg-section-header/50 p-2 space-y-2 relative scrollbar-thin scrollbar-thumb-section-header-border scrollbar-track-transparent"
+              role="listbox"
+              aria-label="レシピ一覧"
+            >
               {isLoading ? (
                 <div className="flex flex-col items-center justify-center h-full gap-2 text-secondary/80">
                   <SpinnerIcon className="h-8 w-8 animate-spin" />
@@ -131,32 +140,38 @@ export function ChildRecipeSelectorDialog({
                     aria-selected={selectedRecipeId === recipe.id}
                     onClick={() => setSelectedRecipeId(recipe.id)}
                     onKeyDown={(e) => {
-                      if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault()
-                        setSelectedRecipeId(recipe.id)
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        setSelectedRecipeId(recipe.id);
                       }
                     }}
                     className={cn(
                       "group flex items-center p-3 rounded-lg border cursor-pointer transition-all duration-200 ease-out",
                       selectedRecipeId === recipe.id
                         ? "border-secondary bg-secondary-light/80 shadow-sm ring-1 ring-secondary/50"
-                        : "border-transparent bg-white hover:border-secondary-light hover:bg-secondary-light/30 hover:shadow-sm"
+                        : "border-transparent bg-white hover:border-secondary-light hover:bg-secondary-light/30 hover:shadow-sm",
                     )}
                   >
-                    <div className={cn(
-                      "h-5 w-5 rounded-full border-2 mr-3 flex items-center justify-center transition-all duration-200 flex-shrink-0",
-                      selectedRecipeId === recipe.id
-                        ? "border-secondary-hover bg-secondary-hover scale-110"
-                        : "border-border-dark group-hover:border-secondary bg-white"
-                    )}>
+                    <div
+                      className={cn(
+                        "h-5 w-5 rounded-full border-2 mr-3 flex items-center justify-center transition-all duration-200 flex-shrink-0",
+                        selectedRecipeId === recipe.id
+                          ? "border-secondary-hover bg-secondary-hover scale-110"
+                          : "border-border-dark group-hover:border-secondary bg-white",
+                      )}
+                    >
                       {selectedRecipeId === recipe.id && (
                         <div className="h-2 w-2 rounded-full bg-white shadow-sm animate-in zoom-in duration-200" />
                       )}
                     </div>
-                    <div className={cn(
-                      "font-medium text-sm transition-colors",
-                      selectedRecipeId === recipe.id ? "text-foreground" : "text-foreground group-hover:text-foreground"
-                    )}>
+                    <div
+                      className={cn(
+                        "font-medium text-sm transition-colors",
+                        selectedRecipeId === recipe.id
+                          ? "text-foreground"
+                          : "text-foreground group-hover:text-foreground",
+                      )}
+                    >
                       {recipe.title}
                     </div>
                   </div>
@@ -166,14 +181,19 @@ export function ChildRecipeSelectorDialog({
           </div>
 
           {/* Input Fields (Animated) */}
-          <div className={cn(
-            "grid grid-cols-2 gap-4 transition-all duration-500 ease-in-out border-t border-dashed border-muted",
-            selectedRecipeId
-              ? "opacity-100 max-h-[200px] pt-4 translate-y-0"
-              : "opacity-0 max-h-0 pt-0 -translate-y-4 pointer-events-none"
-          )}>
+          <div
+            className={cn(
+              "grid grid-cols-2 gap-4 transition-all duration-500 ease-in-out border-t border-dashed border-muted",
+              selectedRecipeId
+                ? "opacity-100 max-h-[200px] pt-4 translate-y-0"
+                : "opacity-0 max-h-0 pt-0 -translate-y-4 pointer-events-none",
+            )}
+          >
             <div className="space-y-2">
-              <label htmlFor="child-recipe-quantity" className="text-sm font-medium text-foreground ml-1">
+              <label
+                htmlFor="child-recipe-quantity"
+                className="text-sm font-medium text-foreground ml-1"
+              >
                 分量 <span className="text-xs text-muted-foreground font-normal">(任意)</span>
               </label>
               <Input
@@ -185,7 +205,10 @@ export function ChildRecipeSelectorDialog({
               />
             </div>
             <div className="space-y-2">
-              <label htmlFor="child-recipe-notes" className="text-sm font-medium text-foreground ml-1">
+              <label
+                htmlFor="child-recipe-notes"
+                className="text-sm font-medium text-foreground ml-1"
+              >
                 メモ <span className="text-xs text-muted-foreground font-normal">(任意)</span>
               </label>
               <Input
@@ -214,7 +237,7 @@ export function ChildRecipeSelectorDialog({
               "shine-effect relative overflow-hidden transition-all duration-300",
               selectedRecipeId
                 ? "bg-secondary-hover hover:bg-secondary-hover text-white shadow-md shadow-secondary/20 hover:shadow-lg hover:shadow-secondary/30 w-full sm:w-auto"
-                : "bg-section-header-border text-muted-foreground cursor-not-allowed"
+                : "bg-section-header-border text-muted-foreground cursor-not-allowed",
             )}
           >
             サブレシピを追加
@@ -222,5 +245,5 @@ export function ChildRecipeSelectorDialog({
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

@@ -1,11 +1,11 @@
-import Image from 'next/image'
-import { Card, CardContent } from '@/components/ui/card'
-import { PhotographIcon } from '@/components/icons/photograph-icon'
+import Image from "next/image";
+import { Card, CardContent } from "@/components/ui/card";
+import { PhotographIcon } from "@/components/icons/photograph-icon";
 
 type RecipeImageSectionProps = {
-  imageUrl: string
-  title: string
-}
+  imageUrl: string;
+  title: string;
+};
 
 export function RecipeImageSection({ imageUrl, title }: RecipeImageSectionProps) {
   return (
@@ -26,5 +26,5 @@ export function RecipeImageSection({ imageUrl, title }: RecipeImageSectionProps)
         />
       </CardContent>
     </Card>
-  )
+  );
 }

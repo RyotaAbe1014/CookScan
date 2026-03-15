@@ -1,251 +1,262 @@
-'use client'
+"use client";
 
-import { useState, useRef, useEffect, useCallback } from 'react'
-import Image from 'next/image'
-import type { ExtractedRecipeData, ExtractResponse } from './types'
-import { Button } from '@/components/ui/button'
-import { Alert } from '@/components/ui/alert'
-import { CloudUploadIcon } from '@/components/icons/cloud-upload-icon'
-import { ClipboardIcon } from '@/components/icons/clipboard-icon'
-import { InfoCircleIcon } from '@/components/icons/info-circle-icon'
-import { CloseIcon } from '@/components/icons/close-icon'
-import { ReloadIcon } from '@/components/icons/reload-icon'
-import { LightningBoltIcon } from '@/components/icons/lightning-bolt-icon'
-import { PhotographIcon } from '@/components/icons/photograph-icon'
-import { uploadFilesToS3 } from '@/lib/aws/s3-upload'
+import { useState, useRef, useEffect, useCallback } from "react";
+import Image from "next/image";
+import type { ExtractedRecipeData, ExtractResponse } from "./types";
+import { Button } from "@/components/ui/button";
+import { Alert } from "@/components/ui/alert";
+import { CloudUploadIcon } from "@/components/icons/cloud-upload-icon";
+import { ClipboardIcon } from "@/components/icons/clipboard-icon";
+import { InfoCircleIcon } from "@/components/icons/info-circle-icon";
+import { CloseIcon } from "@/components/icons/close-icon";
+import { ReloadIcon } from "@/components/icons/reload-icon";
+import { LightningBoltIcon } from "@/components/icons/lightning-bolt-icon";
+import { PhotographIcon } from "@/components/icons/photograph-icon";
+import { uploadFilesToS3 } from "@/lib/aws/s3-upload";
 
-type UploadStatus = 'idle' | 'uploading' | 'ocr-processing' | 'converting'
+type UploadStatus = "idle" | "uploading" | "ocr-processing" | "converting";
 
 const uploadStatusLabel: Record<UploadStatus, string> = {
-  idle: 'レシピを抽出',
-  uploading: 'アップロード中...',
-  'ocr-processing': '画像を読み取り中...',
-  converting: 'レシピに変換中...',
-}
+  idle: "レシピを抽出",
+  uploading: "アップロード中...",
+  "ocr-processing": "画像を読み取り中...",
+  converting: "レシピに変換中...",
+};
 
 type Props = {
-  onUpload: (imageUrl: string, extractedData: ExtractedRecipeData) => void
-  onUploadingChange: (isUploading: boolean) => void
-}
+  onUpload: (imageUrl: string, extractedData: ExtractedRecipeData) => void;
+  onUploadingChange: (isUploading: boolean) => void;
+};
 
 export default function ImageUpload({ onUpload, onUploadingChange }: Props) {
-  const [isDragging, setIsDragging] = useState(false)
-  const [uploadStatus, setUploadStatus] = useState<UploadStatus>('idle')
-  const [selectedImages, setSelectedImages] = useState<Array<{ file: File; preview: string }>>([])
-  const [error, setError] = useState<string | null>(null)
-  const fileInputRef = useRef<HTMLInputElement>(null)
-  const preview = selectedImages[0]?.preview ?? null
+  const [isDragging, setIsDragging] = useState(false);
+  const [uploadStatus, setUploadStatus] = useState<UploadStatus>("idle");
+  const [selectedImages, setSelectedImages] = useState<Array<{ file: File; preview: string }>>([]);
+  const [error, setError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const preview = selectedImages[0]?.preview ?? null;
 
   const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault()
-    setIsDragging(true)
-  }
+    e.preventDefault();
+    setIsDragging(true);
+  };
 
   const handleDragLeave = (e: React.DragEvent) => {
-    e.preventDefault()
-    setIsDragging(false)
-  }
+    e.preventDefault();
+    setIsDragging(false);
+  };
 
   const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault()
-    setIsDragging(false)
+    e.preventDefault();
+    setIsDragging(false);
 
-    const files = e.dataTransfer.files
+    const files = e.dataTransfer.files;
     if (files.length > 0) {
-      void handleFiles(files)
+      void handleFiles(files);
     }
-  }
+  };
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files
+    const files = e.target.files;
     if (files && files.length > 0) {
-      void handleFiles(files)
+      void handleFiles(files);
     }
-  }
+  };
 
-  const readFileAsDataUrl = useCallback((file: File) => new Promise<string>((resolve, reject) => {
-    const reader = new FileReader()
-    reader.onload = () => resolve(reader.result as string)
-    reader.onerror = () => reject(reader.error ?? new Error('Failed to read file'))
-    reader.readAsDataURL(file)
-  }), [])
+  const readFileAsDataUrl = useCallback(
+    (file: File) =>
+      new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = () => reject(reader.error ?? new Error("Failed to read file"));
+        reader.readAsDataURL(file);
+      }),
+    [],
+  );
 
-  const handleFiles = useCallback(async (
-    files: FileList | File[],
-    options?: { append?: boolean }
-  ) => {
-    setError(null)
-    const fileList = Array.from(files)
-    if (fileList.length === 0) return
+  const handleFiles = useCallback(
+    async (files: FileList | File[], options?: { append?: boolean }) => {
+      setError(null);
+      const fileList = Array.from(files);
+      if (fileList.length === 0) return;
 
-    const invalidFile = fileList.find((file) => !file.type.startsWith('image/'))
-    if (invalidFile) {
-      setError('画像ファイルを選択してください')
-      return
-    }
-
-    // HEIC/HEIF形式を除外
-    const isHeic = fileList.some((file) => {
-      const lowerFileName = file.name.toLowerCase()
-      return file.type === 'image/heic' ||
-        file.type === 'image/heif' ||
-        lowerFileName.endsWith('.heic') ||
-        lowerFileName.endsWith('.heif')
-    })
-
-    if (isHeic) {
-      setError('HEIC形式のファイルは対応していません。PNG、JPG、GIF形式の画像を選択してください')
-      return
-    }
-
-    // ファイル数制限チェック
-    const MAX_FILES = 5
-    const currentCount = options?.append ? selectedImages.length : 0
-    const totalCount = currentCount + fileList.length
-
-    if (totalCount > MAX_FILES) {
-      setError(`画像は最大${MAX_FILES}枚までです`)
-      return
-    }
-
-    try {
-      const previews = await Promise.all(fileList.map(readFileAsDataUrl))
-      const nextImages = fileList.map((file, index) => ({
-        file,
-        preview: previews[index],
-      }))
-      setSelectedImages((current) => options?.append ? [...current, ...nextImages] : nextImages)
-    } catch (error) {
-      console.error(error)
-      setError('画像の読み込みに失敗しました')
-    }
-  }, [readFileAsDataUrl, selectedImages.length])
-
-  const handlePaste = useCallback((e: ClipboardEvent) => {
-    const items = e.clipboardData?.items
-    if (!items) return
-
-    for (let i = 0; i < items.length; i++) {
-      const item = items[i]
-      if (item.type.startsWith('image/')) {
-        e.preventDefault()
-        const file = item.getAsFile()
-        if (file) {
-          void handleFiles([file], { append: true })
-        }
-        break
+      const invalidFile = fileList.find((file) => !file.type.startsWith("image/"));
+      if (invalidFile) {
+        setError("画像ファイルを選択してください");
+        return;
       }
-    }
-  }, [handleFiles])
+
+      // HEIC/HEIF形式を除外
+      const isHeic = fileList.some((file) => {
+        const lowerFileName = file.name.toLowerCase();
+        return (
+          file.type === "image/heic" ||
+          file.type === "image/heif" ||
+          lowerFileName.endsWith(".heic") ||
+          lowerFileName.endsWith(".heif")
+        );
+      });
+
+      if (isHeic) {
+        setError("HEIC形式のファイルは対応していません。PNG、JPG、GIF形式の画像を選択してください");
+        return;
+      }
+
+      // ファイル数制限チェック
+      const MAX_FILES = 5;
+      const currentCount = options?.append ? selectedImages.length : 0;
+      const totalCount = currentCount + fileList.length;
+
+      if (totalCount > MAX_FILES) {
+        setError(`画像は最大${MAX_FILES}枚までです`);
+        return;
+      }
+
+      try {
+        const previews = await Promise.all(fileList.map(readFileAsDataUrl));
+        const nextImages = fileList.map((file, index) => ({
+          file,
+          preview: previews[index],
+        }));
+        setSelectedImages((current) =>
+          options?.append ? [...current, ...nextImages] : nextImages,
+        );
+      } catch (error) {
+        console.error(error);
+        setError("画像の読み込みに失敗しました");
+      }
+    },
+    [readFileAsDataUrl, selectedImages.length],
+  );
+
+  const handlePaste = useCallback(
+    (e: ClipboardEvent) => {
+      const items = e.clipboardData?.items;
+      if (!items) return;
+
+      for (let i = 0; i < items.length; i++) {
+        const item = items[i];
+        if (item.type.startsWith("image/")) {
+          e.preventDefault();
+          const file = item.getAsFile();
+          if (file) {
+            void handleFiles([file], { append: true });
+          }
+          break;
+        }
+      }
+    },
+    [handleFiles],
+  );
 
   useEffect(() => {
-    document.addEventListener('paste', handlePaste)
+    document.addEventListener("paste", handlePaste);
     return () => {
-      document.removeEventListener('paste', handlePaste)
-    }
-  }, [handlePaste])
+      document.removeEventListener("paste", handlePaste);
+    };
+  }, [handlePaste]);
 
   const handleUpload = async () => {
-    if (selectedImages.length === 0 || !preview) return
+    if (selectedImages.length === 0 || !preview) return;
 
-    setUploadStatus('uploading')
-    onUploadingChange(true)
+    setUploadStatus("uploading");
+    onUploadingChange(true);
     try {
       // S3にアップロード
-      const uploadResult = await uploadFilesToS3(selectedImages.map(({ file }) => file))
+      const uploadResult = await uploadFilesToS3(selectedImages.map(({ file }) => file));
       if (!uploadResult.success) {
-        setError(uploadResult.error)
-        setUploadStatus('idle')
-        onUploadingChange(false)
-        return
+        setError(uploadResult.error);
+        setUploadStatus("idle");
+        onUploadingChange(false);
+        return;
       }
 
       // S3アップロード完了後、Extract APIでSQSにenqueue
-      const enqueueRes = await fetch('/api/recipes/extract/file', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const enqueueRes = await fetch("/api/recipes/extract/file", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ jobId: uploadResult.jobId }),
-      })
+      });
 
       if (!enqueueRes.ok) {
-        setError('アップロードに失敗しました')
-        setUploadStatus('idle')
-        onUploadingChange(false)
-        return
+        setError("アップロードに失敗しました");
+        setUploadStatus("idle");
+        onUploadingChange(false);
+        return;
       }
 
       // OCR結果をポーリングで取得
-      setUploadStatus('ocr-processing')
-      const POLL_INTERVAL = 5000
-      const MAX_POLLS = 36
-      let ocrText: string | null = null
+      setUploadStatus("ocr-processing");
+      const POLL_INTERVAL = 5000;
+      const MAX_POLLS = 36;
+      let ocrText: string | null = null;
 
       for (let i = 0; i < MAX_POLLS; i++) {
-        await new Promise((resolve) => setTimeout(resolve, POLL_INTERVAL))
+        await new Promise((resolve) => setTimeout(resolve, POLL_INTERVAL));
 
-        const pollRes = await fetch(`/api/recipes/extract/result?jobId=${uploadResult.jobId}`)
-        const pollData = await pollRes.json()
+        const pollRes = await fetch(`/api/recipes/extract/result?jobId=${uploadResult.jobId}`);
+        const pollData = await pollRes.json();
 
-        if (pollData.status === 'pending') continue
+        if (pollData.status === "pending") continue;
 
-        if (pollData.status === 'error') {
-          setError(pollData.error ?? 'OCR処理に失敗しました')
-          setUploadStatus('idle')
-          onUploadingChange(false)
-          return
+        if (pollData.status === "error") {
+          setError(pollData.error ?? "OCR処理に失敗しました");
+          setUploadStatus("idle");
+          onUploadingChange(false);
+          return;
         }
 
-        if (pollData.status === 'success') {
-          ocrText = pollData.result.text
-          break
+        if (pollData.status === "success") {
+          ocrText = pollData.result.text;
+          break;
         }
       }
 
       if (!ocrText) {
-        setError('OCR処理がタイムアウトしました。しばらく経ってから再度お試しください。')
-        setUploadStatus('idle')
-        onUploadingChange(false)
-        return
+        setError("OCR処理がタイムアウトしました。しばらく経ってから再度お試しください。");
+        setUploadStatus("idle");
+        onUploadingChange(false);
+        return;
       }
 
       // OCRテキストをレシピ構造化APIに送信
-      setUploadStatus('converting')
-      const textRes = await fetch('/api/recipes/extract/text', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      setUploadStatus("converting");
+      const textRes = await fetch("/api/recipes/extract/text", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text: ocrText }),
-      })
+      });
 
       const textData: ExtractResponse = await textRes.json().catch(() => ({
-        status: 'error' as const,
-        error: 'レシピの構造化に失敗しました',
-      }))
+        status: "error" as const,
+        error: "レシピの構造化に失敗しました",
+      }));
 
-      if (!textRes.ok || textData.status !== 'success') {
-        const msg = textData.status === 'error' ? textData.error : 'レシピの構造化に失敗しました'
-        setError(msg)
-        setUploadStatus('idle')
-        onUploadingChange(false)
-        return
+      if (!textRes.ok || textData.status !== "success") {
+        const msg = textData.status === "error" ? textData.error : "レシピの構造化に失敗しました";
+        setError(msg);
+        setUploadStatus("idle");
+        onUploadingChange(false);
+        return;
       }
 
-      onUpload(preview, textData.result)
+      onUpload(preview, textData.result);
     } catch (e) {
-      console.error(e)
-      setError('ネットワークエラーが発生しました')
+      console.error(e);
+      setError("ネットワークエラーが発生しました");
     } finally {
-      setUploadStatus('idle')
-      onUploadingChange(false)
+      setUploadStatus("idle");
+      onUploadingChange(false);
     }
-  }
+  };
 
   const handleRemove = () => {
-    setError(null)
-    setSelectedImages([])
+    setError(null);
+    setSelectedImages([]);
     if (fileInputRef.current) {
-      fileInputRef.current.value = ''
+      fileInputRef.current.value = "";
     }
-  }
+  };
 
   return (
     <div className="mx-auto max-w-2xl">
@@ -259,24 +270,25 @@ export default function ImageUpload({ onUpload, onUploadingChange }: Props) {
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
-          className={`relative overflow-hidden rounded-xl border-2 border-dashed p-12 text-center shadow-lg ring-1 ring-card-border transition-all duration-300 ${isDragging
-            ? 'border-primary bg-primary-light shadow-xl'
-            : 'border-border-dark bg-white hover:border-primary hover:shadow-xl'
-            }`}
+          className={`relative overflow-hidden rounded-xl border-2 border-dashed p-12 text-center shadow-lg ring-1 ring-card-border transition-all duration-300 ${
+            isDragging
+              ? "border-primary bg-primary-light shadow-xl"
+              : "border-border-dark bg-white hover:border-primary hover:shadow-xl"
+          }`}
         >
           <div className="flex flex-col items-center">
-            <div className={`rounded-xl p-4 transition-colors ${isDragging
-              ? 'bg-primary'
-              : 'bg-linear-to-br from-primary-light to-secondary-light'
-              }`}>
+            <div
+              className={`rounded-xl p-4 transition-colors ${
+                isDragging ? "bg-primary" : "bg-linear-to-br from-primary-light to-secondary-light"
+              }`}
+            >
               <CloudUploadIcon
-                className={`h-16 w-16 transition-colors ${isDragging ? 'text-white' : 'text-primary'
-                  }`}
+                className={`h-16 w-16 transition-colors ${
+                  isDragging ? "text-white" : "text-primary"
+                }`}
               />
             </div>
-            <p className="mt-6 text-lg font-bold text-foreground">
-              画像をドラッグ&ドロップ
-            </p>
+            <p className="mt-6 text-lg font-bold text-foreground">画像をドラッグ&ドロップ</p>
             <div className="mt-3 flex items-center gap-2">
               <div className="h-px flex-1 bg-border-dark" />
               <p className="text-sm text-muted-foreground">または</p>
@@ -294,11 +306,7 @@ export default function ImageUpload({ onUpload, onUploadingChange }: Props) {
               onChange={handleFileSelect}
               className="hidden"
             />
-            <Button
-              onClick={() => fileInputRef.current?.click()}
-              size="lg"
-              className="mt-6"
-            >
+            <Button onClick={() => fileInputRef.current?.click()} size="lg" className="mt-6">
               <PhotographIcon className="h-5 w-5" />
               ファイルを選択
             </Button>
@@ -311,7 +319,8 @@ export default function ImageUpload({ onUpload, onUploadingChange }: Props) {
                 <div className="flex gap-2">
                   <InfoCircleIcon className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
                   <p className="text-xs leading-relaxed text-primary-hover">
-                    <span className="font-bold">ヒント:</span> 複数のファイルをアップロードする場合、レシピの続きに合わせて順番に設定すると、より正確に読み取ることができます。
+                    <span className="font-bold">ヒント:</span>{" "}
+                    複数のファイルをアップロードする場合、レシピの続きに合わせて順番に設定すると、より正確に読み取ることができます。
                   </p>
                 </div>
               </div>
@@ -331,12 +340,10 @@ export default function ImageUpload({ onUpload, onUploadingChange }: Props) {
             />
             <button
               onClick={handleRemove}
-              disabled={uploadStatus !== 'idle'}
+              disabled={uploadStatus !== "idle"}
               className="absolute -right-2 -top-2 rounded-full bg-white p-2.5 shadow-lg ring-1 ring-card-border transition-all hover:bg-danger-light hover:ring-danger-light disabled:cursor-not-allowed disabled:opacity-50"
             >
-              <CloseIcon
-                className="h-5 w-5 text-muted-foreground hover:text-danger"
-              />
+              <CloseIcon className="h-5 w-5 text-muted-foreground hover:text-danger" />
             </button>
           </div>
           {selectedImages.length > 1 && (
@@ -359,26 +366,17 @@ export default function ImageUpload({ onUpload, onUploadingChange }: Props) {
             </div>
           )}
           <div className="mt-6 flex justify-center gap-4">
-            <Button
-              variant="secondary"
-              onClick={handleRemove}
-              disabled={uploadStatus !== 'idle'}
-            >
+            <Button variant="secondary" onClick={handleRemove} disabled={uploadStatus !== "idle"}>
               <ReloadIcon className="h-4 w-4" />
               別の画像を選択
             </Button>
-            <Button
-              onClick={handleUpload}
-              isLoading={uploadStatus !== 'idle'}
-            >
-              {uploadStatus === 'idle' && (
-                <LightningBoltIcon className="h-4 w-4" />
-              )}
+            <Button onClick={handleUpload} isLoading={uploadStatus !== "idle"}>
+              {uploadStatus === "idle" && <LightningBoltIcon className="h-4 w-4" />}
               {uploadStatusLabel[uploadStatus]}
             </Button>
           </div>
         </div>
       )}
     </div>
-  )
+  );
 }

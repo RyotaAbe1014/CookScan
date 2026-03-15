@@ -1,8 +1,8 @@
-'use client'
+"use client";
 
-import { Input } from '@/components/ui/input'
-import { TrashIcon } from '@/components/icons/trash-icon'
-import type { ChildRecipeInputProps } from './types'
+import { Input } from "@/components/ui/input";
+import { TrashIcon } from "@/components/icons/trash-icon";
+import type { ChildRecipeInputProps } from "./types";
 
 export function ChildRecipeInput({ item, index, onUpdate, onRemove }: ChildRecipeInputProps) {
   return (
@@ -23,26 +23,36 @@ export function ChildRecipeInput({ item, index, onUpdate, onRemove }: ChildRecip
       </div>
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <div>
-          <label htmlFor={`child-recipe-quantity-${index}`} className="mb-1 block text-xs font-medium text-muted-foreground">分量</label>
+          <label
+            htmlFor={`child-recipe-quantity-${index}`}
+            className="mb-1 block text-xs font-medium text-muted-foreground"
+          >
+            分量
+          </label>
           <Input
             id={`child-recipe-quantity-${index}`}
             type="text"
             value={item.quantity}
-            onChange={(e) => onUpdate(index, 'quantity', e.target.value)}
+            onChange={(e) => onUpdate(index, "quantity", e.target.value)}
             placeholder="例: 大さじ2"
           />
         </div>
         <div>
-          <label htmlFor={`child-recipe-notes-${index}`} className="mb-1 block text-xs font-medium text-muted-foreground">メモ</label>
+          <label
+            htmlFor={`child-recipe-notes-${index}`}
+            className="mb-1 block text-xs font-medium text-muted-foreground"
+          >
+            メモ
+          </label>
           <Input
             id={`child-recipe-notes-${index}`}
             type="text"
             value={item.notes}
-            onChange={(e) => onUpdate(index, 'notes', e.target.value)}
+            onChange={(e) => onUpdate(index, "notes", e.target.value)}
             placeholder="例: 事前に作っておく"
           />
         </div>
       </div>
     </div>
-  )
+  );
 }

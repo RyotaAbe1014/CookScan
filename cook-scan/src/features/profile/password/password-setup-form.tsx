@@ -1,39 +1,39 @@
-'use client'
+"use client";
 
-import { useState, useTransition, type FormEvent } from 'react'
-import { setupPassword, type PasswordSetupFormData } from './actions'
-import { isSuccess } from '@/utils/result'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Alert } from '@/components/ui/alert'
-import { CheckIcon } from '@/components/icons/check-icon'
-import { ShieldCheckIcon } from '@/components/icons/shield-check-icon'
-import { CheckCircleOutlineIcon } from '@/components/icons/check-circle-outline-icon'
+import { useState, useTransition, type FormEvent } from "react";
+import { setupPassword, type PasswordSetupFormData } from "./actions";
+import { isSuccess } from "@/utils/result";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Alert } from "@/components/ui/alert";
+import { CheckIcon } from "@/components/icons/check-icon";
+import { ShieldCheckIcon } from "@/components/icons/shield-check-icon";
+import { CheckCircleOutlineIcon } from "@/components/icons/check-circle-outline-icon";
 
 export const PasswordSetupForm = () => {
-  const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
-  const [error, setError] = useState<string | null>(null)
-  const [isPending, startTransition] = useTransition()
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [isPending, startTransition] = useTransition();
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    setError(null)
+    e.preventDefault();
+    setError(null);
 
     const formData: PasswordSetupFormData = {
       password,
       confirmPassword,
-    }
+    };
 
     startTransition(async () => {
-      const result = await setupPassword(formData)
+      const result = await setupPassword(formData);
 
       if (!isSuccess(result)) {
-        setError(result.error.message)
+        setError(result.error.message);
       }
       // 成功時は setupPassword 内で redirect される
-    })
-  }
+    });
+  };
 
   return (
     <div className="w-full max-w-md mx-auto p-8">
@@ -41,9 +41,7 @@ export const PasswordSetupForm = () => {
         <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary-light mb-4">
           <ShieldCheckIcon className="h-8 w-8 text-primary" />
         </div>
-        <h1 className="text-2xl font-bold text-foreground mb-2">
-          パスワードを設定
-        </h1>
+        <h1 className="text-2xl font-bold text-foreground mb-2">パスワードを設定</h1>
         <p className="text-sm text-muted-foreground">
           アカウントのセキュリティを保護するため、パスワードを設定してください
         </p>
@@ -83,7 +81,8 @@ export const PasswordSetupForm = () => {
           </div>
           <div className="rounded-md bg-primary-light p-3">
             <p className="text-xs text-primary-hover">
-              <strong>セキュリティ要件:</strong> パスワードは8文字以上で、大文字、小文字、数字を含める必要があります
+              <strong>セキュリティ要件:</strong>{" "}
+              パスワードは8文字以上で、大文字、小文字、数字を含める必要があります
             </p>
           </div>
         </div>
@@ -116,7 +115,9 @@ export const PasswordSetupForm = () => {
               <CheckCircleOutlineIcon className="h-5 w-5 text-secondary" />
             </div>
           </div>
-          <p className="text-xs text-muted-foreground">入力ミスを防ぐため、もう一度入力してください</p>
+          <p className="text-xs text-muted-foreground">
+            入力ミスを防ぐため、もう一度入力してください
+          </p>
         </div>
 
         {/* 送信ボタン */}
@@ -129,7 +130,7 @@ export const PasswordSetupForm = () => {
           className="w-full shadow-md hover:shadow-lg transition-shadow"
         >
           {isPending ? (
-            '設定中...'
+            "設定中..."
           ) : (
             <>
               <CheckIcon className="h-5 w-5" />
@@ -139,5 +140,5 @@ export const PasswordSetupForm = () => {
         </Button>
       </form>
     </div>
-  )
-}
+  );
+};

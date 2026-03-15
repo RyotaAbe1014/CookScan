@@ -1,25 +1,25 @@
-import type { Meta, StoryObj } from '@storybook/nextjs'
-import { Select } from './select'
+import type { Meta, StoryObj } from "@storybook/nextjs";
+import { Select } from "./select";
 
 const meta = {
-  title: 'UI/Select',
+  title: "UI/Select",
   component: Select,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {
     variant: {
-      control: 'select',
-      options: ['default', 'green', 'blue'],
+      control: "select",
+      options: ["default", "green", "blue"],
     },
     size: {
-      control: 'select',
-      options: ['sm', 'md', 'lg', 'xl'],
+      control: "select",
+      options: ["sm", "md", "lg", "xl"],
     },
-    disabled: { control: 'boolean' },
+    disabled: { control: "boolean" },
   },
-} satisfies Meta<typeof Select>
+} satisfies Meta<typeof Select>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
@@ -32,11 +32,11 @@ export const Default: Story = {
       </>
     ),
   },
-}
+};
 
 export const Green: Story = {
   args: {
-    variant: 'green',
+    variant: "green",
     children: (
       <>
         <option value="">単位を選択</option>
@@ -48,11 +48,11 @@ export const Green: Story = {
       </>
     ),
   },
-}
+};
 
 export const Blue: Story = {
   args: {
-    variant: 'blue',
+    variant: "blue",
     children: (
       <>
         <option value="">タイマーを設定</option>
@@ -62,7 +62,7 @@ export const Blue: Story = {
       </>
     ),
   },
-}
+};
 
 export const WithOptgroup: Story = {
   args: {
@@ -82,7 +82,7 @@ export const WithOptgroup: Story = {
       </>
     ),
   },
-}
+};
 
 export const Disabled: Story = {
   args: {
@@ -93,7 +93,7 @@ export const Disabled: Story = {
       </>
     ),
   },
-}
+};
 
 export const AllVariants: Story = {
   render: () => (
@@ -109,7 +109,7 @@ export const AllVariants: Story = {
       </Select>
     </div>
   ),
-}
+};
 
 export const AllSizes: Story = {
   render: () => (
@@ -128,4 +128,4 @@ export const AllSizes: Story = {
       </Select>
     </div>
   ),
-}
+};

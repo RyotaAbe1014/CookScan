@@ -1,29 +1,29 @@
-'use client'
+"use client";
 
-import { ReactNode, useState, useTransition } from 'react'
-import { BookIcon } from '@/components/icons/book-icon'
-import { InfoCircleIcon } from '@/components/icons/info-circle-icon'
-import { MenuIcon } from '@/components/icons/menu-icon'
-import { Sheet } from '@/components/ui/sheet'
-import { MobileNav } from '@/components/layouts/mobile-nav'
-import { logout } from '@/features/auth/actions'
+import { ReactNode, useState, useTransition } from "react";
+import { BookIcon } from "@/components/icons/book-icon";
+import { InfoCircleIcon } from "@/components/icons/info-circle-icon";
+import { MenuIcon } from "@/components/icons/menu-icon";
+import { Sheet } from "@/components/ui/sheet";
+import { MobileNav } from "@/components/layouts/mobile-nav";
+import { logout } from "@/features/auth/actions";
 
 type HeaderProps = {
-  title: string
-  subtitle?: string
-  rightAction?: ReactNode
-}
+  title: string;
+  subtitle?: string;
+  rightAction?: ReactNode;
+};
 
 export function Header({ title, subtitle, rightAction }: HeaderProps) {
-  const [isOpen, setIsOpen] = useState(false)
-  const [isPending, startTransition] = useTransition()
+  const [isOpen, setIsOpen] = useState(false);
+  const [isPending, startTransition] = useTransition();
 
   const handleLogout = () => {
     startTransition(async () => {
-      await logout()
-      setIsOpen(false)
-    })
-  }
+      await logout();
+      setIsOpen(false);
+    });
+  };
 
   return (
     <header className="relative overflow-hidden border-b border-slate-200 bg-white shadow-sm">
@@ -80,5 +80,5 @@ export function Header({ title, subtitle, rightAction }: HeaderProps) {
         />
       </Sheet>
     </header>
-  )
+  );
 }

@@ -1,16 +1,14 @@
-import { ReactNode } from 'react'
-import { AuthLayoutWrapper } from '@/components/layouts/auth-layout-wrapper'
-import { PageContainer } from '@/components/layouts/page-container'
-import Link from 'next/link'
-import { ChevronLeftIcon } from '@/components/icons/chevron-left-icon'
+import { ReactNode } from "react";
+import { AuthLayoutWrapper } from "@/components/layouts/auth-layout-wrapper";
+import { PageContainer } from "@/components/layouts/page-container";
+import Link from "next/link";
+import { ChevronLeftIcon } from "@/components/icons/chevron-left-icon";
 
 type PasswordChangeLayoutProps = {
-  children: ReactNode
-}
+  children: ReactNode;
+};
 
-export default function PasswordChangeLayout({
-  children,
-}: PasswordChangeLayoutProps) {
+export default function PasswordChangeLayout({ children }: PasswordChangeLayoutProps) {
   return (
     <AuthLayoutWrapper
       title="パスワード変更"
@@ -27,5 +25,5 @@ export default function PasswordChangeLayout({
     >
       <PageContainer>{children}</PageContainer>
     </AuthLayoutWrapper>
-  )
+  );
 }

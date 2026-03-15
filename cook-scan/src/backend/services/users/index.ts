@@ -2,4 +2,4 @@
  * User Service Layer Exports
  */
 
-export * from './user.service'
+export * from "./user.service";

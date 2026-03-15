@@ -1,46 +1,43 @@
-'use client'
+"use client";
 
-import { useState, useTransition, type FormEvent } from 'react'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { inviteUser } from './actions'
-import { toast } from 'sonner'
-import { isSuccess } from '@/utils/result'
-import type { InviteFormData } from './types'
+import { useState, useTransition, type FormEvent } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { inviteUser } from "./actions";
+import { toast } from "sonner";
+import { isSuccess } from "@/utils/result";
+import type { InviteFormData } from "./types";
 
 export const InviteUserForm = () => {
-  const [email, setEmail] = useState('')
-  const [isPending, startTransition] = useTransition()
+  const [email, setEmail] = useState("");
+  const [isPending, startTransition] = useTransition();
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+    e.preventDefault();
 
     if (!email.trim()) {
-      toast.error('メールアドレスを入力してください')
-      return
+      toast.error("メールアドレスを入力してください");
+      return;
     }
 
-    const formData: InviteFormData = { email: email.trim() }
+    const formData: InviteFormData = { email: email.trim() };
 
     startTransition(async () => {
-      const result = await inviteUser(formData.email)
+      const result = await inviteUser(formData.email);
 
       if (isSuccess(result)) {
-        toast.success('招待の送信に成功しました')
-        setEmail('')
+        toast.success("招待の送信に成功しました");
+        setEmail("");
       } else {
-        toast.error(result.error.message)
+        toast.error(result.error.message);
       }
-    })
-  }
+    });
+  };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label
-          htmlFor="invite-email"
-          className="block text-sm font-medium text-foreground mb-1"
-        >
+        <label htmlFor="invite-email" className="block text-sm font-medium text-foreground mb-1">
           メールアドレス
         </label>
         <Input
@@ -55,8 +52,8 @@ export const InviteUserForm = () => {
       </div>
 
       <Button type="submit" disabled={isPending} variant="primary" isLoading={isPending}>
-        {isPending ? '送信中...' : '招待を送信する'}
+        {isPending ? "送信中..." : "招待を送信する"}
       </Button>
     </form>
-  )
-}
+  );
+};

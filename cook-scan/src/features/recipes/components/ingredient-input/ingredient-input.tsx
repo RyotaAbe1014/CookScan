@@ -1,8 +1,8 @@
-'use client'
+"use client";
 
-import { Input } from '@/components/ui/input'
-import { TrashIcon } from '@/components/icons/trash-icon'
-import type { IngredientInputProps } from './types'
+import { Input } from "@/components/ui/input";
+import { TrashIcon } from "@/components/icons/trash-icon";
+import type { IngredientInputProps } from "./types";
 
 export function IngredientInput({
   ingredient,
@@ -18,7 +18,7 @@ export function IngredientInput({
           type="text"
           placeholder="材料名"
           value={ingredient.name}
-          onChange={(e) => onUpdate(index, 'name', e.target.value)}
+          onChange={(e) => onUpdate(index, "name", e.target.value)}
           variant="green"
           size="md"
         />
@@ -27,8 +27,8 @@ export function IngredientInput({
         <Input
           type="text"
           placeholder="分量"
-          value={ingredient.unit ?? ''}
-          onChange={(e) => onUpdate(index, 'unit', e.target.value)}
+          value={ingredient.unit ?? ""}
+          onChange={(e) => onUpdate(index, "unit", e.target.value)}
           variant="green"
           size="md"
         />
@@ -37,8 +37,8 @@ export function IngredientInput({
         <Input
           type="text"
           placeholder="メモ"
-          value={ingredient.notes ?? ''}
-          onChange={(e) => onUpdate(index, 'notes', e.target.value)}
+          value={ingredient.notes ?? ""}
+          onChange={(e) => onUpdate(index, "notes", e.target.value)}
           variant="green"
           size="md"
         />
@@ -53,5 +53,5 @@ export function IngredientInput({
         <TrashIcon className="h-5 w-5" stroke="currentColor" />
       </button>
     </div>
-  )
+  );
 }

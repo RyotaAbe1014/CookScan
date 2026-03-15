@@ -1,15 +1,15 @@
-import { Card, CardHeader, CardContent } from '@/components/ui/card'
-import { BeakerIcon } from '@/components/icons/beaker-icon'
-import { PlusIcon } from '@/components/icons/plus-icon'
-import { IngredientInput } from './ingredient-input'
-import type { IngredientFormData } from '@/types/forms'
+import { Card, CardHeader, CardContent } from "@/components/ui/card";
+import { BeakerIcon } from "@/components/icons/beaker-icon";
+import { PlusIcon } from "@/components/icons/plus-icon";
+import { IngredientInput } from "./ingredient-input";
+import type { IngredientFormData } from "@/types/forms";
 
 type Props = {
-  ingredients: IngredientFormData[]
-  onAdd: () => void
-  onUpdate: (index: number, field: keyof IngredientFormData, value: string) => void
-  onRemove: (index: number) => void
-}
+  ingredients: IngredientFormData[];
+  onAdd: () => void;
+  onUpdate: (index: number, field: keyof IngredientFormData, value: string) => void;
+  onRemove: (index: number) => void;
+};
 
 export function IngredientSection({ ingredients, onAdd, onUpdate, onRemove }: Props) {
   return (
@@ -44,5 +44,5 @@ export function IngredientSection({ ingredients, onAdd, onUpdate, onRemove }: Pr
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

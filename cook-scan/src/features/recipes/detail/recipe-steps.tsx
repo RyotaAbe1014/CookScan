@@ -1,24 +1,21 @@
-'use client'
+"use client";
 
-import { Card, CardHeader, CardContent } from '@/components/ui/card'
-import type { Step } from '@/types/step'
-import { StepTimer } from './step-timer'
-import { ClipboardListIcon } from '@/components/icons/clipboard-list-icon'
+import { Card, CardHeader, CardContent } from "@/components/ui/card";
+import type { Step } from "@/types/step";
+import { StepTimer } from "./step-timer";
+import { ClipboardListIcon } from "@/components/icons/clipboard-list-icon";
 
 type RecipeStepsProps = {
-  recipeId: string
-  recipeTitle: string
-  steps: Step[]
-}
+  recipeId: string;
+  recipeTitle: string;
+  steps: Step[];
+};
 
 export function RecipeSteps({ recipeId, recipeTitle, steps }: RecipeStepsProps) {
-
   return (
     <Card>
       <CardHeader
-        icon={
-          <ClipboardListIcon className="h-5 w-5 text-white" />
-        }
+        icon={<ClipboardListIcon className="h-5 w-5 text-white" />}
         iconColor="accent-steps"
         title="調理手順"
       />
@@ -54,5 +51,5 @@ export function RecipeSteps({ recipeId, recipeTitle, steps }: RecipeStepsProps) 
         )}
       </CardContent>
     </Card>
-  )
+  );
 }

@@ -1,5 +1,5 @@
-import { EmptyState } from '@/components/ui/empty-state'
-import { ClipboardListIcon } from '@/components/icons/clipboard-list-icon'
+import { EmptyState } from "@/components/ui/empty-state";
+import { ClipboardListIcon } from "@/components/icons/clipboard-list-icon";
 
 export function ShoppingListEmptyState() {
   return (
@@ -8,5 +8,5 @@ export function ShoppingListEmptyState() {
       title="買い物リストは空です"
       description="上のフォームからアイテムを追加してみましょう"
     />
-  )
+  );
 }

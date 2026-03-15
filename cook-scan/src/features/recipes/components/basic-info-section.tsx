@@ -1,24 +1,31 @@
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { Card, CardHeader, CardContent } from '@/components/ui/card'
-import { InfoCircleIcon } from '@/components/icons/info-circle-icon'
-import { TagIcon } from '@/components/icons/tag-icon'
-import { BookOpenIcon } from '@/components/icons/book-open-icon'
-import { DocumentIcon } from '@/components/icons/document-icon'
-import { LinkIcon } from '@/components/icons/link-icon'
-import { DocumentTextIcon } from '@/components/icons/document-text-icon'
-import type { SourceInfoFormData } from '@/types/forms'
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Card, CardHeader, CardContent } from "@/components/ui/card";
+import { InfoCircleIcon } from "@/components/icons/info-circle-icon";
+import { TagIcon } from "@/components/icons/tag-icon";
+import { BookOpenIcon } from "@/components/icons/book-open-icon";
+import { DocumentIcon } from "@/components/icons/document-icon";
+import { LinkIcon } from "@/components/icons/link-icon";
+import { DocumentTextIcon } from "@/components/icons/document-text-icon";
+import type { SourceInfoFormData } from "@/types/forms";
 
 type Props = {
-  title: string
-  onTitleChange: (value: string) => void
-  sourceInfo: SourceInfoFormData
-  onSourceInfoChange: (value: SourceInfoFormData) => void
-  memo: string
-  onMemoChange: (value: string) => void
-}
+  title: string;
+  onTitleChange: (value: string) => void;
+  sourceInfo: SourceInfoFormData;
+  onSourceInfoChange: (value: SourceInfoFormData) => void;
+  memo: string;
+  onMemoChange: (value: string) => void;
+};
 
-export function BasicInfoSection({ title, onTitleChange, sourceInfo, onSourceInfoChange, memo, onMemoChange }: Props) {
+export function BasicInfoSection({
+  title,
+  onTitleChange,
+  sourceInfo,
+  onSourceInfoChange,
+  memo,
+  onMemoChange,
+}: Props) {
   return (
     <Card>
       <CardHeader
@@ -115,5 +122,5 @@ export function BasicInfoSection({ title, onTitleChange, sourceInfo, onSourceInf
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

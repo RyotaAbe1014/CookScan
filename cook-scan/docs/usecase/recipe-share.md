@@ -200,13 +200,13 @@ sequenceDiagram
 
 #### コンポーネント構成
 
-| コンポーネント | ファイルパス | タイプ | 役割 |
-|---|---|---|---|
-| RecipeShareButton | `src/features/recipes/share/recipe-share-button.tsx` | Client Component | 共有ダイアログ、共有作成/停止/コピーUI |
-| SharedRecipePage | `src/app/(shared)/shared/[token]/page.tsx` | Server Component | 共有トークンで公開レシピ取得、404制御 |
-| SharedRecipeContent | `src/features/recipes/share/shared-recipe-content.tsx` | Component | 共有レシピの公開表示 |
-| SharedLayout | `src/app/(shared)/layout.tsx` | Server Component | 公開ページ用レイアウト |
-| RecipeDetailActions | `src/features/recipes/detail/recipe-detail-actions.tsx` | Client Component | 共有ボタンの配置元 |
+| コンポーネント      | ファイルパス                                            | タイプ           | 役割                                   |
+| ------------------- | ------------------------------------------------------- | ---------------- | -------------------------------------- |
+| RecipeShareButton   | `src/features/recipes/share/recipe-share-button.tsx`    | Client Component | 共有ダイアログ、共有作成/停止/コピーUI |
+| SharedRecipePage    | `src/app/(shared)/shared/[token]/page.tsx`              | Server Component | 共有トークンで公開レシピ取得、404制御  |
+| SharedRecipeContent | `src/features/recipes/share/shared-recipe-content.tsx`  | Component        | 共有レシピの公開表示                   |
+| SharedLayout        | `src/app/(shared)/layout.tsx`                           | Server Component | 公開ページ用レイアウト                 |
+| RecipeDetailActions | `src/features/recipes/detail/recipe-detail-actions.tsx` | Client Component | 共有ボタンの配置元                     |
 
 #### 使用コンポーネント
 
@@ -218,11 +218,11 @@ sequenceDiagram
 #### 状態管理
 
 ```typescript
-const [isOpen, setIsOpen] = useState(false)
-const [isLoading, setIsLoading] = useState(false)
-const [shareToken, setShareToken] = useState<string | null>(null)
-const [isActive, setIsActive] = useState(false)
-const [copied, setCopied] = useState(false)
+const [isOpen, setIsOpen] = useState(false);
+const [isLoading, setIsLoading] = useState(false);
+const [shareToken, setShareToken] = useState<string | null>(null);
+const [isActive, setIsActive] = useState(false);
+const [copied, setCopied] = useState(false);
 ```
 
 #### 主要な処理フロー
@@ -230,11 +230,11 @@ const [copied, setCopied] = useState(false)
 ```typescript
 // ダイアログを開いた時だけ共有状態を取得
 useEffect(() => {
-  if (isOpen) fetchShareInfo()
-}, [isOpen, fetchShareInfo])
+  if (isOpen) fetchShareInfo();
+}, [isOpen, fetchShareInfo]);
 
 // 共有URLはクライアントで origin を組み立てる
-const shareUrl = shareToken ? `${window.location.origin}/shared/${shareToken}` : ''
+const shareUrl = shareToken ? `${window.location.origin}/shared/${shareToken}` : "";
 ```
 
 ### バックエンド
@@ -332,30 +332,30 @@ model RecipeShare {
 #### シグネチャ
 
 ```typescript
-async function createShareLink(recipeId: string): Promise<Result<ShareInfoOutput>>
+async function createShareLink(recipeId: string): Promise<Result<ShareInfoOutput>>;
 ```
 
 #### パラメータ
 
-| 名前 | 型 | 説明 |
-|------|------|------|
+| 名前     | 型     | 説明             |
+| -------- | ------ | ---------------- |
 | recipeId | string | 共有対象レシピID |
 
 #### 戻り値
 
 ```typescript
 type ShareInfoOutput = {
-  shareToken: string
-  isActive: boolean
-}
+  shareToken: string;
+  isActive: boolean;
+};
 ```
 
 #### エラーコード
 
-| コード | メッセージ | 発生条件 |
-|--------|-----------|---------|
-| UNAUTHENTICATED | 認証が必要です | 未ログイン |
-| NOT_FOUND | レシピが見つかりません | 所有者でない / レシピ不存在 |
+| コード          | メッセージ             | 発生条件                    |
+| --------------- | ---------------------- | --------------------------- |
+| UNAUTHENTICATED | 認証が必要です         | 未ログイン                  |
+| NOT_FOUND       | レシピが見つかりません | 所有者でない / レシピ不存在 |
 
 ### removeShareLink (Server Action)
 
@@ -366,21 +366,21 @@ type ShareInfoOutput = {
 #### シグネチャ
 
 ```typescript
-async function removeShareLink(recipeId: string): Promise<Result<void>>
+async function removeShareLink(recipeId: string): Promise<Result<void>>;
 ```
 
 #### パラメータ
 
-| 名前 | 型 | 説明 |
-|------|------|------|
+| 名前     | 型     | 説明         |
+| -------- | ------ | ------------ |
 | recipeId | string | 対象レシピID |
 
 #### エラーコード
 
-| コード | メッセージ | 発生条件 |
-|--------|-----------|---------|
-| UNAUTHENTICATED | 認証が必要です | 未ログイン |
-| NOT_FOUND | 共有リンクが見つかりません | 共有未作成 / 既に停止済み / 所有者でない |
+| コード          | メッセージ                 | 発生条件                                 |
+| --------------- | -------------------------- | ---------------------------------------- |
+| UNAUTHENTICATED | 認証が必要です             | 未ログイン                               |
+| NOT_FOUND       | 共有リンクが見つかりません | 共有未作成 / 既に停止済み / 所有者でない |
 
 ### getShareInfo (Server Action)
 
@@ -391,7 +391,7 @@ async function removeShareLink(recipeId: string): Promise<Result<void>>
 #### シグネチャ
 
 ```typescript
-async function getShareInfo(recipeId: string): Promise<Result<ShareInfoOutput | null>>
+async function getShareInfo(recipeId: string): Promise<Result<ShareInfoOutput | null>>;
 ```
 
 ### getSharedRecipe (Server Action)
@@ -403,7 +403,7 @@ async function getShareInfo(recipeId: string): Promise<Result<ShareInfoOutput | 
 #### シグネチャ
 
 ```typescript
-async function getSharedRecipe(token: string): Promise<Result<SharedRecipeOutput>>
+async function getSharedRecipe(token: string): Promise<Result<SharedRecipeOutput>>;
 ```
 
 ## セキュリティ

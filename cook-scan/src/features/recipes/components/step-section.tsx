@@ -1,15 +1,15 @@
-import { Card, CardHeader, CardContent } from '@/components/ui/card'
-import { ClipboardListIcon } from '@/components/icons/clipboard-list-icon'
-import { PlusIcon } from '@/components/icons/plus-icon'
-import { StepInput } from './step-input'
-import type { StepFormData } from '@/types/forms'
+import { Card, CardHeader, CardContent } from "@/components/ui/card";
+import { ClipboardListIcon } from "@/components/icons/clipboard-list-icon";
+import { PlusIcon } from "@/components/icons/plus-icon";
+import { StepInput } from "./step-input";
+import type { StepFormData } from "@/types/forms";
 
 type Props = {
-  steps: StepFormData[]
-  onAdd: () => void
-  onUpdate: (index: number, field: keyof StepFormData, value: string) => void
-  onRemove: (index: number) => void
-}
+  steps: StepFormData[];
+  onAdd: () => void;
+  onUpdate: (index: number, field: keyof StepFormData, value: string) => void;
+  onRemove: (index: number) => void;
+};
 
 export function StepSection({ steps, onAdd, onUpdate, onRemove }: Props) {
   return (
@@ -44,5 +44,5 @@ export function StepSection({ steps, onAdd, onUpdate, onRemove }: Props) {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

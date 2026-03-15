@@ -3,7 +3,7 @@
  * Prismaクエリの集約
  */
 
-import { prisma } from '@/lib/prisma'
+import { prisma } from "@/lib/prisma";
 
 // ===== User Profile Operations =====
 
@@ -13,7 +13,7 @@ import { prisma } from '@/lib/prisma'
 export async function findUserByAuthId(authId: string) {
   return prisma.user.findUnique({
     where: { authId },
-  })
+  });
 }
 
 /**
@@ -26,7 +26,7 @@ export async function createUser(authId: string, email: string, name: string) {
       email,
       name,
     },
-  })
+  });
 }
 
 /**
@@ -36,5 +36,5 @@ export async function updateUser(authId: string, name: string) {
   return prisma.user.update({
     where: { authId },
     data: { name },
-  })
+  });
 }

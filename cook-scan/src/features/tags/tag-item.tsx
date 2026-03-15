@@ -1,85 +1,85 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { toast } from 'sonner'
-import { updateTag, deleteTag } from './actions'
-import { isSuccess } from '@/utils/result'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { TagIcon } from '@/components/icons/tag-icon'
-import { BookOpenIcon } from '@/components/icons/book-open-icon'
-import { PencilIcon } from '@/components/icons/pencil-icon'
-import { TrashIcon } from '@/components/icons/trash-icon'
+import { useState } from "react";
+import { toast } from "sonner";
+import { updateTag, deleteTag } from "./actions";
+import { isSuccess } from "@/utils/result";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { TagIcon } from "@/components/icons/tag-icon";
+import { BookOpenIcon } from "@/components/icons/book-open-icon";
+import { PencilIcon } from "@/components/icons/pencil-icon";
+import { TrashIcon } from "@/components/icons/trash-icon";
 
 type TagItemProps = {
   tag: {
-    id: string
-    name: string
-    description: string | null
-    isSystem: boolean
-  }
-  usageCount: number
-  isUserOwned: boolean
-}
+    id: string;
+    name: string;
+    description: string | null;
+    isSystem: boolean;
+  };
+  usageCount: number;
+  isUserOwned: boolean;
+};
 
 export function TagItem({ tag, usageCount, isUserOwned }: TagItemProps) {
-  const [isEditing, setIsEditing] = useState(false)
-  const [editName, setEditName] = useState(tag.name)
-  const [editDescription, setEditDescription] = useState(tag.description || '')
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isEditing, setIsEditing] = useState(false);
+  const [editName, setEditName] = useState(tag.name);
+  const [editDescription, setEditDescription] = useState(tag.description || "");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleEdit = async (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
 
     if (!editName.trim()) {
-      toast.error('タグ名を入力してください')
-      return
+      toast.error("タグ名を入力してください");
+      return;
     }
 
-    setIsSubmitting(true)
+    setIsSubmitting(true);
 
     try {
-      const result = await updateTag(tag.id, editName.trim(), editDescription.trim() || undefined)
+      const result = await updateTag(tag.id, editName.trim(), editDescription.trim() || undefined);
 
       if (isSuccess(result)) {
-        setIsEditing(false)
+        setIsEditing(false);
       } else {
-        toast.error(result.error.message)
+        toast.error(result.error.message);
       }
     } catch {
-      toast.error('タグの更新中にエラーが発生しました')
+      toast.error("タグの更新中にエラーが発生しました");
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
   const handleDelete = async () => {
     if (!confirm(`「${tag.name}」を削除しますか？この操作は取り消せません。`)) {
-      return
+      return;
     }
 
-    setIsSubmitting(true)
+    setIsSubmitting(true);
 
     try {
-      const result = await deleteTag(tag.id)
+      const result = await deleteTag(tag.id);
 
       if (!isSuccess(result)) {
-        toast.error(result.error.message)
-        setIsSubmitting(false)
+        toast.error(result.error.message);
+        setIsSubmitting(false);
       }
       // 成功時はページがリロードされるのでローディング状態を維持
     } catch {
-      toast.error('タグの削除中にエラーが発生しました')
-      setIsSubmitting(false)
+      toast.error("タグの削除中にエラーが発生しました");
+      setIsSubmitting(false);
     }
-  }
+  };
 
   const handleCancel = () => {
-    setIsEditing(false)
-    setEditName(tag.name)
-    setEditDescription(tag.description || '')
-  }
+    setIsEditing(false);
+    setEditName(tag.name);
+    setEditDescription(tag.description || "");
+  };
 
   if (isEditing) {
     return (
@@ -123,7 +123,7 @@ export function TagItem({ tag, usageCount, isUserOwned }: TagItemProps) {
 
           <div className="flex gap-2">
             <Button type="submit" isLoading={isSubmitting} size="sm">
-              {isSubmitting ? '保存中...' : '保存'}
+              {isSubmitting ? "保存中..." : "保存"}
             </Button>
             <Button
               type="button"
@@ -137,7 +137,7 @@ export function TagItem({ tag, usageCount, isUserOwned }: TagItemProps) {
           </div>
         </form>
       </div>
-    )
+    );
   }
 
   return (
@@ -170,5 +170,5 @@ export function TagItem({ tag, usageCount, isUserOwned }: TagItemProps) {
         </div>
       )}
     </div>
-  )
+  );
 }

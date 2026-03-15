@@ -1,76 +1,74 @@
-'use client'
+"use client";
 
-import { useRouter, useSearchParams } from 'next/navigation'
-import { FilterIcon } from '@/components/icons/filter-icon'
-import { CloseIcon } from '@/components/icons/close-icon'
-import { CheckSolidIcon } from '@/components/icons/check-solid-icon'
-import { CheckCircleOutlineIcon } from '@/components/icons/check-circle-outline-icon'
-import { useCallback } from 'react'
-import { Card, CardHeader, CardContent } from '@/components/ui/card'
-import { Route } from 'next'
+import { useRouter, useSearchParams } from "next/navigation";
+import { FilterIcon } from "@/components/icons/filter-icon";
+import { CloseIcon } from "@/components/icons/close-icon";
+import { CheckSolidIcon } from "@/components/icons/check-solid-icon";
+import { CheckCircleOutlineIcon } from "@/components/icons/check-circle-outline-icon";
+import { useCallback } from "react";
+import { Card, CardHeader, CardContent } from "@/components/ui/card";
+import { Route } from "next";
 
 type Tag = {
-  id: string
-  name: string
-}
+  id: string;
+  name: string;
+};
 
 type TagCategory = {
-  id: string
-  name: string
-  tags: Tag[]
-}
+  id: string;
+  name: string;
+  tags: Tag[];
+};
 
 type TagFilterProps = {
-  tagCategories: TagCategory[]
-}
+  tagCategories: TagCategory[];
+};
 
 export function TagFilter({ tagCategories }: TagFilterProps) {
-  const router = useRouter()
-  const searchParams = useSearchParams()
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
-  const selectedTags = searchParams.getAll('tag')
+  const selectedTags = searchParams.getAll("tag");
 
   const createQueryString = useCallback(
     (tagId: string) => {
-      const params = new URLSearchParams(searchParams.toString())
-      const currentTags = params.getAll('tag')
+      const params = new URLSearchParams(searchParams.toString());
+      const currentTags = params.getAll("tag");
 
       // Remove all existing tag params
-      params.delete('tag')
+      params.delete("tag");
 
       if (currentTags.includes(tagId)) {
         // Remove the tag if already selected
-        currentTags
-          .filter(t => t !== tagId)
-          .forEach(t => params.append('tag', t))
+        currentTags.filter((t) => t !== tagId).forEach((t) => params.append("tag", t));
       } else {
         // Add the tag
-        currentTags.forEach(t => params.append('tag', t))
-        params.append('tag', tagId)
+        currentTags.forEach((t) => params.append("tag", t));
+        params.append("tag", tagId);
       }
 
-      return params.toString()
+      return params.toString();
     },
-    [searchParams]
-  )
+    [searchParams],
+  );
 
   const clearFilters = useCallback(() => {
-    router.push('/recipes')
-  }, [router])
+    router.push("/recipes");
+  }, [router]);
 
   const handleTagClick = useCallback(
     (tagId: string) => {
-      const queryString = createQueryString(tagId)
-      router.push(`/recipes${queryString ? `?${queryString}` : ''}` as Route)
+      const queryString = createQueryString(tagId);
+      router.push(`/recipes${queryString ? `?${queryString}` : ""}` as Route);
     },
-    [createQueryString, router]
-  )
+    [createQueryString, router],
+  );
 
   // Filter categories that have tags
-  const categoriesWithTags = tagCategories.filter(cat => cat.tags.length > 0)
+  const categoriesWithTags = tagCategories.filter((cat) => cat.tags.length > 0);
 
   if (categoriesWithTags.length === 0) {
-    return null
+    return null;
   }
 
   return (
@@ -99,13 +97,11 @@ export function TagFilter({ tagCategories }: TagFilterProps) {
             <div key={category.id}>
               <div className="mb-2 flex items-center gap-2">
                 <div className="h-1 w-1 rounded-full bg-primary" />
-                <h3 className="text-sm font-semibold text-foreground">
-                  {category.name}
-                </h3>
+                <h3 className="text-sm font-semibold text-foreground">{category.name}</h3>
               </div>
               <div className="flex flex-wrap gap-2">
                 {category.tags.map((tag) => {
-                  const isSelected = selectedTags.includes(tag.id)
+                  const isSelected = selectedTags.includes(tag.id);
                   return (
                     <button
                       key={tag.id}
@@ -113,18 +109,17 @@ export function TagFilter({ tagCategories }: TagFilterProps) {
                       className={`
                         inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium
                         transition-all duration-200
-                        ${isSelected
-                          ? 'bg-primary text-white shadow-lg shadow-primary/30 ring-2 ring-primary'
-                          : 'bg-muted text-foreground ring-1 ring-section-header-border hover:bg-section-header-border hover:ring-border-dark'
+                        ${
+                          isSelected
+                            ? "bg-primary text-white shadow-lg shadow-primary/30 ring-2 ring-primary"
+                            : "bg-muted text-foreground ring-1 ring-section-header-border hover:bg-section-header-border hover:ring-border-dark"
                         }
                       `}
                     >
-                      {isSelected && (
-                        <CheckSolidIcon className="h-3.5 w-3.5" />
-                      )}
+                      {isSelected && <CheckSolidIcon className="h-3.5 w-3.5" />}
                       {tag.name}
                     </button>
-                  )
+                  );
                 })}
               </div>
             </div>
@@ -141,5 +136,5 @@ export function TagFilter({ tagCategories }: TagFilterProps) {
         )}
       </CardContent>
     </Card>
-  )
+  );
 }

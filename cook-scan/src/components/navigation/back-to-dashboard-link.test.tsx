@@ -1,79 +1,94 @@
-import { render, screen } from '@testing-library/react'
-import { BackToDashboardLink } from './back-to-dashboard-link'
+import { render, screen } from "@testing-library/react";
+import { BackToDashboardLink } from "./back-to-dashboard-link";
 
-describe('BackToDashboardLink', () => {
-  test('正常系：ダッシュボードへのリンクが表示される', () => {
+describe("BackToDashboardLink", () => {
+  test("正常系：ダッシュボードへのリンクが表示される", () => {
     // Given: BackToDashboardLinkコンポーネントが用意されている
     // When: レンダリングする
-    render(<BackToDashboardLink />)
+    render(<BackToDashboardLink />);
 
     // Then: リンクが存在する
-    const link = screen.getByRole('link', { name: /ダッシュボード/ })
-    expect(link).toBeInTheDocument()
-  })
+    const link = screen.getByRole("link", { name: /ダッシュボード/ });
+    expect(link).toBeInTheDocument();
+  });
 
-  test('正常系：正しいhref属性を持つ', () => {
+  test("正常系：正しいhref属性を持つ", () => {
     // Given: BackToDashboardLinkコンポーネントが用意されている
     // When: レンダリングする
-    render(<BackToDashboardLink />)
+    render(<BackToDashboardLink />);
 
     // Then: /dashboardへのリンクである
-    const link = screen.getByRole('link', { name: /ダッシュボード/ })
-    expect(link).toHaveAttribute('href', '/dashboard')
-  })
+    const link = screen.getByRole("link", { name: /ダッシュボード/ });
+    expect(link).toHaveAttribute("href", "/dashboard");
+  });
 
-  test('正常系：ダッシュボードテキストが表示される', () => {
+  test("正常系：ダッシュボードテキストが表示される", () => {
     // Given: BackToDashboardLinkコンポーネントが用意されている
     // When: レンダリングする
-    render(<BackToDashboardLink />)
+    render(<BackToDashboardLink />);
 
     // Then: 「ダッシュボード」というテキストが表示される
-    expect(screen.getByText('ダッシュボード')).toBeInTheDocument()
-  })
+    expect(screen.getByText("ダッシュボード")).toBeInTheDocument();
+  });
 
-  test('正常系：アイコンSVGが表示される', () => {
+  test("正常系：アイコンSVGが表示される", () => {
     // Given: BackToDashboardLinkコンポーネントが用意されている
     // When: レンダリングする
-    const { container } = render(<BackToDashboardLink />)
+    const { container } = render(<BackToDashboardLink />);
 
     // Then: SVG要素が存在する
-    const svg = container.querySelector('svg')
-    expect(svg).toBeInTheDocument()
+    const svg = container.querySelector("svg");
+    expect(svg).toBeInTheDocument();
 
     // Then: SVGに適切なクラスが適用される
-    expect(svg).toHaveClass('h-4', 'w-4')
-  })
+    expect(svg).toHaveClass("h-4", "w-4");
+  });
 
-  test('正常系：適切なスタイルクラスが適用される', () => {
+  test("正常系：適切なスタイルクラスが適用される", () => {
     // Given: BackToDashboardLinkコンポーネントが用意されている
     // When: レンダリングする
-    render(<BackToDashboardLink />)
+    render(<BackToDashboardLink />);
 
     // Then: リンクに適切なスタイルクラスが適用される
-    const link = screen.getByRole('link', { name: /ダッシュボード/ })
-    expect(link).toHaveClass('inline-flex', 'items-center', 'gap-2', 'text-sm', 'font-medium', 'text-slate-500', 'transition-all', 'duration-150', 'hover:text-emerald-600', 'focus:outline-none', 'focus:ring-2', 'focus:ring-emerald-600', 'focus:ring-offset-2', 'rounded-md')
-  })
+    const link = screen.getByRole("link", { name: /ダッシュボード/ });
+    expect(link).toHaveClass(
+      "inline-flex",
+      "items-center",
+      "gap-2",
+      "text-sm",
+      "font-medium",
+      "text-slate-500",
+      "transition-all",
+      "duration-150",
+      "hover:text-emerald-600",
+      "focus:outline-none",
+      "focus:ring-2",
+      "focus:ring-emerald-600",
+      "focus:ring-offset-2",
+      "rounded-md",
+    );
+  });
 
-  test('正常系：SVGに戻る矢印のパスが含まれる', () => {
+  test("正常系：SVGに戻る矢印のパスが含まれる", () => {
     // Given: BackToDashboardLinkコンポーネントが用意されている
     // When: レンダリングする
-    const { container } = render(<BackToDashboardLink />)
+    const { container } = render(<BackToDashboardLink />);
 
     // Then: 左向き矢印のパス要素が存在する
-    const path = container.querySelector('path')
-    expect(path).toBeInTheDocument()
-    expect(path).toHaveAttribute('d', 'M10 19l-7-7m0 0l7-7m-7 7h18')
-  })
+    const path = container.querySelector("path");
+    expect(path).toBeInTheDocument();
+    expect(path).toHaveAttribute("d", "M10 19l-7-7m0 0l7-7m-7 7h18");
+  });
 
-  test('正常系：アイコンとテキストが両方表示される', () => {
+  test("正常系：アイコンとテキストが両方表示される", () => {
     // Given: BackToDashboardLinkコンポーネントが用意されている
     // When: レンダリングする
-    const { container } = render(<BackToDashboardLink />)
+    const { container } = render(<BackToDashboardLink />);
 
     // Then: SVGアイコンが存在する
-    expect(container.querySelector('svg')).toBeInTheDocument()
+    expect(container.querySelector("svg")).toBeInTheDocument();
 
     // Then: テキストが存在する
-    expect(screen.getByText('ダッシュボード')).toBeInTheDocument()
-  })
-})
+    expect(screen.getByText("ダッシュボード")).toBeInTheDocument();
+  });
+});

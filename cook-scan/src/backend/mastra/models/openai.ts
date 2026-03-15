@@ -1,8 +1,8 @@
-import { createOpenAI } from '@ai-sdk/openai';
+import { createOpenAI } from "@ai-sdk/openai";
 
 const openai = createOpenAI({
-  apiKey: process.env.OPENAI_API_KEY
+  apiKey: process.env.OPENAI_API_KEY,
 });
 
-export const openaiGpt = openai('gpt-5-mini-2025-08-07');
-export const openaiGpt4oMini = openai('gpt-4o-mini');
+export const openaiGpt = openai("gpt-5-mini-2025-08-07");
+export const openaiGpt4oMini = openai("gpt-4o-mini");

@@ -1,42 +1,41 @@
-'use client'
+"use client";
 
-import { useEffect } from 'react'
-import { useSetAtom } from 'jotai'
-import dynamic from 'next/dynamic'
-import type { RecipeWithRelations } from '@/types/recipe'
-import { RecipeImageSection } from './recipe-image-section'
-import { RecipeSourceInfo } from './recipe-source-info'
-import { RecipeMemo } from './recipe-memo'
-import { RecipeTagsSection } from './recipe-tags-section'
-import { RecipeChildRecipesSection } from './recipe-child-recipes-section'
-import { RecipeParentRecipesSection } from './recipe-parent-recipes-section'
-import { RecipeIngredients } from './recipe-ingredients'
-import { RecipeSteps } from './recipe-steps'
-import { RecipeDetailActions } from './recipe-detail-actions'
-import { formatMemo, getSourceInfo } from './utils'
-import { cleanupOldTimerStatesAtom } from './atoms/timer-atoms'
-import { InfoCircleIcon } from '@/components/icons/info-circle-icon'
+import { useEffect } from "react";
+import { useSetAtom } from "jotai";
+import dynamic from "next/dynamic";
+import type { RecipeWithRelations } from "@/types/recipe";
+import { RecipeImageSection } from "./recipe-image-section";
+import { RecipeSourceInfo } from "./recipe-source-info";
+import { RecipeMemo } from "./recipe-memo";
+import { RecipeTagsSection } from "./recipe-tags-section";
+import { RecipeChildRecipesSection } from "./recipe-child-recipes-section";
+import { RecipeParentRecipesSection } from "./recipe-parent-recipes-section";
+import { RecipeIngredients } from "./recipe-ingredients";
+import { RecipeSteps } from "./recipe-steps";
+import { RecipeDetailActions } from "./recipe-detail-actions";
+import { formatMemo, getSourceInfo } from "./utils";
+import { cleanupOldTimerStatesAtom } from "./atoms/timer-atoms";
+import { InfoCircleIcon } from "@/components/icons/info-circle-icon";
 
 const CookingTimerManager = dynamic(
-  () => import('./cooking-timer-manager').then(mod => ({ default: mod.CookingTimerManager })),
-  { ssr: false }
-)
+  () => import("./cooking-timer-manager").then((mod) => ({ default: mod.CookingTimerManager })),
+  { ssr: false },
+);
 
 type RecipeDetailContentProps = {
-  recipe: RecipeWithRelations
-  initialShareInfo: { shareToken: string; isActive: boolean } | null
-}
+  recipe: RecipeWithRelations;
+  initialShareInfo: { shareToken: string; isActive: boolean } | null;
+};
 
 export function RecipeDetailContent({ recipe, initialShareInfo }: RecipeDetailContentProps) {
-  const memo = formatMemo(recipe.memo)
-  const sourceInfo = getSourceInfo(recipe.sourceInfo)
-  const cleanupOldTimerStates = useSetAtom(cleanupOldTimerStatesAtom)
+  const memo = formatMemo(recipe.memo);
+  const sourceInfo = getSourceInfo(recipe.sourceInfo);
+  const cleanupOldTimerStates = useSetAtom(cleanupOldTimerStatesAtom);
 
   // ページマウント時に古いタイマー状態をクリーンアップ
   useEffect(() => {
-    cleanupOldTimerStates()
-  }, [cleanupOldTimerStates])
-
+    cleanupOldTimerStates();
+  }, [cleanupOldTimerStates]);
 
   return (
     <div className="space-y-8">
@@ -52,14 +51,16 @@ export function RecipeDetailContent({ recipe, initialShareInfo }: RecipeDetailCo
           </h1>
           <p className="mt-2 flex items-center gap-1.5 text-sm text-muted-foreground">
             <InfoCircleIcon className="h-4 w-4 text-primary" />
-            作成日: {new Date(recipe.createdAt).toLocaleDateString('ja-JP')}
+            作成日: {new Date(recipe.createdAt).toLocaleDateString("ja-JP")}
           </p>
         </div>
 
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
           {/* 左側: レシピ画像とソース情報 */}
           <div className="lg:col-span-1">
-            {recipe.imageUrl && <RecipeImageSection imageUrl={recipe.imageUrl} title={recipe.title} />}
+            {recipe.imageUrl && (
+              <RecipeImageSection imageUrl={recipe.imageUrl} title={recipe.title} />
+            )}
             {sourceInfo && <RecipeSourceInfo sourceInfo={sourceInfo} />}
             {memo && <RecipeMemo memo={memo} />}
             <RecipeTagsSection recipeTags={recipe.recipeTags} />
@@ -80,5 +81,5 @@ export function RecipeDetailContent({ recipe, initialShareInfo }: RecipeDetailCo
         <RecipeDetailActions recipe={recipe} initialShareInfo={initialShareInfo} />
       </div>
     </div>
-  )
+  );
 }

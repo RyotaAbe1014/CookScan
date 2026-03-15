@@ -1,6 +1,6 @@
-import Link from 'next/link'
-import { Header } from '@/components/layouts/header'
-import { ExclamationCircleIcon } from '@/components/icons/exclamation-circle-icon'
+import Link from "next/link";
+import { Header } from "@/components/layouts/header";
+import { ExclamationCircleIcon } from "@/components/icons/exclamation-circle-icon";
 
 export default function NotFound() {
   return (
@@ -8,10 +8,7 @@ export default function NotFound() {
       <Header
         title="レシピが見つかりません"
         rightAction={
-          <Link
-            href="/recipes"
-            className="text-sm text-gray-500 hover:text-gray-700"
-          >
+          <Link href="/recipes" className="text-sm text-gray-500 hover:text-gray-700">
             マイレシピに戻る
           </Link>
         }
@@ -37,5 +34,5 @@ export default function NotFound() {
         </div>
       </main>
     </div>
-  )
+  );
 }

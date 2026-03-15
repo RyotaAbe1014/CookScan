@@ -1,16 +1,16 @@
-import { Card, CardHeader, CardContent } from '@/components/ui/card'
-import { TagIcon } from '@/components/icons/tag-icon'
-import { CheckSolidIcon } from '@/components/icons/check-solid-icon'
-import type { RecipeFormTagCategory } from '@/features/recipes/types/tag'
+import { Card, CardHeader, CardContent } from "@/components/ui/card";
+import { TagIcon } from "@/components/icons/tag-icon";
+import { CheckSolidIcon } from "@/components/icons/check-solid-icon";
+import type { RecipeFormTagCategory } from "@/features/recipes/types/tag";
 
 type Props = {
-  tagCategories: RecipeFormTagCategory[]
-  selectedTagIds: string[]
-  onToggleTag: (tagId: string) => void
-}
+  tagCategories: RecipeFormTagCategory[];
+  selectedTagIds: string[];
+  onToggleTag: (tagId: string) => void;
+};
 
 export function TagSection({ tagCategories, selectedTagIds, onToggleTag }: Props) {
-  if (tagCategories.length === 0) return null
+  if (tagCategories.length === 0) return null;
 
   return (
     <Card>
@@ -32,10 +32,11 @@ export function TagSection({ tagCategories, selectedTagIds, onToggleTag }: Props
                   {category.tags.map((tag) => (
                     <label
                       key={tag.id}
-                      className={`inline-flex cursor-pointer items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 ${selectedTagIds.includes(tag.id)
-                        ? 'bg-primary text-white shadow-lg shadow-primary/30 ring-2 ring-primary'
-                        : 'bg-muted text-foreground ring-1 ring-section-header-border hover:bg-section-header-border hover:ring-border-dark'
-                        }`}
+                      className={`inline-flex cursor-pointer items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 ${
+                        selectedTagIds.includes(tag.id)
+                          ? "bg-primary text-white shadow-lg shadow-primary/30 ring-2 ring-primary"
+                          : "bg-muted text-foreground ring-1 ring-section-header-border hover:bg-section-header-border hover:ring-border-dark"
+                      }`}
                     >
                       <input
                         type="checkbox"
@@ -58,5 +59,5 @@ export function TagSection({ tagCategories, selectedTagIds, onToggleTag }: Props
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

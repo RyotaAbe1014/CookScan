@@ -1,32 +1,32 @@
-'use client'
+"use client";
 
-import { useTransition } from 'react'
-import type { ShoppingItemOutput } from '@/backend/domain/shopping-items'
-import { deleteShoppingItem } from '@/features/shopping-list/actions'
-import { isSuccess } from '@/utils/result'
-import { Button } from '@/components/ui/button'
-import { CheckIcon } from '@/components/icons/check-icon'
-import { PencilIcon } from '@/components/icons/pencil-icon'
-import { TrashIcon } from '@/components/icons/trash-icon'
-import { cn } from '@/lib/tailwind'
+import { useTransition } from "react";
+import type { ShoppingItemOutput } from "@/backend/domain/shopping-items";
+import { deleteShoppingItem } from "@/features/shopping-list/actions";
+import { isSuccess } from "@/utils/result";
+import { Button } from "@/components/ui/button";
+import { CheckIcon } from "@/components/icons/check-icon";
+import { PencilIcon } from "@/components/icons/pencil-icon";
+import { TrashIcon } from "@/components/icons/trash-icon";
+import { cn } from "@/lib/tailwind";
 
 type ShoppingItemRowProps = {
-  item: ShoppingItemOutput
-  onEdit: () => void
-  onToggleCheck: (itemId: string) => void
-}
+  item: ShoppingItemOutput;
+  onEdit: () => void;
+  onToggleCheck: (itemId: string) => void;
+};
 
 export function ShoppingItemRow({ item, onEdit, onToggleCheck }: ShoppingItemRowProps) {
-  const [isDeletePending, startDeleteTransition] = useTransition()
+  const [isDeletePending, startDeleteTransition] = useTransition();
 
   const handleDelete = () => {
     startDeleteTransition(async () => {
-      const result = await deleteShoppingItem(item.id)
+      const result = await deleteShoppingItem(item.id);
       if (!isSuccess(result)) {
-        console.error('Failed to delete item:', result.error.message)
+        console.error("Failed to delete item:", result.error.message);
       }
-    })
-  }
+    });
+  };
 
   return (
     <li
@@ -35,9 +35,9 @@ export function ShoppingItemRow({ item, onEdit, onToggleCheck }: ShoppingItemRow
       tabIndex={0}
       onClick={() => onToggleCheck(item.id)}
       onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault()
-          onToggleCheck(item.id)
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          onToggleCheck(item.id);
         }
       }}
     >
@@ -45,17 +45,17 @@ export function ShoppingItemRow({ item, onEdit, onToggleCheck }: ShoppingItemRow
       <button
         type="button"
         onClick={(e) => {
-          e.stopPropagation()
-          onToggleCheck(item.id)
+          e.stopPropagation();
+          onToggleCheck(item.id);
         }}
         className={cn(
-          'flex h-6 w-6 shrink-0 items-center justify-center rounded-md border-2 transition-all duration-200 cursor-pointer',
-          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2',
+          "flex h-6 w-6 shrink-0 items-center justify-center rounded-md border-2 transition-all duration-200 cursor-pointer",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
           item.isChecked
-            ? 'border-primary bg-primary text-white'
-            : 'border-border-dark bg-white hover:border-primary'
+            ? "border-primary bg-primary text-white"
+            : "border-border-dark bg-white hover:border-primary",
         )}
-        aria-label={item.isChecked ? 'チェックを外す' : 'チェックする'}
+        aria-label={item.isChecked ? "チェックを外す" : "チェックする"}
       >
         {item.isChecked && <CheckIcon className="h-4 w-4" />}
       </button>
@@ -64,17 +64,13 @@ export function ShoppingItemRow({ item, onEdit, onToggleCheck }: ShoppingItemRow
       <div className="min-w-0 flex-1">
         <p
           className={cn(
-            'text-sm font-medium transition-colors duration-200',
-            item.isChecked ? 'text-muted-foreground line-through' : 'text-foreground'
+            "text-sm font-medium transition-colors duration-200",
+            item.isChecked ? "text-muted-foreground line-through" : "text-foreground",
           )}
         >
           {item.name}
         </p>
-        {item.memo && (
-          <p className="mt-0.5 truncate text-xs text-muted-foreground">
-            {item.memo}
-          </p>
-        )}
+        {item.memo && <p className="mt-0.5 truncate text-xs text-muted-foreground">{item.memo}</p>}
       </div>
 
       {/* アクションボタン */}
@@ -84,8 +80,8 @@ export function ShoppingItemRow({ item, onEdit, onToggleCheck }: ShoppingItemRow
           variant="ghost"
           size="icon"
           onClick={(e) => {
-            e.stopPropagation()
-            onEdit()
+            e.stopPropagation();
+            onEdit();
           }}
           className="h-8 w-8"
           aria-label="編集"
@@ -97,8 +93,8 @@ export function ShoppingItemRow({ item, onEdit, onToggleCheck }: ShoppingItemRow
           variant="danger-ghost"
           size="icon"
           onClick={(e) => {
-            e.stopPropagation()
-            handleDelete()
+            e.stopPropagation();
+            handleDelete();
           }}
           disabled={isDeletePending}
           isLoading={isDeletePending}
@@ -109,5 +105,5 @@ export function ShoppingItemRow({ item, onEdit, onToggleCheck }: ShoppingItemRow
         </Button>
       </div>
     </li>
-  )
+  );
 }

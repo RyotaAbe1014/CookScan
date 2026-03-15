@@ -1,8 +1,8 @@
-'use client'
+"use client";
 
-import { Input } from '@/components/ui/input'
-import { TrashIcon } from '@/components/icons/trash-icon'
-import type { IngredientInputProps } from './types'
+import { Input } from "@/components/ui/input";
+import { TrashIcon } from "@/components/icons/trash-icon";
+import type { IngredientInputProps } from "./types";
 
 export function IngredientInputMobile({
   ingredient,
@@ -19,7 +19,10 @@ export function IngredientInputMobile({
       <div className="space-y-3 pl-2">
         {/* Row 1: Name */}
         <div>
-          <label htmlFor={`ingredient-name-${index}`} className="mb-1.5 block text-xs font-semibold tracking-wide text-muted-foreground uppercase">
+          <label
+            htmlFor={`ingredient-name-${index}`}
+            className="mb-1.5 block text-xs font-semibold tracking-wide text-muted-foreground uppercase"
+          >
             材料名
           </label>
           <Input
@@ -27,7 +30,7 @@ export function IngredientInputMobile({
             type="text"
             placeholder="例: 鶏もも肉"
             value={ingredient.name}
-            onChange={(e) => onUpdate(index, 'name', e.target.value)}
+            onChange={(e) => onUpdate(index, "name", e.target.value)}
             variant="green"
             size="lg"
             className="font-medium"
@@ -36,15 +39,18 @@ export function IngredientInputMobile({
 
         {/* Row 2: Unit */}
         <div>
-          <label htmlFor={`ingredient-unit-${index}`} className="mb-1.5 block text-xs font-semibold tracking-wide text-muted-foreground uppercase">
+          <label
+            htmlFor={`ingredient-unit-${index}`}
+            className="mb-1.5 block text-xs font-semibold tracking-wide text-muted-foreground uppercase"
+          >
             分量
           </label>
           <Input
             id={`ingredient-unit-${index}`}
             type="text"
             placeholder="例: 300g、大さじ2、適量"
-            value={ingredient.unit ?? ''}
-            onChange={(e) => onUpdate(index, 'unit', e.target.value)}
+            value={ingredient.unit ?? ""}
+            onChange={(e) => onUpdate(index, "unit", e.target.value)}
             variant="green"
             size="lg"
           />
@@ -52,15 +58,18 @@ export function IngredientInputMobile({
 
         {/* Row 3: Notes */}
         <div>
-          <label htmlFor={`ingredient-notes-${index}`} className="mb-1.5 block text-xs font-semibold tracking-wide text-muted-foreground uppercase">
+          <label
+            htmlFor={`ingredient-notes-${index}`}
+            className="mb-1.5 block text-xs font-semibold tracking-wide text-muted-foreground uppercase"
+          >
             メモ
           </label>
           <Input
             id={`ingredient-notes-${index}`}
             type="text"
             placeholder="下処理や代替食材などのメモ..."
-            value={ingredient.notes ?? ''}
-            onChange={(e) => onUpdate(index, 'notes', e.target.value)}
+            value={ingredient.notes ?? ""}
+            onChange={(e) => onUpdate(index, "notes", e.target.value)}
             variant="green"
             size="lg"
           />
@@ -81,5 +90,5 @@ export function IngredientInputMobile({
         </div>
       </div>
     </div>
-  )
+  );
 }

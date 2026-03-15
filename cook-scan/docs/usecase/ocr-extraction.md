@@ -51,6 +51,7 @@
 #### AI エージェントの役割
 
 **convertTextToRecipeAgent (レシピ抽出専門)**
+
 - **厳守ルール: 元のテキストを改変しない**
 - 要約・言い換え・推測は一切しない
 - 元の表現をできるだけ使用
@@ -244,72 +245,80 @@ sequenceDiagram
 #### 画像アップロードコンポーネント
 
 **ImageUpload**
+
 - **ファイル**: `/src/features/recipes/upload/image-upload.tsx`
 - **タイプ**: Client Component
 - **スタイリング**: Tailwind CSS v4
 
 #### 使用コンポーネント
+
 - `Button` - アップロード/アクションボタン
 - `Alert` - エラー表示
 - `Image` コンポーネント (next/image) - プレビュー表示
 - カスタムアイコン群 (CloudUploadIcon, ClipboardIcon, etc.)
 
 #### 状態管理
-```typescript
-type UploadStatus = 'idle' | 'uploading' | 'ocr-processing' | 'converting'
 
-const [isDragging, setIsDragging] = useState(false)
-const [uploadStatus, setUploadStatus] = useState<UploadStatus>('idle')
-const [selectedImages, setSelectedImages] = useState<Array<{ file: File; preview: string }>>([])
-const [error, setError] = useState<string | null>(null)
+```typescript
+type UploadStatus = "idle" | "uploading" | "ocr-processing" | "converting";
+
+const [isDragging, setIsDragging] = useState(false);
+const [uploadStatus, setUploadStatus] = useState<UploadStatus>("idle");
+const [selectedImages, setSelectedImages] = useState<Array<{ file: File; preview: string }>>([]);
+const [error, setError] = useState<string | null>(null);
 
 // ステータスラベルマッピング
 const uploadStatusLabel: Record<UploadStatus, string> = {
-  idle: 'レシピを抽出',
-  uploading: 'アップロード中...',
-  'ocr-processing': '画像を読み取り中...',
-  converting: 'レシピに変換中...',
-}
+  idle: "レシピを抽出",
+  uploading: "アップロード中...",
+  "ocr-processing": "画像を読み取り中...",
+  converting: "レシピに変換中...",
+};
 ```
 
 #### 主要な処理フロー (handleUpload)
+
 ```typescript
 const handleUpload = async () => {
-  setUploadStatus('uploading')
-  onUploadingChange(true)
+  setUploadStatus("uploading");
+  onUploadingChange(true);
 
   // 1. S3にアップロード (presigned URL経由)
-  const uploadResult = await uploadFilesToS3(selectedImages.map(({ file }) => file))
+  const uploadResult = await uploadFilesToS3(selectedImages.map(({ file }) => file));
 
   // 2. SQSにエンキュー
-  await fetch('/api/recipes/extract/file', {
-    method: 'POST',
+  await fetch("/api/recipes/extract/file", {
+    method: "POST",
     body: JSON.stringify({ jobId: uploadResult.jobId }),
-  })
+  });
 
   // 3. OCR結果をポーリング
-  setUploadStatus('ocr-processing')
+  setUploadStatus("ocr-processing");
   // POLL_INTERVAL: 5000ms, MAX_POLLS: 36 (最大3分)
   for (let i = 0; i < MAX_POLLS; i++) {
-    const pollData = await fetch(`/api/recipes/extract/result?jobId=${jobId}`)
-    if (pollData.success === true) { ocrText = pollData.result.text; break }
+    const pollData = await fetch(`/api/recipes/extract/result?jobId=${jobId}`);
+    if (pollData.success === true) {
+      ocrText = pollData.result.text;
+      break;
+    }
   }
 
   // 4. OCRテキストをレシピ構造に変換
-  setUploadStatus('converting')
-  const textData = await fetch('/api/recipes/extract/text', {
-    method: 'POST',
+  setUploadStatus("converting");
+  const textData = await fetch("/api/recipes/extract/text", {
+    method: "POST",
     body: JSON.stringify({ text: ocrText }),
-  })
+  });
 
-  onUpload(preview, textData.result)
-  setUploadStatus('idle')
-}
+  onUpload(preview, textData.result);
+  setUploadStatus("idle");
+};
 ```
 
 #### テキスト入力コンポーネント
 
 **TextInput**
+
 - **ファイル**: `/src/features/recipes/upload/text-input.tsx`
 - **タイプ**: Client Component
 - 最小20文字の入力が必要
@@ -320,38 +329,45 @@ const handleUpload = async () => {
 #### API Routes
 
 **POST /api/recipes/presign**
+
 - presigned URLの発行
 - jobId (UUID) の生成
 - 1時間有効期限
 
 **POST /api/recipes/extract/file**
+
 - SQSへのOCRジョブエンキュー
 - リクエスト: `{ jobId: string }`
 - SQSメッセージ: `{ jobId, userId, s3Prefix }`
 
 **GET /api/recipes/extract/result**
+
 - OCR結果のポーリング
 - クエリパラメータ: `jobId`
 - S3キー: `results/{userId}/{jobId}/ocr-result.json`
 - レスポンス: `{ success: "pending" | true | false }`
 
 **POST /api/recipes/extract/text**
+
 - テキストからレシピ構造化
 - Mastra textToRecipeWorkflow を実行
 
 #### Mastra Framework
 
 **textToRecipeWorkflow**
+
 - **ファイル**: `/src/mastra/workflows/text-to-recipe.ts`
 - convertTextToRecipeStep → テキストからレシピ構造化 (GPT-5-mini)
 
 #### S3アップロードユーティリティ
 
 **uploadFilesToS3**
+
 - **ファイル**: `/src/lib/aws/s3-upload.ts`
 - presigned URL取得 → 並列PUT → jobId返却
 
 #### AWS構成
+
 - S3: 画像保存・OCR結果保存
 - SQS: OCRジョブキュー
 - 認証: Vercel OIDC Provider (本番) / ローカルAWS認証情報 (開発)
@@ -386,14 +402,19 @@ model OcrProcessingHistory {
 ### POST /api/recipes/presign
 
 #### 概要
+
 S3への画像アップロード用presigned URLを発行
 
 #### リクエスト
+
 ```typescript
-{ files: Array<{ name: string; type: string }> }
+{
+  files: Array<{ name: string; type: string }>;
+}
 ```
 
 #### レスポンス
+
 ```typescript
 {
   success: true,
@@ -409,14 +430,19 @@ S3への画像アップロード用presigned URLを発行
 ### POST /api/recipes/extract/file
 
 #### 概要
+
 画像OCR処理をSQSにエンキュー
 
 #### リクエスト
+
 ```typescript
-{ jobId: string }
+{
+  jobId: string;
+}
 ```
 
 #### レスポンス
+
 ```typescript
 { success: true, result: { jobId: string } }
 ```
@@ -426,14 +452,17 @@ S3への画像アップロード用presigned URLを発行
 ### GET /api/recipes/extract/result
 
 #### 概要
+
 OCR処理結果をポーリング取得
 
 #### クエリパラメータ
-| 名前 | 型 | 説明 |
-|------|------|------|
+
+| 名前  | 型     | 説明     |
+| ----- | ------ | -------- |
 | jobId | string | ジョブID |
 
 #### レスポンス
+
 ```typescript
 // 処理中
 { success: "pending" }  // HTTP 202
@@ -450,14 +479,19 @@ OCR処理結果をポーリング取得
 ### POST /api/recipes/extract/text
 
 #### 概要
+
 テキストからレシピ情報を構造化
 
 #### リクエスト
+
 ```typescript
-{ text: string }
+{
+  text: string;
+}
 ```
 
 #### レスポンス
+
 ```typescript
 // 成功時
 {
@@ -475,14 +509,16 @@ OCR処理結果をポーリング取得
 ```
 
 #### エラーコード
-| HTTPステータス | メッセージ | 発生条件 |
-|--------|-----------|---------|
-| 400 | テキストが入力されていません | text フィールドが空 |
-| 500 | レシピの生成に失敗しました | ワークフロー失敗 |
+
+| HTTPステータス | メッセージ                   | 発生条件            |
+| -------------- | ---------------------------- | ------------------- |
+| 400            | テキストが入力されていません | text フィールドが空 |
+| 500            | レシピの生成に失敗しました   | ワークフロー失敗    |
 
 ## テスト
 
 ### テストファイル
+
 - `/src/features/recipes/upload/__tests__/image-upload.test.tsx` (70+テスト)
 - `/src/features/recipes/upload/__tests__/recipe-upload-content.test.tsx`
 - `/src/features/recipes/upload/__tests__/text-input.test.tsx`

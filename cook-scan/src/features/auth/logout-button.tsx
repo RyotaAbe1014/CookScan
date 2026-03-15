@@ -1,19 +1,19 @@
-'use client'
+"use client";
 
-import { useTransition } from 'react'
-import { logout } from './actions'
-import { Button } from '@/components/ui/button'
-import { LogoutIcon } from '@/components/icons/logout-icon'
-import { SpinnerIcon } from '@/components/icons/spinner-icon'
+import { useTransition } from "react";
+import { logout } from "./actions";
+import { Button } from "@/components/ui/button";
+import { LogoutIcon } from "@/components/icons/logout-icon";
+import { SpinnerIcon } from "@/components/icons/spinner-icon";
 
 export default function LogoutButton() {
-  const [isPending, startTransition] = useTransition()
+  const [isPending, startTransition] = useTransition();
 
   const handleLogout = () => {
     startTransition(async () => {
-      await logout()
-    })
-  }
+      await logout();
+    });
+  };
 
   return (
     <Button
@@ -36,5 +36,5 @@ export default function LogoutButton() {
         </>
       )}
     </Button>
-  )
+  );
 }

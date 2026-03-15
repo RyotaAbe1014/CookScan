@@ -1,182 +1,182 @@
-import { atom } from 'jotai'
-import { atomWithStorage } from 'jotai/utils'
-import { atomFamily } from 'jotai-family'
-import type { PersistedTimerState } from '@/utils/timer-persistence'
+import { atom } from "jotai";
+import { atomWithStorage } from "jotai/utils";
+import { atomFamily } from "jotai-family";
+import type { PersistedTimerState } from "@/utils/timer-persistence";
 
 // localStorageのキー
-const STORAGE_KEY = 'cookscan-active-timers'
+const STORAGE_KEY = "cookscan-active-timers";
 
 // localStorageが利用可能かチェック
 function isLocalStorageAvailable(): boolean {
-  if (typeof window === 'undefined') return false
+  if (typeof window === "undefined") return false;
 
   try {
-    const test = '__localStorage_test__'
-    localStorage.setItem(test, test)
-    localStorage.removeItem(test)
-    return true
+    const test = "__localStorage_test__";
+    localStorage.setItem(test, test);
+    localStorage.removeItem(test);
+    return true;
   } catch {
-    return false
+    return false;
   }
 }
 
 // レシピIDごとのタイマー状態を管理する型
 // key: recipeId, value: Map<stepId, PersistedTimerState>
-type TimerStatesMap = Map<string, Map<string, PersistedTimerState>>
+type TimerStatesMap = Map<string, Map<string, PersistedTimerState>>;
 
 // カスタムストレージアダプター: 既存のlocalStorageキー形式を維持
 const createStorageAdapter = () => {
   return {
     getItem: (_key: string): TimerStatesMap => {
-      if (!isLocalStorageAvailable()) return new Map()
+      if (!isLocalStorageAvailable()) return new Map();
 
       try {
         // すべてのレシピIDのタイマー状態を収集
-        const allStates: TimerStatesMap = new Map()
+        const allStates: TimerStatesMap = new Map();
 
         for (let i = 0; i < localStorage.length; i++) {
-          const storageKey = localStorage.key(i)
-          if (!storageKey?.startsWith(STORAGE_KEY)) continue
+          const storageKey = localStorage.key(i);
+          if (!storageKey?.startsWith(STORAGE_KEY)) continue;
 
           // レシピIDを抽出（`cookscan-active-timers-${recipeId}`形式）
-          const recipeId = storageKey.replace(`${STORAGE_KEY}-`, '')
-          if (!recipeId) continue
+          const recipeId = storageKey.replace(`${STORAGE_KEY}-`, "");
+          if (!recipeId) continue;
 
           try {
-            const stored = localStorage.getItem(storageKey)
-            if (!stored) continue
+            const stored = localStorage.getItem(storageKey);
+            if (!stored) continue;
 
-            const parsed = JSON.parse(stored) as Array<[string, PersistedTimerState]>
-            if (!Array.isArray(parsed)) continue
+            const parsed = JSON.parse(stored) as Array<[string, PersistedTimerState]>;
+            if (!Array.isArray(parsed)) continue;
 
-            allStates.set(recipeId, new Map(parsed))
+            allStates.set(recipeId, new Map(parsed));
           } catch (error) {
-            console.error(`Failed to parse timer state for ${storageKey}:`, error)
+            console.error(`Failed to parse timer state for ${storageKey}:`, error);
             // 破損したデータを削除
             try {
-              localStorage.removeItem(storageKey)
+              localStorage.removeItem(storageKey);
             } catch {
               // 削除に失敗しても続行
             }
           }
         }
 
-        return allStates
+        return allStates;
       } catch (error) {
-        console.error('Failed to get timer states:', error)
-        return new Map()
+        console.error("Failed to get timer states:", error);
+        return new Map();
       }
     },
     setItem: (key: string, value: TimerStatesMap): void => {
-      if (!isLocalStorageAvailable()) return
+      if (!isLocalStorageAvailable()) return;
 
       try {
         // 既存のキーをすべて削除
-        const keysToRemove: string[] = []
+        const keysToRemove: string[] = [];
         for (let i = 0; i < localStorage.length; i++) {
-          const storageKey = localStorage.key(i)
+          const storageKey = localStorage.key(i);
           if (storageKey?.startsWith(STORAGE_KEY)) {
-            keysToRemove.push(storageKey)
+            keysToRemove.push(storageKey);
           }
         }
-        keysToRemove.forEach(k => localStorage.removeItem(k))
+        keysToRemove.forEach((k) => localStorage.removeItem(k));
 
         // 新しい値を保存
         value.forEach((states, recipeId) => {
-          if (states.size === 0) return
+          if (states.size === 0) return;
 
-          const storageKey = `${STORAGE_KEY}-${recipeId}`
-          const serialized = JSON.stringify(Array.from(states.entries()))
-          localStorage.setItem(storageKey, serialized)
-        })
+          const storageKey = `${STORAGE_KEY}-${recipeId}`;
+          const serialized = JSON.stringify(Array.from(states.entries()));
+          localStorage.setItem(storageKey, serialized);
+        });
       } catch (error) {
-        console.error('Failed to set timer states:', error)
+        console.error("Failed to set timer states:", error);
       }
     },
     removeItem: (_key: string): void => {
-      if (!isLocalStorageAvailable()) return
+      if (!isLocalStorageAvailable()) return;
 
       try {
         // すべてのタイマー関連のキーを削除
-        const keysToRemove: string[] = []
+        const keysToRemove: string[] = [];
         for (let i = 0; i < localStorage.length; i++) {
-          const storageKey = localStorage.key(i)
+          const storageKey = localStorage.key(i);
           if (storageKey?.startsWith(STORAGE_KEY)) {
-            keysToRemove.push(storageKey)
+            keysToRemove.push(storageKey);
           }
         }
-        keysToRemove.forEach(k => localStorage.removeItem(k))
+        keysToRemove.forEach((k) => localStorage.removeItem(k));
       } catch (error) {
-        console.error('Failed to remove timer states:', error)
+        console.error("Failed to remove timer states:", error);
       }
     },
-  }
-}
+  };
+};
 
 // グローバルなタイマー状態atom（すべてのレシピのタイマー状態を管理）
 export const timerStatesAtom = atomWithStorage<TimerStatesMap>(
-  'cookscan-timer-states',
+  "cookscan-timer-states",
   new Map(),
-  createStorageAdapter()
-)
+  createStorageAdapter(),
+);
 
 // 特定のレシピのタイマー状態を取得・更新するatom
 export const recipeTimerStatesAtomFamily = atomFamily((recipeId: string) => {
   return atom(
     (get) => {
-      const allStates = get(timerStatesAtom)
-      return allStates.get(recipeId) || new Map<string, PersistedTimerState>()
+      const allStates = get(timerStatesAtom);
+      return allStates.get(recipeId) || new Map<string, PersistedTimerState>();
     },
     (get, set, update: Map<string, PersistedTimerState> | null) => {
-      const allStates = new Map(get(timerStatesAtom))
+      const allStates = new Map(get(timerStatesAtom));
       if (update === null) {
         // nullが渡されたら削除
-        allStates.delete(recipeId)
+        allStates.delete(recipeId);
       } else {
-        allStates.set(recipeId, update)
+        allStates.set(recipeId, update);
       }
-      set(timerStatesAtom, allStates)
-    }
-  )
-})
+      set(timerStatesAtom, allStates);
+    },
+  );
+});
 
 // 全停止用のatom（レシピIDを渡すとそのレシピのタイマーをクリア）
 export const stopAllTimersAtomFamily = atomFamily((recipeId: string) => {
-  const recipeTimerStatesAtom = recipeTimerStatesAtomFamily(recipeId)
+  const recipeTimerStatesAtom = recipeTimerStatesAtomFamily(recipeId);
   return atom(null, (get, set) => {
-    set(recipeTimerStatesAtom, null)
-  })
-})
+    set(recipeTimerStatesAtom, null);
+  });
+});
 
 // 古いタイマー状態をクリーンアップするatom（24時間以上経過したタイマーを削除）
 export const cleanupOldTimerStatesAtom = atom(null, (get, set) => {
-  const allStates = get(timerStatesAtom)
-  const now = Date.now()
-  const maxAge = 24 * 60 * 60 * 1000 // 24時間
-  const recipeIdsToRemove: string[] = []
+  const allStates = get(timerStatesAtom);
+  const now = Date.now();
+  const maxAge = 24 * 60 * 60 * 1000; // 24時間
+  const recipeIdsToRemove: string[] = [];
 
   // 各レシピIDのタイマー状態をチェック
   allStates.forEach((states, recipeId) => {
-    const filtered = new Map<string, PersistedTimerState>()
+    const filtered = new Map<string, PersistedTimerState>();
 
     states.forEach((state, stepId) => {
-      const age = now - state.startedAt
+      const age = now - state.startedAt;
       if (age < maxAge) {
-        filtered.set(stepId, state)
+        filtered.set(stepId, state);
       }
-    })
+    });
 
     if (filtered.size === 0) {
       // すべてのタイマーが古い場合、レシピIDを削除対象に追加
-      recipeIdsToRemove.push(recipeId)
+      recipeIdsToRemove.push(recipeId);
     } else if (filtered.size !== states.size) {
       // 一部のタイマーが古い場合、フィルタリング後の状態で更新
-      set(recipeTimerStatesAtomFamily(recipeId), filtered)
+      set(recipeTimerStatesAtomFamily(recipeId), filtered);
     }
-  })
+  });
 
   // 空になったレシピIDのatomを削除（nullを設定することでatomFamilyから削除される）
-  recipeIdsToRemove.forEach(recipeId => {
-    set(recipeTimerStatesAtomFamily(recipeId), null)
-  })
-})
+  recipeIdsToRemove.forEach((recipeId) => {
+    set(recipeTimerStatesAtomFamily(recipeId), null);
+  });
+});

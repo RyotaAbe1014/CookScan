@@ -1,40 +1,33 @@
-import { checkUserProfile } from '@/features/auth/auth-utils'
-import { AuthLayoutWrapper } from '@/components/layouts/auth-layout-wrapper'
-import { PageContainer } from '@/components/layouts/page-container'
-import { BackToDashboardLink } from '@/components/navigation/back-to-dashboard-link'
-import {
-  getRecipesWithFilters,
-  getTagCategoriesForUser,
-} from '@/features/recipes/list/actions'
-import { isSuccess } from '@/utils/result'
-import { parseRecipeSearchParams } from '@/features/recipes/list/utils'
-import { RecipeListContent } from '@/features/recipes/list/recipe-list-content'
+import { checkUserProfile } from "@/features/auth/auth-utils";
+import { AuthLayoutWrapper } from "@/components/layouts/auth-layout-wrapper";
+import { PageContainer } from "@/components/layouts/page-container";
+import { BackToDashboardLink } from "@/components/navigation/back-to-dashboard-link";
+import { getRecipesWithFilters, getTagCategoriesForUser } from "@/features/recipes/list/actions";
+import { isSuccess } from "@/utils/result";
+import { parseRecipeSearchParams } from "@/features/recipes/list/utils";
+import { RecipeListContent } from "@/features/recipes/list/recipe-list-content";
 
-type SearchParams = Promise<{ tag?: string | string[]; q?: string }>
+type SearchParams = Promise<{ tag?: string | string[]; q?: string }>;
 
-export default async function RecipesPage({
-  searchParams,
-}: {
-  searchParams: SearchParams
-}) {
-  const { profile } = await checkUserProfile()
-  const params = await searchParams
+export default async function RecipesPage({ searchParams }: { searchParams: SearchParams }) {
+  const { profile } = await checkUserProfile();
+  const params = await searchParams;
 
   if (!profile) {
-    return null
+    return null;
   }
 
   // Parse search params
-  const { tagIds: selectedTagIds, searchQuery } = parseRecipeSearchParams(params)
+  const { tagIds: selectedTagIds, searchQuery } = parseRecipeSearchParams(params);
 
   // Fetch recipes and tag categories in parallel
   const [recipesResult, tagCategoriesResult] = await Promise.all([
     getRecipesWithFilters(searchQuery, selectedTagIds),
     getTagCategoriesForUser(),
-  ])
+  ]);
 
-  const recipes = isSuccess(recipesResult) ? recipesResult.data : []
-  const tagCategories = isSuccess(tagCategoriesResult) ? tagCategoriesResult.data : []
+  const recipes = isSuccess(recipesResult) ? recipesResult.data : [];
+  const tagCategories = isSuccess(tagCategoriesResult) ? tagCategoriesResult.data : [];
 
   return (
     <AuthLayoutWrapper
@@ -51,5 +44,5 @@ export default async function RecipesPage({
         />
       </PageContainer>
     </AuthLayoutWrapper>
-  )
+  );
 }

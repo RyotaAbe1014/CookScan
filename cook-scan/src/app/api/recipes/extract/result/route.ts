@@ -9,18 +9,12 @@ export async function GET(request: NextRequest) {
   try {
     const { hasAuth, hasProfile, profile } = await checkUserProfile();
     if (!hasAuth || !hasProfile || !profile) {
-      return NextResponse.json(
-        { success: false, error: "認証が必要です" },
-        { status: 401 },
-      );
+      return NextResponse.json({ success: false, error: "認証が必要です" }, { status: 401 });
     }
 
     const jobId = request.nextUrl.searchParams.get("jobId");
     if (!jobId) {
-      return NextResponse.json(
-        { success: false, error: "jobId は必須です" },
-        { status: 400 },
-      );
+      return NextResponse.json({ success: false, error: "jobId は必須です" }, { status: 400 });
     }
 
     if (!S3_BUCKET_NAME) {

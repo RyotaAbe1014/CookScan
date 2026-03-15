@@ -1,31 +1,31 @@
-import type { StorybookConfig } from '@storybook/nextjs'
-import path from 'path'
-import { fileURLToPath } from 'url'
+import type { StorybookConfig } from "@storybook/nextjs";
+import path from "path";
+import { fileURLToPath } from "url";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const config: StorybookConfig = {
-  stories: ['../src/**/*.stories.@(ts|tsx)'],
+  stories: ["../src/**/*.stories.@(ts|tsx)"],
   framework: {
-    name: '@storybook/nextjs',
+    name: "@storybook/nextjs",
     options: {},
   },
-  staticDirs: ['../public'],
+  staticDirs: ["../public"],
   docs: {
-    autodocs: 'tag',
+    autodocs: "tag",
   },
   typescript: {
-    reactDocgen: 'react-docgen-typescript',
+    reactDocgen: "react-docgen-typescript",
   },
   webpackFinal: async (config) => {
     if (config.resolve) {
       config.resolve.alias = {
         ...config.resolve.alias,
-        '@': path.resolve(__dirname, '../src'),
-      }
+        "@": path.resolve(__dirname, "../src"),
+      };
     }
-    return config
+    return config;
   },
-}
+};
 
-export default config
+export default config;

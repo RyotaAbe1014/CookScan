@@ -1,90 +1,90 @@
-'use client'
+"use client";
 
-import { useEffect, useRef, useState } from 'react'
-import Link from 'next/link'
-import { toast } from 'sonner'
-import { domToJpeg } from 'modern-screenshot'
-import type { RecipeMinimal } from '@/types/recipe'
-import { Button } from '@/components/ui/button'
-import { PencilIcon } from '@/components/icons/pencil-icon'
-import { DownloadIcon } from '@/components/icons/download-icon'
-import { TrashIcon } from '@/components/icons/trash-icon'
-import { CalendarIcon } from '@/components/icons/calendar-icon'
-import { ExclamationTriangleIcon } from '@/components/icons/exclamation-triangle-icon'
-import DeleteRecipeDialog from '@/features/recipes/delete/delete-recipe-dialog'
-import { RecipeShareButton } from '@/features/recipes/share/recipe-share-button'
-import { AddToMealPlanDialog } from './add-to-meal-plan-dialog'
+import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
+import { toast } from "sonner";
+import { domToJpeg } from "modern-screenshot";
+import type { RecipeMinimal } from "@/types/recipe";
+import { Button } from "@/components/ui/button";
+import { PencilIcon } from "@/components/icons/pencil-icon";
+import { DownloadIcon } from "@/components/icons/download-icon";
+import { TrashIcon } from "@/components/icons/trash-icon";
+import { CalendarIcon } from "@/components/icons/calendar-icon";
+import { ExclamationTriangleIcon } from "@/components/icons/exclamation-triangle-icon";
+import DeleteRecipeDialog from "@/features/recipes/delete/delete-recipe-dialog";
+import { RecipeShareButton } from "@/features/recipes/share/recipe-share-button";
+import { AddToMealPlanDialog } from "./add-to-meal-plan-dialog";
 
 type Props = {
-  recipe: RecipeMinimal
-  initialShareInfo: { shareToken: string; isActive: boolean } | null
-}
+  recipe: RecipeMinimal;
+  initialShareInfo: { shareToken: string; isActive: boolean } | null;
+};
 
 export function RecipeDetailActions({ recipe, initialShareInfo }: Props) {
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
-  const [isMealPlanDialogOpen, setIsMealPlanDialogOpen] = useState(false)
-  const [isDownloading, setIsDownloading] = useState(false)
-  const [downloadError, setDownloadError] = useState(false)
-  const errorTimeoutRef = useRef<number | null>(null)
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isMealPlanDialogOpen, setIsMealPlanDialogOpen] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
+  const [downloadError, setDownloadError] = useState(false);
+  const errorTimeoutRef = useRef<number | null>(null);
 
   const handleDeleteClick = () => {
-    setIsDeleteDialogOpen(true)
-  }
+    setIsDeleteDialogOpen(true);
+  };
 
   const handleCloseDialog = () => {
-    setIsDeleteDialogOpen(false)
-  }
+    setIsDeleteDialogOpen(false);
+  };
 
   const handleMealPlanSuccess = () => {
-    toast.success('献立に追加しました')
-  }
+    toast.success("献立に追加しました");
+  };
 
   const handleMealPlanError = () => {
-    toast.error('献立への追加に失敗しました')
-  }
+    toast.error("献立への追加に失敗しました");
+  };
 
   const showDownloadError = () => {
-    setDownloadError(true)
+    setDownloadError(true);
     if (errorTimeoutRef.current) {
-      window.clearTimeout(errorTimeoutRef.current)
+      window.clearTimeout(errorTimeoutRef.current);
     }
     errorTimeoutRef.current = window.setTimeout(() => {
-      setDownloadError(false)
-    }, 3000)
-  }
+      setDownloadError(false);
+    }, 3000);
+  };
 
   const handleDownloadClick = async () => {
-    setIsDownloading(true)
+    setIsDownloading(true);
     try {
-      const target = document.getElementById('recipe-detail-capture')
+      const target = document.getElementById("recipe-detail-capture");
       if (!target) {
-        throw new Error('capture target not found')
+        throw new Error("capture target not found");
       }
 
       if (document.fonts?.ready) {
-        await document.fonts.ready
+        await document.fonts.ready;
       }
 
-      const dataUrl = await domToJpeg(target, { quality: 0.95 })
-      const link = document.createElement('a')
-      link.download = `${recipe.title}.jpg`
-      link.href = dataUrl
-      link.click()
+      const dataUrl = await domToJpeg(target, { quality: 0.95 });
+      const link = document.createElement("a");
+      link.download = `${recipe.title}.jpg`;
+      link.href = dataUrl;
+      link.click();
     } catch (error) {
-      console.error('画像ダウンロードに失敗しました', error)
-      showDownloadError()
+      console.error("画像ダウンロードに失敗しました", error);
+      showDownloadError();
     } finally {
-      setIsDownloading(false)
+      setIsDownloading(false);
     }
-  }
+  };
 
   useEffect(() => {
     return () => {
       if (errorTimeoutRef.current) {
-        window.clearTimeout(errorTimeoutRef.current)
+        window.clearTimeout(errorTimeoutRef.current);
       }
-    }
-  }, [])
+    };
+  }, []);
 
   return (
     <>
@@ -154,5 +154,5 @@ export function RecipeDetailActions({ recipe, initialShareInfo }: Props) {
         </div>
       )}
     </>
-  )
+  );
 }

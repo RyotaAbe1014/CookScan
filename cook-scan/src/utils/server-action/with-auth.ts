@@ -1,6 +1,6 @@
-import type { Result } from '@/utils/result'
-import { failure, Errors } from '@/utils/result'
-import { checkUserProfile, type UserProfile } from '@/features/auth/auth-utils'
+import type { Result } from "@/utils/result";
+import { failure, Errors } from "@/utils/result";
+import { checkUserProfile, type UserProfile } from "@/features/auth/auth-utils";
 
 /**
  * 認証必須のServer Actionラッパー
@@ -18,18 +18,17 @@ import { checkUserProfile, type UserProfile } from '@/features/auth/auth-utils'
  * ```
  */
 export async function withAuth<T>(
-  action: (profile: UserProfile) => Promise<Result<T>>
+  action: (profile: UserProfile) => Promise<Result<T>>,
 ): Promise<Result<T>> {
-  const { hasAuth, hasProfile, profile } = await checkUserProfile()
+  const { hasAuth, hasProfile, profile } = await checkUserProfile();
 
   if (!hasAuth) {
-    return failure(Errors.unauthenticated())
+    return failure(Errors.unauthenticated());
   }
 
   if (!hasProfile || !profile) {
-    return failure(Errors.unauthenticated('プロフィール設定が必要です'))
+    return failure(Errors.unauthenticated("プロフィール設定が必要です"));
   }
 
-  return action(profile)
+  return action(profile);
 }
-

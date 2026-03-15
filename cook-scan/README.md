@@ -21,18 +21,21 @@
 ### 環境設定
 
 1. **リポジトリをクローン**
+
 ```bash
 git clone [repository-url]
 cd cook-scan
 ```
 
 2. **依存関係をインストール**
+
 ```bash
 pnpm install
 ```
 
 3. **環境変数を設定**
-`.env` ファイルを作成して以下を設定:
+   `.env` ファイルを作成して以下を設定:
+
 ```
 DATABASE_URL=postgresql://USER:PASSWORD@HOST:PORT/DB
 DIRECT_URL=postgresql://USER:PASSWORD@HOST:PORT/DB
@@ -43,21 +46,25 @@ GOOGLE_API_KEY=YOUR_GOOGLE_KEY
 ```
 
 4. **Prisma Clientを生成**
+
 ```bash
 pnpm run db:generate
 ```
 
 5. **マイグレーションを適用**
+
 ```bash
 pnpm run db:migrate -- --create-only
 ```
 
 6. **マイグレーションをデプロイ**
+
 ```bash
 pnpm run db:deploy
 ```
 
 6. **開発サーバーを起動**
+
 ```bash
 pnpm run dev
 ```
@@ -67,12 +74,14 @@ pnpm run dev
 ## 開発用コマンド
 
 ### アプリケーション
+
 - `pnpm run dev` - 開発サーバー起動（.envを読み込み）
 - `pnpm run build` - 本番ビルド（.envを読み込み）
 - `pnpm run start` - 本番サーバー起動
 - `pnpm run lint` - Lintチェック実行（src）
 
 ### テスト
+
 - `pnpm run test` - Vitest起動
 - `pnpm run test:run` - テストを1回実行
 - `pnpm run test:coverage` - カバレッジ取得
@@ -80,6 +89,7 @@ pnpm run dev
 - `pnpm run test:ui` - Vitest UI
 
 ### データベース
+
 - `pnpm run db:generate` - Prisma Client生成
 - `pnpm run db:format` - スキーマ整形
 - `pnpm run db:validate` - スキーマ検証
@@ -102,10 +112,12 @@ cook-scan/
 ## トラブルシューティング
 
 ### マイグレーションが失敗する
+
 1. `.env` の接続情報が正しいか確認
 2. `pnpm run db:status` で状態を確認
 3. `pnpm run db:generate` でClientを再生成
 
 ### ビルドエラー
+
 1. `pnpm run db:generate` でPrisma Clientを再生成
 2. node_modulesを削除して再インストール

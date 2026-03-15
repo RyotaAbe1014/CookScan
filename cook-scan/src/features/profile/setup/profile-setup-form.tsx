@@ -1,45 +1,48 @@
-'use client'
+"use client";
 
-import { useState, useTransition } from 'react'
-import { createProfile } from './actions'
-import { isSuccess } from '@/utils/result'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Alert } from '@/components/ui/alert'
-import { EnvelopeIcon } from '@/components/icons/envelope-icon'
-import { MailIcon } from '@/components/icons/mail-icon'
-import { UserIcon } from '@/components/icons/user-icon'
-import { UserCircleIcon } from '@/components/icons/user-circle-icon'
-import { CheckCircleOutlineIcon } from '@/components/icons/check-circle-outline-icon'
+import { useState, useTransition } from "react";
+import { createProfile } from "./actions";
+import { isSuccess } from "@/utils/result";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Alert } from "@/components/ui/alert";
+import { EnvelopeIcon } from "@/components/icons/envelope-icon";
+import { MailIcon } from "@/components/icons/mail-icon";
+import { UserIcon } from "@/components/icons/user-icon";
+import { UserCircleIcon } from "@/components/icons/user-circle-icon";
+import { CheckCircleOutlineIcon } from "@/components/icons/check-circle-outline-icon";
 
 type ProfileSetupFormProps = {
-  userId: string
-  userEmail: string
-}
+  userId: string;
+  userEmail: string;
+};
 
 export default function ProfileSetupForm({ userId, userEmail }: ProfileSetupFormProps) {
-  const [name, setName] = useState('')
-  const [error, setError] = useState<string | null>(null)
-  const [isPending, startTransition] = useTransition()
+  const [name, setName] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [isPending, startTransition] = useTransition();
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    setError(null)
+    e.preventDefault();
+    setError(null);
 
     startTransition(async () => {
-      const result = await createProfile(userId, userEmail, name)
+      const result = await createProfile(userId, userEmail, name);
       // 成功時はリダイレクトされるため、失敗時のみエラーを設定
       if (!isSuccess(result)) {
-        setError(result.error.message)
+        setError(result.error.message);
       }
-    })
-  }
+    });
+  };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-8 p-8">
       {/* Email Field - 無効化フィールド */}
       <div className="space-y-2">
-        <label htmlFor="email" className="flex items-center gap-2 text-sm font-medium text-foreground">
+        <label
+          htmlFor="email"
+          className="flex items-center gap-2 text-sm font-medium text-foreground"
+        >
           <div className="flex h-5 w-5 items-center justify-center rounded bg-muted-foreground">
             <EnvelopeIcon className="h-3 w-3 text-white" />
           </div>
@@ -64,7 +67,10 @@ export default function ProfileSetupForm({ userId, userEmail }: ProfileSetupForm
 
       {/* Name Field - プライマリフィールド */}
       <div className="space-y-2">
-        <label htmlFor="name" className="flex items-center gap-2 text-sm font-medium text-foreground">
+        <label
+          htmlFor="name"
+          className="flex items-center gap-2 text-sm font-medium text-foreground"
+        >
           <div className="flex h-5 w-5 items-center justify-center rounded bg-primary">
             <UserIcon className="h-3 w-3 text-white" />
           </div>
@@ -90,9 +96,7 @@ export default function ProfileSetupForm({ userId, userEmail }: ProfileSetupForm
       </div>
 
       {/* Error Message */}
-      {error && (
-        <Alert variant="error">{error}</Alert>
-      )}
+      {error && <Alert variant="error">{error}</Alert>}
 
       {/* Submit Button - emerald primary */}
       <Button
@@ -104,7 +108,7 @@ export default function ProfileSetupForm({ userId, userEmail }: ProfileSetupForm
         className="w-full shadow-md hover:shadow-lg transition-shadow"
       >
         {isPending ? (
-          '作成中...'
+          "作成中..."
         ) : (
           <>
             <CheckCircleOutlineIcon className="h-5 w-5" />
@@ -113,5 +117,5 @@ export default function ProfileSetupForm({ userId, userEmail }: ProfileSetupForm
         )}
       </Button>
     </form>
-  )
+  );
 }

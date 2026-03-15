@@ -1,15 +1,15 @@
-import Link from 'next/link'
-import { BookOpenIcon } from '@/components/icons/book-open-icon'
-import { ChevronRightIcon } from '@/components/icons/chevron-right-icon'
-import { EmptyIcon } from '@/components/icons/empty-icon'
-import { PlusIcon } from '@/components/icons/plus-icon'
-import { EmptyState } from '@/components/ui/empty-state'
-import { RecipeCard } from '@/features/recipes/list/recipe-card'
-import type { RecipeBasic } from '@/types/recipe'
+import Link from "next/link";
+import { BookOpenIcon } from "@/components/icons/book-open-icon";
+import { ChevronRightIcon } from "@/components/icons/chevron-right-icon";
+import { EmptyIcon } from "@/components/icons/empty-icon";
+import { PlusIcon } from "@/components/icons/plus-icon";
+import { EmptyState } from "@/components/ui/empty-state";
+import { RecipeCard } from "@/features/recipes/list/recipe-card";
+import type { RecipeBasic } from "@/types/recipe";
 
 type RecentRecipesSectionProps = {
-  recipes: RecipeBasic[]
-}
+  recipes: RecipeBasic[];
+};
 
 export function RecentRecipesSection({ recipes }: RecentRecipesSectionProps) {
   return (
@@ -62,5 +62,5 @@ export function RecentRecipesSection({ recipes }: RecentRecipesSectionProps) {
         </div>
       )}
     </section>
-  )
+  );
 }

@@ -16,6 +16,7 @@
 ### 機能詳細
 
 #### 名前編集
+
 - 表示名を1〜50文字の範囲で変更可能
 - 前後の空白は自動的に除去（trim）
 - 空白のみの入力は不可
@@ -23,17 +24,21 @@
 - 成功メッセージは3秒後に自動消去
 
 #### メールアドレス表示
+
 - 現在のメールアドレスを読み取り専用で表示
 - 変更は不可（disabled フィールド）
 
 #### 最終更新日時表示
+
 - プロフィールの最終更新日時を表示
 
 #### 関連機能へのナビゲーション
+
 - パスワード変更ページへのリンク
 - ユーザー招待フォームを同一ページに統合
 
 #### UI/UX
+
 - Emerald カラーで名前フィールドを装飾（UserCircleIcon アイコン）
 - Slate カラーでメールアドレスフィールドを装飾（グレーで非活性を明示）
 - 送信中はボタンをdisableにしてローディング状態を表示
@@ -128,16 +133,19 @@ sequenceDiagram
 #### コンポーネント構成
 
 **ページコンポーネント（Server Component）**
+
 - **ファイル**: `src/app/(auth)/settings/profile/page.tsx`
 - **タイプ**: Server Component
 - **役割**: プロフィール取得・初期データ提供・リダイレクト制御
 
 **レイアウト**
+
 - **ファイル**: `src/app/(auth)/settings/profile/layout.tsx`
 - **タイプ**: Server Component
 - **役割**: `AuthLayoutWrapper` でレイアウト統一（タイトル: "プロフィール"、ダッシュボード戻るボタン付き）
 
 **フォームコンポーネント（Client Component）**
+
 - **ファイル**: `src/features/profile/edit/profile-edit-form.tsx`
 - **タイプ**: Client Component
 - **スタイリング**: Tailwind CSS v4
@@ -146,31 +154,31 @@ sequenceDiagram
 
 ```typescript
 // ProfileEditForm 内部の状態
-const [name, setName] = useState(initialName)
-const [error, setError] = useState<string | null>(null)
-const [isSuccess, setIsSuccess] = useState(false)
-const [isPending, startTransition] = useTransition()
+const [name, setName] = useState(initialName);
+const [error, setError] = useState<string | null>(null);
+const [isSuccess, setIsSuccess] = useState(false);
+const [isPending, startTransition] = useTransition();
 ```
 
 #### 主要な処理フロー
 
 ```typescript
 const handleSubmit = async (e: FormEvent) => {
-  e.preventDefault()
-  setError(null)
-  setIsSuccess(false)
+  e.preventDefault();
+  setError(null);
+  setIsSuccess(false);
 
   startTransition(async () => {
-    const result = await updateUserProfile({ name })
+    const result = await updateUserProfile({ name });
     if (!result.ok) {
-      setError(result.error.message)
+      setError(result.error.message);
     } else {
-      setIsSuccess(true)
+      setIsSuccess(true);
       // 3秒後に自動消去
-      setTimeout(() => setIsSuccess(false), 3000)
+      setTimeout(() => setIsSuccess(false), 3000);
     }
-  })
-}
+  });
+};
 ```
 
 ### バックエンド
@@ -179,10 +187,10 @@ const handleSubmit = async (e: FormEvent) => {
 
 **ファイル**: `src/features/profile/edit/actions.ts`
 
-| 関数 | シグネチャ | 役割 |
-|------|-----------|------|
-| `getUserProfile` | `() => Promise<Result<UserProfile>>` | 現在のユーザープロフィール取得 |
-| `updateUserProfile` | `(data: { name: string }) => Promise<Result<void>>` | プロフィール名の更新 |
+| 関数                | シグネチャ                                          | 役割                           |
+| ------------------- | --------------------------------------------------- | ------------------------------ |
+| `getUserProfile`    | `() => Promise<Result<UserProfile>>`                | 現在のユーザープロフィール取得 |
+| `updateUserProfile` | `(data: { name: string }) => Promise<Result<void>>` | プロフィール名の更新           |
 
 #### バリデーションスキーマ
 
@@ -191,13 +199,13 @@ const handleSubmit = async (e: FormEvent) => {
 const updateProfileInputSchema = z.object({
   name: z
     .string()
-    .min(1, '名前を入力してください')
-    .max(50, '名前は50文字以内で入力してください')
+    .min(1, "名前を入力してください")
+    .max(50, "名前は50文字以内で入力してください")
     .trim()
     .refine((val) => val.length > 0, {
-      message: '空白のみの名前は使用できません',
+      message: "空白のみの名前は使用できません",
     }),
-})
+});
 ```
 
 #### 処理フロー（updateUserProfile）
@@ -220,10 +228,12 @@ const updateProfileInputSchema = z.object({
 ### ビジネスロジック層
 
 #### UserService
+
 - **ファイル**: `src/backend/services/users/user.service.ts`
 - `updateProfile(authId, input)` - プロフィール存在確認後に更新
 
 #### UserRepository
+
 - **ファイル**: `src/backend/repositories/user.repository.ts`
 - `updateUser(authId, name)` - `prisma.user.update()` でDB更新
 
@@ -251,10 +261,10 @@ model User {
 
 #### プロフィール編集で操作するフィールド
 
-| フィールド | 型 | 説明 |
-|-----------|-----|------|
-| `name` | `String?` | 表示名（プロフィール編集で更新対象） |
-| `email` | `String` | メールアドレス（表示のみ、変更不可） |
+| フィールド  | 型         | 説明                                     |
+| ----------- | ---------- | ---------------------------------------- |
+| `name`      | `String?`  | 表示名（プロフィール編集で更新対象）     |
+| `email`     | `String`   | メールアドレス（表示のみ、変更不可）     |
 | `updatedAt` | `DateTime` | 最終更新日時（自動更新、フォームに表示） |
 
 ## API仕様
@@ -262,51 +272,66 @@ model User {
 ### getUserProfile (Server Action)
 
 #### 概要
+
 現在の認証ユーザーのプロフィール情報を取得する。
 
 #### シグネチャ
+
 ```typescript
-async function getUserProfile(): Promise<Result<UserProfile>>
+async function getUserProfile(): Promise<Result<UserProfile>>;
 ```
 
 #### 戻り値
+
 ```typescript
 // 成功
-{ ok: true; data: UserProfile }
+{
+  ok: true;
+  data: UserProfile;
+}
 
 // 失敗
-{ ok: false; error: AppError }
+{
+  ok: false;
+  error: AppError;
+}
 ```
 
 #### エラーコード
-| コード | メッセージ | 発生条件 |
-|--------|-----------|---------|
-| `UNAUTHENTICATED` | 認証エラー | 未認証ユーザーのアクセス |
-| `NOT_FOUND` | プロフィールが見つかりません | プロフィール未設定 |
+
+| コード            | メッセージ                   | 発生条件                 |
+| ----------------- | ---------------------------- | ------------------------ |
+| `UNAUTHENTICATED` | 認証エラー                   | 未認証ユーザーのアクセス |
+| `NOT_FOUND`       | プロフィールが見つかりません | プロフィール未設定       |
 
 ---
 
 ### updateUserProfile (Server Action)
 
 #### 概要
+
 現在の認証ユーザーの表示名を更新する。
 
 #### シグネチャ
+
 ```typescript
-async function updateUserProfile(data: { name: string }): Promise<Result<void>>
+async function updateUserProfile(data: { name: string }): Promise<Result<void>>;
 ```
 
 #### パラメータ
-| 名前 | 型 | 説明 |
-|------|-----|------|
+
+| 名前        | 型       | 説明         |
+| ----------- | -------- | ------------ |
 | `data.name` | `string` | 新しい表示名 |
 
 #### バリデーション
-| フィールド | 型 | 必須 | バリデーション |
-|-----------|-----|------|--------------|
-| `name` | `string` | ✓ | 1〜50文字、trim後に空文字不可 |
+
+| フィールド | 型       | 必須 | バリデーション                |
+| ---------- | -------- | ---- | ----------------------------- |
+| `name`     | `string` | ✓    | 1〜50文字、trim後に空文字不可 |
 
 #### 戻り値
+
 ```typescript
 // 成功
 { ok: true; data: void }
@@ -316,14 +341,16 @@ async function updateUserProfile(data: { name: string }): Promise<Result<void>>
 ```
 
 #### エラーコード
-| コード | メッセージ | 発生条件 |
-|--------|-----------|---------|
+
+| コード             | メッセージ                                                                                   | 発生条件           |
+| ------------------ | -------------------------------------------------------------------------------------------- | ------------------ |
 | `VALIDATION_ERROR` | 名前を入力してください / 名前は50文字以内で入力してください / 空白のみの名前は使用できません | バリデーション失敗 |
-| `UNAUTHENTICATED` | 認証エラー | 未認証ユーザー |
-| `NOT_FOUND` | プロフィールが見つかりません | プロフィール未設定 |
-| `SERVER_ERROR` | サーバーエラー | DB更新失敗 |
+| `UNAUTHENTICATED`  | 認証エラー                                                                                   | 未認証ユーザー     |
+| `NOT_FOUND`        | プロフィールが見つかりません                                                                 | プロフィール未設定 |
+| `SERVER_ERROR`     | サーバーエラー                                                                               | DB更新失敗         |
 
 #### 処理詳細
+
 1. Zodスキーマでバリデーション実行
 2. Supabase Auth でユーザー認証確認
 3. DBでプロフィール存在確認
@@ -334,10 +361,10 @@ async function updateUserProfile(data: { name: string }): Promise<Result<void>>
 
 ### テストファイル
 
-| ファイル | フレームワーク | 対象 |
-|---------|-------------|------|
+| ファイル                                                         | フレームワーク                 | 対象                           |
+| ---------------------------------------------------------------- | ------------------------------ | ------------------------------ |
 | `src/features/profile/edit/__tests__/profile-edit-form.test.tsx` | Vitest + React Testing Library | ProfileEditForm コンポーネント |
-| `src/features/profile/edit/__tests__/actions.test.ts` | Vitest | Server Actions |
+| `src/features/profile/edit/__tests__/actions.test.ts`            | Vitest                         | Server Actions                 |
 
 ### テストケース（profile-edit-form.test.tsx）
 

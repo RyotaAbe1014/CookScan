@@ -1,9 +1,9 @@
-import Image from 'next/image'
-import type { SharedRecipeOutput } from '@/backend/domain/recipes'
+import Image from "next/image";
+import type { SharedRecipeOutput } from "@/backend/domain/recipes";
 
 type Props = {
-  recipe: SharedRecipeOutput
-}
+  recipe: SharedRecipeOutput;
+};
 
 export function SharedRecipeContent({ recipe }: Props) {
   return (
@@ -11,9 +11,7 @@ export function SharedRecipeContent({ recipe }: Props) {
       {/* ヘッダー */}
       <div>
         <p className="text-sm font-medium text-primary">共有レシピ</p>
-        <h1 className="mt-1 text-2xl font-bold text-foreground sm:text-3xl">
-          {recipe.title}
-        </h1>
+        <h1 className="mt-1 text-2xl font-bold text-foreground sm:text-3xl">{recipe.title}</h1>
       </div>
 
       {/* 画像 */}
@@ -39,7 +37,7 @@ export function SharedRecipeContent({ recipe }: Props) {
                 <li key={index} className="flex items-center justify-between px-4 py-3">
                   <span className="text-sm text-foreground">{ingredient.name}</span>
                   <span className="text-sm text-muted-foreground">
-                    {[ingredient.unit, ingredient.notes].filter(Boolean).join(' ')}
+                    {[ingredient.unit, ingredient.notes].filter(Boolean).join(" ")}
                   </span>
                 </li>
               ))}
@@ -62,7 +60,8 @@ export function SharedRecipeContent({ recipe }: Props) {
                   <p className="text-sm text-foreground">{step.instruction}</p>
                   {step.timerSeconds && (
                     <p className="mt-1 text-xs text-muted-foreground">
-                      ⏱ {Math.floor(step.timerSeconds / 60)}分{step.timerSeconds % 60 > 0 ? `${step.timerSeconds % 60}秒` : ''}
+                      ⏱ {Math.floor(step.timerSeconds / 60)}分
+                      {step.timerSeconds % 60 > 0 ? `${step.timerSeconds % 60}秒` : ""}
                     </p>
                   )}
                 </div>
@@ -77,5 +76,5 @@ export function SharedRecipeContent({ recipe }: Props) {
         CookScan で作成されたレシピ
       </div>
     </div>
-  )
+  );
 }

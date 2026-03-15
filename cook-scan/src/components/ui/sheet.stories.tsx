@@ -1,33 +1,33 @@
-import type { Meta, StoryObj } from '@storybook/nextjs'
-import { useState } from 'react'
-import Link from 'next/link'
-import { Sheet } from './sheet'
-import { Button } from './button'
-import { CloseIcon } from '@/components/icons/close-icon'
+import type { Meta, StoryObj } from "@storybook/nextjs";
+import { useState } from "react";
+import Link from "next/link";
+import { Sheet } from "./sheet";
+import { Button } from "./button";
+import { CloseIcon } from "@/components/icons/close-icon";
 
 const meta = {
-  title: 'UI/Sheet',
+  title: "UI/Sheet",
   component: Sheet,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   parameters: {
-    layout: 'fullscreen',
+    layout: "fullscreen",
   },
   argTypes: {
-    isOpen: { control: 'boolean' },
+    isOpen: { control: "boolean" },
   },
-} satisfies Meta<typeof Sheet>
+} satisfies Meta<typeof Sheet>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
     isOpen: false,
-    onClose: () => { },
+    onClose: () => {},
     children: null,
   },
   render: function SheetStory() {
-    const [isOpen, setIsOpen] = useState(false)
+    const [isOpen, setIsOpen] = useState(false);
     return (
       <div className="p-8">
         <Button onClick={() => setIsOpen(true)}>シートを開く</Button>
@@ -49,28 +49,29 @@ export const Default: Story = {
               <Link href="/tags" className="rounded-md px-3 py-2 text-sm hover:bg-muted">
                 タグ管理
               </Link>
-              <Link href="/settings/profile" className="rounded-md px-3 py-2 text-sm hover:bg-muted">
+              <Link
+                href="/settings/profile"
+                className="rounded-md px-3 py-2 text-sm hover:bg-muted"
+              >
                 設定
               </Link>
             </nav>
           </div>
         </Sheet>
       </div>
-    )
+    );
   },
-}
+};
 
 export const AlwaysOpen: Story = {
   args: {
     isOpen: true,
-    onClose: () => { },
+    onClose: () => {},
     children: (
       <div className="p-6">
         <h2 className="text-lg font-semibold">シートコンテンツ</h2>
-        <p className="mt-2 text-sm text-gray-600">
-          ここにコンテンツが入ります。
-        </p>
+        <p className="mt-2 text-sm text-gray-600">ここにコンテンツが入ります。</p>
       </div>
     ),
   },
-}
+};

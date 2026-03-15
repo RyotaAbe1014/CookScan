@@ -15,20 +15,24 @@
 ### 機能詳細
 
 #### タグカテゴリ作成
+
 - カテゴリ名（必須、最大50文字）と説明（任意、最大200文字）を入力して作成する
 - 作成したカテゴリは自分のみが所有・編集・削除できる
 - カテゴリにタグが1個以上存在する場合は削除不可
 
 #### タグ作成
+
 - 既存のカテゴリを選択し、タグ名（必須、最大50文字）と説明（任意、最大200文字）を入力して作成する
 - 自分のカテゴリ、またはシステムカテゴリへのタグ作成が可能
 - 作成したタグは自分のみが所有・編集・削除できる
 
 #### システムリソースの保護
+
 - `isSystem: true` のカテゴリ・タグは編集・削除不可
 - システムカテゴリにはユーザーがタグを追加可能（システムタグは作成不可）
 
 #### UI/UX
+
 - タブ切り替えで「タグを作成」と「カテゴリを作成」を切り替え
 - カテゴリが存在しない場合は送信ボタンを無効化
 - 送信中はローディング状態（「作成中...」テキスト）を表示
@@ -37,6 +41,7 @@
 - 削除時はネイティブconfirmダイアログで確認
 
 #### その他
+
 - 空白文字は自動でtrim処理（説明の空文字列はundefinedとして扱う）
 - システムカテゴリとユーザーカテゴリを視覚的に区別（アイコン・カラー）
 - 各タグのレシピ使用数をバッジで表示
@@ -138,16 +143,17 @@ sequenceDiagram
 
 #### コンポーネント構成
 
-| コンポーネント | ファイル | タイプ | 役割 |
-|---|---|---|---|
-| TagCreateForm | `src/features/tags/tag-create-form.tsx` | Client Component | タグ・カテゴリ作成フォーム |
+| コンポーネント | ファイル                                 | タイプ           | 役割                       |
+| -------------- | ---------------------------------------- | ---------------- | -------------------------- |
+| TagCreateForm  | `src/features/tags/tag-create-form.tsx`  | Client Component | タグ・カテゴリ作成フォーム |
 | TagPageContent | `src/features/tags/tag-page-content.tsx` | Client Component | タグページ全体のレイアウト |
-| CategoryItem | `src/features/tags/category-item.tsx` | Client Component | カテゴリの表示・編集・削除 |
-| TagItem | `src/features/tags/tag-item.tsx` | Client Component | タグの表示・編集・削除 |
-| TagInfoBanner | `src/features/tags/tag-info-banner.tsx` | Server Component | 情報バナー |
-| TagEmptyState | `src/features/tags/tag-empty-state.tsx` | Server Component | 空状態の表示 |
+| CategoryItem   | `src/features/tags/category-item.tsx`    | Client Component | カテゴリの表示・編集・削除 |
+| TagItem        | `src/features/tags/tag-item.tsx`         | Client Component | タグの表示・編集・削除     |
+| TagInfoBanner  | `src/features/tags/tag-info-banner.tsx`  | Server Component | 情報バナー                 |
+| TagEmptyState  | `src/features/tags/tag-empty-state.tsx`  | Server Component | 空状態の表示               |
 
 #### 使用コンポーネント
+
 - `Button` - 送信・編集・削除アクション
 - `Input` - テキスト入力フィールド
 - `Textarea` - 説明入力フィールド
@@ -161,18 +167,18 @@ sequenceDiagram
 ```typescript
 // TagForm: useReducerで5つの状態を統合管理
 type TagFormState = {
-  tagName: string
-  tagDescription: string
-  selectedCategoryId: string
-  isSubmittingTag: boolean
-  tagCreatedSuccess: boolean
-}
+  tagName: string;
+  tagDescription: string;
+  selectedCategoryId: string;
+  isSubmittingTag: boolean;
+  tagCreatedSuccess: boolean;
+};
 
 // CategoryForm: useStateで個別管理
-const [categoryName, setCategoryName] = useState('')
-const [categoryDescription, setCategoryDescription] = useState('')
-const [isSubmittingCategory, setIsSubmittingCategory] = useState(false)
-const [categoryCreatedSuccess, setCategoryCreatedSuccess] = useState(false)
+const [categoryName, setCategoryName] = useState("");
+const [categoryDescription, setCategoryDescription] = useState("");
+const [isSubmittingCategory, setIsSubmittingCategory] = useState(false);
+const [categoryCreatedSuccess, setCategoryCreatedSuccess] = useState(false);
 ```
 
 #### 主要な処理フロー
@@ -180,42 +186,43 @@ const [categoryCreatedSuccess, setCategoryCreatedSuccess] = useState(false)
 ```typescript
 // タグ作成送信ハンドラ
 const handleSubmitTag = async (e: FormEvent<HTMLFormElement>) => {
-  e.preventDefault()
-  dispatch({ type: 'SET_SUBMITTING', payload: true })
+  e.preventDefault();
+  dispatch({ type: "SET_SUBMITTING", payload: true });
   try {
     const result = await createTag(
       selectedCategoryId,
       tagName.trim(),
-      tagDescription.trim() || undefined
-    )
+      tagDescription.trim() || undefined,
+    );
     if (isSuccess(result)) {
-      dispatch({ type: 'RESET_AND_SUCCESS' })
+      dispatch({ type: "RESET_AND_SUCCESS" });
     } else {
-      toast.error(result.error.message)
+      toast.error(result.error.message);
     }
   } catch {
-    toast.error('タグの作成中にエラーが発生しました')
+    toast.error("タグの作成中にエラーが発生しました");
   } finally {
-    dispatch({ type: 'SET_SUBMITTING', payload: false })
+    dispatch({ type: "SET_SUBMITTING", payload: false });
   }
-}
+};
 ```
 
 ### バックエンド
 
 #### Server Actions
+
 - **ファイル**: `src/features/tags/actions.ts`
 
-| 関数 | シグネチャ | 説明 |
-|---|---|---|
-| `createTagCategory` | `(name: string, description?: string) => Promise<Result<{ categoryId: string }>>` | カテゴリを作成 |
-| `createTag` | `(categoryId: string, name: string, description?: string) => Promise<Result<{ tagId: string }>>` | タグを作成 |
-| `updateTagCategory` | `(categoryId: string, name: string, description?: string) => Promise<Result<undefined>>` | カテゴリを更新 |
-| `updateTag` | `(tagId: string, name: string, description?: string) => Promise<Result<undefined>>` | タグを更新 |
-| `deleteTagCategory` | `(categoryId: string) => Promise<Result<undefined>>` | カテゴリを削除 |
-| `deleteTag` | `(tagId: string) => Promise<Result<undefined>>` | タグを削除 |
-| `getTagCategoriesWithTags` | `() => Promise<Result<TagCategoriesWithTagsOutput>>` | タグページ用一覧取得 |
-| `getAllTagsForRecipe` | `() => Promise<Result<TagsForRecipeOutput>>` | レシピ用タグ一覧取得 |
+| 関数                       | シグネチャ                                                                                       | 説明                 |
+| -------------------------- | ------------------------------------------------------------------------------------------------ | -------------------- |
+| `createTagCategory`        | `(name: string, description?: string) => Promise<Result<{ categoryId: string }>>`                | カテゴリを作成       |
+| `createTag`                | `(categoryId: string, name: string, description?: string) => Promise<Result<{ tagId: string }>>` | タグを作成           |
+| `updateTagCategory`        | `(categoryId: string, name: string, description?: string) => Promise<Result<undefined>>`         | カテゴリを更新       |
+| `updateTag`                | `(tagId: string, name: string, description?: string) => Promise<Result<undefined>>`              | タグを更新           |
+| `deleteTagCategory`        | `(categoryId: string) => Promise<Result<undefined>>`                                             | カテゴリを削除       |
+| `deleteTag`                | `(tagId: string) => Promise<Result<undefined>>`                                                  | タグを削除           |
+| `getTagCategoriesWithTags` | `() => Promise<Result<TagCategoriesWithTagsOutput>>`                                             | タグページ用一覧取得 |
+| `getAllTagsForRecipe`      | `() => Promise<Result<TagsForRecipeOutput>>`                                                     | レシピ用タグ一覧取得 |
 
 #### バリデーションスキーマ
 
@@ -224,24 +231,22 @@ const handleSubmitTag = async (e: FormEvent<HTMLFormElement>) => {
 ```typescript
 // カテゴリ作成
 const createTagCategoryInputSchema = z.object({
-  name: z.string()
-    .min(1, 'カテゴリ名を入力してください')
-    .max(50, 'カテゴリ名は50文字以内で入力してください'),
-  description: z.string()
-    .max(200, '説明は200文字以内で入力してください')
-    .optional(),
-})
+  name: z
+    .string()
+    .min(1, "カテゴリ名を入力してください")
+    .max(50, "カテゴリ名は50文字以内で入力してください"),
+  description: z.string().max(200, "説明は200文字以内で入力してください").optional(),
+});
 
 // タグ作成
 const createTagInputSchema = z.object({
-  categoryId: z.string().min(1, 'カテゴリIDが必要です'),
-  name: z.string()
-    .min(1, 'タグ名を入力してください')
-    .max(50, 'タグ名は50文字以内で入力してください'),
-  description: z.string()
-    .max(200, '説明は200文字以内で入力してください')
-    .optional(),
-})
+  categoryId: z.string().min(1, "カテゴリIDが必要です"),
+  name: z
+    .string()
+    .min(1, "タグ名を入力してください")
+    .max(50, "タグ名は50文字以内で入力してください"),
+  description: z.string().max(200, "説明は200文字以内で入力してください").optional(),
+});
 ```
 
 #### 処理フロー（タグ作成）
@@ -268,6 +273,7 @@ const createTagInputSchema = z.object({
 Prismaを使ったDB操作を担う層。
 
 主要な関数:
+
 ```typescript
 findTagCategoryById(categoryId: string): Promise<TagCategory | null>
 createTagCategory(userId: string, name: string, description?: string): Promise<{ categoryId: string }>
@@ -277,6 +283,7 @@ validateTagIdsForUser(tagIds: string[], userId: string): Promise<{ validTagIds: 
 ```
 
 #### 使用ライブラリ
+
 - `zod` - バリデーション
 - `@prisma/client` - DBアクセス
 - `sonner` - トースト通知（フロントエンド）
@@ -304,6 +311,7 @@ model TagCategory {
 ```
 
 #### 関連フィールド
+
 - `userId`: NULL可能。NULLの場合はシステムカテゴリ
 - `isSystem`: システムカテゴリの場合 `true`。ユーザー作成時は常に `false`
 
@@ -329,6 +337,7 @@ model Tag {
 ```
 
 #### 関連フィールド
+
 - `userId`: NULL可能。NULLの場合はシステムタグ
 - `categoryId`: 必須。タグは必ずカテゴリに属する
 - `isSystem`: システムタグの場合 `true`。ユーザー作成時は常に `false`
@@ -356,25 +365,29 @@ model RecipeTag {
 ### createTag (Server Action)
 
 #### 概要
+
 認証済みユーザーが指定したカテゴリにタグを作成する。
 
 #### シグネチャ
+
 ```typescript
 async function createTag(
   categoryId: string,
   name: string,
-  description?: string
-): Promise<Result<{ tagId: string }>>
+  description?: string,
+): Promise<Result<{ tagId: string }>>;
 ```
 
 #### パラメータ
-| 名前 | 型 | 必須 | バリデーション |
-|------|------|------|--------------|
-| `categoryId` | `string` | ✓ | 1文字以上 |
-| `name` | `string` | ✓ | 1〜50文字 |
-| `description` | `string` | - | 最大200文字 |
+
+| 名前          | 型       | 必須 | バリデーション |
+| ------------- | -------- | ---- | -------------- |
+| `categoryId`  | `string` | ✓    | 1文字以上      |
+| `name`        | `string` | ✓    | 1〜50文字      |
+| `description` | `string` | -    | 最大200文字    |
 
 #### 戻り値
+
 ```typescript
 // 成功
 { success: true, data: { tagId: string } }
@@ -384,33 +397,38 @@ async function createTag(
 ```
 
 #### エラーコード
-| コード | メッセージ | 発生条件 |
-|--------|-----------|---------|
-| `UNAUTHENTICATED` | - | 未認証 |
-| `NOT_FOUND` | 「カテゴリが見つかりません」 | 指定カテゴリが存在しない |
-| `FORBIDDEN` | 「このカテゴリにタグを作成する権限がありません」 | 他ユーザーの非システムカテゴリへの追加 |
-| `SERVER_ERROR` | 「タグの作成に失敗しました」 | その他のDBエラー等 |
+
+| コード            | メッセージ                                       | 発生条件                               |
+| ----------------- | ------------------------------------------------ | -------------------------------------- |
+| `UNAUTHENTICATED` | -                                                | 未認証                                 |
+| `NOT_FOUND`       | 「カテゴリが見つかりません」                     | 指定カテゴリが存在しない               |
+| `FORBIDDEN`       | 「このカテゴリにタグを作成する権限がありません」 | 他ユーザーの非システムカテゴリへの追加 |
+| `SERVER_ERROR`    | 「タグの作成に失敗しました」                     | その他のDBエラー等                     |
 
 ### createTagCategory (Server Action)
 
 #### 概要
+
 認証済みユーザーがタグカテゴリを作成する。
 
 #### シグネチャ
+
 ```typescript
 async function createTagCategory(
   name: string,
-  description?: string
-): Promise<Result<{ categoryId: string }>>
+  description?: string,
+): Promise<Result<{ categoryId: string }>>;
 ```
 
 #### パラメータ
-| 名前 | 型 | 必須 | バリデーション |
-|------|------|------|--------------|
-| `name` | `string` | ✓ | 1〜50文字 |
-| `description` | `string` | - | 最大200文字 |
+
+| 名前          | 型       | 必須 | バリデーション |
+| ------------- | -------- | ---- | -------------- |
+| `name`        | `string` | ✓    | 1〜50文字      |
+| `description` | `string` | -    | 最大200文字    |
 
 #### 戻り値
+
 ```typescript
 // 成功
 { success: true, data: { categoryId: string } }
@@ -420,20 +438,21 @@ async function createTagCategory(
 ```
 
 #### エラーコード
-| コード | メッセージ | 発生条件 |
-|--------|-----------|---------|
-| `UNAUTHENTICATED` | - | 未認証 |
-| `SERVER_ERROR` | 「カテゴリの作成に失敗しました」 | DBエラー等 |
+
+| コード            | メッセージ                       | 発生条件   |
+| ----------------- | -------------------------------- | ---------- |
+| `UNAUTHENTICATED` | -                                | 未認証     |
+| `SERVER_ERROR`    | 「カテゴリの作成に失敗しました」 | DBエラー等 |
 
 ## テスト
 
 ### テストファイル
 
-| ファイル | フレームワーク | テスト対象 |
-|---|---|---|
-| `src/features/tags/__tests__/tag-create-form.test.tsx` | Vitest / React Testing Library | TagCreateForm コンポーネント |
-| `src/backend/services/tags/__tests__/tag.service.test.ts` | Vitest | TagService |
-| `src/backend/domain/tags/__tests__/validators.test.ts` | Vitest | バリデーションスキーマ |
+| ファイル                                                  | フレームワーク                 | テスト対象                   |
+| --------------------------------------------------------- | ------------------------------ | ---------------------------- |
+| `src/features/tags/__tests__/tag-create-form.test.tsx`    | Vitest / React Testing Library | TagCreateForm コンポーネント |
+| `src/backend/services/tags/__tests__/tag.service.test.ts` | Vitest                         | TagService                   |
+| `src/backend/domain/tags/__tests__/validators.test.ts`    | Vitest                         | バリデーションスキーマ       |
 
 ### テストケース
 

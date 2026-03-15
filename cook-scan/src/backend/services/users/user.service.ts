@@ -3,13 +3,13 @@
  * ビジネスロジック
  */
 
-import * as UserRepository from '@/backend/repositories/user.repository'
+import * as UserRepository from "@/backend/repositories/user.repository";
 import type {
   CreateProfileInput,
   UpdateProfileInput,
   UserProfileOutput,
   ProfileCheckResult,
-} from '@/backend/domain/users'
+} from "@/backend/domain/users";
 
 // ===== Profile Services =====
 
@@ -17,27 +17,27 @@ import type {
  * プロフィール存在確認
  */
 export async function checkExistingProfile(authId: string): Promise<ProfileCheckResult> {
-  const profile = await UserRepository.findUserByAuthId(authId)
+  const profile = await UserRepository.findUserByAuthId(authId);
 
   return {
     exists: !!profile,
     profile,
-  }
+  };
 }
 
 /**
  * プロフィールを作成
  */
 export async function createProfile(input: CreateProfileInput): Promise<UserProfileOutput> {
-  const { authId, email, name } = input
+  const { authId, email, name } = input;
 
   // 既存プロフィールの確認
-  const existing = await UserRepository.findUserByAuthId(authId)
+  const existing = await UserRepository.findUserByAuthId(authId);
   if (existing) {
-    throw new Error('プロフィールは既に作成されています')
+    throw new Error("プロフィールは既に作成されています");
   }
 
-  return UserRepository.createUser(authId, email, name)
+  return UserRepository.createUser(authId, email, name);
 }
 
 /**
@@ -45,22 +45,22 @@ export async function createProfile(input: CreateProfileInput): Promise<UserProf
  */
 export async function updateProfile(
   authId: string,
-  input: UpdateProfileInput
+  input: UpdateProfileInput,
 ): Promise<UserProfileOutput> {
-  const { name } = input
+  const { name } = input;
 
   // プロフィールの存在確認
-  const existing = await UserRepository.findUserByAuthId(authId)
+  const existing = await UserRepository.findUserByAuthId(authId);
   if (!existing) {
-    throw new Error('プロフィールが見つかりません')
+    throw new Error("プロフィールが見つかりません");
   }
 
-  return UserRepository.updateUser(authId, name)
+  return UserRepository.updateUser(authId, name);
 }
 
 /**
  * プロフィールを取得
  */
 export async function getUserProfile(authId: string): Promise<UserProfileOutput | null> {
-  return UserRepository.findUserByAuthId(authId)
+  return UserRepository.findUserByAuthId(authId);
 }

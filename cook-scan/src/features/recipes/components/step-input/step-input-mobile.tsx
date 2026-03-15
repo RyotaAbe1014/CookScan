@@ -1,18 +1,12 @@
-'use client'
+"use client";
 
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { TrashIcon } from '@/components/icons/trash-icon'
-import { ClockIcon } from '@/components/icons/clock-icon'
-import type { StepInputProps } from './types'
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { TrashIcon } from "@/components/icons/trash-icon";
+import { ClockIcon } from "@/components/icons/clock-icon";
+import type { StepInputProps } from "./types";
 
-export function StepInputMobile({
-  step,
-  index,
-  canDelete,
-  onUpdate,
-  onRemove,
-}: StepInputProps) {
+export function StepInputMobile({ step, index, canDelete, onUpdate, onRemove }: StepInputProps) {
   return (
     <div className="group relative overflow-hidden rounded-2xl bg-linear-to-br from-white via-section-header/50 to-accent-steps-light/30 p-4 shadow-sm ring-1 ring-section-header-border/80 transition-all duration-300 active:scale-[0.99]">
       {/* Decorative accent */}
@@ -42,14 +36,17 @@ export function StepInputMobile({
 
       {/* Instruction textarea (full width) */}
       <div className="mb-4">
-        <label htmlFor={`step-instruction-${index}`} className="mb-1.5 block text-xs font-semibold tracking-wide text-muted-foreground uppercase">
+        <label
+          htmlFor={`step-instruction-${index}`}
+          className="mb-1.5 block text-xs font-semibold tracking-wide text-muted-foreground uppercase"
+        >
           手順の説明
         </label>
         <Textarea
           id={`step-instruction-${index}`}
           placeholder="この手順で行うことを詳しく書いてください..."
           value={step.instruction}
-          onChange={(e) => onUpdate(index, 'instruction', e.target.value)}
+          onChange={(e) => onUpdate(index, "instruction", e.target.value)}
           rows={3}
           variant="blue"
           size="lg"
@@ -59,7 +56,10 @@ export function StepInputMobile({
 
       {/* Timer input (full width) */}
       <div className="rounded-xl bg-linear-to-r from-accent-steps-light to-accent-steps-light p-3 ring-1 ring-accent-steps-light">
-        <label htmlFor={`step-timer-${index}`} className="mb-2 flex items-center gap-2 text-xs font-semibold tracking-wide text-primary uppercase">
+        <label
+          htmlFor={`step-timer-${index}`}
+          className="mb-2 flex items-center gap-2 text-xs font-semibold tracking-wide text-primary uppercase"
+        >
           <ClockIcon className="h-4 w-4" stroke="currentColor" />
           タイマー設定
         </label>
@@ -68,17 +68,15 @@ export function StepInputMobile({
             id={`step-timer-${index}`}
             type="number"
             placeholder="例: 180"
-            value={step.timerSeconds ?? ''}
-            onChange={(e) => onUpdate(index, 'timerSeconds', e.target.value)}
+            value={step.timerSeconds ?? ""}
+            onChange={(e) => onUpdate(index, "timerSeconds", e.target.value)}
             size="lg"
             className="flex-1 text-center font-medium"
           />
           <span className="shrink-0 text-base font-semibold text-primary">秒</span>
         </div>
-        <p className="mt-2 text-xs text-muted-foreground">
-          調理中にタイマーを使用できます（任意）
-        </p>
+        <p className="mt-2 text-xs text-muted-foreground">調理中にタイマーを使用できます（任意）</p>
       </div>
     </div>
-  )
+  );
 }

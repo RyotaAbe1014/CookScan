@@ -219,11 +219,13 @@ sequenceDiagram
 #### コンポーネント構成
 
 **タグ削除:**
+
 - **ファイル**: `src/features/tags/tag-item.tsx`
 - **タイプ**: Client Component
 - **スタイリング**: Tailwind CSS v4
 
 **タグカテゴリ削除:**
+
 - **ファイル**: `src/features/tags/category-item.tsx`
 - **タイプ**: Client Component
 - **スタイリング**: Tailwind CSS v4
@@ -237,7 +239,7 @@ sequenceDiagram
 
 ```typescript
 // TagItem / CategoryItem 共通
-const [isSubmitting, setIsSubmitting] = useState(false)
+const [isSubmitting, setIsSubmitting] = useState(false);
 ```
 
 #### 主要な処理フロー（タグ削除）
@@ -245,24 +247,24 @@ const [isSubmitting, setIsSubmitting] = useState(false)
 ```typescript
 const handleDelete = async () => {
   if (!confirm(`「${tag.name}」を削除しますか？この操作は取り消せません。`)) {
-    return
+    return;
   }
 
-  setIsSubmitting(true)
+  setIsSubmitting(true);
 
   try {
-    const result = await deleteTag(tag.id)
+    const result = await deleteTag(tag.id);
 
     if (!isSuccess(result)) {
-      toast.error(result.error.message)
-      setIsSubmitting(false)
+      toast.error(result.error.message);
+      setIsSubmitting(false);
     }
     // 成功時はページがリロードされるのでローディング状態を維持
   } catch {
-    toast.error('タグの削除中にエラーが発生しました')
-    setIsSubmitting(false)
+    toast.error("タグの削除中にエラーが発生しました");
+    setIsSubmitting(false);
   }
-}
+};
 ```
 
 #### 削除ボタン表示制御
@@ -334,13 +336,13 @@ const handleDelete = async () => {
 
 ```typescript
 export async function deleteTag(userId: string, tagId: string): Promise<void> {
-  const tag = await TagRepository.findTagById(tagId)
+  const tag = await TagRepository.findTagById(tagId);
 
-  if (!tag) throw new Error('タグが見つかりません')
-  if (tag.isSystem) throw new Error('システムタグは削除できません')
-  if (tag.userId !== userId) throw new Error('このタグを削除する権限がありません')
+  if (!tag) throw new Error("タグが見つかりません");
+  if (tag.isSystem) throw new Error("システムタグは削除できません");
+  if (tag.userId !== userId) throw new Error("このタグを削除する権限がありません");
 
-  await TagRepository.deleteTag(tagId)
+  await TagRepository.deleteTag(tagId);
 }
 ```
 
@@ -348,16 +350,16 @@ export async function deleteTag(userId: string, tagId: string): Promise<void> {
 
 ```typescript
 export async function deleteTagCategory(userId: string, categoryId: string): Promise<void> {
-  const category = await TagRepository.findTagCategoryById(categoryId)
+  const category = await TagRepository.findTagCategoryById(categoryId);
 
-  if (!category) throw new Error('カテゴリが見つかりません')
-  if (category.isSystem) throw new Error('システムカテゴリは削除できません')
-  if (category.userId !== userId) throw new Error('このカテゴリを削除する権限がありません')
+  if (!category) throw new Error("カテゴリが見つかりません");
+  if (category.isSystem) throw new Error("システムカテゴリは削除できません");
+  if (category.userId !== userId) throw new Error("このカテゴリを削除する権限がありません");
   if (category.tags && category.tags.length > 0) {
-    throw new Error(`このカテゴリには${category.tags.length}個のタグがあるため削除できません`)
+    throw new Error(`このカテゴリには${category.tags.length}個のタグがあるため削除できません`);
   }
 
-  await TagRepository.deleteTagCategory(categoryId)
+  await TagRepository.deleteTagCategory(categoryId);
 }
 ```
 
@@ -369,13 +371,13 @@ export async function deleteTagCategory(userId: string, categoryId: string): Pro
 export async function deleteTag(tagId: string) {
   return prisma.tag.delete({
     where: { id: tagId },
-  })
+  });
 }
 
 export async function deleteTagCategory(categoryId: string) {
   return prisma.tagCategory.delete({
     where: { id: categoryId },
-  })
+  });
 }
 ```
 
@@ -439,11 +441,11 @@ model RecipeTag {
 
 #### カスケード削除の動作
 
-| 操作 | 影響テーブル | 動作 |
-|------|------------|------|
-| Tag 削除 | RecipeTag | `onDelete: Cascade` により自動削除 |
-| Tag 削除 | Recipe | 削除されない（タグ付けが外れるだけ） |
-| TagCategory 削除 | Tag | Service層で事前チェックし、タグがある場合はエラー |
+| 操作             | 影響テーブル | 動作                                              |
+| ---------------- | ------------ | ------------------------------------------------- |
+| Tag 削除         | RecipeTag    | `onDelete: Cascade` により自動削除                |
+| Tag 削除         | Recipe       | 削除されない（タグ付けが外れるだけ）              |
+| TagCategory 削除 | Tag          | Service層で事前チェックし、タグがある場合はエラー |
 
 #### 関連フィールド
 
@@ -461,13 +463,13 @@ model RecipeTag {
 #### シグネチャ
 
 ```typescript
-async function deleteTag(tagId: string): Promise<Result<void>>
+async function deleteTag(tagId: string): Promise<Result<void>>;
 ```
 
 #### パラメータ
 
-| 名前 | 型 | 説明 |
-|------|------|------|
+| 名前  | 型       | 説明             |
+| ----- | -------- | ---------------- |
 | tagId | `string` | 削除対象タグのID |
 
 #### 戻り値
@@ -480,13 +482,13 @@ type Result<void> =
 
 #### エラーコード
 
-| コード | メッセージ | 発生条件 |
-|--------|-----------|---------|
-| `UNAUTHENTICATED` | "認証が必要です" | 未ログイン |
-| `NOT_FOUND` | "タグが見つかりません" | 指定IDのタグが存在しない |
-| `FORBIDDEN` | "システムタグは削除できません" | `isSystem=true` のタグ |
-| `FORBIDDEN` | "このタグを削除する権限がありません" | 他ユーザーのタグ |
-| `SERVER_ERROR` | "タグの削除に失敗しました" | 予期しないエラー |
+| コード            | メッセージ                           | 発生条件                 |
+| ----------------- | ------------------------------------ | ------------------------ |
+| `UNAUTHENTICATED` | "認証が必要です"                     | 未ログイン               |
+| `NOT_FOUND`       | "タグが見つかりません"               | 指定IDのタグが存在しない |
+| `FORBIDDEN`       | "システムタグは削除できません"       | `isSystem=true` のタグ   |
+| `FORBIDDEN`       | "このタグを削除する権限がありません" | 他ユーザーのタグ         |
+| `SERVER_ERROR`    | "タグの削除に失敗しました"           | 予期しないエラー         |
 
 #### 処理詳細
 
@@ -509,13 +511,13 @@ type Result<void> =
 #### シグネチャ
 
 ```typescript
-async function deleteTagCategory(categoryId: string): Promise<Result<void>>
+async function deleteTagCategory(categoryId: string): Promise<Result<void>>;
 ```
 
 #### パラメータ
 
-| 名前 | 型 | 説明 |
-|------|------|------|
+| 名前       | 型       | 説明                 |
+| ---------- | -------- | -------------------- |
 | categoryId | `string` | 削除対象カテゴリのID |
 
 #### 戻り値
@@ -528,14 +530,14 @@ type Result<void> =
 
 #### エラーコード
 
-| コード | メッセージ | 発生条件 |
-|--------|-----------|---------|
-| `UNAUTHENTICATED` | "認証が必要です" | 未ログイン |
-| `NOT_FOUND` | "カテゴリが見つかりません" | 指定IDのカテゴリが存在しない |
-| `FORBIDDEN` | "システムカテゴリは削除できません" | `isSystem=true` のカテゴリ |
-| `FORBIDDEN` | "このカテゴリを削除する権限がありません" | 他ユーザーのカテゴリ |
-| `CONFLICT` | "このカテゴリには{N}個のタグがあるため削除できません" | カテゴリ内にタグが存在する |
-| `SERVER_ERROR` | "カテゴリの削除に失敗しました" | 予期しないエラー |
+| コード            | メッセージ                                            | 発生条件                     |
+| ----------------- | ----------------------------------------------------- | ---------------------------- |
+| `UNAUTHENTICATED` | "認証が必要です"                                      | 未ログイン                   |
+| `NOT_FOUND`       | "カテゴリが見つかりません"                            | 指定IDのカテゴリが存在しない |
+| `FORBIDDEN`       | "システムカテゴリは削除できません"                    | `isSystem=true` のカテゴリ   |
+| `FORBIDDEN`       | "このカテゴリを削除する権限がありません"              | 他ユーザーのカテゴリ         |
+| `CONFLICT`        | "このカテゴリには{N}個のタグがあるため削除できません" | カテゴリ内にタグが存在する   |
+| `SERVER_ERROR`    | "カテゴリの削除に失敗しました"                        | 予期しないエラー             |
 
 #### 処理詳細
 

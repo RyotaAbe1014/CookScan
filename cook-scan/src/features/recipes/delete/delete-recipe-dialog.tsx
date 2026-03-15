@@ -1,9 +1,9 @@
-'use client'
+"use client";
 
-import { useState, useTransition } from 'react'
-import { useRouter } from 'next/navigation'
-import { deleteRecipe } from './actions'
-import { isSuccess } from '@/utils/result'
+import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
+import { deleteRecipe } from "./actions";
+import { isSuccess } from "@/utils/result";
 import {
   Dialog,
   DialogContent,
@@ -11,47 +11,52 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
-} from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
-import { Alert } from '@/components/ui/alert'
-import { TrashIcon } from '@/components/icons/trash-icon'
-import { WarningIcon } from '@/components/icons/warning-icon'
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Alert } from "@/components/ui/alert";
+import { TrashIcon } from "@/components/icons/trash-icon";
+import { WarningIcon } from "@/components/icons/warning-icon";
 
 type Props = {
-  recipeId: string
-  recipeTitle: string
-  isOpen: boolean
-  onClose: () => void
-}
+  recipeId: string;
+  recipeTitle: string;
+  isOpen: boolean;
+  onClose: () => void;
+};
 
 export default function DeleteRecipeDialog({ recipeId, recipeTitle, isOpen, onClose }: Props) {
-  const router = useRouter()
-  const [isPending, startTransition] = useTransition()
-  const [error, setError] = useState<string | null>(null)
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+  const [error, setError] = useState<string | null>(null);
 
   const handleClose = () => {
-    setError(null)
-    onClose()
-  }
+    setError(null);
+    onClose();
+  };
 
   const handleDelete = async () => {
     startTransition(async () => {
       try {
-        const result = await deleteRecipe(recipeId)
+        const result = await deleteRecipe(recipeId);
         if (isSuccess(result)) {
-          router.push('/recipes')
-          handleClose()
+          router.push("/recipes");
+          handleClose();
         } else {
-          setError(result.error.message)
+          setError(result.error.message);
         }
       } catch {
-        setError('エラーが発生しました')
+        setError("エラーが発生しました");
       }
-    })
-  }
+    });
+  };
 
   return (
-    <Dialog open={isOpen} onOpenChange={(open) => { if (!open) handleClose() }}>
+    <Dialog
+      open={isOpen}
+      onOpenChange={(open) => {
+        if (!open) handleClose();
+      }}
+    >
       <DialogContent maxWidth="max-w-md">
         {/* Header with gradient */}
         <DialogHeader className="bg-linear-to-r from-danger-light to-danger-light">
@@ -99,7 +104,7 @@ export default function DeleteRecipeDialog({ recipeId, recipeTitle, isOpen, onCl
             className="flex-1"
           >
             {isPending ? (
-              '削除中...'
+              "削除中..."
             ) : (
               <>
                 <TrashIcon className="h-4 w-4" />
@@ -110,5 +115,5 @@ export default function DeleteRecipeDialog({ recipeId, recipeTitle, isOpen, onCl
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

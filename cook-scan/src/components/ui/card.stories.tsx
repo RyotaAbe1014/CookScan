@@ -1,20 +1,20 @@
-import type { Meta, StoryObj } from '@storybook/nextjs'
-import { Card, CardHeader, CardContent } from './card'
-import { BookOpenIcon } from '@/components/icons/book-open-icon'
-import { TagIcon } from '@/components/icons/tag-icon'
-import { ClockIcon } from '@/components/icons/clock-icon'
+import type { Meta, StoryObj } from "@storybook/nextjs";
+import { Card, CardHeader, CardContent } from "./card";
+import { BookOpenIcon } from "@/components/icons/book-open-icon";
+import { TagIcon } from "@/components/icons/tag-icon";
+import { ClockIcon } from "@/components/icons/clock-icon";
 
 const meta = {
-  title: 'UI/Card',
+  title: "UI/Card",
   component: Card,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {
-    hover: { control: 'boolean' },
+    hover: { control: "boolean" },
   },
-} satisfies Meta<typeof Card>
+} satisfies Meta<typeof Card>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
@@ -24,7 +24,7 @@ export const Default: Story = {
       </CardContent>
     ),
   },
-}
+};
 
 export const WithHover: Story = {
   args: {
@@ -35,7 +35,7 @@ export const WithHover: Story = {
       </CardContent>
     ),
   },
-}
+};
 
 export const WithHeader: Story = {
   render: () => (
@@ -50,13 +50,21 @@ export const WithHeader: Story = {
       </CardContent>
     </Card>
   ),
-}
+};
 
 export const IconColors: Story = {
   render: () => (
     <div className="flex flex-col gap-4">
       {(
-        ['primary', 'secondary', 'accent-steps', 'accent-ingredients', 'accent-tags', 'warning', 'danger'] as const
+        [
+          "primary",
+          "secondary",
+          "accent-steps",
+          "accent-ingredients",
+          "accent-tags",
+          "warning",
+          "danger",
+        ] as const
       ).map((color) => (
         <Card key={color} className="w-96">
           <CardHeader
@@ -68,7 +76,7 @@ export const IconColors: Story = {
       ))}
     </div>
   ),
-}
+};
 
 export const WithHeaderActions: Story = {
   render: () => (
@@ -78,9 +86,7 @@ export const WithHeaderActions: Story = {
         iconColor="accent-steps"
         title="調理手順"
         actions={
-          <button className="rounded-md bg-primary px-3 py-1 text-xs text-white">
-            編集
-          </button>
+          <button className="rounded-md bg-primary px-3 py-1 text-xs text-white">編集</button>
         }
       />
       <CardContent>
@@ -92,7 +98,7 @@ export const WithHeaderActions: Story = {
       </CardContent>
     </Card>
   ),
-}
+};
 
 export const ContentPadding: Story = {
   render: () => (
@@ -119,4 +125,4 @@ export const ContentPadding: Story = {
       </Card>
     </div>
   ),
-}
+};

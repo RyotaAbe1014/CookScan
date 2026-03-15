@@ -1,20 +1,20 @@
-import Image from 'next/image'
-import { ClipboardListIcon } from '@/components/icons/clipboard-list-icon'
-import { ClockIcon } from '@/components/icons/clock-icon'
-import { TagIcon } from '@/components/icons/tag-icon'
-import type { RecipeBasic } from '@/types/recipe'
+import Image from "next/image";
+import { ClipboardListIcon } from "@/components/icons/clipboard-list-icon";
+import { ClockIcon } from "@/components/icons/clock-icon";
+import { TagIcon } from "@/components/icons/tag-icon";
+import type { RecipeBasic } from "@/types/recipe";
 
 type RecipeCardProps = {
-  recipe: RecipeBasic
-  badge?: React.ReactNode
-}
+  recipe: RecipeBasic;
+  badge?: React.ReactNode;
+};
 
 function formatRecipeDate(date: Date) {
-  return new Date(date).toLocaleDateString('ja-JP', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  })
+  return new Date(date).toLocaleDateString("ja-JP", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
 }
 
 export function RecipeCard({ recipe, badge }: RecipeCardProps) {
@@ -74,5 +74,5 @@ export function RecipeCard({ recipe, badge }: RecipeCardProps) {
         </div>
       </div>
     </article>
-  )
+  );
 }

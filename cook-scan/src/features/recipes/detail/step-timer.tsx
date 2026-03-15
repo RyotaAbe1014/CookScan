@@ -1,30 +1,30 @@
-'use client'
+"use client";
 
-import { useEffect, useRef } from 'react'
-import { Button } from '@/components/ui/button'
-import { useCookingTimer } from './hooks/use-cooking-timer'
-import { requestNotificationPermission } from '@/utils/timer-notifications'
-import { ClockIcon } from '@/components/icons/clock-icon'
-import { PlayIcon } from '@/components/icons/play-icon'
-import { PauseIcon } from '@/components/icons/pause-icon'
-import { ReloadIcon } from '@/components/icons/reload-icon'
-import { CheckIcon } from '@/components/icons/check-icon'
+import { useEffect, useRef } from "react";
+import { Button } from "@/components/ui/button";
+import { useCookingTimer } from "./hooks/use-cooking-timer";
+import { requestNotificationPermission } from "@/utils/timer-notifications";
+import { ClockIcon } from "@/components/icons/clock-icon";
+import { PlayIcon } from "@/components/icons/play-icon";
+import { PauseIcon } from "@/components/icons/pause-icon";
+import { ReloadIcon } from "@/components/icons/reload-icon";
+import { CheckIcon } from "@/components/icons/check-icon";
 
 type StepTimerProps = {
-  stepId: string
-  recipeId: string
-  recipeTitle: string
-  stepNumber: number
-  instruction: string
-  timerSeconds: number
-  onActiveChange?: (stepId: string, isActive: boolean) => void
-}
+  stepId: string;
+  recipeId: string;
+  recipeTitle: string;
+  stepNumber: number;
+  instruction: string;
+  timerSeconds: number;
+  onActiveChange?: (stepId: string, isActive: boolean) => void;
+};
 
 // 秒数を分:秒形式にフォーマット
 function formatTime(seconds: number): string {
-  const mins = Math.floor(seconds / 60)
-  const secs = seconds % 60
-  return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`
+  const mins = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+  return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
 }
 
 export function StepTimer({
@@ -36,56 +36,57 @@ export function StepTimer({
   timerSeconds,
   onActiveChange,
 }: StepTimerProps) {
-  const { remainingSeconds, isRunning, isPaused, isFinished, start, pause, resume, reset } = useCookingTimer({
-    stepId,
-    recipeId,
-    recipeTitle,
-    stepNumber,
-    instruction,
-    initialSeconds: timerSeconds,
-  })
+  const { remainingSeconds, isRunning, isPaused, isFinished, start, pause, resume, reset } =
+    useCookingTimer({
+      stepId,
+      recipeId,
+      recipeTitle,
+      stepNumber,
+      instruction,
+      initialSeconds: timerSeconds,
+    });
 
   // 前回のisRunningの値を保持
-  const prevIsRunningRef = useRef(isRunning)
+  const prevIsRunningRef = useRef(isRunning);
   // onActiveChangeをrefで保持
-  const onActiveChangeRef = useRef(onActiveChange)
+  const onActiveChangeRef = useRef(onActiveChange);
   useEffect(() => {
-    onActiveChangeRef.current = onActiveChange
-  }, [onActiveChange])
+    onActiveChangeRef.current = onActiveChange;
+  }, [onActiveChange]);
 
   // アクティブ状態の変更を親に通知（isRunningが実際に変わった時のみ）
   useEffect(() => {
     if (prevIsRunningRef.current !== isRunning) {
-      prevIsRunningRef.current = isRunning
-      onActiveChangeRef.current?.(stepId, isRunning)
+      prevIsRunningRef.current = isRunning;
+      onActiveChangeRef.current?.(stepId, isRunning);
     }
-  }, [stepId, isRunning])
+  }, [stepId, isRunning]);
 
   // 初回タイマー開始時に通知許可をリクエスト
   const handleStart = async () => {
-    await requestNotificationPermission()
-    start()
-  }
+    await requestNotificationPermission();
+    start();
+  };
 
-  const progress = ((timerSeconds - remainingSeconds) / timerSeconds) * 100
+  const progress = ((timerSeconds - remainingSeconds) / timerSeconds) * 100;
 
   // 状態に応じたスタイルクラス
   const getContainerClass = () => {
-    const baseClass = 'transition-all duration-300'
+    const baseClass = "transition-all duration-300";
     if (isFinished) {
-      return `${baseClass} bg-linear-to-br from-primary to-secondary-hover shadow-lg`
+      return `${baseClass} bg-linear-to-br from-primary to-secondary-hover shadow-lg`;
     }
     if (isPaused) {
-      return `${baseClass} bg-linear-to-br from-warning to-warning shadow-md`
+      return `${baseClass} bg-linear-to-br from-warning to-warning shadow-md`;
     }
     if (isRunning) {
-      return `${baseClass} bg-linear-to-br from-accent-steps to-accent-steps shadow-xl animate-pulse`
+      return `${baseClass} bg-linear-to-br from-accent-steps to-accent-steps shadow-xl animate-pulse`;
     }
-    return `${baseClass} bg-muted ring-1 ring-border`
-  }
+    return `${baseClass} bg-muted ring-1 ring-border`;
+  };
 
   // 初期状態かどうか
-  const isInitial = !isRunning && !isPaused && !isFinished
+  const isInitial = !isRunning && !isPaused && !isFinished;
 
   return (
     <div className={`mt-3 rounded-xl p-4 ${getContainerClass()}`}>
@@ -98,11 +99,11 @@ export function StepTimer({
         className="mb-3 flex items-center justify-center gap-2"
       >
         <ClockIcon
-          className={`h-5 w-5 ${isInitial ? 'text-muted-foreground' : 'text-white'}`}
+          className={`h-5 w-5 ${isInitial ? "text-muted-foreground" : "text-white"}`}
           stroke="currentColor"
         />
         <span
-          className={`font-mono text-2xl font-bold tracking-wider ${isInitial ? 'text-muted-foreground' : 'text-white'}`}
+          className={`font-mono text-2xl font-bold tracking-wider ${isInitial ? "text-muted-foreground" : "text-white"}`}
         >
           {formatTime(remainingSeconds)}
         </span>
@@ -215,5 +216,5 @@ export function StepTimer({
         </div>
       )}
     </div>
-  )
+  );
 }

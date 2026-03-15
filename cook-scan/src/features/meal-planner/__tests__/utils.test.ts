@@ -1,4 +1,4 @@
-import { describe, test, expect } from "vitest";
+import { describe, test, expect } from "vite-plus/test";
 import {
   getMealPlanDayOfWeek,
   getWeekStart,
@@ -65,13 +65,7 @@ describe("getWeekStart", () => {
       results.push(weekStart);
     }
 
-    expect(results).toEqual([
-      "2026-03-02",
-      "2026-03-09",
-      "2026-03-16",
-      "2026-03-23",
-      "2026-03-30",
-    ]);
+    expect(results).toEqual(["2026-03-02", "2026-03-09", "2026-03-16", "2026-03-23", "2026-03-30"]);
   });
 
   test("連続して前の週に戻れる", () => {

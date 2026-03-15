@@ -1,5 +1,5 @@
-import { TagIcon } from '@/components/icons/tag-icon'
-import { InfoSolidIcon } from '@/components/icons/info-solid-icon'
+import { TagIcon } from "@/components/icons/tag-icon";
+import { InfoSolidIcon } from "@/components/icons/info-solid-icon";
 
 export function TagEmptyState() {
   return (
@@ -18,5 +18,5 @@ export function TagEmptyState() {
         </div>
       </div>
     </div>
-  )
+  );
 }

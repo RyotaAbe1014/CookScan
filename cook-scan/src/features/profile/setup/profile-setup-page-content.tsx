@@ -1,10 +1,10 @@
-import { ProfileSetupHeader } from './profile-setup-header'
-import ProfileSetupForm from './profile-setup-form'
+import { ProfileSetupHeader } from "./profile-setup-header";
+import ProfileSetupForm from "./profile-setup-form";
 
 type ProfileSetupPageContentProps = {
-  userId: string
-  userEmail: string
-}
+  userId: string;
+  userEmail: string;
+};
 
 export function ProfileSetupPageContent({ userId, userEmail }: ProfileSetupPageContentProps) {
   return (
@@ -16,5 +16,5 @@ export function ProfileSetupPageContent({ userId, userEmail }: ProfileSetupPageC
         </div>
       </div>
     </div>
-  )
+  );
 }

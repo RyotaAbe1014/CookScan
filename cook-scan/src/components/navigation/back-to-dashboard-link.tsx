@@ -1,5 +1,5 @@
-import Link from 'next/link'
-import { ChevronLeftIcon } from '@/components/icons/chevron-left-icon'
+import Link from "next/link";
+import { ChevronLeftIcon } from "@/components/icons/chevron-left-icon";
 
 export function BackToDashboardLink() {
   return (
@@ -10,5 +10,5 @@ export function BackToDashboardLink() {
       <ChevronLeftIcon className="h-4 w-4" />
       ダッシュボード
     </Link>
-  )
+  );
 }

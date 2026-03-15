@@ -1,10 +1,10 @@
-import Link from 'next/link'
-import type { RecipeBasic } from '@/types/recipe'
-import { RecipeCard } from './recipe-card'
+import Link from "next/link";
+import type { RecipeBasic } from "@/types/recipe";
+import { RecipeCard } from "./recipe-card";
 
 type RecipeGridProps = {
-  recipes: RecipeBasic[]
-}
+  recipes: RecipeBasic[];
+};
 
 export function RecipeGrid({ recipes }: RecipeGridProps) {
   return (
@@ -15,5 +15,5 @@ export function RecipeGrid({ recipes }: RecipeGridProps) {
         </Link>
       ))}
     </div>
-  )
+  );
 }

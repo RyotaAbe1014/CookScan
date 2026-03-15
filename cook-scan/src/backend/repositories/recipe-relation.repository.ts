@@ -3,9 +3,9 @@
  * 子レシピ関係のPrismaクエリ
  */
 
-import { prisma } from '@/lib/prisma'
-import { Prisma } from '@prisma/client'
-import type { ChildRecipeRelationInput } from '@/backend/domain/recipes'
+import { prisma } from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
+import type { ChildRecipeRelationInput } from "@/backend/domain/recipes";
 
 /**
  * 子レシピ候補を検索（自分のレシピのうち、除外IDを除く）
@@ -13,7 +13,7 @@ import type { ChildRecipeRelationInput } from '@/backend/domain/recipes'
 export async function findAvailableChildRecipes(
   userId: string,
   excludeRecipeIds: string[],
-  searchQuery?: string
+  searchQuery?: string,
 ) {
   return prisma.recipe.findMany({
     where: {
@@ -22,7 +22,7 @@ export async function findAvailableChildRecipes(
       ...(searchQuery && {
         title: {
           contains: searchQuery,
-          mode: 'insensitive',
+          mode: "insensitive",
         },
       }),
     },
@@ -31,8 +31,8 @@ export async function findAvailableChildRecipes(
       title: true,
       imageUrl: true,
     },
-    orderBy: { updatedAt: 'desc' },
-  })
+    orderBy: { updatedAt: "desc" },
+  });
 }
 
 /**
@@ -41,9 +41,9 @@ export async function findAvailableChildRecipes(
 export async function createRecipeRelations(
   tx: Prisma.TransactionClient,
   parentRecipeId: string,
-  childRecipes: ChildRecipeRelationInput[]
+  childRecipes: ChildRecipeRelationInput[],
 ) {
-  if (childRecipes.length === 0) return
+  if (childRecipes.length === 0) return;
 
   await tx.recipeRelation.createMany({
     data: childRecipes.map((cr) => ({
@@ -52,7 +52,7 @@ export async function createRecipeRelations(
       quantity: cr.quantity || null,
       notes: cr.notes || null,
     })),
-  })
+  });
 }
 
 /**
@@ -61,11 +61,11 @@ export async function createRecipeRelations(
 export async function validateChildRecipeOwnership(
   tx: Prisma.TransactionClient,
   userId: string,
-  childRecipeIds: string[]
+  childRecipeIds: string[],
 ): Promise<boolean> {
-  if (childRecipeIds.length === 0) return true
+  if (childRecipeIds.length === 0) return true;
 
-  const uniqueChildRecipeIds = [...new Set(childRecipeIds)]
+  const uniqueChildRecipeIds = [...new Set(childRecipeIds)];
   const ownedRecipeCount = await tx.recipe.count({
     where: {
       userId,
@@ -73,9 +73,9 @@ export async function validateChildRecipeOwnership(
         in: uniqueChildRecipeIds,
       },
     },
-  })
+  });
 
-  return ownedRecipeCount === uniqueChildRecipeIds.length
+  return ownedRecipeCount === uniqueChildRecipeIds.length;
 }
 
 /**
@@ -84,30 +84,30 @@ export async function validateChildRecipeOwnership(
  */
 export async function checkCircularReference(
   parentRecipeId: string,
-  childRecipeId: string
+  childRecipeId: string,
 ): Promise<boolean> {
   // 自己参照チェック
-  if (parentRecipeId === childRecipeId) return true
+  if (parentRecipeId === childRecipeId) return true;
 
   // BFSでchildRecipeIdの子孫にparentRecipeIdが含まれるか確認
-  const visited = new Set<string>()
-  const queue = [childRecipeId]
+  const visited = new Set<string>();
+  const queue = [childRecipeId];
 
   while (queue.length > 0) {
-    const currentId = queue.shift()!
-    if (visited.has(currentId)) continue
-    visited.add(currentId)
+    const currentId = queue.shift()!;
+    if (visited.has(currentId)) continue;
+    visited.add(currentId);
 
     const children = await prisma.recipeRelation.findMany({
       where: { parentRecipeId: currentId },
       select: { childRecipeId: true },
-    })
+    });
 
     for (const child of children) {
-      if (child.childRecipeId === parentRecipeId) return true
-      queue.push(child.childRecipeId)
+      if (child.childRecipeId === parentRecipeId) return true;
+      queue.push(child.childRecipeId);
     }
   }
 
-  return false
+  return false;
 }

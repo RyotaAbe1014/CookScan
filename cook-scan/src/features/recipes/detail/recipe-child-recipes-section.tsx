@@ -1,16 +1,16 @@
-import Link from 'next/link'
-import { Card, CardHeader, CardContent } from '@/components/ui/card'
-import { FolderIcon } from '@/components/icons/folder-icon'
-import { ChevronRightIcon } from '@/components/icons/chevron-right-icon'
-import type { ChildRecipeRelation } from '@/types/recipe'
+import Link from "next/link";
+import { Card, CardHeader, CardContent } from "@/components/ui/card";
+import { FolderIcon } from "@/components/icons/folder-icon";
+import { ChevronRightIcon } from "@/components/icons/chevron-right-icon";
+import type { ChildRecipeRelation } from "@/types/recipe";
 
 type RecipeChildRecipesSectionProps = {
-  childRecipes: ChildRecipeRelation[]
-}
+  childRecipes: ChildRecipeRelation[];
+};
 
 export function RecipeChildRecipesSection({ childRecipes }: RecipeChildRecipesSectionProps) {
   if (childRecipes.length === 0) {
-    return null
+    return null;
   }
 
   return (
@@ -48,5 +48,5 @@ export function RecipeChildRecipesSection({ childRecipes }: RecipeChildRecipesSe
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

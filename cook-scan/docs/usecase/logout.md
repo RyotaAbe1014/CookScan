@@ -15,11 +15,13 @@ CookScanアプリケーションのログアウト機能は、ユーザーがア
 ### 機能詳細
 
 #### ログアウト方法
+
 - ヘッダーのログアウトボタンからログアウト可能
 - モバイルナビゲーションからログアウト可能
 - ワンクリックでログアウト処理が実行
 
 #### UI/UX
+
 - ローディング状態の表示（スピナーアイコン＋「ログアウト中...」テキスト）
 - ホバー時のスタイル変更（赤系の警告色で視覚的フィードバック）
 - レスポンシブデザイン対応
@@ -29,6 +31,7 @@ CookScanアプリケーションのログアウト機能は、ユーザーがア
 - アクセシビリティ対応（`aria-label`属性）
 
 #### セキュリティ
+
 - Supabase Authによるセキュアなセッション終了
 - Server Actionsによるサーバーサイド処理
 - ログアウト後は自動的にログインページへリダイレクト
@@ -78,38 +81,45 @@ sequenceDiagram
 ### フロントエンド
 
 #### コンポーネント構成
+
 - **ファイル**: `src/features/auth/logout-button.tsx`
 - **タイプ**: Client Component (`'use client'`)
 - **スタイリング**: Tailwind CSS v4
 
 #### 使用コンポーネント
+
 - `Button` - ログアウトボタン（secondaryバリアント）
 - アイコン:
   - `LogoutIcon` - ログアウトアイコン
   - `SpinnerIcon` - ローディング時のスピナーアイコン
 
 #### 状態管理
+
 ```typescript
-const [isPending, startTransition] = useTransition() // ローディング状態
+const [isPending, startTransition] = useTransition(); // ローディング状態
 ```
 
 #### 主要な処理フロー
+
 ```typescript
 const handleLogout = () => {
   startTransition(async () => {
-    await logout()
-  })
-}
+    await logout();
+  });
+};
 ```
 
 #### スタイリング詳細
+
 ```typescript
-className="transition-all duration-200 hover:border-red-300 hover:bg-red-50 hover:text-red-600 hover:shadow-sm"
+className =
+  "transition-all duration-200 hover:border-red-300 hover:bg-red-50 hover:text-red-600 hover:shadow-sm";
 ```
 
 ホバー時に赤系の警告色に変化することで、ログアウトという重要なアクションであることを視覚的に伝えています。
 
 #### レスポンシブ対応
+
 ```typescript
 <span className="hidden sm:inline">ログアウト</span>
 ```
@@ -119,25 +129,29 @@ className="transition-all duration-200 hover:border-red-300 hover:bg-red-50 hove
 ### バックエンド
 
 #### Server Action
+
 - **ファイル**: `src/features/auth/actions.ts`
 - **関数**: `logout(): Promise<void>`
 - **ディレクティブ**: `'use server'`
 
 #### 処理フロー
+
 1. Supabaseクライアントの作成
 2. Supabase Auth の `signOut()` を呼び出し
 3. `/login` へリダイレクト
 
 #### 使用ライブラリ
+
 - `@supabase/supabase-js` - Supabase Auth
 - `next/navigation` - リダイレクト
 
 #### 実装コード
+
 ```typescript
 export async function logout(): Promise<void> {
-  const supabase = await createClient()
-  await supabase.auth.signOut()
-  redirect('/login')
+  const supabase = await createClient();
+  await supabase.auth.signOut();
+  redirect("/login");
 }
 ```
 
@@ -181,35 +195,43 @@ model User {
 ### logout (Server Action)
 
 #### 概要
+
 現在のユーザーをログアウトさせ、認証セッションを終了する
 
 #### シグネチャ
+
 ```typescript
-async function logout(): Promise<void>
+async function logout(): Promise<void>;
 ```
 
 #### パラメータ
+
 なし
 
 #### 戻り値
+
 - `void` - 成功時はリダイレクトされるため戻り値なし
 
 #### 処理詳細
+
 1. サーバーサイドSupabaseクライアントを作成
 2. `supabase.auth.signOut()` を呼び出してセッション終了
 3. `/login` へリダイレクト
 
 #### エラーハンドリング
+
 - ログアウト処理は常に成功するべき操作のため、明示的なエラーハンドリングは実装していません
 - リダイレクト失敗時はNext.jsのエラーハンドリング機構が動作します
 
 ## テスト
 
 ### テストファイル
+
 - **ファイル**: `src/features/auth/__tests__/logout-button.test.tsx`
 - **フレームワーク**: Vitest + React Testing Library
 
 ### テストケース
+
 1. **基本レンダリング**
    - ログアウトボタンが正しく表示されること
    - LogoutIconが表示されること

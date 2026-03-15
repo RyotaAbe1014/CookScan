@@ -1,32 +1,32 @@
-'use client'
+"use client";
 
-import { useState, useTransition } from 'react'
-import { login } from '@/features/auth/actions'
-import { isSuccess } from '@/utils/result'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { FormField } from '@/components/ui/form-field'
-import { Alert } from '@/components/ui/alert'
-import { BookIcon } from '@/components/icons/book-icon'
-import { MailIcon } from '@/components/icons/mail-icon'
-import { LockIcon } from '@/components/icons/lock-icon'
-import { LoginIcon } from '@/components/icons/login-icon'
-import { UserAddIcon } from '@/components/icons/user-add-icon'
+import { useState, useTransition } from "react";
+import { login } from "@/features/auth/actions";
+import { isSuccess } from "@/utils/result";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { FormField } from "@/components/ui/form-field";
+import { Alert } from "@/components/ui/alert";
+import { BookIcon } from "@/components/icons/book-icon";
+import { MailIcon } from "@/components/icons/mail-icon";
+import { LockIcon } from "@/components/icons/lock-icon";
+import { LoginIcon } from "@/components/icons/login-icon";
+import { UserAddIcon } from "@/components/icons/user-add-icon";
 
 export const LoginForm = () => {
-  const [isPending, startTransition] = useTransition()
-  const [error, setError] = useState<string | null>(null)
+  const [isPending, startTransition] = useTransition();
+  const [error, setError] = useState<string | null>(null);
 
   const handleLogin = async (formData: FormData) => {
-    setError(null)
+    setError(null);
     startTransition(async () => {
-      const result = await login(formData)
+      const result = await login(formData);
       // 成功時はリダイレクトされるため、失敗時のみエラーを設定
       if (!isSuccess(result)) {
-        setError(result.error.message)
+        setError(result.error.message);
       }
-    })
-  }
+    });
+  };
 
   return (
     <>
@@ -107,7 +107,7 @@ export const LoginForm = () => {
                 className="w-full"
               >
                 {isPending ? (
-                  'ログイン中...'
+                  "ログイン中..."
                 ) : (
                   <>
                     <LoginIcon className="h-4 w-4" />
@@ -134,7 +134,7 @@ export const LoginForm = () => {
                 className="w-full hover:border-primary-light hover:bg-primary-light hover:text-primary-hover"
               >
                 {isPending ? (
-                  '登録中...'
+                  "登録中..."
                 ) : (
                   <>
                     <UserAddIcon className="h-4 w-4" />
@@ -144,7 +144,7 @@ export const LoginForm = () => {
               </Button>
             </div>
           </form>
-        </div >
+        </div>
 
         {/* Footer decoration */}
         <div className="bg-linear-to-r from-primary to-secondary px-8 py-4 sm:px-10">
@@ -161,5 +161,5 @@ export const LoginForm = () => {
         簡単に整理・検索
       </p>
     </>
-  )
-}
+  );
+};

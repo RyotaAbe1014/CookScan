@@ -1,4 +1,4 @@
-import { UserIcon } from '@/components/icons/user-icon'
+import { UserIcon } from "@/components/icons/user-icon";
 
 export function ProfileSetupHeader() {
   return (
@@ -9,14 +9,12 @@ export function ProfileSetupHeader() {
       </div>
 
       {/* タイトル - emerald-600 単色 */}
-      <h1 className="text-3xl font-bold text-primary">
-        プロフィール設定
-      </h1>
+      <h1 className="text-3xl font-bold text-primary">プロフィール設定</h1>
 
       {/* 説明テキスト - neutral-600 */}
       <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
         CookScanへようこそ！まずはプロフィール情報を設定しましょう
       </p>
     </div>
-  )
+  );
 }

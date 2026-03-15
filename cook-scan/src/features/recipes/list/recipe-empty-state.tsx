@@ -1,13 +1,13 @@
-import Link from 'next/link'
-import { EmptyIcon } from '@/components/icons/empty-icon'
-import { CloseIcon } from '@/components/icons/close-icon'
-import { PlusIcon } from '@/components/icons/plus-icon'
+import Link from "next/link";
+import { EmptyIcon } from "@/components/icons/empty-icon";
+import { CloseIcon } from "@/components/icons/close-icon";
+import { PlusIcon } from "@/components/icons/plus-icon";
 
 type RecipeEmptyStateProps = {
-  hasFilters: boolean
-  hasSearchQuery: boolean
-  hasSelectedTags: boolean
-}
+  hasFilters: boolean;
+  hasSearchQuery: boolean;
+  hasSelectedTags: boolean;
+};
 
 export function RecipeEmptyState({
   hasFilters,
@@ -24,10 +24,10 @@ export function RecipeEmptyState({
           <h3 className="mt-6 text-lg font-semibold text-foreground">該当するレシピがありません</h3>
           <p className="mt-2 text-sm text-muted-foreground">
             {hasSearchQuery && hasSelectedTags
-              ? '検索条件とタグに一致するレシピが見つかりませんでした'
+              ? "検索条件とタグに一致するレシピが見つかりませんでした"
               : hasSearchQuery
-                ? '検索条件に一致するレシピが見つかりませんでした'
-                : '選択したタグに一致するレシピが見つかりませんでした'}
+                ? "検索条件に一致するレシピが見つかりませんでした"
+                : "選択したタグに一致するレシピが見つかりませんでした"}
           </p>
           <div className="mt-6">
             <Link
@@ -42,7 +42,9 @@ export function RecipeEmptyState({
       ) : (
         <>
           <h3 className="mt-6 text-lg font-semibold text-foreground">レシピがまだありません</h3>
-          <p className="mt-2 text-sm text-muted-foreground">レシピをスキャンして、マイレシピに追加しましょう</p>
+          <p className="mt-2 text-sm text-muted-foreground">
+            レシピをスキャンして、マイレシピに追加しましょう
+          </p>
           <div className="mt-6">
             <Link
               href="/recipes/upload"
@@ -55,5 +57,5 @@ export function RecipeEmptyState({
         </>
       )}
     </div>
-  )
+  );
 }

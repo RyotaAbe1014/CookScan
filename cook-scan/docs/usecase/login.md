@@ -15,27 +15,32 @@ CookScanアプリケーションのログイン機能は、メールアドレス
 ### 機能詳細
 
 #### 認証方式
+
 - メールアドレスとパスワードによる認証
 - Supabase Authを使用したセキュアな認証処理
 
 #### 入力バリデーション
+
 - メールアドレス形式のバリデーション（Zodスキーマ使用）
 - パスワードの必須チェック
 - サーバーサイドでのバリデーション実行
 
 #### エラーハンドリング
+
 - バリデーションエラーのユーザーフレンドリーな表示
 - Supabaseエラーメッセージの日本語変換
   - `Invalid login credentials` → 「メールアドレスまたはパスワードが正しくありません」
   - その他のエラー → 「ログインに失敗しました。時間をおいて再度お試しください。」
 
 #### UI/UX
+
 - ローディング状態の表示（ボタンが「ログイン中...」に変化）
 - 送信中は入力フィールドとボタンを無効化
 - エラーメッセージはAlertコンポーネントで表示
 - レスポンシブデザイン対応
 
 #### その他
+
 - 新規登録ボタンは現在無効化されている
 
 ### ユーザーフロー
@@ -111,11 +116,13 @@ sequenceDiagram
 ### フロントエンド
 
 #### コンポーネント構成
+
 - **ファイル**: `src/features/auth/login/LoginForm.tsx`
 - **タイプ**: Client Component (`'use client'`)
 - **スタイリング**: Tailwind CSS v4
 
 #### 使用コンポーネント
+
 - `Button` - ログインボタン、新規登録ボタン
 - `Input` - メールアドレス、パスワード入力フィールド
 - `FormField` - フォームフィールドラッパー
@@ -123,41 +130,46 @@ sequenceDiagram
 - アイコン: `BookIcon`, `MailIcon`, `LockIcon`, `LoginIcon`, `UserAddIcon`
 
 #### 状態管理
+
 ```typescript
-const [isPending, startTransition] = useTransition() // 送信中状態
-const [error, setError] = useState<string | null>(null) // エラーメッセージ
+const [isPending, startTransition] = useTransition(); // 送信中状態
+const [error, setError] = useState<string | null>(null); // エラーメッセージ
 ```
 
 #### 主要な処理フロー
+
 ```typescript
 const handleLogin = async (formData: FormData) => {
-  setError(null)
+  setError(null);
   startTransition(async () => {
-    const result = await login(formData)
+    const result = await login(formData);
     // 成功時はリダイレクトされるため、失敗時のみエラーを設定
     if (!isSuccess(result)) {
-      setError(result.error.message)
+      setError(result.error.message);
     }
-  })
-}
+  });
+};
 ```
 
 ### バックエンド
 
 #### Server Action
+
 - **ファイル**: `src/features/auth/actions.ts`
 - **関数**: `login(formData: FormData): Promise<Result<void>>`
 - **ディレクティブ**: `'use server'`
 
 #### バリデーションスキーマ
+
 ```typescript
 const loginSchema = z.object({
-  email: z.string().email('有効なメールアドレスを入力してください'),
-  password: z.string().min(1, 'パスワードを入力してください'),
-})
+  email: z.string().email("有効なメールアドレスを入力してください"),
+  password: z.string().min(1, "パスワードを入力してください"),
+});
 ```
 
 #### 処理フロー
+
 1. Supabaseクライアントの作成
 2. Zodスキーマによる入力バリデーション
 3. Supabase Auth で認証処理
@@ -165,6 +177,7 @@ const loginSchema = z.object({
 5. 成功時のキャッシュ再検証とリダイレクト
 
 #### 使用ライブラリ
+
 - `@supabase/supabase-js` - Supabase Auth
 - `zod` - バリデーション
 - `next/cache` - キャッシュ再検証
@@ -173,16 +186,18 @@ const loginSchema = z.object({
 ### 認証ユーティリティ
 
 #### ファイル
+
 - `src/features/auth/auth-utils.ts`
 
 #### 主要関数
+
 ```typescript
 export async function checkUserProfile(): Promise<{
-  hasAuth: boolean
-  hasProfile: boolean
-  authUser?: User
-  profile?: UserProfile
-}>
+  hasAuth: boolean;
+  hasProfile: boolean;
+  authUser?: User;
+  profile?: UserProfile;
+}>;
 ```
 
 この関数は、ユーザーの認証状態とプロフィールの存在を確認するために使用されます。
@@ -211,6 +226,7 @@ model User {
 ```
 
 #### 関連フィールド
+
 - `authId`: Supabase Authで管理されるユーザーIDとの紐付け
 - `email`: ログイン時に使用するメールアドレス
 - `name`: ユーザー名（プロフィール設定で入力）
@@ -220,25 +236,30 @@ model User {
 ### login (Server Action)
 
 #### 概要
+
 メールアドレスとパスワードを使用してユーザー認証を行う
 
 #### シグネチャ
+
 ```typescript
-async function login(formData: FormData): Promise<Result<void>>
+async function login(formData: FormData): Promise<Result<void>>;
 ```
 
 #### パラメータ
-| 名前 | 型 | 説明 |
-|------|------|------|
+
+| 名前     | 型       | 説明                                    |
+| -------- | -------- | --------------------------------------- |
 | formData | FormData | フォームデータ（email, passwordを含む） |
 
 #### FormDataフィールド
-| フィールド名 | 型 | 必須 | バリデーション |
-|------------|------|------|--------------|
-| email | string | ✓ | メールアドレス形式 |
-| password | string | ✓ | 最低1文字 |
+
+| フィールド名 | 型     | 必須 | バリデーション     |
+| ------------ | ------ | ---- | ------------------ |
+| email        | string | ✓    | メールアドレス形式 |
+| password     | string | ✓    | 最低1文字          |
 
 #### 戻り値
+
 ```typescript
 Result<void> =
   | { success: true }
@@ -246,13 +267,15 @@ Result<void> =
 ```
 
 #### エラーコード
-| コード | メッセージ | 発生条件 |
-|--------|-----------|---------|
-| validation | バリデーションエラーメッセージ | 入力形式が不正 |
-| validation | メールアドレスまたはパスワードが正しくありません | 認証情報が不一致 |
-| server | ログインに失敗しました。時間をおいて再度お試しください。 | その他のサーバーエラー |
+
+| コード     | メッセージ                                               | 発生条件               |
+| ---------- | -------------------------------------------------------- | ---------------------- |
+| validation | バリデーションエラーメッセージ                           | 入力形式が不正         |
+| validation | メールアドレスまたはパスワードが正しくありません         | 認証情報が不一致       |
+| server     | ログインに失敗しました。時間をおいて再度お試しください。 | その他のサーバーエラー |
 
 #### 処理詳細
+
 1. FormDataから email, password を抽出
 2. Zodスキーマでバリデーション
 3. Supabase Auth の `signInWithPassword` を呼び出し
@@ -263,17 +286,21 @@ Result<void> =
 ### logout (Server Action)
 
 #### 概要
+
 現在のユーザーをログアウトさせる
 
 #### シグネチャ
+
 ```typescript
-async function logout(): Promise<void>
+async function logout(): Promise<void>;
 ```
 
 #### パラメータ
+
 なし
 
 #### 処理詳細
+
 1. Supabaseクライアントを作成
 2. `supabase.auth.signOut()` を呼び出し
 3. `/login` へリダイレクト
@@ -281,27 +308,31 @@ async function logout(): Promise<void>
 ### checkUserProfile (ユーティリティ関数)
 
 #### 概要
+
 ユーザーの認証状態とプロフィールの存在を確認する
 
 #### シグネチャ
+
 ```typescript
 async function checkUserProfile(): Promise<{
-  hasAuth: boolean
-  hasProfile: boolean
-  authUser?: User
-  profile?: UserProfile
-}>
+  hasAuth: boolean;
+  hasProfile: boolean;
+  authUser?: User;
+  profile?: UserProfile;
+}>;
 ```
 
 #### 戻り値
-| フィールド | 型 | 説明 |
-|-----------|------|------|
-| hasAuth | boolean | Supabase Authでの認証状態 |
-| hasProfile | boolean | データベースにプロフィールが存在するか |
-| authUser | User \| undefined | Supabase Authユーザー情報 |
-| profile | UserProfile \| undefined | データベース内のプロフィール情報 |
+
+| フィールド | 型                       | 説明                                   |
+| ---------- | ------------------------ | -------------------------------------- |
+| hasAuth    | boolean                  | Supabase Authでの認証状態              |
+| hasProfile | boolean                  | データベースにプロフィールが存在するか |
+| authUser   | User \| undefined        | Supabase Authユーザー情報              |
+| profile    | UserProfile \| undefined | データベース内のプロフィール情報       |
 
 #### 使用例
+
 プロフィール設定が完了しているかを確認し、未完了の場合は設定画面へリダイレクトする処理などで使用されます。
 
 ## セキュリティ

@@ -1,11 +1,11 @@
-import Link from 'next/link'
-import type { Route } from 'next'
-import { CameraIcon } from '@/components/icons/camera-icon'
-import { ChevronRightIcon } from '@/components/icons/chevron-right-icon'
-import { ClipboardListIcon } from '@/components/icons/clipboard-list-icon'
-import { EmptyIcon } from '@/components/icons/empty-icon'
-import { TagIcon } from '@/components/icons/tag-icon'
-import { CalendarIcon } from '@/components/icons/calendar-icon'
+import Link from "next/link";
+import type { Route } from "next";
+import { CameraIcon } from "@/components/icons/camera-icon";
+import { ChevronRightIcon } from "@/components/icons/chevron-right-icon";
+import { ClipboardListIcon } from "@/components/icons/clipboard-list-icon";
+import { EmptyIcon } from "@/components/icons/empty-icon";
+import { TagIcon } from "@/components/icons/tag-icon";
+import { CalendarIcon } from "@/components/icons/calendar-icon";
 
 export function QuickActions() {
   return (
@@ -21,9 +21,9 @@ export function QuickActions() {
           href="/recipes/upload"
           className="group relative block overflow-hidden rounded-2xl bg-primary p-8 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl sm:p-10"
           style={{
-            animation: 'fadeInUp 0.5s ease-out',
-            animationDelay: '0ms',
-            animationFillMode: 'both',
+            animation: "fadeInUp 0.5s ease-out",
+            animationDelay: "0ms",
+            animationFillMode: "both",
           }}
         >
           {/* 背景装飾 */}
@@ -62,9 +62,9 @@ export function QuickActions() {
             href="/recipes"
             className="group relative overflow-hidden rounded-xl bg-white p-6 shadow-md ring-1 ring-border transition-all duration-200 hover:-translate-y-1 hover:shadow-lg"
             style={{
-              animation: 'fadeInUp 0.5s ease-out',
-              animationDelay: '100ms',
-              animationFillMode: 'both',
+              animation: "fadeInUp 0.5s ease-out",
+              animationDelay: "100ms",
+              animationFillMode: "both",
             }}
           >
             <div className="flex items-center gap-4">
@@ -84,9 +84,9 @@ export function QuickActions() {
             href="/shopping-list"
             className="group relative overflow-hidden rounded-xl bg-white p-6 shadow-md ring-1 ring-border transition-all duration-200 hover:-translate-y-1 hover:shadow-lg"
             style={{
-              animation: 'fadeInUp 0.5s ease-out',
-              animationDelay: '150ms',
-              animationFillMode: 'both',
+              animation: "fadeInUp 0.5s ease-out",
+              animationDelay: "150ms",
+              animationFillMode: "both",
             }}
           >
             <div className="flex items-center gap-4">
@@ -103,12 +103,12 @@ export function QuickActions() {
 
           {/* 献立プランナー */}
           <Link
-            href={'/meal-planner' as Route}
+            href={"/meal-planner" as Route}
             className="group relative overflow-hidden rounded-xl bg-white p-6 shadow-md ring-1 ring-border transition-all duration-200 hover:-translate-y-1 hover:shadow-lg"
             style={{
-              animation: 'fadeInUp 0.5s ease-out',
-              animationDelay: '200ms',
-              animationFillMode: 'both',
+              animation: "fadeInUp 0.5s ease-out",
+              animationDelay: "200ms",
+              animationFillMode: "both",
             }}
           >
             <div className="flex items-center gap-4">
@@ -128,9 +128,9 @@ export function QuickActions() {
             href="/tags"
             className="group relative overflow-hidden rounded-xl bg-white p-6 shadow-md ring-1 ring-border transition-all duration-200 hover:-translate-y-1 hover:shadow-lg"
             style={{
-              animation: 'fadeInUp 0.5s ease-out',
-              animationDelay: '200ms',
-              animationFillMode: 'both',
+              animation: "fadeInUp 0.5s ease-out",
+              animationDelay: "200ms",
+              animationFillMode: "both",
             }}
           >
             <div className="flex items-center gap-4">
@@ -147,5 +147,5 @@ export function QuickActions() {
         </div>
       </div>
     </div>
-  )
+  );
 }

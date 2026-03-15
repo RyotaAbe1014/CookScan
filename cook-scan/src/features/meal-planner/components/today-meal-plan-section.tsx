@@ -1,42 +1,39 @@
-import type { Route } from 'next'
-import Link from 'next/link'
-import { CalendarIcon } from '@/components/icons/calendar-icon'
-import { ChevronRightIcon } from '@/components/icons/chevron-right-icon'
-import { PlusIcon } from '@/components/icons/plus-icon'
-import { Card, CardContent } from '@/components/ui/card'
+import type { Route } from "next";
+import Link from "next/link";
+import { CalendarIcon } from "@/components/icons/calendar-icon";
+import { ChevronRightIcon } from "@/components/icons/chevron-right-icon";
+import { PlusIcon } from "@/components/icons/plus-icon";
+import { Card, CardContent } from "@/components/ui/card";
 
-const MAX_VISIBLE_ITEMS = 3
+const MAX_VISIBLE_ITEMS = 3;
 
 export type TodayMealPlanSummaryItem = {
-  id: string
-  title: string
-}
+  id: string;
+  title: string;
+};
 
 export type TodayMealPlanSummary = {
-  weekStart: string
-  plannerHref: Route
-  dateLabel: string
-  items: TodayMealPlanSummaryItem[]
-}
+  weekStart: string;
+  plannerHref: Route;
+  dateLabel: string;
+  items: TodayMealPlanSummaryItem[];
+};
 
 type TodayMealPlanSectionProps = {
-  summary: TodayMealPlanSummary
-}
+  summary: TodayMealPlanSummary;
+};
 
 export function TodayMealPlanSection({ summary }: TodayMealPlanSectionProps) {
-  const visibleItems = summary.items.slice(0, MAX_VISIBLE_ITEMS)
-  const remainingCount = Math.max(summary.items.length - visibleItems.length, 0)
-  const hasItems = summary.items.length > 0
+  const visibleItems = summary.items.slice(0, MAX_VISIBLE_ITEMS);
+  const remainingCount = Math.max(summary.items.length - visibleItems.length, 0);
+  const hasItems = summary.items.length > 0;
 
   return (
     <section aria-labelledby="today-meal-plan-heading" className="space-y-6">
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-3">
           <div className="h-1 w-12 rounded-full bg-primary" />
-          <h2
-            id="today-meal-plan-heading"
-            className="text-2xl font-bold text-foreground"
-          >
+          <h2 id="today-meal-plan-heading" className="text-2xl font-bold text-foreground">
             今日の献立
           </h2>
         </div>
@@ -60,9 +57,7 @@ export function TodayMealPlanSection({ summary }: TodayMealPlanSectionProps) {
             <div className="space-y-1">
               <p className="text-sm font-semibold text-primary">{summary.dateLabel}</p>
               <p className="text-sm text-muted-foreground">
-                {hasItems
-                  ? `今日の献立は${summary.items.length}件です`
-                  : '今日の献立は未登録です'}
+                {hasItems ? `今日の献立は${summary.items.length}件です` : "今日の献立は未登録です"}
               </p>
             </div>
           </div>
@@ -78,17 +73,13 @@ export function TodayMealPlanSection({ summary }: TodayMealPlanSectionProps) {
                     <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary-light text-xs font-bold text-primary">
                       {index + 1}
                     </span>
-                    <span className="text-sm font-medium text-foreground">
-                      {item.title}
-                    </span>
+                    <span className="text-sm font-medium text-foreground">{item.title}</span>
                   </li>
                 ))}
               </ul>
 
               {remainingCount > 0 ? (
-                <p className="text-sm font-medium text-muted-foreground">
-                  他{remainingCount}件
-                </p>
+                <p className="text-sm font-medium text-muted-foreground">他{remainingCount}件</p>
               ) : null}
             </div>
           ) : (
@@ -108,5 +99,5 @@ export function TodayMealPlanSection({ summary }: TodayMealPlanSectionProps) {
         </CardContent>
       </Card>
     </section>
-  )
+  );
 }

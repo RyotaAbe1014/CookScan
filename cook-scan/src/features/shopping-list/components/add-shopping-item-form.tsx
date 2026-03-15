@@ -1,43 +1,46 @@
-'use client'
+"use client";
 
-import { useState, useTransition, useRef } from 'react'
-import { createShoppingItem } from '@/features/shopping-list/actions'
-import { isSuccess } from '@/utils/result'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
-import { PlusIcon } from '@/components/icons/plus-icon'
+import { useState, useTransition, useRef } from "react";
+import { createShoppingItem } from "@/features/shopping-list/actions";
+import { isSuccess } from "@/utils/result";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { PlusIcon } from "@/components/icons/plus-icon";
 
 export function AddShoppingItemForm() {
-  const [name, setName] = useState('')
-  const [memo, setMemo] = useState('')
-  const [showMemo, setShowMemo] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [isPending, startTransition] = useTransition()
-  const inputRef = useRef<HTMLInputElement>(null)
+  const [name, setName] = useState("");
+  const [memo, setMemo] = useState("");
+  const [showMemo, setShowMemo] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [isPending, startTransition] = useTransition();
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    const trimmedName = name.trim()
-    if (!trimmedName) return
+    const trimmedName = name.trim();
+    if (!trimmedName) return;
 
-    setError(null)
+    setError(null);
     startTransition(async () => {
-      const result = await createShoppingItem(trimmedName, memo.trim() || undefined)
+      const result = await createShoppingItem(trimmedName, memo.trim() || undefined);
       if (isSuccess(result)) {
-        setName('')
-        setMemo('')
-        setShowMemo(false)
-        inputRef.current?.focus()
+        setName("");
+        setMemo("");
+        setShowMemo(false);
+        inputRef.current?.focus();
       } else {
-        setError(result.error.message)
+        setError(result.error.message);
       }
-    })
-  }
+    });
+  };
 
   return (
     <div className="mb-6">
-      <form onSubmit={handleSubmit} className="rounded-xl bg-white p-4 shadow-card ring-1 ring-card-border">
+      <form
+        onSubmit={handleSubmit}
+        className="rounded-xl bg-white p-4 shadow-card ring-1 ring-card-border"
+      >
         <div className="flex items-center gap-3">
           <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary-light">
             <PlusIcon className="h-4 w-4 text-primary" />
@@ -87,10 +90,8 @@ export function AddShoppingItemForm() {
           </div>
         )}
 
-        {error && (
-          <p className="mt-2 ml-11 text-xs text-danger">{error}</p>
-        )}
+        {error && <p className="mt-2 ml-11 text-xs text-danger">{error}</p>}
       </form>
     </div>
-  )
+  );
 }

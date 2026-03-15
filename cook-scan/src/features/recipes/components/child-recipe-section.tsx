@@ -1,19 +1,19 @@
-import { Card, CardHeader, CardContent } from '@/components/ui/card'
-import { FolderIcon } from '@/components/icons/folder-icon'
-import { PlusIcon } from '@/components/icons/plus-icon'
-import { ChildRecipeInput, ChildRecipeSelectorDialog } from './child-recipe-input'
-import type { ChildRecipeItem } from './child-recipe-input'
+import { Card, CardHeader, CardContent } from "@/components/ui/card";
+import { FolderIcon } from "@/components/icons/folder-icon";
+import { PlusIcon } from "@/components/icons/plus-icon";
+import { ChildRecipeInput, ChildRecipeSelectorDialog } from "./child-recipe-input";
+import type { ChildRecipeItem } from "./child-recipe-input";
 
 type Props = {
-  childRecipes: ChildRecipeItem[]
-  isDialogOpen: boolean
-  onOpenDialog: () => void
-  onCloseDialog: () => void
-  onAdd: (item: ChildRecipeItem) => void
-  onUpdate: (index: number, field: 'quantity' | 'notes', value: string) => void
-  onRemove: (index: number) => void
-  parentRecipeId?: string
-}
+  childRecipes: ChildRecipeItem[];
+  isDialogOpen: boolean;
+  onOpenDialog: () => void;
+  onCloseDialog: () => void;
+  onAdd: (item: ChildRecipeItem) => void;
+  onUpdate: (index: number, field: "quantity" | "notes", value: string) => void;
+  onRemove: (index: number) => void;
+  parentRecipeId?: string;
+};
 
 export function ChildRecipeSection({
   childRecipes,
@@ -66,8 +66,8 @@ export function ChildRecipeSection({
         onClose={onCloseDialog}
         onAdd={onAdd}
         parentRecipeId={parentRecipeId}
-        existingChildRecipeIds={childRecipes.map(cr => cr.childRecipeId)}
+        existingChildRecipeIds={childRecipes.map((cr) => cr.childRecipeId)}
       />
     </>
-  )
+  );
 }

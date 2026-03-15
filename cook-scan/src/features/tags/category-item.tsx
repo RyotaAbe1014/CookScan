@@ -1,107 +1,105 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { toast } from 'sonner'
-import { updateTagCategory, deleteTagCategory } from './actions'
-import { isSuccess } from '@/utils/result'
-import { TagItem } from './tag-item'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { Card, CardContent } from '@/components/ui/card'
-import { FolderIcon } from '@/components/icons/folder-icon'
-import { BadgeCheckIcon } from '@/components/icons/badge-check-icon'
-import { UserCircleSolidIcon } from '@/components/icons/user-circle-solid-icon'
-import { TagIcon } from '@/components/icons/tag-icon'
-import { PencilIcon } from '@/components/icons/pencil-icon'
-import { TrashIcon } from '@/components/icons/trash-icon'
+import { useState } from "react";
+import { toast } from "sonner";
+import { updateTagCategory, deleteTagCategory } from "./actions";
+import { isSuccess } from "@/utils/result";
+import { TagItem } from "./tag-item";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent } from "@/components/ui/card";
+import { FolderIcon } from "@/components/icons/folder-icon";
+import { BadgeCheckIcon } from "@/components/icons/badge-check-icon";
+import { UserCircleSolidIcon } from "@/components/icons/user-circle-solid-icon";
+import { TagIcon } from "@/components/icons/tag-icon";
+import { PencilIcon } from "@/components/icons/pencil-icon";
+import { TrashIcon } from "@/components/icons/trash-icon";
 
 type Tag = {
-  id: string
-  name: string
-  description: string | null
-  isSystem: boolean
-  userId: string | null
-  recipeTags: { recipeId: string }[]
-}
+  id: string;
+  name: string;
+  description: string | null;
+  isSystem: boolean;
+  userId: string | null;
+  recipeTags: { recipeId: string }[];
+};
 
 type CategoryItemProps = {
   category: {
-    id: string
-    name: string
-    description: string | null
-    isSystem: boolean
-    userId: string | null
-    tags: Tag[]
-  }
-  currentUserId: string
-}
+    id: string;
+    name: string;
+    description: string | null;
+    isSystem: boolean;
+    userId: string | null;
+    tags: Tag[];
+  };
+  currentUserId: string;
+};
 
 export function CategoryItem({ category, currentUserId }: CategoryItemProps) {
-  const [isEditing, setIsEditing] = useState(false)
-  const [editName, setEditName] = useState(category.name)
-  const [editDescription, setEditDescription] = useState(category.description || '')
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isEditing, setIsEditing] = useState(false);
+  const [editName, setEditName] = useState(category.name);
+  const [editDescription, setEditDescription] = useState(category.description || "");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const isUserOwned = category.userId === currentUserId
+  const isUserOwned = category.userId === currentUserId;
 
   const handleEdit = async (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
 
     if (!editName.trim()) {
-      toast.error('カテゴリ名を入力してください')
-      return
+      toast.error("カテゴリ名を入力してください");
+      return;
     }
 
-    setIsSubmitting(true)
+    setIsSubmitting(true);
 
     try {
       const result = await updateTagCategory(
         category.id,
         editName.trim(),
-        editDescription.trim() || undefined
-      )
+        editDescription.trim() || undefined,
+      );
 
       if (isSuccess(result)) {
-        setIsEditing(false)
+        setIsEditing(false);
       } else {
-        toast.error(result.error.message)
+        toast.error(result.error.message);
       }
     } catch {
-      toast.error('カテゴリの更新中にエラーが発生しました')
+      toast.error("カテゴリの更新中にエラーが発生しました");
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
   const handleDelete = async () => {
-    if (
-      !confirm(`カテゴリ「${category.name}」を削除しますか？この操作は取り消せません。`)
-    ) {
-      return
+    if (!confirm(`カテゴリ「${category.name}」を削除しますか？この操作は取り消せません。`)) {
+      return;
     }
 
-    setIsSubmitting(true)
+    setIsSubmitting(true);
 
     try {
-      const result = await deleteTagCategory(category.id)
+      const result = await deleteTagCategory(category.id);
 
       if (!isSuccess(result)) {
-        toast.error(result.error.message)
-        setIsSubmitting(false)
+        toast.error(result.error.message);
+        setIsSubmitting(false);
       }
       // 成功時はページがリロードされるのでローディング状態を維持
     } catch {
-      toast.error('カテゴリの削除中にエラーが発生しました')
-      setIsSubmitting(false)
+      toast.error("カテゴリの削除中にエラーが発生しました");
+      setIsSubmitting(false);
     }
-  }
+  };
 
   const handleCancel = () => {
-    setIsEditing(false)
-    setEditName(category.name)
-    setEditDescription(category.description || '')
-  }
+    setIsEditing(false);
+    setEditName(category.name);
+    setEditDescription(category.description || "");
+  };
 
   return (
     <Card hover>
@@ -146,7 +144,7 @@ export function CategoryItem({ category, currentUserId }: CategoryItemProps) {
 
             <div className="flex gap-2">
               <Button type="submit" isLoading={isSubmitting} size="sm">
-                {isSubmitting ? '保存中...' : '保存'}
+                {isSubmitting ? "保存中..." : "保存"}
               </Button>
               <Button
                 type="button"
@@ -220,16 +218,21 @@ export function CategoryItem({ category, currentUserId }: CategoryItemProps) {
         ) : (
           <div className="flex flex-wrap gap-3">
             {category.tags.map((tag) => {
-              const usageCount = tag.recipeTags.length
-              const isTagUserOwned = tag.userId === currentUserId
+              const usageCount = tag.recipeTags.length;
+              const isTagUserOwned = tag.userId === currentUserId;
 
               return (
-                <TagItem key={tag.id} tag={tag} usageCount={usageCount} isUserOwned={isTagUserOwned} />
-              )
+                <TagItem
+                  key={tag.id}
+                  tag={tag}
+                  usageCount={usageCount}
+                  isUserOwned={isTagUserOwned}
+                />
+              );
             })}
           </div>
         )}
       </CardContent>
     </Card>
-  )
+  );
 }

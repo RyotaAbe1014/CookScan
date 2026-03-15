@@ -1,4 +1,4 @@
-import { SpinnerIcon } from '@/components/icons/spinner-icon'
+import { SpinnerIcon } from "@/components/icons/spinner-icon";
 
 export function PageLoading() {
   return (
@@ -8,5 +8,5 @@ export function PageLoading() {
         <p className="text-sm font-medium text-muted-foreground">読み込み中...</p>
       </div>
     </div>
-  )
+  );
 }

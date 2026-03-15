@@ -1,6 +1,6 @@
-'use client'
+"use client";
 
-import { useSyncExternalStore } from 'react'
+import { useSyncExternalStore } from "react";
 
 /**
  * メディアクエリの状態を監視するカスタムフック
@@ -9,18 +9,18 @@ import { useSyncExternalStore } from 'react'
  */
 export function useMediaQuery(query: string): boolean {
   const subscribe = (callback: () => void) => {
-    const media = window.matchMedia(query)
-    media.addEventListener('change', callback)
-    return () => media.removeEventListener('change', callback)
-  }
+    const media = window.matchMedia(query);
+    media.addEventListener("change", callback);
+    return () => media.removeEventListener("change", callback);
+  };
 
   const getSnapshot = () => {
-    return window.matchMedia(query).matches
-  }
+    return window.matchMedia(query).matches;
+  };
 
-  const getServerSnapshot = () => false
+  const getServerSnapshot = () => false;
 
-  return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot)
+  return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 }
 
 /**
@@ -29,5 +29,5 @@ export function useMediaQuery(query: string): boolean {
  * @returns モバイルデバイスの場合 true
  */
 export function useIsMobile(): boolean {
-  return !useMediaQuery('(min-width: 640px)')
+  return !useMediaQuery("(min-width: 640px)");
 }

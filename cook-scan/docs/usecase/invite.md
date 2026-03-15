@@ -14,6 +14,7 @@
 ### 機能詳細
 
 #### 招待メール送信
+
 - ログイン中のユーザーがメールアドレスを入力して招待メールを送信する
 - 招待は1件ずつ送信する（複数同時送信は不可）
 - 同じメールアドレスへの再送信が可能
@@ -21,10 +22,12 @@
 - 招待履歴の一覧表示はない
 
 #### 招待メールの内容
+
 - サインアップ用リンクが含まれる
 - リンク先: `/auth/confirm`（トークン検証後、パスワード設定ページへリダイレクト）
 
 #### UI/UX
+
 - プロフィール編集画面の下部に招待フォームを配置
 - メールアドレス入力フィールドと送信ボタンで構成
 - 送信成功時: 成功トースト表示、フォームリセット
@@ -118,48 +121,57 @@ sequenceDiagram
 ### フロントエンド
 
 #### コンポーネント構成
+
 - **ファイル**: `src/features/profile/invite/invite-user-form.tsx`
 - **タイプ**: Client Component（`'use client'`）
 - **スタイリング**: Tailwind CSS
 
 #### 使用コンポーネント
+
 - `Input` - メールアドレス入力フィールド
 - `Button` - 送信ボタン
 - `toast` - 成功/エラー通知
 
 #### 配置場所
+
 - `src/features/profile/edit/profile-edit-form.tsx` のプロフィール編集画面下部に配置
 
 ### バックエンド
 
 #### Server Action
+
 - **ファイル**: `src/features/profile/invite/actions.ts`
 - **関数**: `inviteUser(email: string): Promise<Result<void>>`
 - **ディレクティブ**: `'use server'`
 
 #### バリデーションスキーマ
+
 ```typescript
 const inviteSchema = z.object({
   email: z.string().email(),
-})
+});
 ```
 
 #### 処理フロー
+
 1. Zodスキーマでメールアドレスをバリデーション
 2. Supabase Admin API `inviteUserByEmail` を呼び出し
 3. リダイレクト先を `${NEXT_PUBLIC_APP_URL}/auth/confirm` に設定
 4. 成功/失敗をResult型で返却
 
 #### 使用ライブラリ
+
 - `zod` - 入力バリデーション
 - `@supabase/supabase-js` - Supabase Admin Client
 
 ### 認証確認ルート
 
 #### ファイル
+
 - `src/app/auth/confirm/route.ts`
 
 #### 処理フロー
+
 1. クエリパラメータから `token_hash` と `type` を取得
 2. `supabase.auth.verifyOtp()` でOTP検証
 3. `type === 'invite'` の場合、`/password/setup` へリダイレクト
@@ -187,19 +199,23 @@ model User {
 ### inviteUser (Server Action)
 
 #### 概要
+
 指定されたメールアドレスに招待メールを送信する
 
 #### シグネチャ
+
 ```typescript
-async function inviteUser(email: string): Promise<Result<void>>
+async function inviteUser(email: string): Promise<Result<void>>;
 ```
 
 #### パラメータ
-| 名前 | 型 | 説明 |
-|------|------|------|
+
+| 名前  | 型     | 説明                   |
+| ----- | ------ | ---------------------- |
 | email | string | 招待先のメールアドレス |
 
 #### 戻り値
+
 ```typescript
 type Result<void> =
   | { ok: true; data: void }
@@ -207,18 +223,21 @@ type Result<void> =
 ```
 
 #### エラーコード
-| コード | メッセージ | 発生条件 |
-|--------|-----------|---------|
-| VALIDATION_ERROR | バリデーションエラーメッセージ | メールアドレスの形式が不正 |
-| SERVER_ERROR | Supabaseエラーメッセージ | Supabase APIの呼び出しに失敗 |
+
+| コード           | メッセージ                     | 発生条件                     |
+| ---------------- | ------------------------------ | ---------------------------- |
+| VALIDATION_ERROR | バリデーションエラーメッセージ | メールアドレスの形式が不正   |
+| SERVER_ERROR     | Supabaseエラーメッセージ       | Supabase APIの呼び出しに失敗 |
 
 ## テスト
 
 ### テストファイル
+
 - **ファイル**: `src/features/profile/invite/__tests__/invite-user-form.test.tsx`
 - **フレームワーク**: Vitest + React Testing Library
 
 ### テストケース
+
 1. **有効なメールアドレスで招待を送信できる**
    - 正しいメールアドレスを入力して送信し、成功トーストが表示されることを検証
 

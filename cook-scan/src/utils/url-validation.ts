@@ -5,15 +5,15 @@
  */
 export function isValidHttpUrl(url: string | null | undefined): boolean {
   if (!url) {
-    return false
+    return false;
   }
 
   try {
-    const parsedUrl = new URL(url)
-    return parsedUrl.protocol === 'http:' || parsedUrl.protocol === 'https:'
+    const parsedUrl = new URL(url);
+    return parsedUrl.protocol === "http:" || parsedUrl.protocol === "https:";
   } catch {
     // 無効なURL形式
-    return false
+    return false;
   }
 }
 
@@ -24,8 +24,8 @@ export function isValidHttpUrl(url: string | null | undefined): boolean {
  */
 export function sanitizeUrl(url: string | null | undefined): string | null {
   if (!url) {
-    return null
+    return null;
   }
 
-  return isValidHttpUrl(url) ? url : null
+  return isValidHttpUrl(url) ? url : null;
 }

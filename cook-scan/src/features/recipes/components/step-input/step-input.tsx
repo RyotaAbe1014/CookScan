@@ -1,18 +1,12 @@
-'use client'
+"use client";
 
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { TrashIcon } from '@/components/icons/trash-icon'
-import { ClockIcon } from '@/components/icons/clock-icon'
-import type { StepInputProps } from './types'
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { TrashIcon } from "@/components/icons/trash-icon";
+import { ClockIcon } from "@/components/icons/clock-icon";
+import type { StepInputProps } from "./types";
 
-export function StepInput({
-  step,
-  index,
-  canDelete,
-  onUpdate,
-  onRemove,
-}: StepInputProps) {
+export function StepInput({ step, index, canDelete, onUpdate, onRemove }: StepInputProps) {
   return (
     <div className="group flex gap-3 rounded-lg bg-linear-to-r from-section-header to-white p-4 ring-1 ring-section-header-border transition-all hover:shadow-md">
       <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-linear-to-br from-accent-steps to-accent-steps text-base font-bold text-white shadow-md">
@@ -22,7 +16,7 @@ export function StepInput({
         <Textarea
           placeholder="手順の説明"
           value={step.instruction}
-          onChange={(e) => onUpdate(index, 'instruction', e.target.value)}
+          onChange={(e) => onUpdate(index, "instruction", e.target.value)}
           rows={2}
           variant="blue"
         />
@@ -31,8 +25,8 @@ export function StepInput({
           <Input
             type="number"
             placeholder="タイマー（秒）"
-            value={step.timerSeconds ?? ''}
-            onChange={(e) => onUpdate(index, 'timerSeconds', e.target.value)}
+            value={step.timerSeconds ?? ""}
+            onChange={(e) => onUpdate(index, "timerSeconds", e.target.value)}
             size="sm"
             className="w-28"
           />
@@ -49,5 +43,5 @@ export function StepInput({
         <TrashIcon className="h-5 w-5" stroke="currentColor" />
       </button>
     </div>
-  )
+  );
 }

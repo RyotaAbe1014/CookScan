@@ -1,70 +1,70 @@
-'use client'
+"use client";
 
-import { useState } from "react"
-import type { ExtractedRecipeData, ExtractResponse } from "./types"
-import { Textarea } from "@/components/ui/textarea"
-import { Button } from "@/components/ui/button"
-import { Alert } from "@/components/ui/alert"
-import { DocumentTextIcon } from '@/components/icons/document-text-icon'
-import { CheckCircleSolidIcon } from '@/components/icons/check-circle-solid-icon'
-import { ExclamationTriangleSolidIcon } from '@/components/icons/exclamation-triangle-solid-icon'
-import { InfoCircleIcon } from '@/components/icons/info-circle-icon'
-import { InfoSolidIcon } from '@/components/icons/info-solid-icon'
-import { LightningBoltIcon } from '@/components/icons/lightning-bolt-icon'
+import { useState } from "react";
+import type { ExtractedRecipeData, ExtractResponse } from "./types";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { Alert } from "@/components/ui/alert";
+import { DocumentTextIcon } from "@/components/icons/document-text-icon";
+import { CheckCircleSolidIcon } from "@/components/icons/check-circle-solid-icon";
+import { ExclamationTriangleSolidIcon } from "@/components/icons/exclamation-triangle-solid-icon";
+import { InfoCircleIcon } from "@/components/icons/info-circle-icon";
+import { InfoSolidIcon } from "@/components/icons/info-solid-icon";
+import { LightningBoltIcon } from "@/components/icons/lightning-bolt-icon";
 
 type Props = {
-  handleTextInput: (extractedData: ExtractedRecipeData) => void
-}
+  handleTextInput: (extractedData: ExtractedRecipeData) => void;
+};
 
 export const TextInput = ({ handleTextInput }: Props) => {
-  const [text, setText] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const [text, setText] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setText(e.target.value)
-    if (error) setError(null)
-  }
+    setText(e.target.value);
+    if (error) setError(null);
+  };
 
   const handleSubmit = async () => {
     if (!text.trim()) {
-      setError('テキストを入力してください')
-      return
+      setError("テキストを入力してください");
+      return;
     }
 
-    setIsLoading(true)
-    setError(null)
+    setIsLoading(true);
+    setError(null);
 
     try {
-      const res = await fetch('/api/recipes/extract/text', {
-        method: 'POST',
+      const res = await fetch("/api/recipes/extract/text", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ text }),
-      })
+      });
       const data: ExtractResponse = await res.json().catch(() => ({
-        status: 'error' as const,
-        error: 'アップロードに失敗しました'
-      }))
+        status: "error" as const,
+        error: "アップロードに失敗しました",
+      }));
 
-      if (data.status === 'success') {
-        handleTextInput(data.result)
-        setText('')
-      } else if (data.status === 'error') {
-        setError(data.error)
+      if (data.status === "success") {
+        handleTextInput(data.result);
+        setText("");
+      } else if (data.status === "error") {
+        setError(data.error);
       }
     } catch (e) {
-      console.error(e)
-      setError('ネットワークエラーが発生しました。もう一度お試しください。')
+      console.error(e);
+      setError("ネットワークエラーが発生しました。もう一度お試しください。");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
-  const charCount = text.length
-  const minChars = 20
-  const isValid = charCount >= minChars
+  const charCount = text.length;
+  const minChars = 20;
+  const isValid = charCount >= minChars;
 
   return (
     <div className="mx-auto max-w-2xl">
@@ -93,10 +93,13 @@ export const TextInput = ({ handleTextInput }: Props) => {
               <span className="text-sm font-semibold text-foreground">レシピテキスト</span>
             </div>
             {charCount > 0 && (
-              <div className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold shadow-sm transition-all ${isValid
-                  ? 'bg-success-light text-success ring-1 ring-success'
-                  : 'bg-warning-light text-warning ring-1 ring-warning'
-                }`}>
+              <div
+                className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold shadow-sm transition-all ${
+                  isValid
+                    ? "bg-success-light text-success ring-1 ring-success"
+                    : "bg-warning-light text-warning ring-1 ring-warning"
+                }`}
+              >
                 <span>{charCount}文字</span>
                 {isValid ? (
                   <CheckCircleSolidIcon className="h-3.5 w-3.5" />
@@ -146,9 +149,7 @@ export const TextInput = ({ handleTextInput }: Props) => {
             </div>
 
             {/* エラー表示 */}
-            {error && (
-              <Alert variant="error">{error}</Alert>
-            )}
+            {error && <Alert variant="error">{error}</Alert>}
 
             {/* アクションボタン */}
             <div className="flex justify-end">
@@ -158,15 +159,13 @@ export const TextInput = ({ handleTextInput }: Props) => {
                 isLoading={isLoading}
                 size="lg"
               >
-                {!isLoading && (
-                  <LightningBoltIcon className="h-5 w-5" />
-                )}
-                {isLoading ? '変換中...' : 'レシピを生成'}
+                {!isLoading && <LightningBoltIcon className="h-5 w-5" />}
+                {isLoading ? "変換中..." : "レシピを生成"}
               </Button>
             </div>
           </div>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};

@@ -1,29 +1,29 @@
-'use client'
+"use client";
 
-import { useState, useMemo, useTransition } from 'react'
+import { useState, useMemo, useTransition } from "react";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogDescription,
-} from '@/components/ui/dialog'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
-import { SearchIcon } from '@/components/icons/search-icon'
-import { isSuccess } from '@/utils/result'
-import { addMealPlanItem } from '../actions'
-import { DAY_LABELS } from '../utils'
-import type { RecipeListOutput } from '@/backend/domain/recipes'
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { SearchIcon } from "@/components/icons/search-icon";
+import { isSuccess } from "@/utils/result";
+import { addMealPlanItem } from "../actions";
+import { DAY_LABELS } from "../utils";
+import type { RecipeListOutput } from "@/backend/domain/recipes";
 
 type AddRecipeDialogProps = {
-  open: boolean
-  onOpenChange: (open: boolean) => void
-  dayOfWeek: number | null
-  weekStart: string
-  recipes: RecipeListOutput[]
-  onItemAdded: () => void
-}
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  dayOfWeek: number | null;
+  weekStart: string;
+  recipes: RecipeListOutput[];
+  onItemAdded: () => void;
+};
 
 export function AddRecipeDialog({
   open,
@@ -33,25 +33,25 @@ export function AddRecipeDialog({
   recipes,
   onItemAdded,
 }: AddRecipeDialogProps) {
-  const [search, setSearch] = useState('')
-  const [isPending, startTransition] = useTransition()
+  const [search, setSearch] = useState("");
+  const [isPending, startTransition] = useTransition();
 
   const filtered = useMemo(() => {
-    const query = search.toLowerCase()
-    return recipes.filter((r) => r.title.toLowerCase().includes(query))
-  }, [recipes, search])
+    const query = search.toLowerCase();
+    return recipes.filter((r) => r.title.toLowerCase().includes(query));
+  }, [recipes, search]);
 
   function handleSelect(recipeId: string) {
-    if (dayOfWeek === null) return
+    if (dayOfWeek === null) return;
 
     startTransition(async () => {
-      const result = await addMealPlanItem(weekStart, dayOfWeek, recipeId)
+      const result = await addMealPlanItem(weekStart, dayOfWeek, recipeId);
       if (isSuccess(result)) {
-        onItemAdded()
-        onOpenChange(false)
-        setSearch('')
+        onItemAdded();
+        onOpenChange(false);
+        setSearch("");
       }
-    })
+    });
   }
 
   return (
@@ -101,5 +101,5 @@ export function AddRecipeDialog({
         </div>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

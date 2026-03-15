@@ -1,10 +1,10 @@
-import Link from 'next/link'
-import { BookOpenIcon } from '@/components/icons/book-open-icon'
-import { PlusIcon } from '@/components/icons/plus-icon'
+import Link from "next/link";
+import { BookOpenIcon } from "@/components/icons/book-open-icon";
+import { PlusIcon } from "@/components/icons/plus-icon";
 
 type RecipeStatsBarProps = {
-  recipeCount: number
-}
+  recipeCount: number;
+};
 
 export function RecipeStatsBar({ recipeCount }: RecipeStatsBarProps) {
   return (
@@ -26,5 +26,5 @@ export function RecipeStatsBar({ recipeCount }: RecipeStatsBarProps) {
         レシピをスキャン
       </Link>
     </div>
-  )
+  );
 }

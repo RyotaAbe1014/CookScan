@@ -1,25 +1,23 @@
-import { Card, CardHeader, CardContent } from '@/components/ui/card'
-import type { RecipeTag } from '@/types/recipe'
-import { groupTagsByCategory } from './utils'
-import { TagIcon } from '@/components/icons/tag-icon'
+import { Card, CardHeader, CardContent } from "@/components/ui/card";
+import type { RecipeTag } from "@/types/recipe";
+import { groupTagsByCategory } from "./utils";
+import { TagIcon } from "@/components/icons/tag-icon";
 
 type RecipeTagsSectionProps = {
-  recipeTags: RecipeTag[]
-}
+  recipeTags: RecipeTag[];
+};
 
 export function RecipeTagsSection({ recipeTags }: RecipeTagsSectionProps) {
   if (recipeTags.length === 0) {
-    return null
+    return null;
   }
 
-  const tagsByCategory = groupTagsByCategory(recipeTags)
+  const tagsByCategory = groupTagsByCategory(recipeTags);
 
   return (
     <Card className="mb-6">
       <CardHeader
-        icon={
-          <TagIcon className="h-5 w-5 text-white" />
-        }
+        icon={<TagIcon className="h-5 w-5 text-white" />}
         iconColor="accent-tags"
         title="タグ"
       />
@@ -47,5 +45,5 @@ export function RecipeTagsSection({ recipeTags }: RecipeTagsSectionProps) {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

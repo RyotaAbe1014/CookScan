@@ -1,5 +1,5 @@
-import Link from 'next/link'
-import { ChevronLeftIcon } from '@/components/icons/chevron-left-icon'
+import Link from "next/link";
+import { ChevronLeftIcon } from "@/components/icons/chevron-left-icon";
 
 export function BackToRecipesLink() {
   return (
@@ -10,5 +10,5 @@ export function BackToRecipesLink() {
       <ChevronLeftIcon className="h-4 w-4" />
       <span className="hidden sm:inline">マイレシピに戻る</span>
     </Link>
-  )
+  );
 }

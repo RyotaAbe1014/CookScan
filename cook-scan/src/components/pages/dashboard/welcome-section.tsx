@@ -1,14 +1,14 @@
 type Profile = {
-  name: string | null
-  email: string
-}
+  name: string | null;
+  email: string;
+};
 
 type WelcomeSectionProps = {
-  profile: Profile
-}
+  profile: Profile;
+};
 
 export function WelcomeSection({ profile }: WelcomeSectionProps) {
-  const displayName = profile.name || 'ゲスト'
+  const displayName = profile.name || "ゲスト";
 
   return (
     <div className="mb-8">
@@ -17,5 +17,5 @@ export function WelcomeSection({ profile }: WelcomeSectionProps) {
       </h2>
       <p className="mt-1 text-muted-foreground">今日は何を料理しますか？</p>
     </div>
-  )
+  );
 }
