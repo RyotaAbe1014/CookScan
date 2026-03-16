@@ -77,6 +77,7 @@ async function validateAndCreateChildRecipeRelations(
 
   for (const childRecipe of childRecipes) {
     const isCircular = await RecipeRelationRepository.checkCircularReference(
+      tx,
       parentRecipeId,
       childRecipe.childRecipeId
     )

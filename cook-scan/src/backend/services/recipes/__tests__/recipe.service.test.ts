@@ -285,6 +285,7 @@ describe('recipe.service', () => {
         ['child-1']
       )
       expect(RecipeRelationRepository.checkCircularReference).toHaveBeenCalledWith(
+        mockTx,
         'recipe-new',
         'child-1'
       )

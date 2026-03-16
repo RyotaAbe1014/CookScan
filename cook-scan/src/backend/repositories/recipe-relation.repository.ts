@@ -83,6 +83,7 @@ export async function validateChildRecipeOwnership(
  * parentRecipeId -> childRecipeId を追加した場合に循環が生じるかを検出
  */
 export async function checkCircularReference(
+  tx: Prisma.TransactionClient,
   parentRecipeId: string,
   childRecipeId: string
 ): Promise<boolean> {
@@ -98,7 +99,7 @@ export async function checkCircularReference(
     if (visited.has(currentId)) continue
     visited.add(currentId)
 
-    const children = await prisma.recipeRelation.findMany({
+    const children = await tx.recipeRelation.findMany({
       where: { parentRecipeId: currentId },
       select: { childRecipeId: true },
     })
