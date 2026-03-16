@@ -3,5 +3,5 @@
  */
 
 export type InviteFormData = {
-  email: string
-}
+  email: string;
+};

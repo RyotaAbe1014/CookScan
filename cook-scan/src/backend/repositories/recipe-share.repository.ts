@@ -3,8 +3,8 @@
  * レシピ共有のPrismaクエリ
  */
 
-import { prisma } from '@/lib/prisma'
-import type { SharedRecipeOutput, ShareInfoOutput } from '@/backend/domain/recipes'
+import { prisma } from "@/lib/prisma";
+import type { SharedRecipeOutput, ShareInfoOutput } from "@/backend/domain/recipes";
 
 /**
  * 共有トークンからレシピを取得（基本情報のみ）
@@ -16,26 +16,26 @@ export async function findByShareToken(shareToken: string): Promise<SharedRecipe
       recipe: {
         include: {
           ingredients: {
-            orderBy: { createdAt: 'asc' },
+            orderBy: { createdAt: "asc" },
             select: { name: true, unit: true, notes: true },
           },
           steps: {
-            orderBy: { orderIndex: 'asc' },
+            orderBy: { orderIndex: "asc" },
             select: { orderIndex: true, instruction: true, timerSeconds: true },
           },
         },
       },
     },
-  })
+  });
 
-  if (!share) return null
+  if (!share) return null;
 
   return {
     title: share.recipe.title,
     imageUrl: share.recipe.imageUrl,
     ingredients: share.recipe.ingredients,
     steps: share.recipe.steps,
-  }
+  };
 }
 
 /**
@@ -45,9 +45,9 @@ export async function findByRecipeId(recipeId: string): Promise<ShareInfoOutput 
   const share = await prisma.recipeShare.findUnique({
     where: { recipeId },
     select: { shareToken: true, isActive: true },
-  })
+  });
 
-  return share
+  return share;
 }
 
 /**
@@ -57,9 +57,9 @@ export async function create(recipeId: string, shareToken: string): Promise<Shar
   const share = await prisma.recipeShare.create({
     data: { recipeId, shareToken },
     select: { shareToken: true, isActive: true },
-  })
+  });
 
-  return share
+  return share;
 }
 
 /**
@@ -69,7 +69,7 @@ export async function deactivate(recipeId: string): Promise<void> {
   await prisma.recipeShare.update({
     where: { recipeId },
     data: { isActive: false },
-  })
+  });
 }
 
 /**
@@ -80,7 +80,7 @@ export async function activate(recipeId: string): Promise<ShareInfoOutput> {
     where: { recipeId },
     data: { isActive: true },
     select: { shareToken: true, isActive: true },
-  })
+  });
 
-  return share
+  return share;
 }

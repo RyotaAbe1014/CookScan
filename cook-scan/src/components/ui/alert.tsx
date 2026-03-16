@@ -1,60 +1,60 @@
-import { type HTMLAttributes, forwardRef } from 'react'
-import { cva, type VariantProps } from 'class-variance-authority'
-import { cn } from '@/lib/tailwind'
-import { XCircleIcon } from '@/components/icons/x-circle-icon'
-import { CheckCircleIcon } from '@/components/icons/check-circle-icon'
-import { WarningIcon } from '@/components/icons/warning-icon'
-import { InfoSolidIcon } from '@/components/icons/info-solid-icon'
+import { type HTMLAttributes, forwardRef } from "react";
+import { cva, type VariantProps } from "class-variance-authority";
+import { cn } from "@/lib/tailwind";
+import { XCircleIcon } from "@/components/icons/x-circle-icon";
+import { CheckCircleIcon } from "@/components/icons/check-circle-icon";
+import { WarningIcon } from "@/components/icons/warning-icon";
+import { InfoSolidIcon } from "@/components/icons/info-solid-icon";
 
 const alertVariants = cva(
   // 共通スタイル - デザインシステムに準拠
-  'flex items-start gap-3 rounded-lg p-4 ring-1 transition-colors duration-150',
+  "flex items-start gap-3 rounded-lg p-4 ring-1 transition-colors duration-150",
   {
     variants: {
       variant: {
         // エラー: red系
-        error: 'bg-danger-light ring-danger-light',
+        error: "bg-danger-light ring-danger-light",
         // 成功: green系
-        success: 'bg-success-light ring-success-light',
+        success: "bg-success-light ring-success-light",
         // 警告: amber系
-        warning: 'bg-warning-light ring-warning-light',
+        warning: "bg-warning-light ring-warning-light",
         // 情報: blue系
-        info: 'bg-blue-50 ring-blue-200',
+        info: "bg-blue-50 ring-blue-200",
       },
     },
     defaultVariants: {
-      variant: 'info',
+      variant: "info",
     },
-  }
-)
+  },
+);
 
-const alertIconVariants = cva('h-5 w-5 shrink-0', {
+const alertIconVariants = cva("h-5 w-5 shrink-0", {
   variants: {
     variant: {
-      error: 'text-danger',
-      success: 'text-success',
-      warning: 'text-warning',
-      info: 'text-blue-600',
+      error: "text-danger",
+      success: "text-success",
+      warning: "text-warning",
+      info: "text-blue-600",
     },
   },
   defaultVariants: {
-    variant: 'info',
+    variant: "info",
   },
-})
+});
 
-const alertTextVariants = cva('text-sm font-medium', {
+const alertTextVariants = cva("text-sm font-medium", {
   variants: {
     variant: {
-      error: 'text-danger-hover',
-      success: 'text-green-800',
-      warning: 'text-amber-800',
-      info: 'text-blue-800',
+      error: "text-danger-hover",
+      success: "text-green-800",
+      warning: "text-amber-800",
+      info: "text-blue-800",
     },
   },
   defaultVariants: {
-    variant: 'info',
+    variant: "info",
   },
-})
+});
 
 // SVG アイコンコンポーネント
 const AlertIcons = {
@@ -62,25 +62,20 @@ const AlertIcons = {
   success: <CheckCircleIcon />,
   warning: <WarningIcon />,
   info: <InfoSolidIcon />,
-}
+};
 
 type AlertProps = HTMLAttributes<HTMLDivElement> &
   VariantProps<typeof alertVariants> & {
     /** アイコンを非表示にする */
-    hideIcon?: boolean
-  }
+    hideIcon?: boolean;
+  };
 
 const Alert = forwardRef<HTMLDivElement, AlertProps>(
   ({ className, variant, hideIcon, children, ...props }, ref) => {
-    const iconVariant = variant || 'info'
+    const iconVariant = variant || "info";
 
     return (
-      <div
-        className={cn(alertVariants({ variant, className }))}
-        ref={ref}
-        role="alert"
-        {...props}
-      >
+      <div className={cn(alertVariants({ variant, className }))} ref={ref} role="alert" {...props}>
         {!hideIcon && (
           <span className={cn(alertIconVariants({ variant: iconVariant }))}>
             {AlertIcons[iconVariant]}
@@ -88,9 +83,9 @@ const Alert = forwardRef<HTMLDivElement, AlertProps>(
         )}
         <p className={cn(alertTextVariants({ variant: iconVariant }))}>{children}</p>
       </div>
-    )
-  }
-)
-Alert.displayName = 'Alert'
+    );
+  },
+);
+Alert.displayName = "Alert";
 
-export { Alert }
+export { Alert };

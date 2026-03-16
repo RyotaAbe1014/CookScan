@@ -15,6 +15,7 @@ CookScanアプリケーションのレシピ手動作成機能は、ユーザー
 ### 機能詳細
 
 #### 基本情報入力
+
 - レシピタイトル（必須）
 - ソース情報（すべて任意）
   - 本の名前
@@ -23,29 +24,34 @@ CookScanアプリケーションのレシピ手動作成機能は、ユーザー
 - メモ（任意、テキストエリア）
 
 #### タグ選択
+
 - カテゴリ別にグループ化されたタグをチェックボックス形式で複数選択可能
 - 選択されたタグは視覚的にハイライト表示（緑背景＋チェックアイコン）
 - システムタグとユーザー作成タグの両方が表示される
 
 #### 材料入力
+
 - 材料名（必須）、分量（任意）、メモ（任意）の3フィールド
 - 動的に追加・削除が可能（最低1つは必須）
 - 1つしかない場合は削除ボタンが無効化される
 - デスクトップとモバイルでレスポンシブなレイアウト
 
 #### サブレシピ入力
+
 - ダイアログから既存レシピを検索・選択して追加
 - 分量（任意、最大100文字）とメモ（任意、最大500文字）を設定可能
 - 循環参照チェック・自己参照チェック機能あり
 - サブレシピ未追加の場合は「サブレシピが追加されていません」と表示
 
 #### 調理手順入力
+
 - 手順の説明（必須、テキストエリア）とタイマー秒数（任意、数値）
 - 手順番号は自動採番（orderIndex管理）
 - 動的に追加・削除が可能（最低1つは必須）
 - 削除時にorderIndexを自動再調整
 
 #### UI/UX
+
 - レスポンシブデザイン対応（デスクトップ・モバイル）
 - タイトル未入力時は保存ボタンが無効化される
 - 送信中はローディング状態を表示
@@ -54,6 +60,7 @@ CookScanアプリケーションのレシピ手動作成機能は、ユーザー
 - 画像アップロード・テキスト入力からの抽出データがある場合は初期値として反映
 
 #### その他
+
 - OCR・テキスト入力からの抽出データを初期値として受け取り可能（`extractedData` props）
 - アップロード画像がある場合は画像プレビューを表示
 
@@ -153,11 +160,13 @@ sequenceDiagram
 ### フロントエンド
 
 #### コンポーネント構成
+
 - **ファイル**: `src/features/recipes/upload/recipe-form.tsx`
 - **タイプ**: Client Component (`'use client'`)
 - **スタイリング**: Tailwind CSS v4
 
 #### 使用コンポーネント
+
 - `Input` - テキスト入力フィールド
 - `Textarea` - テキストエリア（メモ、手順の説明）
 - `Card`, `CardHeader`, `CardContent` - セクションレイアウト
@@ -170,6 +179,7 @@ sequenceDiagram
 - アイコン: `CameraIcon`, `InfoCircleIcon`, `TagIcon`, `BookOpenIcon`, `DocumentIcon`, `LinkIcon`, `DocumentTextIcon`, `CheckSolidIcon`, `BeakerIcon`, `PlusIcon`, `ClipboardListIcon`, `FolderIcon`
 
 #### 状態管理
+
 ```typescript
 // RecipeForm コンポーネント
 const [isSubmitting, setIsSubmitting] = useState(false) // 送信中状態
@@ -193,80 +203,94 @@ const {
 ```
 
 #### 主要な処理フロー
+
 ```typescript
 const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault()
-  setError(null)
-  setIsSubmitting(true)
+  e.preventDefault();
+  setError(null);
+  setIsSubmitting(true);
 
   try {
     const result = await createRecipe({
       title,
-      sourceInfo: sourceInfo.bookName || sourceInfo.pageNumber || sourceInfo.url
-        ? sourceInfo : null,
+      sourceInfo:
+        sourceInfo.bookName || sourceInfo.pageNumber || sourceInfo.url ? sourceInfo : null,
       ingredients,
       steps,
       memo,
       tags: selectedTagIds,
-      childRecipes: childRecipes.map(cr => ({
+      childRecipes: childRecipes.map((cr) => ({
         childRecipeId: cr.childRecipeId,
         quantity: cr.quantity || undefined,
         notes: cr.notes || undefined,
       })),
-    })
+    });
 
     if (isSuccess(result)) {
-      router.push(`/recipes/${result.data.recipeId}`)
+      router.push(`/recipes/${result.data.recipeId}`);
     } else {
-      setError(result.error.message)
-      setIsSubmitting(false)
+      setError(result.error.message);
+      setIsSubmitting(false);
     }
   } catch (err) {
-    setError('エラーが発生しました')
-    setIsSubmitting(false)
+    setError("エラーが発生しました");
+    setIsSubmitting(false);
   }
-}
+};
 ```
 
 ### バックエンド
 
 #### Server Action
+
 - **ファイル**: `src/features/recipes/upload/actions.ts`
 - **関数**: `createRecipe(request: CreateRecipeRequest): Promise<Result<{ recipeId: string }>>`
 - **ディレクティブ**: `'use server'`
 
 #### バリデーションスキーマ
+
 ```typescript
 // src/backend/domain/recipes/validators.ts
 
 export const createRecipeInputSchema = z.object({
-  title: z.string().min(1, 'タイトルを入力してください'),
-  sourceInfo: z.object({
-    bookName: z.string().optional(),
-    pageNumber: z.string().optional(),
-    url: z.string().optional(),
-  }).nullable(),
-  ingredients: z.array(z.object({
-    name: z.string().min(1, '材料名を入力してください'),
-    unit: z.string().optional(),
-    notes: z.string().optional(),
-  })),
-  steps: z.array(z.object({
-    instruction: z.string().min(1, '手順を入力してください'),
-    timerSeconds: z.number().optional(),
-    orderIndex: z.number().optional(),
-  })),
+  title: z.string().min(1, "タイトルを入力してください"),
+  sourceInfo: z
+    .object({
+      bookName: z.string().optional(),
+      pageNumber: z.string().optional(),
+      url: z.string().optional(),
+    })
+    .nullable(),
+  ingredients: z.array(
+    z.object({
+      name: z.string().min(1, "材料名を入力してください"),
+      unit: z.string().optional(),
+      notes: z.string().optional(),
+    }),
+  ),
+  steps: z.array(
+    z.object({
+      instruction: z.string().min(1, "手順を入力してください"),
+      timerSeconds: z.number().optional(),
+      orderIndex: z.number().optional(),
+    }),
+  ),
   memo: z.string().optional(),
   tags: z.array(z.string()),
-  childRecipes: z.array(z.object({
-    childRecipeId: z.string().min(1, '子レシピを選択してください'),
-    quantity: z.string().max(100, '分量は100文字以内').optional(),
-    notes: z.string().max(500, 'メモは500文字以内').optional(),
-  })).optional(),
-})
+  childRecipes: z
+    .array(
+      z.object({
+        childRecipeId: z.string().min(1, "子レシピを選択してください"),
+        quantity: z.string().max(100, "分量は100文字以内").optional(),
+        notes: z.string().max(500, "メモは500文字以内").optional(),
+      }),
+    )
+    .optional(),
+});
 ```
 
 #### 処理フロー
+
 1. `withAuth()` で認証チェック（Supabase Auth）
 2. `RecipeService.createRecipe()` を呼び出し
 3. タグのバリデーション（ユーザーが使用可能なタグか確認）
@@ -282,6 +306,7 @@ export const createRecipeInputSchema = z.object({
 7. 成功結果（`{ recipeId }`）を返却
 
 #### 使用ライブラリ
+
 - `zod` - バリデーション
 - `@prisma/client` - データベース操作・トランザクション管理
 - `next/cache` - キャッシュ再検証
@@ -289,9 +314,11 @@ export const createRecipeInputSchema = z.object({
 ### カスタムフック
 
 #### ファイル
+
 - `src/features/recipes/hooks/use-recipe-form.ts`
 
 #### 主要関数
+
 ```typescript
 export function useRecipeForm(options: UseRecipeFormOptions = {}): {
   // 状態: title, sourceInfo, ingredients, steps, memo, selectedTagIds, childRecipes
@@ -300,7 +327,7 @@ export function useRecipeForm(options: UseRecipeFormOptions = {}): {
   // 手順操作: addStep, removeStep, updateStep (タイマーのNaNチェック含む)
   // サブレシピ操作: addChildRecipe, removeChildRecipe, updateChildRecipe
   // タグ操作: toggleTag
-}
+};
 ```
 
 レシピ作成フォーム・編集フォームで共通して使用される状態管理とロジックを提供するカスタムフック。手順の`orderIndex`自動管理やタイマー入力のNaNチェックなどを統一的に処理する。
@@ -308,11 +335,13 @@ export function useRecipeForm(options: UseRecipeFormOptions = {}): {
 ### URL検証ユーティリティ
 
 #### ファイル
+
 - `src/utils/url-validation.ts`
 
 #### 主要関数
+
 ```typescript
-export function sanitizeUrl(url: string | null | undefined): string | null
+export function sanitizeUrl(url: string | null | undefined): string | null;
 // http/https プロトコルのみ許可。javascript:, data:, file: 等は拒否
 ```
 
@@ -343,6 +372,7 @@ model Recipe {
 ```
 
 #### 関連テーブル
+
 - `ingredients` - 材料（name, unit, notes）
 - `steps` - 調理手順（orderIndex, instruction, timerSeconds）
 - `source_infos` - ソース情報（sourceType, sourceName, sourceUrl, pageNumber）
@@ -350,6 +380,7 @@ model Recipe {
 - `recipe_relations` - レシピ親子関係（parentRecipeId, childRecipeId, quantity, notes）
 
 #### 主要制約
+
 - カスケード削除設定（レシピ削除時に関連データも削除）
 - 親子レシピの組み合わせにユニーク制約
 - 外部キー制約（参照整合性）
@@ -359,33 +390,38 @@ model Recipe {
 ### createRecipe (Server Action)
 
 #### 概要
+
 手動入力されたレシピデータをデータベースに保存する
 
 #### シグネチャ
+
 ```typescript
-async function createRecipe(request: CreateRecipeRequest): Promise<Result<{ recipeId: string }>>
+async function createRecipe(request: CreateRecipeRequest): Promise<Result<{ recipeId: string }>>;
 ```
 
 #### パラメータ
-| 名前 | 型 | 説明 |
-|------|------|------|
+
+| 名前    | 型                  | 説明                       |
+| ------- | ------------------- | -------------------------- |
 | request | CreateRecipeRequest | レシピ作成リクエストデータ |
 
 #### CreateRecipeRequest フィールド
-| フィールド名 | 型 | 必須 | バリデーション |
-|------------|------|------|--------------|
-| title | string | ✓ | 1文字以上 |
-| sourceInfo | SourceInfoInput \| null | | 全フィールド空ならnull |
-| sourceInfo.bookName | string | | |
-| sourceInfo.pageNumber | string | | |
-| sourceInfo.url | string | | http/httpsのみ許可 |
-| ingredients | IngredientInput[] | ✓ | 各材料のnameは1文字以上 |
-| steps | StepInput[] | ✓ | 各手順のinstructionは1文字以上 |
-| memo | string | | |
-| tags | string[] | ✓ | ユーザー使用可能なタグIDのみ |
-| childRecipes | ChildRecipeInput[] | | 所有権・循環参照チェック |
+
+| フィールド名          | 型                      | 必須 | バリデーション                 |
+| --------------------- | ----------------------- | ---- | ------------------------------ |
+| title                 | string                  | ✓    | 1文字以上                      |
+| sourceInfo            | SourceInfoInput \| null |      | 全フィールド空ならnull         |
+| sourceInfo.bookName   | string                  |      |                                |
+| sourceInfo.pageNumber | string                  |      |                                |
+| sourceInfo.url        | string                  |      | http/httpsのみ許可             |
+| ingredients           | IngredientInput[]       | ✓    | 各材料のnameは1文字以上        |
+| steps                 | StepInput[]             | ✓    | 各手順のinstructionは1文字以上 |
+| memo                  | string                  |      |                                |
+| tags                  | string[]                | ✓    | ユーザー使用可能なタグIDのみ   |
+| childRecipes          | ChildRecipeInput[]      |      | 所有権・循環参照チェック       |
 
 #### 戻り値
+
 ```typescript
 Result<{ recipeId: string }> =
   | { ok: true; data: { recipeId: string } }
@@ -393,16 +429,18 @@ Result<{ recipeId: string }> =
 ```
 
 #### エラーコード
-| コード | メッセージ | 発生条件 |
-|--------|-----------|---------|
-| UNAUTHENTICATED | 認証が必要です | 未ログイン状態 |
-| UNAUTHENTICATED | プロフィール設定が必要です | プロフィール未設定 |
-| VALIDATION | 無効なタグが含まれています | 使用不可能なタグIDが指定された |
-| VALIDATION | 無効な子レシピが含まれています | 他ユーザーのレシピをサブレシピに指定 |
-| VALIDATION | 循環参照が検出されました。子レシピの設定を見直してください | サブレシピの循環参照 |
-| SERVER | レシピの作成に失敗しました | その他のサーバーエラー |
+
+| コード          | メッセージ                                                 | 発生条件                             |
+| --------------- | ---------------------------------------------------------- | ------------------------------------ |
+| UNAUTHENTICATED | 認証が必要です                                             | 未ログイン状態                       |
+| UNAUTHENTICATED | プロフィール設定が必要です                                 | プロフィール未設定                   |
+| VALIDATION      | 無効なタグが含まれています                                 | 使用不可能なタグIDが指定された       |
+| VALIDATION      | 無効な子レシピが含まれています                             | 他ユーザーのレシピをサブレシピに指定 |
+| VALIDATION      | 循環参照が検出されました。子レシピの設定を見直してください | サブレシピの循環参照                 |
+| SERVER          | レシピの作成に失敗しました                                 | その他のサーバーエラー               |
 
 #### 処理詳細
+
 1. `withAuth()` で認証チェック（Supabase Auth + プロフィール確認）
 2. `RecipeService.createRecipe()` を呼び出し
 3. タグIDのバリデーション（ユーザーが所有/使用可能か確認）
@@ -419,6 +457,7 @@ Result<{ recipeId: string }> =
 ## テスト
 
 ### テストファイル
+
 - **ファイル**: `src/features/recipes/upload/__tests__/recipe-form.test.tsx`
 - **フレームワーク**: Vitest + React Testing Library
 

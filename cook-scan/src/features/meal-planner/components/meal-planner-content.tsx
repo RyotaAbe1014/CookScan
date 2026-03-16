@@ -1,60 +1,60 @@
-'use client'
+"use client";
 
-import { useState, useCallback } from 'react'
-import { useRouter } from 'next/navigation'
-import type { Route } from 'next'
-import { WeekNavigator } from './week-navigator'
-import { MealPlanDayCard } from './meal-plan-day-card'
-import { AddRecipeDialog } from './add-recipe-dialog'
-import { GenerateShoppingListButton } from './generate-shopping-list-button'
-import { getWeekStart, getWeekDates, parseLocalDate, WEEK_DIRECTION } from '../utils'
-import type { MealPlanOutput } from '@/backend/domain/meal-plans'
-import type { RecipeListOutput } from '@/backend/domain/recipes'
+import { useState, useCallback } from "react";
+import { useRouter } from "next/navigation";
+import type { Route } from "next";
+import { WeekNavigator } from "./week-navigator";
+import { MealPlanDayCard } from "./meal-plan-day-card";
+import { AddRecipeDialog } from "./add-recipe-dialog";
+import { GenerateShoppingListButton } from "./generate-shopping-list-button";
+import { getWeekStart, getWeekDates, parseLocalDate, WEEK_DIRECTION } from "../utils";
+import type { MealPlanOutput } from "@/backend/domain/meal-plans";
+import type { RecipeListOutput } from "@/backend/domain/recipes";
 
 type MealPlannerContentProps = {
-  initialWeekStart: string
-  initialPlan: MealPlanOutput | null
-  recipes: RecipeListOutput[]
-}
+  initialWeekStart: string;
+  initialPlan: MealPlanOutput | null;
+  recipes: RecipeListOutput[];
+};
 
 export function MealPlannerContent({
   initialWeekStart,
   initialPlan,
   recipes,
 }: MealPlannerContentProps) {
-  const router = useRouter()
-  const [weekStart, setWeekStart] = useState(initialWeekStart)
-  const [dialogOpen, setDialogOpen] = useState(false)
-  const [selectedDay, setSelectedDay] = useState<number | null>(null)
+  const router = useRouter();
+  const [weekStart, setWeekStart] = useState(initialWeekStart);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [selectedDay, setSelectedDay] = useState<number | null>(null);
 
   const navigateWeek = useCallback(
     (offset: number) => {
-      const current = parseLocalDate(weekStart)
-      current.setDate(current.getDate() + offset * 7)
-      const newWeekStart = getWeekStart(current)
-      setWeekStart(newWeekStart)
-      router.push(`/meal-planner?week=${newWeekStart}` as Route)
+      const current = parseLocalDate(weekStart);
+      current.setDate(current.getDate() + offset * 7);
+      const newWeekStart = getWeekStart(current);
+      setWeekStart(newWeekStart);
+      router.push(`/meal-planner?week=${newWeekStart}` as Route);
     },
-    [weekStart, router]
-  )
+    [weekStart, router],
+  );
 
   const handleToday = useCallback(() => {
-    const today = getWeekStart(new Date())
-    setWeekStart(today)
-    router.push(`/meal-planner?week=${today}` as Route)
-  }, [router])
+    const today = getWeekStart(new Date());
+    setWeekStart(today);
+    router.push(`/meal-planner?week=${today}` as Route);
+  }, [router]);
 
   function handleAddRecipe(dayOfWeek: number) {
-    setSelectedDay(dayOfWeek)
-    setDialogOpen(true)
+    setSelectedDay(dayOfWeek);
+    setDialogOpen(true);
   }
 
   function handleItemChanged() {
-    router.refresh()
+    router.refresh();
   }
 
-  const items = initialPlan?.items ?? []
-  const weekDates = getWeekDates(weekStart)
+  const items = initialPlan?.items ?? [];
+  const weekDates = getWeekDates(weekStart);
 
   return (
     <div className="space-y-6">
@@ -78,10 +78,7 @@ export function MealPlannerContent({
         ))}
       </div>
 
-      <GenerateShoppingListButton
-        weekStart={weekStart}
-        hasItems={items.length > 0}
-      />
+      <GenerateShoppingListButton weekStart={weekStart} hasItems={items.length > 0} />
 
       <AddRecipeDialog
         open={dialogOpen}
@@ -92,5 +89,5 @@ export function MealPlannerContent({
         onItemAdded={handleItemChanged}
       />
     </div>
-  )
+  );
 }

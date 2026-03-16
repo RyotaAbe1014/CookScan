@@ -1,9 +1,9 @@
-'use client'
+"use client";
 
-import { useState, useTransition } from 'react'
-import type { ShoppingItemOutput } from '@/backend/domain/shopping-items'
-import { updateShoppingItem } from '@/features/shopping-list/actions'
-import { isSuccess } from '@/utils/result'
+import { useState, useTransition } from "react";
+import type { ShoppingItemOutput } from "@/backend/domain/shopping-items";
+import { updateShoppingItem } from "@/features/shopping-list/actions";
+import { isSuccess } from "@/utils/result";
 import {
   Dialog,
   DialogContent,
@@ -11,123 +11,128 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
-} from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { FormField } from '@/components/ui/form-field'
-import { Alert } from '@/components/ui/alert'
-import { PencilIcon } from '@/components/icons/pencil-icon'
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { FormField } from "@/components/ui/form-field";
+import { Alert } from "@/components/ui/alert";
+import { PencilIcon } from "@/components/icons/pencil-icon";
 
 type EditShoppingItemDialogProps = {
-  item: ShoppingItemOutput | null
-  isOpen: boolean
-  onClose: () => void
-}
+  item: ShoppingItemOutput | null;
+  isOpen: boolean;
+  onClose: () => void;
+};
 
 export function EditShoppingItemDialog({ item, isOpen, onClose }: EditShoppingItemDialogProps) {
   return (
-    <Dialog open={isOpen} onOpenChange={(open) => { if (!open) onClose() }}>
-      {item && (
-        <EditShoppingItemForm key={item.id} item={item} onClose={onClose} />
-      )}
+    <Dialog
+      open={isOpen}
+      onOpenChange={(open) => {
+        if (!open) onClose();
+      }}
+    >
+      {item && <EditShoppingItemForm key={item.id} item={item} onClose={onClose} />}
     </Dialog>
-  )
+  );
 }
 
-function EditShoppingItemForm({ item, onClose }: { item: ShoppingItemOutput; onClose: () => void }) {
-  const [name, setName] = useState(item.name)
-  const [memo, setMemo] = useState(item.memo || '')
-  const [error, setError] = useState<string | null>(null)
-  const [isPending, startTransition] = useTransition()
+function EditShoppingItemForm({
+  item,
+  onClose,
+}: {
+  item: ShoppingItemOutput;
+  onClose: () => void;
+}) {
+  const [name, setName] = useState(item.name);
+  const [memo, setMemo] = useState(item.memo || "");
+  const [error, setError] = useState<string | null>(null);
+  const [isPending, startTransition] = useTransition();
 
   const handleClose = () => {
-    setError(null)
-    onClose()
-  }
+    setError(null);
+    onClose();
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    const trimmedName = name.trim()
+    const trimmedName = name.trim();
     if (!trimmedName) {
-      setError('アイテム名を入力してください')
-      return
+      setError("アイテム名を入力してください");
+      return;
     }
 
     startTransition(async () => {
-      const result = await updateShoppingItem(item.id, trimmedName, memo.trim() || undefined)
+      const result = await updateShoppingItem(item.id, trimmedName, memo.trim() || undefined);
       if (isSuccess(result)) {
-        handleClose()
+        handleClose();
       } else {
-        setError(result.error.message)
+        setError(result.error.message);
       }
-    })
-  }
+    });
+  };
 
   return (
-      <DialogContent maxWidth="max-w-md">
-        <DialogHeader className="bg-linear-to-r from-primary-light to-secondary-light">
-          <div className="flex items-start gap-4">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-primary to-secondary-hover shadow-lg">
-              <PencilIcon className="h-6 w-6 text-white" />
-            </div>
-            <div className="flex-1">
-              <DialogTitle>アイテムを編集</DialogTitle>
-              <DialogDescription>
-                買い物アイテムの名前やメモを変更できます
-              </DialogDescription>
-            </div>
+    <DialogContent maxWidth="max-w-md">
+      <DialogHeader className="from-primary-light to-secondary-light bg-linear-to-r">
+        <div className="flex items-start gap-4">
+          <div className="from-primary to-secondary-hover flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-linear-to-br shadow-lg">
+            <PencilIcon className="h-6 w-6 text-white" />
           </div>
-        </DialogHeader>
-
-        <form onSubmit={handleSubmit}>
-          <div className="space-y-4 px-6 py-5">
-            {error && (
-              <Alert variant="error">{error}</Alert>
-            )}
-
-            <FormField label="アイテム名" required>
-              <Input
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="例: 牛乳"
-                disabled={isPending}
-              />
-            </FormField>
-
-            <FormField label="メモ">
-              <Input
-                type="text"
-                value={memo}
-                onChange={(e) => setMemo(e.target.value)}
-                placeholder="例: 低脂肪タイプ"
-                disabled={isPending}
-              />
-            </FormField>
+          <div className="flex-1">
+            <DialogTitle>アイテムを編集</DialogTitle>
+            <DialogDescription>買い物アイテムの名前やメモを変更できます</DialogDescription>
           </div>
+        </div>
+      </DialogHeader>
 
-          <DialogFooter>
-            <Button
-              type="button"
-              variant="secondary"
+      <form onSubmit={handleSubmit}>
+        <div className="space-y-4 px-6 py-5">
+          {error && <Alert variant="error">{error}</Alert>}
+
+          <FormField label="アイテム名" required>
+            <Input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="例: 牛乳"
               disabled={isPending}
-              onClick={handleClose}
-              className="flex-1"
-            >
-              キャンセル
-            </Button>
-            <Button
-              type="submit"
-              variant="primary"
-              disabled={!name.trim() || isPending}
-              isLoading={isPending}
-              className="flex-1"
-            >
-              {isPending ? '保存中...' : '保存'}
-            </Button>
-          </DialogFooter>
-        </form>
-      </DialogContent>
-  )
+            />
+          </FormField>
+
+          <FormField label="メモ">
+            <Input
+              type="text"
+              value={memo}
+              onChange={(e) => setMemo(e.target.value)}
+              placeholder="例: 低脂肪タイプ"
+              disabled={isPending}
+            />
+          </FormField>
+        </div>
+
+        <DialogFooter>
+          <Button
+            type="button"
+            variant="secondary"
+            disabled={isPending}
+            onClick={handleClose}
+            className="flex-1"
+          >
+            キャンセル
+          </Button>
+          <Button
+            type="submit"
+            variant="primary"
+            disabled={!name.trim() || isPending}
+            isLoading={isPending}
+            className="flex-1"
+          >
+            {isPending ? "保存中..." : "保存"}
+          </Button>
+        </DialogFooter>
+      </form>
+    </DialogContent>
+  );
 }

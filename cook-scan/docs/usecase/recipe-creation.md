@@ -214,11 +214,13 @@ sequenceDiagram
 #### ページコンポーネント
 
 **アップロードページ**
+
 - **ファイル**: `/src/app/(auth)/recipes/upload/page.tsx`
 - **タイプ**: Server Component
 - **処理**: タグカテゴリを取得して RecipeUploadPageContent に渡す
 
 **ページコンテンツ**
+
 - **ファイル**: `/src/features/recipes/upload/recipe-upload-page-content.tsx`
 - **タイプ**: Server Component
 - **処理**: `getAllTagsForRecipe()` を呼び出してタグカテゴリをフェッチ
@@ -226,11 +228,13 @@ sequenceDiagram
 #### コンテナコンポーネント
 
 **RecipeUploadContent**
+
 - **ファイル**: `/src/features/recipes/upload/recipe-upload-content.tsx`
 - **タイプ**: Client Component
 - **スタイリング**: Tailwind CSS v4
 
 #### 使用コンポーネント
+
 - `MethodSelector` - 入力方法選択
 - `ImageUpload` - 画像アップロード
 - `TextInput` - テキスト入力
@@ -238,64 +242,71 @@ sequenceDiagram
 - `Button` - 戻るボタン
 
 #### 状態管理
-```typescript
-type UploadStep = 'method-selection' | 'image-upload' | 'text-input' | 'form'
-type UploadMethod = 'image' | 'text' | 'manual'
 
-const [step, setStep] = useState<UploadStep>('method-selection')
-const [selectedMethod, setSelectedMethod] = useState<UploadMethod | null>(null)
-const [extractedData, setExtractedData] = useState<ExtractedRecipeData | null>(null)
+```typescript
+type UploadStep = "method-selection" | "image-upload" | "text-input" | "form";
+type UploadMethod = "image" | "text" | "manual";
+
+const [step, setStep] = useState<UploadStep>("method-selection");
+const [selectedMethod, setSelectedMethod] = useState<UploadMethod | null>(null);
+const [extractedData, setExtractedData] = useState<ExtractedRecipeData | null>(null);
 ```
 
 #### 主要な処理フロー
+
 ```typescript
 // 入力方法選択時
 const handleMethodSelect = (method: UploadMethod) => {
-  setSelectedMethod(method)
-  if (method === 'manual') {
-    setStep('form')
-  } else if (method === 'image') {
-    setStep('image-upload')
+  setSelectedMethod(method);
+  if (method === "manual") {
+    setStep("form");
+  } else if (method === "image") {
+    setStep("image-upload");
   } else {
-    setStep('text-input')
+    setStep("text-input");
   }
-}
+};
 
 // 抽出データ受け取り時
 const handleExtractedData = (data: ExtractedRecipeData) => {
-  setExtractedData(data)
-  setStep('form')
-}
+  setExtractedData(data);
+  setStep("form");
+};
 
 // 戻るボタン処理
 const handleBack = () => {
-  if (step === 'form') {
-    if (selectedMethod === 'manual') {
-      setStep('method-selection')
-    } else if (selectedMethod === 'image') {
-      setStep('image-upload')
+  if (step === "form") {
+    if (selectedMethod === "manual") {
+      setStep("method-selection");
+    } else if (selectedMethod === "image") {
+      setStep("image-upload");
     } else {
-      setStep('text-input')
+      setStep("text-input");
     }
-  } else if (step === 'image-upload' || step === 'text-input') {
-    setStep('method-selection')
+  } else if (step === "image-upload" || step === "text-input") {
+    setStep("method-selection");
   }
-}
+};
 ```
 
 #### レシピフォームコンポーネント
 
 **RecipeForm**
+
 - **ファイル**: `/src/features/recipes/upload/recipe-form.tsx`
 - **タイプ**: Client Component
 
 **状態管理 (useRecipeFormフック)**
+
 ```typescript
 const {
   // 基本情報
-  title, setTitle,
-  sourceInfo, setSourceInfo,
-  memo, setMemo,
+  title,
+  setTitle,
+  sourceInfo,
+  setSourceInfo,
+  memo,
+  setMemo,
 
   // 材料
   ingredients,
@@ -322,10 +333,11 @@ const {
   removeChildRecipe,
   updateChildRecipeQuantity,
   updateChildRecipeNotes,
-} = useRecipeForm({ initialData: extractedData })
+} = useRecipeForm({ initialData: extractedData });
 ```
 
 **サブコンポーネント**
+
 - `IngredientInput` - 材料入力
 - `StepInput` - 手順入力
 - `ChildRecipeInput` - 子レシピ入力
@@ -334,50 +346,55 @@ const {
 ### バックエンド
 
 #### Server Action
+
 - **ファイル**: `/src/features/recipes/upload/actions.ts`
 - **関数**: `async function createRecipe(request: CreateRecipeRequest): Promise<Result<{ recipeId: string }>>`
 - **ディレクティブ**: `'use server'`
 
 #### バリデーションスキーマ
+
 ```typescript
 // /src/backend/domain/recipes/validators.ts
 
 const ingredientInputSchema = z.object({
-  name: z.string().min(1, '材料名を入力してください'),
+  name: z.string().min(1, "材料名を入力してください"),
   unit: z.string().optional(),
   notes: z.string().optional(),
-})
+});
 
 const stepInputSchema = z.object({
-  instruction: z.string().min(1, '手順を入力してください'),
+  instruction: z.string().min(1, "手順を入力してください"),
   timerSeconds: z.number().optional(),
   orderIndex: z.number().optional(),
-})
+});
 
-const sourceInfoInputSchema = z.object({
-  bookName: z.string().optional(),
-  pageNumber: z.string().optional(),
-  url: z.string().optional(),
-}).nullable()
+const sourceInfoInputSchema = z
+  .object({
+    bookName: z.string().optional(),
+    pageNumber: z.string().optional(),
+    url: z.string().optional(),
+  })
+  .nullable();
 
 const childRecipeRelationInputSchema = z.object({
   childRecipeId: z.string().min(1),
   quantity: z.string().max(100).optional(),
   notes: z.string().max(500).optional(),
-})
+});
 
 const createRecipeInputSchema = z.object({
-  title: z.string().min(1, 'タイトルを入力してください'),
+  title: z.string().min(1, "タイトルを入力してください"),
   sourceInfo: sourceInfoInputSchema,
   ingredients: z.array(ingredientInputSchema).min(1),
   steps: z.array(stepInputSchema).min(1),
   memo: z.string().optional(),
   tags: z.array(z.string()),
   childRecipes: z.array(childRecipeRelationInputSchema).optional(),
-})
+});
 ```
 
 #### 処理フロー
+
 1. `withAuth` ラッパーで認証チェック
 2. タグIDをバリデーション (`validateTagIdsForUser`)
 3. `RecipeService.createRecipe()` 呼び出し
@@ -395,6 +412,7 @@ const createRecipeInputSchema = z.object({
 5. レシピ詳細ページへリダイレクト
 
 #### 使用ライブラリ
+
 - `@prisma/client` - ORM
 - `zod` - バリデーション
 - `next/navigation` - リダイレクト・再検証
@@ -406,68 +424,57 @@ const createRecipeInputSchema = z.object({
 **ファイル**: `/src/backend/services/recipes/recipe.service.ts`
 
 **主要関数**
+
 ```typescript
-async function createRecipe(
-  userId: string,
-  input: CreateRecipeInput
-): Promise<CreateRecipeResult> {
+async function createRecipe(userId: string, input: CreateRecipeInput): Promise<CreateRecipeResult> {
   // 子レシピの所有権チェック
-  const childRecipeIds = input.childRecipes?.map(cr => cr.childRecipeId) ?? []
+  const childRecipeIds = input.childRecipes?.map((cr) => cr.childRecipeId) ?? [];
   if (childRecipeIds.length > 0) {
-    const hasValidOwnership = await validateChildRecipeOwnership(userId, childRecipeIds)
+    const hasValidOwnership = await validateChildRecipeOwnership(userId, childRecipeIds);
     if (!hasValidOwnership) {
-      throw new Error('無効な子レシピが含まれています')
+      throw new Error("無効な子レシピが含まれています");
     }
   }
 
   return await prisma.$transaction(async (tx) => {
     // 1. レシピ作成
-    const recipe = await RecipeRepository.createRecipe(
-      tx, userId, input.title, input.memo
-    )
+    const recipe = await RecipeRepository.createRecipe(tx, userId, input.title, input.memo);
 
     // 2. 材料作成
     if (input.ingredients.length > 0) {
-      await RecipeRepository.createIngredients(tx, recipe.id, input.ingredients)
+      await RecipeRepository.createIngredients(tx, recipe.id, input.ingredients);
     }
 
     // 3. 手順作成
     if (input.steps.length > 0) {
-      await RecipeRepository.createSteps(tx, recipe.id, input.steps)
+      await RecipeRepository.createSteps(tx, recipe.id, input.steps);
     }
 
     // 4. 出典情報作成
     if (input.sourceInfo) {
-      const sanitizedUrl = input.sourceInfo.url
-        ? sanitizeUrl(input.sourceInfo.url)
-        : undefined
-      await RecipeRepository.createSourceInfo(
-        tx, recipe.id, input.sourceInfo, sanitizedUrl
-      )
+      const sanitizedUrl = input.sourceInfo.url ? sanitizeUrl(input.sourceInfo.url) : undefined;
+      await RecipeRepository.createSourceInfo(tx, recipe.id, input.sourceInfo, sanitizedUrl);
     }
 
     // 5. タグ関連付け
     if (input.tags.length > 0) {
-      await RecipeRepository.createRecipeTags(tx, recipe.id, input.tags)
+      await RecipeRepository.createRecipeTags(tx, recipe.id, input.tags);
     }
 
     // 6. 子レシピ関連付け
     if (input.childRecipes && input.childRecipes.length > 0) {
       for (const childRecipe of input.childRecipes) {
         // 円環参照チェック
-        const isCircular = await checkCircularReference(
-          recipe.id,
-          childRecipe.childRecipeId
-        )
+        const isCircular = await checkCircularReference(recipe.id, childRecipe.childRecipeId);
         if (isCircular) {
-          throw new Error('レシピの循環参照が検出されました')
+          throw new Error("レシピの循環参照が検出されました");
         }
       }
-      await createRecipeRelations(tx, recipe.id, input.childRecipes)
+      await createRecipeRelations(tx, recipe.id, input.childRecipes);
     }
 
-    return { recipeId: recipe.id }
-  })
+    return { recipeId: recipe.id };
+  });
 }
 ```
 
@@ -478,43 +485,44 @@ async function createRecipe(
 **ファイル**: `/src/backend/repositories/recipe.repository.ts`
 
 **主要関数**
+
 ```typescript
 // レシピ作成
 async function createRecipe(
   tx: Prisma.TransactionClient,
   userId: string,
   title: string,
-  memo?: string
-): Promise<Recipe>
+  memo?: string,
+): Promise<Recipe>;
 
 // 材料一括作成
 async function createIngredients(
   tx: Prisma.TransactionClient,
   recipeId: string,
-  ingredients: IngredientInput[]
-): Promise<void>
+  ingredients: IngredientInput[],
+): Promise<void>;
 
 // 手順一括作成
 async function createSteps(
   tx: Prisma.TransactionClient,
   recipeId: string,
-  steps: StepInput[]
-): Promise<void>
+  steps: StepInput[],
+): Promise<void>;
 
 // 出典情報作成
 async function createSourceInfo(
   tx: Prisma.TransactionClient,
   recipeId: string,
   sourceInfo: SourceInfoInput,
-  sanitizedUrl?: string
-): Promise<void>
+  sanitizedUrl?: string,
+): Promise<void>;
 
 // タグ関連付け
 async function createRecipeTags(
   tx: Prisma.TransactionClient,
   recipeId: string,
-  tagIds: string[]
-): Promise<void>
+  tagIds: string[],
+): Promise<void>;
 ```
 
 #### RecipeRelationRepository
@@ -522,25 +530,26 @@ async function createRecipeTags(
 **ファイル**: `/src/backend/repositories/recipe-relation.repository.ts`
 
 **主要関数**
+
 ```typescript
 // 所有権チェック
 async function validateChildRecipeOwnership(
   userId: string,
-  childRecipeIds: string[]
-): Promise<boolean>
+  childRecipeIds: string[],
+): Promise<boolean>;
 
 // 円環参照チェック
 async function checkCircularReference(
   parentRecipeId: string,
-  childRecipeId: string
-): Promise<boolean>
+  childRecipeId: string,
+): Promise<boolean>;
 
 // 関連作成
 async function createRecipeRelations(
   tx: Prisma.TransactionClient,
   parentRecipeId: string,
-  childRecipes: ChildRecipeRelationInput[]
-): Promise<void>
+  childRecipes: ChildRecipeRelationInput[],
+): Promise<void>;
 ```
 
 ## データモデル
@@ -649,32 +658,35 @@ model RecipeRelation {
 ### createRecipe (Server Action)
 
 #### 概要
+
 新しいレシピを作成するServer Action
 
 #### シグネチャ
+
 ```typescript
-async function createRecipe(
-  request: CreateRecipeRequest
-): Promise<Result<{ recipeId: string }>>
+async function createRecipe(request: CreateRecipeRequest): Promise<Result<{ recipeId: string }>>;
 ```
 
 #### パラメータ
-| 名前 | 型 | 説明 |
-|------|------|------|
+
+| 名前    | 型                  | 説明                 |
+| ------- | ------------------- | -------------------- |
 | request | CreateRecipeRequest | レシピ作成リクエスト |
 
 #### CreateRecipeRequest フィールド
-| フィールド名 | 型 | 必須 | バリデーション |
-|------------|------|------|--------------|
-| title | string | ✓ | 1文字以上 |
-| sourceInfo | SourceInfoFormData \| null |  | 各フィールド任意 |
-| ingredients | IngredientFormData[] | ✓ | 1個以上、各材料のnameが1文字以上 |
-| steps | StepFormData[] | ✓ | 1個以上、各手順のinstructionが1文字以上 |
-| memo | string |  | 任意 |
-| tags | string[] |  | ユーザー所有のタグIDのみ |
-| childRecipes | ChildRecipeFormData[] |  | ユーザー所有のレシピIDのみ、円環参照禁止 |
+
+| フィールド名 | 型                         | 必須 | バリデーション                           |
+| ------------ | -------------------------- | ---- | ---------------------------------------- |
+| title        | string                     | ✓    | 1文字以上                                |
+| sourceInfo   | SourceInfoFormData \| null |      | 各フィールド任意                         |
+| ingredients  | IngredientFormData[]       | ✓    | 1個以上、各材料のnameが1文字以上         |
+| steps        | StepFormData[]             | ✓    | 1個以上、各手順のinstructionが1文字以上  |
+| memo         | string                     |      | 任意                                     |
+| tags         | string[]                   |      | ユーザー所有のタグIDのみ                 |
+| childRecipes | ChildRecipeFormData[]      |      | ユーザー所有のレシピIDのみ、円環参照禁止 |
 
 #### 戻り値
+
 ```typescript
 // 成功時
 Result<{ recipeId: string }> = {
@@ -694,16 +706,18 @@ Result<{ recipeId: string }> = {
 ```
 
 #### エラーコード
-| コード | メッセージ | 発生条件 |
-|--------|-----------|---------|
-| UNAUTHENTICATED | 認証が必要です | 未ログイン |
-| VALIDATION_ERROR | バリデーションエラー | 入力データが不正 |
-| FORBIDDEN | 無効なタグが含まれています | 他人のタグを指定 |
-| FORBIDDEN | 無効な子レシピが含まれています | 他人のレシピを子レシピに指定 |
-| CONFLICT | レシピの循環参照が検出されました | 子レシピが円環参照を引き起こす |
-| SERVER_ERROR | サーバーエラーが発生しました | データベースエラー等 |
+
+| コード           | メッセージ                       | 発生条件                       |
+| ---------------- | -------------------------------- | ------------------------------ |
+| UNAUTHENTICATED  | 認証が必要です                   | 未ログイン                     |
+| VALIDATION_ERROR | バリデーションエラー             | 入力データが不正               |
+| FORBIDDEN        | 無効なタグが含まれています       | 他人のタグを指定               |
+| FORBIDDEN        | 無効な子レシピが含まれています   | 他人のレシピを子レシピに指定   |
+| CONFLICT         | レシピの循環参照が検出されました | 子レシピが円環参照を引き起こす |
+| SERVER_ERROR     | サーバーエラーが発生しました     | データベースエラー等           |
 
 #### 処理詳細
+
 1. `withAuth` で認証チェック (未ログインは UNAUTHENTICATED)
 2. タグIDをバリデーション (`validateTagIdsForUser`)
 3. `RecipeService.createRecipe(userId, request)` 呼び出し
@@ -722,6 +736,7 @@ Result<{ recipeId: string }> = {
 ## テスト
 
 ### テストファイル
+
 - **ファイル**: `/src/features/recipes/upload/__tests__/recipe-form.test.tsx`
 - **フレームワーク**: Vitest + React Testing Library
 

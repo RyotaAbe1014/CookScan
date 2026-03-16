@@ -1,19 +1,17 @@
-import Image from 'next/image'
-import type { SharedRecipeOutput } from '@/backend/domain/recipes'
+import Image from "next/image";
+import type { SharedRecipeOutput } from "@/backend/domain/recipes";
 
 type Props = {
-  recipe: SharedRecipeOutput
-}
+  recipe: SharedRecipeOutput;
+};
 
 export function SharedRecipeContent({ recipe }: Props) {
   return (
     <div className="space-y-8">
       {/* ヘッダー */}
       <div>
-        <p className="text-sm font-medium text-primary">共有レシピ</p>
-        <h1 className="mt-1 text-2xl font-bold text-foreground sm:text-3xl">
-          {recipe.title}
-        </h1>
+        <p className="text-primary text-sm font-medium">共有レシピ</p>
+        <h1 className="text-foreground mt-1 text-2xl font-bold sm:text-3xl">{recipe.title}</h1>
       </div>
 
       {/* 画像 */}
@@ -32,14 +30,14 @@ export function SharedRecipeContent({ recipe }: Props) {
       {/* 材料 */}
       {recipe.ingredients.length > 0 ? (
         <section>
-          <h2 className="mb-4 text-lg font-bold text-foreground">材料</h2>
-          <div className="rounded-xl border border-border bg-white">
-            <ul className="divide-y divide-muted">
+          <h2 className="text-foreground mb-4 text-lg font-bold">材料</h2>
+          <div className="border-border rounded-xl border bg-white">
+            <ul className="divide-muted divide-y">
               {recipe.ingredients.map((ingredient, index) => (
                 <li key={index} className="flex items-center justify-between px-4 py-3">
-                  <span className="text-sm text-foreground">{ingredient.name}</span>
-                  <span className="text-sm text-muted-foreground">
-                    {[ingredient.unit, ingredient.notes].filter(Boolean).join(' ')}
+                  <span className="text-foreground text-sm">{ingredient.name}</span>
+                  <span className="text-muted-foreground text-sm">
+                    {[ingredient.unit, ingredient.notes].filter(Boolean).join(" ")}
                   </span>
                 </li>
               ))}
@@ -51,18 +49,19 @@ export function SharedRecipeContent({ recipe }: Props) {
       {/* 手順 */}
       {recipe.steps.length > 0 ? (
         <section>
-          <h2 className="mb-4 text-lg font-bold text-foreground">手順</h2>
+          <h2 className="text-foreground mb-4 text-lg font-bold">手順</h2>
           <ol className="space-y-4">
             {recipe.steps.map((step, index) => (
-              <li key={index} className="flex gap-4 rounded-xl border border-border bg-white p-4">
-                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary-light text-sm font-bold text-primary-hover">
+              <li key={index} className="border-border flex gap-4 rounded-xl border bg-white p-4">
+                <span className="bg-primary-light text-primary-hover flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-sm font-bold">
                   {step.orderIndex}
                 </span>
                 <div className="flex-1">
-                  <p className="text-sm text-foreground">{step.instruction}</p>
+                  <p className="text-foreground text-sm">{step.instruction}</p>
                   {step.timerSeconds && (
-                    <p className="mt-1 text-xs text-muted-foreground">
-                      ⏱ {Math.floor(step.timerSeconds / 60)}分{step.timerSeconds % 60 > 0 ? `${step.timerSeconds % 60}秒` : ''}
+                    <p className="text-muted-foreground mt-1 text-xs">
+                      ⏱ {Math.floor(step.timerSeconds / 60)}分
+                      {step.timerSeconds % 60 > 0 ? `${step.timerSeconds % 60}秒` : ""}
                     </p>
                   )}
                 </div>
@@ -73,9 +72,9 @@ export function SharedRecipeContent({ recipe }: Props) {
       ) : null}
 
       {/* フッター */}
-      <div className="border-t border-border pt-4 text-center text-xs text-muted-foreground">
+      <div className="border-border text-muted-foreground border-t pt-4 text-center text-xs">
         CookScan で作成されたレシピ
       </div>
     </div>
-  )
+  );
 }

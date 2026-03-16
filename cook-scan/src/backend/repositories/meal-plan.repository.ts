@@ -3,7 +3,7 @@
  * Prismaクエリの集約
  */
 
-import { prisma } from '@/lib/prisma'
+import { prisma } from "@/lib/prisma";
 
 const mealPlanItemInclude = {
   recipe: {
@@ -11,7 +11,7 @@ const mealPlanItemInclude = {
       ingredients: true,
     },
   },
-} as const
+} as const;
 
 /**
  * 週の献立プランを取得
@@ -24,10 +24,10 @@ export async function findMealPlanByWeek(userId: string, weekStart: Date) {
     include: {
       items: {
         include: mealPlanItemInclude,
-        orderBy: [{ dayOfWeek: 'asc' }, { createdAt: 'asc' }],
+        orderBy: [{ dayOfWeek: "asc" }, { createdAt: "asc" }],
       },
     },
-  })
+  });
 }
 
 /**
@@ -43,24 +43,20 @@ export async function upsertMealPlan(userId: string, weekStart: Date) {
     include: {
       items: {
         include: mealPlanItemInclude,
-        orderBy: [{ dayOfWeek: 'asc' }, { createdAt: 'asc' }],
+        orderBy: [{ dayOfWeek: "asc" }, { createdAt: "asc" }],
       },
     },
-  })
+  });
 }
 
 /**
  * 献立プランアイテムを追加
  */
-export async function createMealPlanItem(
-  mealPlanId: string,
-  dayOfWeek: number,
-  recipeId: string
-) {
+export async function createMealPlanItem(mealPlanId: string, dayOfWeek: number, recipeId: string) {
   return prisma.mealPlanItem.create({
     data: { mealPlanId, dayOfWeek, recipeId },
     include: mealPlanItemInclude,
-  })
+  });
 }
 
 /**
@@ -72,7 +68,7 @@ export async function findMealPlanItemById(itemId: string) {
     include: {
       mealPlan: true,
     },
-  })
+  });
 }
 
 /**
@@ -81,5 +77,5 @@ export async function findMealPlanItemById(itemId: string) {
 export async function deleteMealPlanItem(itemId: string) {
   return prisma.mealPlanItem.delete({
     where: { id: itemId },
-  })
+  });
 }

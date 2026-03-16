@@ -1,52 +1,49 @@
-import { type ReactNode } from 'react'
-import { cn } from '@/lib/tailwind'
+import { type ReactNode } from "react";
+import { cn } from "@/lib/tailwind";
 
 type FormFieldProps = {
   /** フィールドのラベル */
-  label: string
+  label: string;
   /** 入力要素のID（label のfor属性用） */
-  htmlFor?: string
+  htmlFor?: string;
   /** 必須フィールドかどうか */
-  required?: boolean
+  required?: boolean;
   /** ラベルの前に表示するアイコン */
-  icon?: ReactNode
+  icon?: ReactNode;
   /** アイコンの色クラス */
-  iconColorClass?: string
+  iconColorClass?: string;
   /** 子要素（入力コンポーネント） */
-  children: ReactNode
+  children: ReactNode;
   /** 追加のクラス名 */
-  className?: string
+  className?: string;
   /** ラベルのスタイルバリアント */
-  labelVariant?: 'default' | 'semibold' | 'compact'
-}
+  labelVariant?: "default" | "semibold" | "compact";
+};
 
 export function FormField({
   label,
   htmlFor,
   required = false,
   icon,
-  iconColorClass = 'text-primary',
+  iconColorClass = "text-primary",
   children,
   className,
-  labelVariant = 'default',
+  labelVariant = "default",
 }: FormFieldProps) {
-  const labelClasses = cn(
-    'flex items-center gap-2 font-medium text-foreground',
-    {
-      'mb-2 text-sm': labelVariant === 'default',
-      'mb-2 text-sm font-semibold': labelVariant === 'semibold',
-      'mb-1 text-xs': labelVariant === 'compact',
-    }
-  )
+  const labelClasses = cn("text-foreground flex items-center gap-2 font-medium", {
+    "mb-2 text-sm": labelVariant === "default",
+    "mb-2 text-sm font-semibold": labelVariant === "semibold",
+    "mb-1 text-xs": labelVariant === "compact",
+  });
 
   return (
     <div className={className}>
       <label htmlFor={htmlFor} className={labelClasses}>
-        {icon && <span className={cn('h-4 w-4', iconColorClass)}>{icon}</span>}
+        {icon && <span className={cn("h-4 w-4", iconColorClass)}>{icon}</span>}
         {label}
         {required && <span className="text-danger">*</span>}
       </label>
       {children}
     </div>
-  )
+  );
 }

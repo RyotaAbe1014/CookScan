@@ -1,9 +1,8 @@
-
-import { Mastra } from '@mastra/core/mastra';
-import { PinoLogger } from '@mastra/loggers';
+import { Mastra } from "@mastra/core/mastra";
+import { PinoLogger } from "@mastra/loggers";
 import { PostgresStore } from "@mastra/pg";
-import { convertTextToRecipeAgent } from './agents/convert-text-to-recipe-agent';
-import { textToRecipeWorkflow } from './workflows/text-to-recipe';
+import { convertTextToRecipeAgent } from "./agents/convert-text-to-recipe-agent";
+import { textToRecipeWorkflow } from "./workflows/text-to-recipe";
 
 const storage = new PostgresStore({
   id: "pg-storage",
@@ -18,7 +17,7 @@ export const mastra = new Mastra({
   agents: { convertTextToRecipeAgent },
   storage: storage,
   logger: new PinoLogger({
-    name: 'Mastra',
-    level: 'info',
+    name: "Mastra",
+    level: "info",
   }),
 });

@@ -1,9 +1,9 @@
-import { Agent } from '@mastra/core/agent';
-import { openaiGpt } from '../models/openai';
+import { Agent } from "@mastra/core/agent";
+import { openaiGpt } from "../models/openai";
 
 export const convertTextToRecipeAgent = new Agent({
-  id: 'convert-text-to-recipe-agent',
-  name: 'Convert Text to Recipe Agent',
+  id: "convert-text-to-recipe-agent",
+  name: "Convert Text to Recipe Agent",
   instructions: `
 あなたは文章生成AIではありません。
 あなたは「レシピ情報抽出器」です。

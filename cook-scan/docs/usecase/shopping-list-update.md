@@ -234,34 +234,30 @@ sequenceDiagram
 
 #### コンポーネント構成
 
-| ファイル | タイプ | 役割 |
-|---------|--------|------|
-| `src/features/shopping-list/components/shopping-list-content.tsx` | Client Component | メインリスト（チェック切り替え、編集ダイアログ管理） |
-| `src/features/shopping-list/components/edit-shopping-item-dialog.tsx` | Client Component | 編集ダイアログ（名前・メモの更新フォーム） |
-| `src/features/shopping-list/components/shopping-item-row.tsx` | Client Component | 個別アイテム行（チェックボックス、編集ボタン） |
-| `src/app/(auth)/shopping-list/page.tsx` | Server Component | ページ（初期データ取得） |
+| ファイル                                                              | タイプ           | 役割                                                 |
+| --------------------------------------------------------------------- | ---------------- | ---------------------------------------------------- |
+| `src/features/shopping-list/components/shopping-list-content.tsx`     | Client Component | メインリスト（チェック切り替え、編集ダイアログ管理） |
+| `src/features/shopping-list/components/edit-shopping-item-dialog.tsx` | Client Component | 編集ダイアログ（名前・メモの更新フォーム）           |
+| `src/features/shopping-list/components/shopping-item-row.tsx`         | Client Component | 個別アイテム行（チェックボックス、編集ボタン）       |
+| `src/app/(auth)/shopping-list/page.tsx`                               | Server Component | ページ（初期データ取得）                             |
 
 #### 状態管理
 
 ```typescript
 // チェック切り替え（Optimistic Update） - shopping-list-content.tsx
-const [optimisticItems, toggleOptimisticCheck] = useOptimistic(
-  items,
-  (state, itemId: string) =>
-    state.map((item) =>
-      item.id === itemId ? { ...item, isChecked: !item.isChecked } : item
-    )
-)
-const [isCheckPending, startTransition] = useTransition()
+const [optimisticItems, toggleOptimisticCheck] = useOptimistic(items, (state, itemId: string) =>
+  state.map((item) => (item.id === itemId ? { ...item, isChecked: !item.isChecked } : item)),
+);
+const [isCheckPending, startTransition] = useTransition();
 
 // 編集対象アイテム管理 - shopping-list-content.tsx
-const [editingItem, setEditingItem] = useState<ShoppingItemOutput | null>(null)
+const [editingItem, setEditingItem] = useState<ShoppingItemOutput | null>(null);
 
 // 編集フォーム - edit-shopping-item-dialog.tsx (EditShoppingItemForm)
-const [name, setName] = useState(item.name)
-const [memo, setMemo] = useState(item.memo || '')
-const [error, setError] = useState<string | null>(null)
-const [isPending, startTransition] = useTransition()
+const [name, setName] = useState(item.name);
+const [memo, setMemo] = useState(item.memo || "");
+const [error, setError] = useState<string | null>(null);
+const [isPending, startTransition] = useTransition();
 ```
 
 #### 主要な処理フロー
@@ -269,34 +265,34 @@ const [isPending, startTransition] = useTransition()
 ```typescript
 // チェック切り替え（Optimistic Update） - shopping-list-content.tsx
 const handleToggleCheck = (itemId: string) => {
-  const item = optimisticItems.find((i) => i.id === itemId)
-  if (!item) return
+  const item = optimisticItems.find((i) => i.id === itemId);
+  if (!item) return;
   startTransition(async () => {
-    toggleOptimisticCheck(itemId)  // 即座にUI更新
-    const result = await updateShoppingItemCheck(itemId, !item.isChecked)
+    toggleOptimisticCheck(itemId); // 即座にUI更新
+    const result = await updateShoppingItemCheck(itemId, !item.isChecked);
     if (!isSuccess(result)) {
-      router.refresh()  // 失敗時にロールバック
+      router.refresh(); // 失敗時にロールバック
     }
-  })
-}
+  });
+};
 
 // アイテム編集 - edit-shopping-item-dialog.tsx
 const handleSubmit = (e: React.FormEvent) => {
-  e.preventDefault()
-  const trimmedName = name.trim()
+  e.preventDefault();
+  const trimmedName = name.trim();
   if (!trimmedName) {
-    setError('アイテム名を入力してください')
-    return
+    setError("アイテム名を入力してください");
+    return;
   }
   startTransition(async () => {
-    const result = await updateShoppingItem(item.id, trimmedName, memo.trim() || undefined)
+    const result = await updateShoppingItem(item.id, trimmedName, memo.trim() || undefined);
     if (isSuccess(result)) {
-      handleClose()
+      handleClose();
     } else {
-      setError(result.error.message)
+      setError(result.error.message);
     }
-  })
-}
+  });
+};
 ```
 
 ### バックエンド
@@ -306,53 +302,53 @@ const handleSubmit = (e: React.FormEvent) => {
 - **ファイル**: `src/features/shopping-list/actions.ts`
 - **ディレクティブ**: `'use server'`
 
-| 関数 | シグネチャ |
-|------|-----------|
-| `updateShoppingItem` | `(itemId: string, name: string, memo?: string) => Promise<Result<void>>` |
-| `updateShoppingItemCheck` | `(itemId: string, isChecked: boolean) => Promise<Result<void>>` |
-| `reorderShoppingItems` | `(itemIds: string[]) => Promise<Result<void>>` |
+| 関数                      | シグネチャ                                                               |
+| ------------------------- | ------------------------------------------------------------------------ |
+| `updateShoppingItem`      | `(itemId: string, name: string, memo?: string) => Promise<Result<void>>` |
+| `updateShoppingItemCheck` | `(itemId: string, isChecked: boolean) => Promise<Result<void>>`          |
+| `reorderShoppingItems`    | `(itemIds: string[]) => Promise<Result<void>>`                           |
 
 #### バリデーションスキーマ
 
 ```typescript
 // 更新 - validators.ts
 const updateShoppingItemInputSchema = z.object({
-  itemId: z.string().min(1, 'アイテムIDが必要です'),
-  name: z.string().min(1, 'アイテム名を入力してください'),
+  itemId: z.string().min(1, "アイテムIDが必要です"),
+  name: z.string().min(1, "アイテム名を入力してください"),
   memo: z.string().optional(),
-})
+});
 
 // チェック状態更新
 const updateShoppingItemCheckInputSchema = z.object({
-  itemId: z.string().min(1, 'アイテムIDが必要です'),
+  itemId: z.string().min(1, "アイテムIDが必要です"),
   isChecked: z.boolean(),
-})
+});
 
 // 並び順更新
 const reorderShoppingItemsInputSchema = z.object({
-  itemIds: z.array(z.string().min(1)).min(1, '並び替えるアイテムが必要です'),
-})
+  itemIds: z.array(z.string().min(1)).min(1, "並び替えるアイテムが必要です"),
+});
 ```
 
 #### Service層
 
 - **ファイル**: `src/backend/services/shopping-items/shopping-item.service.ts`
 
-| 関数 | 処理内容 |
-|------|---------|
-| `updateShoppingItem(userId, input)` | 存在確認→所有権確認→名前・メモ更新 |
-| `updateShoppingItemCheck(userId, input)` | 存在確認→所有権確認→チェック状態更新 |
-| `reorderShoppingItems(userId, itemIds)` | 全アイテム取得→所有権一括確認→トランザクションで並び順更新 |
+| 関数                                     | 処理内容                                                   |
+| ---------------------------------------- | ---------------------------------------------------------- |
+| `updateShoppingItem(userId, input)`      | 存在確認→所有権確認→名前・メモ更新                         |
+| `updateShoppingItemCheck(userId, input)` | 存在確認→所有権確認→チェック状態更新                       |
+| `reorderShoppingItems(userId, itemIds)`  | 全アイテム取得→所有権一括確認→トランザクションで並び順更新 |
 
 #### Repository層
 
 - **ファイル**: `src/backend/repositories/shopping-item.repository.ts`
 
-| 関数 | Prisma操作 |
-|------|-----------|
-| `updateShoppingItem(itemId, name, memo?)` | `prisma.shoppingItem.update({ where: { id }, data: { name, memo } })` |
-| `updateShoppingItemCheck(itemId, isChecked)` | `prisma.shoppingItem.update({ where: { id }, data: { isChecked } })` |
-| `reorderShoppingItems(itemIds)` | `prisma.$transaction()` で各アイテムの`displayOrder`を更新 |
+| 関数                                         | Prisma操作                                                            |
+| -------------------------------------------- | --------------------------------------------------------------------- |
+| `updateShoppingItem(itemId, name, memo?)`    | `prisma.shoppingItem.update({ where: { id }, data: { name, memo } })` |
+| `updateShoppingItemCheck(itemId, isChecked)` | `prisma.shoppingItem.update({ where: { id }, data: { isChecked } })`  |
+| `reorderShoppingItems(itemIds)`              | `prisma.$transaction()` で各アイテムの`displayOrder`を更新            |
 
 #### 処理フロー（アイテム編集）
 
@@ -423,31 +419,35 @@ model ShoppingItem {
 #### シグネチャ
 
 ```typescript
-async function updateShoppingItem(itemId: string, name: string, memo?: string): Promise<Result<void>>
+async function updateShoppingItem(
+  itemId: string,
+  name: string,
+  memo?: string,
+): Promise<Result<void>>;
 ```
 
 #### パラメータ
 
-| 名前 | 型 | 必須 | 説明 |
-|------|------|------|------|
-| itemId | string | ✓ | 更新対象のアイテムID (UUID) |
-| name | string | ✓ | 新しいアイテム名 |
-| memo | string | | 新しいメモ（未指定時はnullに設定） |
+| 名前   | 型     | 必須 | 説明                               |
+| ------ | ------ | ---- | ---------------------------------- |
+| itemId | string | ✓    | 更新対象のアイテムID (UUID)        |
+| name   | string | ✓    | 新しいアイテム名                   |
+| memo   | string |      | 新しいメモ（未指定時はnullに設定） |
 
 #### 戻り値
 
 ```typescript
-Result<void>  // success(undefined) | failure(AppError)
+Result<void>; // success(undefined) | failure(AppError)
 ```
 
 #### エラーコード
 
-| コード | メッセージ | 発生条件 |
-|--------|-----------|---------|
-| UNAUTHENTICATED | 認証が必要です | 未認証状態でのアクセス |
-| NOT_FOUND | アイテムが見つかりません | 存在しないIDを指定 |
-| FORBIDDEN | 権限がありません | 他ユーザーのアイテムを指定 |
-| SERVER_ERROR | 買い物アイテムの更新に失敗しました | その他のサーバーエラー |
+| コード          | メッセージ                         | 発生条件                   |
+| --------------- | ---------------------------------- | -------------------------- |
+| UNAUTHENTICATED | 認証が必要です                     | 未認証状態でのアクセス     |
+| NOT_FOUND       | アイテムが見つかりません           | 存在しないIDを指定         |
+| FORBIDDEN       | 権限がありません                   | 他ユーザーのアイテムを指定 |
+| SERVER_ERROR    | 買い物アイテムの更新に失敗しました | その他のサーバーエラー     |
 
 ### updateShoppingItemCheck (Server Action)
 
@@ -458,30 +458,30 @@ Result<void>  // success(undefined) | failure(AppError)
 #### シグネチャ
 
 ```typescript
-async function updateShoppingItemCheck(itemId: string, isChecked: boolean): Promise<Result<void>>
+async function updateShoppingItemCheck(itemId: string, isChecked: boolean): Promise<Result<void>>;
 ```
 
 #### パラメータ
 
-| 名前 | 型 | 必須 | 説明 |
-|------|------|------|------|
-| itemId | string | ✓ | 更新対象のアイテムID (UUID) |
-| isChecked | boolean | ✓ | 新しいチェック状態 |
+| 名前      | 型      | 必須 | 説明                        |
+| --------- | ------- | ---- | --------------------------- |
+| itemId    | string  | ✓    | 更新対象のアイテムID (UUID) |
+| isChecked | boolean | ✓    | 新しいチェック状態          |
 
 #### 戻り値
 
 ```typescript
-Result<void>  // success(undefined) | failure(AppError)
+Result<void>; // success(undefined) | failure(AppError)
 ```
 
 #### エラーコード
 
-| コード | メッセージ | 発生条件 |
-|--------|-----------|---------|
-| UNAUTHENTICATED | 認証が必要です | 未認証状態でのアクセス |
-| NOT_FOUND | アイテムが見つかりません | 存在しないIDを指定 |
-| FORBIDDEN | 権限がありません | 他ユーザーのアイテムを指定 |
-| SERVER_ERROR | 買い物アイテムの更新に失敗しました | その他のサーバーエラー |
+| コード          | メッセージ                         | 発生条件                   |
+| --------------- | ---------------------------------- | -------------------------- |
+| UNAUTHENTICATED | 認証が必要です                     | 未認証状態でのアクセス     |
+| NOT_FOUND       | アイテムが見つかりません           | 存在しないIDを指定         |
+| FORBIDDEN       | 権限がありません                   | 他ユーザーのアイテムを指定 |
+| SERVER_ERROR    | 買い物アイテムの更新に失敗しました | その他のサーバーエラー     |
 
 ### reorderShoppingItems (Server Action)
 
@@ -492,40 +492,40 @@ Result<void>  // success(undefined) | failure(AppError)
 #### シグネチャ
 
 ```typescript
-async function reorderShoppingItems(itemIds: string[]): Promise<Result<void>>
+async function reorderShoppingItems(itemIds: string[]): Promise<Result<void>>;
 ```
 
 #### パラメータ
 
-| 名前 | 型 | 必須 | 説明 |
-|------|------|------|------|
-| itemIds | string[] | ✓ | 新しい表示順序でのアイテムID配列 |
+| 名前    | 型       | 必須 | 説明                             |
+| ------- | -------- | ---- | -------------------------------- |
+| itemIds | string[] | ✓    | 新しい表示順序でのアイテムID配列 |
 
 #### 戻り値
 
 ```typescript
-Result<void>  // success(undefined) | failure(AppError)
+Result<void>; // success(undefined) | failure(AppError)
 ```
 
 #### エラーコード
 
-| コード | メッセージ | 発生条件 |
-|--------|-----------|---------|
-| UNAUTHENTICATED | 認証が必要です | 未認証状態でのアクセス |
-| VALIDATION_ERROR | 並び替えるアイテムが必要です | 空の配列を指定 |
-| FORBIDDEN | 権限がありません | 他ユーザーのアイテムIDを含む |
-| SERVER_ERROR | 並び順の更新に失敗しました | その他のサーバーエラー |
+| コード           | メッセージ                   | 発生条件                     |
+| ---------------- | ---------------------------- | ---------------------------- |
+| UNAUTHENTICATED  | 認証が必要です               | 未認証状態でのアクセス       |
+| VALIDATION_ERROR | 並び替えるアイテムが必要です | 空の配列を指定               |
+| FORBIDDEN        | 権限がありません             | 他ユーザーのアイテムIDを含む |
+| SERVER_ERROR     | 並び順の更新に失敗しました   | その他のサーバーエラー       |
 
 ## テスト
 
 ### テストファイル
 
-| ファイル | フレームワーク | テスト対象 |
-|---------|--------------|-----------|
-| `src/features/shopping-list/components/__tests__/edit-shopping-item-dialog.test.tsx` | Vitest + React Testing Library | 編集ダイアログUI |
-| `src/features/shopping-list/components/__tests__/shopping-list-content.test.tsx` | Vitest + React Testing Library | チェック切り替え（Optimistic Update含む） |
-| `src/features/shopping-list/components/__tests__/shopping-item-row.test.tsx` | Vitest + React Testing Library | アイテム行の編集ボタン |
-| `src/backend/services/shopping-items/__tests__/shopping-item.service.test.ts` | Vitest | Service層の更新ロジック |
+| ファイル                                                                             | フレームワーク                 | テスト対象                                |
+| ------------------------------------------------------------------------------------ | ------------------------------ | ----------------------------------------- |
+| `src/features/shopping-list/components/__tests__/edit-shopping-item-dialog.test.tsx` | Vitest + React Testing Library | 編集ダイアログUI                          |
+| `src/features/shopping-list/components/__tests__/shopping-list-content.test.tsx`     | Vitest + React Testing Library | チェック切り替え（Optimistic Update含む） |
+| `src/features/shopping-list/components/__tests__/shopping-item-row.test.tsx`         | Vitest + React Testing Library | アイテム行の編集ボタン                    |
+| `src/backend/services/shopping-items/__tests__/shopping-item.service.test.ts`        | Vitest                         | Service層の更新ロジック                   |
 
 ### テストケース
 

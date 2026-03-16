@@ -1,24 +1,31 @@
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { Card, CardHeader, CardContent } from '@/components/ui/card'
-import { InfoCircleIcon } from '@/components/icons/info-circle-icon'
-import { TagIcon } from '@/components/icons/tag-icon'
-import { BookOpenIcon } from '@/components/icons/book-open-icon'
-import { DocumentIcon } from '@/components/icons/document-icon'
-import { LinkIcon } from '@/components/icons/link-icon'
-import { DocumentTextIcon } from '@/components/icons/document-text-icon'
-import type { SourceInfoFormData } from '@/types/forms'
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Card, CardHeader, CardContent } from "@/components/ui/card";
+import { InfoCircleIcon } from "@/components/icons/info-circle-icon";
+import { TagIcon } from "@/components/icons/tag-icon";
+import { BookOpenIcon } from "@/components/icons/book-open-icon";
+import { DocumentIcon } from "@/components/icons/document-icon";
+import { LinkIcon } from "@/components/icons/link-icon";
+import { DocumentTextIcon } from "@/components/icons/document-text-icon";
+import type { SourceInfoFormData } from "@/types/forms";
 
 type Props = {
-  title: string
-  onTitleChange: (value: string) => void
-  sourceInfo: SourceInfoFormData
-  onSourceInfoChange: (value: SourceInfoFormData) => void
-  memo: string
-  onMemoChange: (value: string) => void
-}
+  title: string;
+  onTitleChange: (value: string) => void;
+  sourceInfo: SourceInfoFormData;
+  onSourceInfoChange: (value: SourceInfoFormData) => void;
+  memo: string;
+  onMemoChange: (value: string) => void;
+};
 
-export function BasicInfoSection({ title, onTitleChange, sourceInfo, onSourceInfoChange, memo, onMemoChange }: Props) {
+export function BasicInfoSection({
+  title,
+  onTitleChange,
+  sourceInfo,
+  onSourceInfoChange,
+  memo,
+  onMemoChange,
+}: Props) {
   return (
     <Card>
       <CardHeader
@@ -31,9 +38,9 @@ export function BasicInfoSection({ title, onTitleChange, sourceInfo, onSourceInf
           <div>
             <label
               htmlFor="title"
-              className="mb-2 flex items-center gap-1.5 text-sm font-medium text-foreground"
+              className="text-foreground mb-2 flex items-center gap-1.5 text-sm font-medium"
             >
-              <TagIcon className="h-4 w-4 text-primary" />
+              <TagIcon className="text-primary h-4 w-4" />
               レシピタイトル <span className="text-danger">*</span>
             </label>
             <Input
@@ -50,9 +57,9 @@ export function BasicInfoSection({ title, onTitleChange, sourceInfo, onSourceInf
             <div>
               <label
                 htmlFor="bookName"
-                className="mb-2 flex items-center gap-1.5 text-sm font-medium text-foreground"
+                className="text-foreground mb-2 flex items-center gap-1.5 text-sm font-medium"
               >
-                <BookOpenIcon className="h-4 w-4 text-warning" />
+                <BookOpenIcon className="text-warning h-4 w-4" />
                 本の名前
               </label>
               <Input
@@ -66,9 +73,9 @@ export function BasicInfoSection({ title, onTitleChange, sourceInfo, onSourceInf
             <div>
               <label
                 htmlFor="pageNumber"
-                className="mb-2 flex items-center gap-1.5 text-sm font-medium text-foreground"
+                className="text-foreground mb-2 flex items-center gap-1.5 text-sm font-medium"
               >
-                <DocumentIcon className="h-4 w-4 text-success" />
+                <DocumentIcon className="text-success h-4 w-4" />
                 ページ番号
               </label>
               <Input
@@ -82,9 +89,9 @@ export function BasicInfoSection({ title, onTitleChange, sourceInfo, onSourceInf
             <div>
               <label
                 htmlFor="url"
-                className="mb-2 flex items-center gap-1.5 text-sm font-medium text-foreground"
+                className="text-foreground mb-2 flex items-center gap-1.5 text-sm font-medium"
               >
-                <LinkIcon className="h-4 w-4 text-accent-steps" />
+                <LinkIcon className="text-accent-steps h-4 w-4" />
                 参照URL
               </label>
               <Input
@@ -99,9 +106,9 @@ export function BasicInfoSection({ title, onTitleChange, sourceInfo, onSourceInf
           <div>
             <label
               htmlFor="memo"
-              className="mb-2 flex items-center gap-1.5 text-sm font-medium text-foreground"
+              className="text-foreground mb-2 flex items-center gap-1.5 text-sm font-medium"
             >
-              <DocumentTextIcon className="h-4 w-4 text-secondary-hover" />
+              <DocumentTextIcon className="text-secondary-hover h-4 w-4" />
               メモ
             </label>
             <Textarea
@@ -115,5 +122,5 @@ export function BasicInfoSection({ title, onTitleChange, sourceInfo, onSourceInf
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

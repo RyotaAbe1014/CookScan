@@ -1,88 +1,88 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
-import LogoutButton from '../logout-button'
+import { describe, it, expect, vi, beforeEach } from "vite-plus/test";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import LogoutButton from "../logout-button";
 
 // モック: Server Action (logout)
-vi.mock('../actions', () => ({
+vi.mock("../actions", () => ({
   logout: vi.fn(() => Promise.resolve()),
-}))
+}));
 
-import { logout } from '../actions'
+import { logout } from "../actions";
 
-describe('LogoutButton', () => {
+describe("LogoutButton", () => {
   beforeEach(() => {
-    vi.clearAllMocks()
-  })
+    vi.clearAllMocks();
+  });
 
-  describe('初期レンダリング', () => {
-    it('ボタンが表示される', () => {
+  describe("初期レンダリング", () => {
+    it("ボタンが表示される", () => {
       // Given: LogoutButtonがマウントされている
-      render(<LogoutButton />)
+      render(<LogoutButton />);
 
       // When: 初期レンダリングされる
-      const button = screen.getByRole('button', { name: /ログアウト/i })
+      const button = screen.getByRole("button", { name: /ログアウト/i });
 
       // Then: ボタンが表示され、aria-label="ログアウト"を持つ
-      expect(button).toBeInTheDocument()
-      expect(button).toHaveAttribute('aria-label', 'ログアウト')
-    })
+      expect(button).toBeInTheDocument();
+      expect(button).toHaveAttribute("aria-label", "ログアウト");
+    });
 
-    it('初期状態はenabled', () => {
+    it("初期状態はenabled", () => {
       // Given: LogoutButtonがマウントされている
-      render(<LogoutButton />)
+      render(<LogoutButton />);
 
       // When: 初期レンダリングされる
-      const button = screen.getByRole('button', { name: /ログアウト/i })
+      const button = screen.getByRole("button", { name: /ログアウト/i });
 
       // Then: ボタンはdisabled属性を持たない
-      expect(button).not.toBeDisabled()
-    })
-  })
+      expect(button).not.toBeDisabled();
+    });
+  });
 
-  describe('ボタンクリック動作', () => {
-    it('クリック時にlogout()が呼ばれる', async () => {
+  describe("ボタンクリック動作", () => {
+    it("クリック時にlogout()が呼ばれる", async () => {
       // Given: LogoutButtonが表示されている
-      render(<LogoutButton />)
-      const button = screen.getByRole('button', { name: /ログアウト/i })
+      render(<LogoutButton />);
+      const button = screen.getByRole("button", { name: /ログアウト/i });
 
       // When: ボタンをクリックする
-      fireEvent.click(button)
+      fireEvent.click(button);
 
       // Then: logout()が1回呼び出される
       await waitFor(() => {
-        expect(logout).toHaveBeenCalledTimes(1)
-      })
-    })
-  })
+        expect(logout).toHaveBeenCalledTimes(1);
+      });
+    });
+  });
 
-  describe('ローディング状態', () => {
-    it('ローディング中はボタンがdisabled', async () => {
+  describe("ローディング状態", () => {
+    it("ローディング中はボタンがdisabled", async () => {
       // Given: LogoutButtonが表示されている
-      render(<LogoutButton />)
-      const button = screen.getByRole('button', { name: /ログアウト/i })
+      render(<LogoutButton />);
+      const button = screen.getByRole("button", { name: /ログアウト/i });
 
       // When: ボタンをクリックして非同期処理が開始される
-      fireEvent.click(button)
+      fireEvent.click(button);
 
       // Then: ボタンがdisabled状態になる
       await waitFor(() => {
-        expect(button).toBeDisabled()
-      })
-    })
+        expect(button).toBeDisabled();
+      });
+    });
 
-    it('ローディング中はスピナーが表示される', async () => {
+    it("ローディング中はスピナーが表示される", async () => {
       // Given: LogoutButtonが表示されている
-      render(<LogoutButton />)
-      const button = screen.getByRole('button', { name: /ログアウト/i })
+      render(<LogoutButton />);
+      const button = screen.getByRole("button", { name: /ログアウト/i });
 
       // When: ボタンをクリックして非同期処理が開始される
-      fireEvent.click(button)
+      fireEvent.click(button);
 
       // Then: アニメーションするSVG（スピナー）が表示される
       await waitFor(() => {
-        const svg = button.querySelector('svg.animate-spin')
-        expect(svg).toBeInTheDocument()
-      })
-    })
-  })
-})
+        const svg = button.querySelector("svg.animate-spin");
+        expect(svg).toBeInTheDocument();
+      });
+    });
+  });
+});

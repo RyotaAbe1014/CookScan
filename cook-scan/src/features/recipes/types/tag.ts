@@ -1,1 +1,1 @@
-export type { RecipeFormTagCategory } from '@/types/tag'
+export type { RecipeFormTagCategory } from "@/types/tag";

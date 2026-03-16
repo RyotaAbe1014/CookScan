@@ -1,26 +1,26 @@
-import { Suspense } from 'react'
-import type { RecipeBasic } from '@/types/recipe'
-import { RecipeSearch } from './recipe-search'
-import { TagFilter } from './tag-filter'
-import { RecipeStatsBar } from './recipe-stats-bar'
-import { RecipeEmptyState } from './recipe-empty-state'
-import { RecipeGrid } from './recipe-grid'
+import { Suspense } from "react";
+import type { RecipeBasic } from "@/types/recipe";
+import { RecipeSearch } from "./recipe-search";
+import { TagFilter } from "./tag-filter";
+import { RecipeStatsBar } from "./recipe-stats-bar";
+import { RecipeEmptyState } from "./recipe-empty-state";
+import { RecipeGrid } from "./recipe-grid";
 
 type TagCategory = {
-  id: string
-  name: string
+  id: string;
+  name: string;
   tags: Array<{
-    id: string
-    name: string
-  }>
-}
+    id: string;
+    name: string;
+  }>;
+};
 
 type RecipeListContentProps = {
-  recipes: RecipeBasic[]
-  tagCategories: TagCategory[]
-  selectedTagIds: string[]
-  searchQuery: string
-}
+  recipes: RecipeBasic[];
+  tagCategories: TagCategory[];
+  selectedTagIds: string[];
+  searchQuery: string;
+};
 
 export function RecipeListContent({
   recipes,
@@ -28,7 +28,7 @@ export function RecipeListContent({
   selectedTagIds,
   searchQuery,
 }: RecipeListContentProps) {
-  const hasFilters = selectedTagIds.length > 0 || searchQuery.length > 0
+  const hasFilters = selectedTagIds.length > 0 || searchQuery.length > 0;
 
   return (
     <>
@@ -52,5 +52,5 @@ export function RecipeListContent({
         <RecipeGrid recipes={recipes} />
       )}
     </>
-  )
+  );
 }

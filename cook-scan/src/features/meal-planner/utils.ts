@@ -2,22 +2,22 @@
  * 献立プランナーユーティリティ
  */
 
-export const DAY_LABELS = ['月', '火', '水', '木', '金', '土', '日'] as const
+export const DAY_LABELS = ["月", "火", "水", "木", "金", "土", "日"] as const;
 
 export const WEEK_DIRECTION = {
   PREVIOUS: -1,
   NEXT: 1,
-} as const
+} as const;
 
-export type WeekDirection = (typeof WEEK_DIRECTION)[keyof typeof WEEK_DIRECTION]
+export type WeekDirection = (typeof WEEK_DIRECTION)[keyof typeof WEEK_DIRECTION];
 
 /**
  * Date#getDay() を献立プラン用の曜日番号に変換する
  * 月曜=0 ... 日曜=6
  */
 export function getMealPlanDayOfWeek(date: Date): number {
-  const day = date.getDay()
-  return day === 0 ? 6 : day - 1
+  const day = date.getDay();
+  return day === 0 ? 6 : day - 1;
 }
 
 /**
@@ -25,47 +25,47 @@ export function getMealPlanDayOfWeek(date: Date): number {
  * ローカルタイムゾーンベースで計算する
  */
 export function getWeekStart(date: Date): string {
-  const d = new Date(date)
-  d.setDate(d.getDate() - getMealPlanDayOfWeek(d))
-  const year = d.getFullYear()
-  const month = String(d.getMonth() + 1).padStart(2, '0')
-  const dayOfMonth = String(d.getDate()).padStart(2, '0')
-  return `${year}-${month}-${dayOfMonth}`
+  const d = new Date(date);
+  d.setDate(d.getDate() - getMealPlanDayOfWeek(d));
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const dayOfMonth = String(d.getDate()).padStart(2, "0");
+  return `${year}-${month}-${dayOfMonth}`;
 }
 
 /**
  * YYYY-MM-DD文字列をローカルタイムゾーンのDateに変換する
  */
 export function parseLocalDate(dateStr: string): Date {
-  const [year, month, day] = dateStr.split('-').map(Number)
-  return new Date(year, month - 1, day)
+  const [year, month, day] = dateStr.split("-").map(Number);
+  return new Date(year, month - 1, day);
 }
 
 /**
  * weekStart文字列から各曜日の日付を生成
  */
 export function getWeekDates(weekStart: string): Date[] {
-  const start = parseLocalDate(weekStart)
+  const start = parseLocalDate(weekStart);
   return Array.from({ length: 7 }, (_, i) => {
-    const d = new Date(start)
-    d.setDate(start.getDate() + i)
-    return d
-  })
+    const d = new Date(start);
+    d.setDate(start.getDate() + i);
+    return d;
+  });
 }
 
 /**
  * 日付をフォーマット (M/D)
  */
 export function formatShortDate(date: Date): string {
-  return `${date.getMonth() + 1}/${date.getDate()}`
+  return `${date.getMonth() + 1}/${date.getDate()}`;
 }
 
 /**
  * 日付をYYYY-MM-DD文字列にフォーマット
  */
 export function formatDateToYYYYMMDD(date: Date): string {
-  const year = date.getFullYear()
-  const month = String(date.getMonth() + 1).padStart(2, '0')
-  const day = String(date.getDate()).padStart(2, '0')
-  return `${year}-${month}-${day}`
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
 }

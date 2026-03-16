@@ -155,22 +155,22 @@ sequenceDiagram
 
 #### コンポーネント構成
 
-| ファイル | タイプ | 役割 |
-|---------|--------|------|
-| `src/features/shopping-list/components/shopping-item-row.tsx` | Client Component | 個別アイテム行（削除ボタン含む） |
+| ファイル                                                                | タイプ           | 役割                                       |
+| ----------------------------------------------------------------------- | ---------------- | ------------------------------------------ |
+| `src/features/shopping-list/components/shopping-item-row.tsx`           | Client Component | 個別アイテム行（削除ボタン含む）           |
 | `src/features/shopping-list/components/delete-checked-items-button.tsx` | Client Component | チェック済み一括削除ボタン＋確認ダイアログ |
-| `src/features/shopping-list/components/shopping-list-content.tsx` | Client Component | メインリスト（一括削除ボタンの配置） |
-| `src/app/(auth)/shopping-list/page.tsx` | Server Component | ページ（初期データ取得） |
+| `src/features/shopping-list/components/shopping-list-content.tsx`       | Client Component | メインリスト（一括削除ボタンの配置）       |
+| `src/app/(auth)/shopping-list/page.tsx`                                 | Server Component | ページ（初期データ取得）                   |
 
 #### 状態管理
 
 ```typescript
 // 個別削除 - shopping-item-row.tsx
-const [isDeletePending, startDeleteTransition] = useTransition()
+const [isDeletePending, startDeleteTransition] = useTransition();
 
 // 一括削除 - delete-checked-items-button.tsx
-const [isOpen, setIsOpen] = useState(false)  // ダイアログ表示状態
-const [isPending, startTransition] = useTransition()
+const [isOpen, setIsOpen] = useState(false); // ダイアログ表示状態
+const [isPending, startTransition] = useTransition();
 ```
 
 #### 主要な処理フロー
@@ -179,22 +179,22 @@ const [isPending, startTransition] = useTransition()
 // 個別削除 - shopping-item-row.tsx
 const handleDelete = () => {
   startDeleteTransition(async () => {
-    const result = await deleteShoppingItem(item.id)
+    const result = await deleteShoppingItem(item.id);
     if (!isSuccess(result)) {
-      console.error('Failed to delete item:', result.error.message)
+      console.error("Failed to delete item:", result.error.message);
     }
-  })
-}
+  });
+};
 
 // 一括削除 - delete-checked-items-button.tsx
 const handleDelete = () => {
   startTransition(async () => {
-    const result = await deleteCheckedItems()
+    const result = await deleteCheckedItems();
     if (isSuccess(result)) {
-      setIsOpen(false)
+      setIsOpen(false);
     }
-  })
-}
+  });
+};
 ```
 
 ### バックエンド
@@ -204,27 +204,27 @@ const handleDelete = () => {
 - **ファイル**: `src/features/shopping-list/actions.ts`
 - **ディレクティブ**: `'use server'`
 
-| 関数 | シグネチャ |
-|------|-----------|
+| 関数                 | シグネチャ                                  |
+| -------------------- | ------------------------------------------- |
 | `deleteShoppingItem` | `(itemId: string) => Promise<Result<void>>` |
-| `deleteCheckedItems` | `() => Promise<Result<void>>` |
+| `deleteCheckedItems` | `() => Promise<Result<void>>`               |
 
 #### Service層
 
 - **ファイル**: `src/backend/services/shopping-items/shopping-item.service.ts`
 
-| 関数 | 処理内容 |
-|------|---------|
-| `deleteShoppingItem(userId, itemId)` | 存在確認→所有権確認→削除 |
-| `deleteCheckedItems(userId)` | チェック済みアイテム一括削除 |
+| 関数                                 | 処理内容                     |
+| ------------------------------------ | ---------------------------- |
+| `deleteShoppingItem(userId, itemId)` | 存在確認→所有権確認→削除     |
+| `deleteCheckedItems(userId)`         | チェック済みアイテム一括削除 |
 
 #### Repository層
 
 - **ファイル**: `src/backend/repositories/shopping-item.repository.ts`
 
-| 関数 | Prisma操作 |
-|------|-----------|
-| `deleteShoppingItem(itemId)` | `prisma.shoppingItem.delete({ where: { id } })` |
+| 関数                         | Prisma操作                                                               |
+| ---------------------------- | ------------------------------------------------------------------------ |
+| `deleteShoppingItem(itemId)` | `prisma.shoppingItem.delete({ where: { id } })`                          |
 | `deleteCheckedItems(userId)` | `prisma.shoppingItem.deleteMany({ where: { userId, isChecked: true } })` |
 
 #### 処理フロー（個別削除）
@@ -281,29 +281,29 @@ model ShoppingItem {
 #### シグネチャ
 
 ```typescript
-async function deleteShoppingItem(itemId: string): Promise<Result<void>>
+async function deleteShoppingItem(itemId: string): Promise<Result<void>>;
 ```
 
 #### パラメータ
 
-| 名前 | 型 | 説明 |
-|------|------|------|
+| 名前   | 型     | 説明                        |
+| ------ | ------ | --------------------------- |
 | itemId | string | 削除対象のアイテムID (UUID) |
 
 #### 戻り値
 
 ```typescript
-Result<void>  // success(undefined) | failure(AppError)
+Result<void>; // success(undefined) | failure(AppError)
 ```
 
 #### エラーコード
 
-| コード | メッセージ | 発生条件 |
-|--------|-----------|---------|
-| UNAUTHENTICATED | 認証が必要です | 未認証状態でのアクセス |
-| NOT_FOUND | アイテムが見つかりません | 存在しないIDを指定 |
-| FORBIDDEN | このアイテムを削除する権限がありません | 他ユーザーのアイテムを指定 |
-| SERVER_ERROR | 買い物アイテムの削除に失敗しました | その他のサーバーエラー |
+| コード          | メッセージ                             | 発生条件                   |
+| --------------- | -------------------------------------- | -------------------------- |
+| UNAUTHENTICATED | 認証が必要です                         | 未認証状態でのアクセス     |
+| NOT_FOUND       | アイテムが見つかりません               | 存在しないIDを指定         |
+| FORBIDDEN       | このアイテムを削除する権限がありません | 他ユーザーのアイテムを指定 |
+| SERVER_ERROR    | 買い物アイテムの削除に失敗しました     | その他のサーバーエラー     |
 
 ### deleteCheckedItems (Server Action)
 
@@ -314,7 +314,7 @@ Result<void>  // success(undefined) | failure(AppError)
 #### シグネチャ
 
 ```typescript
-async function deleteCheckedItems(): Promise<Result<void>>
+async function deleteCheckedItems(): Promise<Result<void>>;
 ```
 
 #### パラメータ
@@ -324,24 +324,24 @@ async function deleteCheckedItems(): Promise<Result<void>>
 #### 戻り値
 
 ```typescript
-Result<void>  // success(undefined) | failure(AppError)
+Result<void>; // success(undefined) | failure(AppError)
 ```
 
 #### エラーコード
 
-| コード | メッセージ | 発生条件 |
-|--------|-----------|---------|
-| UNAUTHENTICATED | 認証が必要です | 未認証状態でのアクセス |
-| SERVER_ERROR | チェック済みアイテムの削除に失敗しました | その他のサーバーエラー |
+| コード          | メッセージ                               | 発生条件               |
+| --------------- | ---------------------------------------- | ---------------------- |
+| UNAUTHENTICATED | 認証が必要です                           | 未認証状態でのアクセス |
+| SERVER_ERROR    | チェック済みアイテムの削除に失敗しました | その他のサーバーエラー |
 
 ## テスト
 
 ### テストファイル
 
-| ファイル | フレームワーク | テスト対象 |
-|---------|--------------|-----------|
-| `src/backend/services/shopping-items/__tests__/shopping-item.service.test.ts` | Vitest | Service層の削除ロジック |
-| `src/features/shopping-list/components/__tests__/shopping-item-row.test.tsx` | Vitest + React Testing Library | 削除ボタンUI操作 |
+| ファイル                                                                      | フレームワーク                 | テスト対象              |
+| ----------------------------------------------------------------------------- | ------------------------------ | ----------------------- |
+| `src/backend/services/shopping-items/__tests__/shopping-item.service.test.ts` | Vitest                         | Service層の削除ロジック |
+| `src/features/shopping-list/components/__tests__/shopping-item-row.test.tsx`  | Vitest + React Testing Library | 削除ボタンUI操作        |
 
 ### テストケース
 

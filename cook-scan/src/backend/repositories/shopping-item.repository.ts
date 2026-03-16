@@ -3,7 +3,7 @@
  * Prismaクエリの集約
  */
 
-import { prisma } from '@/lib/prisma'
+import { prisma } from "@/lib/prisma";
 
 /**
  * ユーザーの買い物アイテム一覧を取得（displayOrder昇順）
@@ -11,8 +11,8 @@ import { prisma } from '@/lib/prisma'
 export async function findShoppingItemsByUser(userId: string) {
   return prisma.shoppingItem.findMany({
     where: { userId },
-    orderBy: { displayOrder: 'asc' },
-  })
+    orderBy: { displayOrder: "asc" },
+  });
 }
 
 /**
@@ -21,7 +21,7 @@ export async function findShoppingItemsByUser(userId: string) {
 export async function findShoppingItemById(itemId: string) {
   return prisma.shoppingItem.findUnique({
     where: { id: itemId },
-  })
+  });
 }
 
 /**
@@ -31,8 +31,8 @@ export async function getMaxDisplayOrder(userId: string): Promise<number> {
   const result = await prisma.shoppingItem.aggregate({
     where: { userId },
     _max: { displayOrder: true },
-  })
-  return result._max.displayOrder ?? -1
+  });
+  return result._max.displayOrder ?? -1;
 }
 
 /**
@@ -42,7 +42,7 @@ export async function createShoppingItem(
   userId: string,
   name: string,
   displayOrder: number,
-  memo?: string
+  memo?: string,
 ) {
   return prisma.shoppingItem.create({
     data: {
@@ -52,7 +52,7 @@ export async function createShoppingItem(
       isChecked: false,
       displayOrder,
     },
-  })
+  });
 }
 
 /**
@@ -65,7 +65,7 @@ export async function updateShoppingItem(itemId: string, name: string, memo?: st
       name,
       memo: memo || null,
     },
-  })
+  });
 }
 
 /**
@@ -75,7 +75,7 @@ export async function updateShoppingItemCheck(itemId: string, isChecked: boolean
   return prisma.shoppingItem.update({
     where: { id: itemId },
     data: { isChecked },
-  })
+  });
 }
 
 /**
@@ -84,7 +84,7 @@ export async function updateShoppingItemCheck(itemId: string, isChecked: boolean
 export async function deleteShoppingItem(itemId: string) {
   return prisma.shoppingItem.delete({
     where: { id: itemId },
-  })
+  });
 }
 
 /**
@@ -95,9 +95,9 @@ export async function reorderShoppingItems(itemIds: string[]) {
     prisma.shoppingItem.update({
       where: { id },
       data: { displayOrder: index },
-    })
-  )
-  return prisma.$transaction(updates)
+    }),
+  );
+  return prisma.$transaction(updates);
 }
 
 /**
@@ -105,7 +105,7 @@ export async function reorderShoppingItems(itemIds: string[]) {
  */
 export async function createShoppingItems(
   userId: string,
-  items: { name: string; displayOrder: number; memo?: string }[]
+  items: { name: string; displayOrder: number; memo?: string }[],
 ) {
   const creates = items.map((item) =>
     prisma.shoppingItem.create({
@@ -116,9 +116,9 @@ export async function createShoppingItems(
         isChecked: false,
         displayOrder: item.displayOrder,
       },
-    })
-  )
-  return prisma.$transaction(creates)
+    }),
+  );
+  return prisma.$transaction(creates);
 }
 
 /**
@@ -127,5 +127,5 @@ export async function createShoppingItems(
 export async function deleteCheckedItems(userId: string) {
   return prisma.shoppingItem.deleteMany({
     where: { userId, isChecked: true },
-  })
+  });
 }

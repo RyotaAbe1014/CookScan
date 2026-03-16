@@ -1,16 +1,16 @@
-import { Card, CardHeader, CardContent } from '@/components/ui/card'
-import { TagIcon } from '@/components/icons/tag-icon'
-import { CheckSolidIcon } from '@/components/icons/check-solid-icon'
-import type { RecipeFormTagCategory } from '@/features/recipes/types/tag'
+import { Card, CardHeader, CardContent } from "@/components/ui/card";
+import { TagIcon } from "@/components/icons/tag-icon";
+import { CheckSolidIcon } from "@/components/icons/check-solid-icon";
+import type { RecipeFormTagCategory } from "@/features/recipes/types/tag";
 
 type Props = {
-  tagCategories: RecipeFormTagCategory[]
-  selectedTagIds: string[]
-  onToggleTag: (tagId: string) => void
-}
+  tagCategories: RecipeFormTagCategory[];
+  selectedTagIds: string[];
+  onToggleTag: (tagId: string) => void;
+};
 
 export function TagSection({ tagCategories, selectedTagIds, onToggleTag }: Props) {
-  if (tagCategories.length === 0) return null
+  if (tagCategories.length === 0) return null;
 
   return (
     <Card>
@@ -24,18 +24,19 @@ export function TagSection({ tagCategories, selectedTagIds, onToggleTag }: Props
           {tagCategories.map((category) => (
             <div key={category.id}>
               <div className="mb-2 flex items-center gap-2">
-                <div className="h-1 w-1 rounded-full bg-warning" />
-                <h4 className="text-sm font-semibold text-foreground">{category.name}</h4>
+                <div className="bg-warning h-1 w-1 rounded-full" />
+                <h4 className="text-foreground text-sm font-semibold">{category.name}</h4>
               </div>
               {category.tags.length > 0 ? (
                 <div className="flex flex-wrap gap-2">
                   {category.tags.map((tag) => (
                     <label
                       key={tag.id}
-                      className={`inline-flex cursor-pointer items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 ${selectedTagIds.includes(tag.id)
-                        ? 'bg-primary text-white shadow-lg shadow-primary/30 ring-2 ring-primary'
-                        : 'bg-muted text-foreground ring-1 ring-section-header-border hover:bg-section-header-border hover:ring-border-dark'
-                        }`}
+                      className={`inline-flex cursor-pointer items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 ${
+                        selectedTagIds.includes(tag.id)
+                          ? "bg-primary shadow-primary/30 ring-primary text-white shadow-lg ring-2"
+                          : "bg-muted text-foreground ring-section-header-border hover:bg-section-header-border hover:ring-border-dark ring-1"
+                      }`}
                     >
                       <input
                         type="checkbox"
@@ -51,12 +52,12 @@ export function TagSection({ tagCategories, selectedTagIds, onToggleTag }: Props
                   ))}
                 </div>
               ) : (
-                <p className="text-sm text-muted-foreground">このカテゴリにはタグがありません</p>
+                <p className="text-muted-foreground text-sm">このカテゴリにはタグがありません</p>
               )}
             </div>
           ))}
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

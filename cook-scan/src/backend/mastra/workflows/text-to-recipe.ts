@@ -1,27 +1,30 @@
-import { createWorkflow } from '@mastra/core/workflows';
+import { createWorkflow } from "@mastra/core/workflows";
 import { z } from "zod";
 import { convertTextToRecipeStep } from "./steps/convert-text-to-recipe";
 
 const textToRecipeWorkflow = createWorkflow({
-  id: 'text-to-recipe-workflow',
+  id: "text-to-recipe-workflow",
   inputSchema: z.object({
     text: z.string(),
   }),
   outputSchema: z.object({
     title: z.string(),
-    ingredients: z.array(z.object({
-      name: z.string(),
-      unit: z.string(),
-      notes: z.string().nullable(),
-    })),
-    steps: z.array(z.object({
-      instruction: z.string(),
-      timerSeconds: z.number().nullable(),
-    })),
+    ingredients: z.array(
+      z.object({
+        name: z.string(),
+        unit: z.string(),
+        notes: z.string().nullable(),
+      }),
+    ),
+    steps: z.array(
+      z.object({
+        instruction: z.string(),
+        timerSeconds: z.number().nullable(),
+      }),
+    ),
     memo: z.string().nullable(),
   }),
-})
-  .then(convertTextToRecipeStep);
+}).then(convertTextToRecipeStep);
 
 textToRecipeWorkflow.commit();
 

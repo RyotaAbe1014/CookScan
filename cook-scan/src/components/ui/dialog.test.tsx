@@ -1,6 +1,6 @@
-import { describe, it, expect, vi } from 'vitest'
-import { render, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
+import { describe, it, expect, vi } from "vite-plus/test";
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import {
   Dialog,
   DialogContent,
@@ -8,20 +8,21 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
-} from './dialog'
+} from "./dialog";
 
 // Radix Dialog Portal をインラインレンダリングに変更
-vi.mock('@radix-ui/react-dialog', async () => {
-  const actual = await vi.importActual<typeof import('@radix-ui/react-dialog')>('@radix-ui/react-dialog')
+vi.mock("@radix-ui/react-dialog", async () => {
+  const actual =
+    await vi.importActual<typeof import("@radix-ui/react-dialog")>("@radix-ui/react-dialog");
   return {
     ...actual,
     Portal: ({ children }: { children: React.ReactNode }) => children,
-  }
-})
+  };
+});
 
-describe('Dialog', () => {
-  describe('表示制御', () => {
-    it('open=trueの時、コンテンツが表示される', () => {
+describe("Dialog", () => {
+  describe("表示制御", () => {
+    it("open=trueの時、コンテンツが表示される", () => {
       render(
         <Dialog open={true}>
           <DialogContent aria-describedby={undefined}>
@@ -29,24 +30,24 @@ describe('Dialog', () => {
             <p>ダイアログの内容</p>
           </DialogContent>
         </Dialog>,
-      )
-      expect(screen.getByText('ダイアログの内容')).toBeInTheDocument()
-    })
+      );
+      expect(screen.getByText("ダイアログの内容")).toBeInTheDocument();
+    });
 
-    it('open=falseの時、コンテンツが表示されない', () => {
+    it("open=falseの時、コンテンツが表示されない", () => {
       render(
         <Dialog open={false}>
           <DialogContent>
             <p>ダイアログの内容</p>
           </DialogContent>
         </Dialog>,
-      )
-      expect(screen.queryByText('ダイアログの内容')).not.toBeInTheDocument()
-    })
-  })
+      );
+      expect(screen.queryByText("ダイアログの内容")).not.toBeInTheDocument();
+    });
+  });
 
-  describe('DialogHeader', () => {
-    it('ヘッダーがborder-bクラスで表示される', () => {
+  describe("DialogHeader", () => {
+    it("ヘッダーがborder-bクラスで表示される", () => {
       const { container } = render(
         <Dialog open={true}>
           <DialogContent aria-describedby={undefined}>
@@ -55,13 +56,13 @@ describe('Dialog', () => {
             </DialogHeader>
           </DialogContent>
         </Dialog>,
-      )
-      expect(screen.getByText('タイトル')).toBeInTheDocument()
-      const header = container.querySelector('.border-b')
-      expect(header).toBeInTheDocument()
-    })
+      );
+      expect(screen.getByText("タイトル")).toBeInTheDocument();
+      const header = container.querySelector(".border-b");
+      expect(header).toBeInTheDocument();
+    });
 
-    it('カスタムclassNameが適用される', () => {
+    it("カスタムclassNameが適用される", () => {
       const { container } = render(
         <Dialog open={true}>
           <DialogContent aria-describedby={undefined}>
@@ -70,14 +71,14 @@ describe('Dialog', () => {
             </DialogHeader>
           </DialogContent>
         </Dialog>,
-      )
-      const header = container.querySelector('.bg-red-50')
-      expect(header).toBeInTheDocument()
-    })
-  })
+      );
+      const header = container.querySelector(".bg-red-50");
+      expect(header).toBeInTheDocument();
+    });
+  });
 
-  describe('DialogTitle', () => {
-    it('タイトルテキストが表示される', () => {
+  describe("DialogTitle", () => {
+    it("タイトルテキストが表示される", () => {
       render(
         <Dialog open={true}>
           <DialogContent aria-describedby={undefined}>
@@ -86,13 +87,13 @@ describe('Dialog', () => {
             </DialogHeader>
           </DialogContent>
         </Dialog>,
-      )
-      expect(screen.getByText('テストタイトル')).toBeInTheDocument()
-    })
-  })
+      );
+      expect(screen.getByText("テストタイトル")).toBeInTheDocument();
+    });
+  });
 
-  describe('DialogDescription', () => {
-    it('説明テキストが表示される', () => {
+  describe("DialogDescription", () => {
+    it("説明テキストが表示される", () => {
       render(
         <Dialog open={true}>
           <DialogContent>
@@ -102,13 +103,13 @@ describe('Dialog', () => {
             </DialogHeader>
           </DialogContent>
         </Dialog>,
-      )
-      expect(screen.getByText('説明テキスト')).toBeInTheDocument()
-    })
-  })
+      );
+      expect(screen.getByText("説明テキスト")).toBeInTheDocument();
+    });
+  });
 
-  describe('DialogFooter', () => {
-    it('フッター内のボタンが表示される', () => {
+  describe("DialogFooter", () => {
+    it("フッター内のボタンが表示される", () => {
       render(
         <Dialog open={true}>
           <DialogContent aria-describedby={undefined}>
@@ -121,14 +122,14 @@ describe('Dialog', () => {
             </DialogFooter>
           </DialogContent>
         </Dialog>,
-      )
-      expect(screen.getByText('キャンセル')).toBeInTheDocument()
-      expect(screen.getByText('確定')).toBeInTheDocument()
-    })
-  })
+      );
+      expect(screen.getByText("キャンセル")).toBeInTheDocument();
+      expect(screen.getByText("確定")).toBeInTheDocument();
+    });
+  });
 
-  describe('DialogContent', () => {
-    it('デフォルトのmaxWidthが適用される', () => {
+  describe("DialogContent", () => {
+    it("デフォルトのmaxWidthが適用される", () => {
       const { container } = render(
         <Dialog open={true}>
           <DialogContent aria-describedby={undefined}>
@@ -136,12 +137,12 @@ describe('Dialog', () => {
             <p>内容</p>
           </DialogContent>
         </Dialog>,
-      )
-      const content = container.querySelector('.max-w-lg')
-      expect(content).toBeInTheDocument()
-    })
+      );
+      const content = container.querySelector(".max-w-lg");
+      expect(content).toBeInTheDocument();
+    });
 
-    it('カスタムmaxWidthが適用される', () => {
+    it("カスタムmaxWidthが適用される", () => {
       const { container } = render(
         <Dialog open={true}>
           <DialogContent maxWidth="max-w-md" aria-describedby={undefined}>
@@ -149,16 +150,16 @@ describe('Dialog', () => {
             <p>内容</p>
           </DialogContent>
         </Dialog>,
-      )
-      const content = container.querySelector('.max-w-md')
-      expect(content).toBeInTheDocument()
-    })
-  })
+      );
+      const content = container.querySelector(".max-w-md");
+      expect(content).toBeInTheDocument();
+    });
+  });
 
-  describe('インタラクション', () => {
-    it('ESCキーでonOpenChangeが呼ばれる', async () => {
-      const onOpenChange = vi.fn()
-      const user = userEvent.setup()
+  describe("インタラクション", () => {
+    it("ESCキーでonOpenChangeが呼ばれる", async () => {
+      const onOpenChange = vi.fn();
+      const user = userEvent.setup();
 
       render(
         <Dialog open={true} onOpenChange={onOpenChange}>
@@ -169,10 +170,10 @@ describe('Dialog', () => {
             <p>内容</p>
           </DialogContent>
         </Dialog>,
-      )
+      );
 
-      await user.keyboard('{Escape}')
-      expect(onOpenChange).toHaveBeenCalledWith(false)
-    })
-  })
-})
+      await user.keyboard("{Escape}");
+      expect(onOpenChange).toHaveBeenCalledWith(false);
+    });
+  });
+});

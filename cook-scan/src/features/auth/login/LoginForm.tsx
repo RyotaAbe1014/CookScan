@@ -1,50 +1,50 @@
-'use client'
+"use client";
 
-import { useState, useTransition } from 'react'
-import { login } from '@/features/auth/actions'
-import { isSuccess } from '@/utils/result'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { FormField } from '@/components/ui/form-field'
-import { Alert } from '@/components/ui/alert'
-import { BookIcon } from '@/components/icons/book-icon'
-import { MailIcon } from '@/components/icons/mail-icon'
-import { LockIcon } from '@/components/icons/lock-icon'
-import { LoginIcon } from '@/components/icons/login-icon'
-import { UserAddIcon } from '@/components/icons/user-add-icon'
+import { useState, useTransition } from "react";
+import { login } from "@/features/auth/actions";
+import { isSuccess } from "@/utils/result";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { FormField } from "@/components/ui/form-field";
+import { Alert } from "@/components/ui/alert";
+import { BookIcon } from "@/components/icons/book-icon";
+import { MailIcon } from "@/components/icons/mail-icon";
+import { LockIcon } from "@/components/icons/lock-icon";
+import { LoginIcon } from "@/components/icons/login-icon";
+import { UserAddIcon } from "@/components/icons/user-add-icon";
 
 export const LoginForm = () => {
-  const [isPending, startTransition] = useTransition()
-  const [error, setError] = useState<string | null>(null)
+  const [isPending, startTransition] = useTransition();
+  const [error, setError] = useState<string | null>(null);
 
   const handleLogin = async (formData: FormData) => {
-    setError(null)
+    setError(null);
     startTransition(async () => {
-      const result = await login(formData)
+      const result = await login(formData);
       // 成功時はリダイレクトされるため、失敗時のみエラーを設定
       if (!isSuccess(result)) {
-        setError(result.error.message)
+        setError(result.error.message);
       }
-    })
-  }
+    });
+  };
 
   return (
     <>
       {/* Card - フラットデザインを重視 */}
-      <div className="overflow-hidden rounded-2xl bg-white shadow-lg ring-1 ring-border">
-        <div className="px-8 pb-8 pt-10 sm:px-10 sm:pb-10 sm:pt-12">
+      <div className="ring-border overflow-hidden rounded-2xl bg-white shadow-lg ring-1">
+        <div className="px-8 pt-10 pb-8 sm:px-10 sm:pt-12 sm:pb-10">
           {/* Header with icon */}
           <div className="mb-8 text-center">
-            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-xl bg-primary shadow-md shadow-primary/20 transition-all duration-200 hover:shadow-lg hover:shadow-primary/30">
+            <div className="bg-primary shadow-primary/20 hover:shadow-primary/30 mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-xl shadow-md transition-all duration-200 hover:shadow-lg">
               <BookIcon className="h-8 w-8 text-white" />
             </div>
-            <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+            <h2 className="text-foreground text-3xl font-bold tracking-tight sm:text-4xl">
               CookScan
             </h2>
-            <p className="mt-3 text-base text-muted-foreground">
+            <p className="text-muted-foreground mt-3 text-base">
               レシピをスキャンして
               <br />
-              <span className="font-semibold text-primary">あなただけの料理コレクション</span>
+              <span className="text-primary font-semibold">あなただけの料理コレクション</span>
               を作りましょう
             </p>
           </div>
@@ -107,7 +107,7 @@ export const LoginForm = () => {
                 className="w-full"
               >
                 {isPending ? (
-                  'ログイン中...'
+                  "ログイン中..."
                 ) : (
                   <>
                     <LoginIcon className="h-4 w-4" />
@@ -119,10 +119,10 @@ export const LoginForm = () => {
               {/* Divider */}
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-border" />
+                  <div className="border-border w-full border-t" />
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="bg-white px-3 text-muted-foreground">または</span>
+                  <span className="text-muted-foreground bg-white px-3">または</span>
                 </div>
               </div>
 
@@ -131,10 +131,10 @@ export const LoginForm = () => {
                 disabled={true}
                 isLoading={isPending}
                 variant="secondary"
-                className="w-full hover:border-primary-light hover:bg-primary-light hover:text-primary-hover"
+                className="hover:border-primary-light hover:bg-primary-light hover:text-primary-hover w-full"
               >
                 {isPending ? (
-                  '登録中...'
+                  "登録中..."
                 ) : (
                   <>
                     <UserAddIcon className="h-4 w-4" />
@@ -144,10 +144,10 @@ export const LoginForm = () => {
               </Button>
             </div>
           </form>
-        </div >
+        </div>
 
         {/* Footer decoration */}
-        <div className="bg-linear-to-r from-primary to-secondary px-8 py-4 sm:px-10">
+        <div className="from-primary to-secondary bg-linear-to-r px-8 py-4 sm:px-10">
           <p className="text-center text-xs font-medium text-white">
             安全に保存されるあなたのレシピコレクション
           </p>
@@ -155,11 +155,11 @@ export const LoginForm = () => {
       </div>
 
       {/* Additional info */}
-      <p className="mt-6 text-center text-sm text-muted-foreground">
+      <p className="text-muted-foreground mt-6 text-center text-sm">
         AIがレシピを自動抽出
-        <span className="mx-1 text-primary">•</span>
+        <span className="text-primary mx-1">•</span>
         簡単に整理・検索
       </p>
     </>
-  )
-}
+  );
+};

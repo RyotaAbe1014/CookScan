@@ -1,10 +1,10 @@
-'use server'
+"use server";
 
-import type { Result } from '@/utils/result'
-import { success, failure, Errors } from '@/utils/result'
-import { withAuth } from '@/utils/server-action/with-auth'
-import * as RecipeShareService from '@/backend/services/recipes/recipe-share.service'
-import type { ShareInfoOutput } from '@/backend/domain/recipes'
+import type { Result } from "@/utils/result";
+import { success, failure, Errors } from "@/utils/result";
+import { withAuth } from "@/utils/server-action/with-auth";
+import * as RecipeShareService from "@/backend/services/recipes/recipe-share.service";
+import type { ShareInfoOutput } from "@/backend/domain/recipes";
 
 /**
  * 共有リンクを作成

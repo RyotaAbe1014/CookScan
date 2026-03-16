@@ -2,4 +2,4 @@
  * MealPlan Service Layer Exports
  */
 
-export * from './meal-plan.service'
+export * from "./meal-plan.service";

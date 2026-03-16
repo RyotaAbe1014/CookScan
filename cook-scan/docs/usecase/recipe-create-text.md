@@ -132,17 +132,17 @@ sequenceDiagram
 
 #### コンポーネント構成
 
-| コンポーネント | ファイル | タイプ |
-|---|---|---|
-| RecipeUploadPageContent | `src/features/recipes/upload/recipe-upload-page-content.tsx` | Server Component |
-| RecipeUploadContent | `src/features/recipes/upload/recipe-upload-content.tsx` | Client Component |
-| TextInput | `src/features/recipes/upload/text-input.tsx` | Client Component |
-| RecipeForm | `src/features/recipes/upload/recipe-form.tsx` | Client Component |
-| IngredientInput | `src/features/recipes/components/ingredient-input/ingredient-input.tsx` | Client Component |
-| StepInput | `src/features/recipes/components/step-input/step-input.tsx` | Client Component |
-| ChildRecipeInput | `src/features/recipes/components/child-recipe-input/child-recipe-input.tsx` | Client Component |
+| コンポーネント            | ファイル                                                                              | タイプ           |
+| ------------------------- | ------------------------------------------------------------------------------------- | ---------------- |
+| RecipeUploadPageContent   | `src/features/recipes/upload/recipe-upload-page-content.tsx`                          | Server Component |
+| RecipeUploadContent       | `src/features/recipes/upload/recipe-upload-content.tsx`                               | Client Component |
+| TextInput                 | `src/features/recipes/upload/text-input.tsx`                                          | Client Component |
+| RecipeForm                | `src/features/recipes/upload/recipe-form.tsx`                                         | Client Component |
+| IngredientInput           | `src/features/recipes/components/ingredient-input/ingredient-input.tsx`               | Client Component |
+| StepInput                 | `src/features/recipes/components/step-input/step-input.tsx`                           | Client Component |
+| ChildRecipeInput          | `src/features/recipes/components/child-recipe-input/child-recipe-input.tsx`           | Client Component |
 | ChildRecipeSelectorDialog | `src/features/recipes/components/child-recipe-input/child-recipe-selector-dialog.tsx` | Client Component |
-| FormActions | `src/features/recipes/components/form-actions/form-actions.tsx` | Client Component |
+| FormActions               | `src/features/recipes/components/form-actions/form-actions.tsx`                       | Client Component |
 
 #### 状態管理
 
@@ -168,6 +168,7 @@ toggleTag(tagId)
 #### ステップ管理
 
 `RecipeUploadContent` が4つのステップを管理:
+
 1. `method-selection`: 入力方法選択（テキスト or 画像）
 2. `image-upload`: 画像アップロード
 3. `text-input`: テキスト入力
@@ -214,29 +215,43 @@ toggleTag(tagId)
 
 ```typescript
 const createRecipeInputSchema = z.object({
-  title: z.string().min(1),                    // 必須
-  sourceInfo: z.object({                       // nullable
-    bookName: z.string().optional(),
-    pageNumber: z.string().optional(),
-    url: z.string().optional(),
-  }).nullable(),
-  ingredients: z.array(z.object({              // 空配列可
-    name: z.string().min(1),                   // 必須
-    unit: z.string().optional(),
-    notes: z.string().optional(),
-  })),
-  steps: z.array(z.object({                    // 空配列可
-    instruction: z.string().min(1),            // 必須
-    timerSeconds: z.number().optional(),
-    orderIndex: z.number().optional(),
-  })),
+  title: z.string().min(1), // 必須
+  sourceInfo: z
+    .object({
+      // nullable
+      bookName: z.string().optional(),
+      pageNumber: z.string().optional(),
+      url: z.string().optional(),
+    })
+    .nullable(),
+  ingredients: z.array(
+    z.object({
+      // 空配列可
+      name: z.string().min(1), // 必須
+      unit: z.string().optional(),
+      notes: z.string().optional(),
+    }),
+  ),
+  steps: z.array(
+    z.object({
+      // 空配列可
+      instruction: z.string().min(1), // 必須
+      timerSeconds: z.number().optional(),
+      orderIndex: z.number().optional(),
+    }),
+  ),
   memo: z.string().optional(),
-  tags: z.array(z.string()),                   // 必須（空配列可）
-  childRecipes: z.array(z.object({             // optional
-    childRecipeId: z.string().min(1),
-    quantity: z.string().max(100),
-    notes: z.string().max(500),
-  })).optional(),
+  tags: z.array(z.string()), // 必須（空配列可）
+  childRecipes: z
+    .array(
+      z.object({
+        // optional
+        childRecipeId: z.string().min(1),
+        quantity: z.string().max(100),
+        notes: z.string().max(500),
+      }),
+    )
+    .optional(),
 });
 ```
 
@@ -331,14 +346,17 @@ model RecipeTag {
 ### POST /recipes/extract/text（API Route）
 
 #### 概要
+
 テキストからAIを使ってレシピデータを抽出する。
 
 #### リクエスト
-| フィールド | 型 | 必須 | 説明 |
-|---|---|---|---|
-| text | string | ✓ | レシピテキスト |
+
+| フィールド | 型     | 必須 | 説明           |
+| ---------- | ------ | ---- | -------------- |
+| text       | string | ✓    | レシピテキスト |
 
 #### レスポンス
+
 ```typescript
 // 成功時
 { success: true, result: ExtractedRecipeData }
@@ -348,33 +366,38 @@ model RecipeTag {
 ```
 
 #### エラーコード
-| ステータス | 条件 |
-|---|---|
-| 400 | テキストが空または未指定 |
-| 500 | ワークフロー実行失敗 |
+
+| ステータス | 条件                     |
+| ---------- | ------------------------ |
+| 400        | テキストが空または未指定 |
+| 500        | ワークフロー実行失敗     |
 
 ### createRecipe（Server Action）
 
 #### 概要
+
 レシピとその関連データを一括で作成する。
 
 #### シグネチャ
+
 ```typescript
-async function createRecipe(input: CreateRecipeRequest): Promise<Result<CreateRecipeResult>>
+async function createRecipe(input: CreateRecipeRequest): Promise<Result<CreateRecipeResult>>;
 ```
 
 #### パラメータ（CreateRecipeRequest）
-| 名前 | 型 | 必須 | 説明 |
-|---|---|---|---|
-| title | string | ✓ | レシピタイトル（1文字以上） |
-| sourceInfo | SourceInfoFormData \| null | - | ソース情報 |
-| ingredients | IngredientFormData[] | ✓ | 材料リスト（空配列可） |
-| steps | StepFormData[] | ✓ | 手順リスト（空配列可） |
-| memo | string | - | メモ |
-| tags | string[] | ✓ | タグIDリスト（空配列可） |
-| childRecipes | ChildRecipeFormData[] | - | サブレシピリスト |
+
+| 名前         | 型                         | 必須 | 説明                        |
+| ------------ | -------------------------- | ---- | --------------------------- |
+| title        | string                     | ✓    | レシピタイトル（1文字以上） |
+| sourceInfo   | SourceInfoFormData \| null | -    | ソース情報                  |
+| ingredients  | IngredientFormData[]       | ✓    | 材料リスト（空配列可）      |
+| steps        | StepFormData[]             | ✓    | 手順リスト（空配列可）      |
+| memo         | string                     | -    | メモ                        |
+| tags         | string[]                   | ✓    | タグIDリスト（空配列可）    |
+| childRecipes | ChildRecipeFormData[]      | -    | サブレシピリスト            |
 
 #### 戻り値
+
 ```typescript
 // 成功時
 { ok: true, data: { recipeId: string } }
@@ -384,23 +407,24 @@ async function createRecipe(input: CreateRecipeRequest): Promise<Result<CreateRe
 ```
 
 #### エラーコード
-| コード | メッセージ | 発生条件 |
-|---|---|---|
-| UNAUTHENTICATED | - | 未認証 |
-| VALIDATION_ERROR | 無効なタグが含まれています | タグIDが無効 |
+
+| コード           | メッセージ                     | 発生条件                   |
+| ---------------- | ------------------------------ | -------------------------- |
+| UNAUTHENTICATED  | -                              | 未認証                     |
+| VALIDATION_ERROR | 無効なタグが含まれています     | タグIDが無効               |
 | VALIDATION_ERROR | 無効な子レシピが含まれています | サブレシピが他ユーザー所有 |
-| VALIDATION_ERROR | 循環参照が検出されました | サブレシピに循環参照あり |
-| SERVER_ERROR | レシピの作成に失敗しました | 予期せぬエラー |
+| VALIDATION_ERROR | 循環参照が検出されました       | サブレシピに循環参照あり   |
+| SERVER_ERROR     | レシピの作成に失敗しました     | 予期せぬエラー             |
 
 ## テスト
 
 ### テストファイル
 
-| ファイル | フレームワーク | 対象 |
-|---|---|---|
-| `src/features/recipes/upload/__tests__/recipe-form.test.tsx` | Vitest + React Testing Library | RecipeFormコンポーネント |
-| `src/features/recipes/upload/__tests__/text-input.test.tsx` | Vitest + React Testing Library | TextInputコンポーネント |
-| `src/backend/services/recipes/__tests__/recipe.service.test.ts` | Vitest | RecipeService |
+| ファイル                                                        | フレームワーク                 | 対象                     |
+| --------------------------------------------------------------- | ------------------------------ | ------------------------ |
+| `src/features/recipes/upload/__tests__/recipe-form.test.tsx`    | Vitest + React Testing Library | RecipeFormコンポーネント |
+| `src/features/recipes/upload/__tests__/text-input.test.tsx`     | Vitest + React Testing Library | TextInputコンポーネント  |
+| `src/backend/services/recipes/__tests__/recipe.service.test.ts` | Vitest                         | RecipeService            |
 
 ### テストケース
 

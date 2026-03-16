@@ -1,94 +1,92 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { toast } from 'sonner'
-import { Card, CardHeader, CardContent } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { BeakerIcon } from '@/components/icons/beaker-icon'
-import { ShoppingCartIcon } from '@/components/icons/shopping-cart-icon'
-import { CheckIcon } from '@/components/icons/check-icon'
-import { createShoppingItems } from '@/features/shopping-list/actions'
-import type { Ingredient } from '@/types/ingredient'
+import { useState } from "react";
+import { toast } from "sonner";
+import { Card, CardHeader, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { BeakerIcon } from "@/components/icons/beaker-icon";
+import { ShoppingCartIcon } from "@/components/icons/shopping-cart-icon";
+import { CheckIcon } from "@/components/icons/check-icon";
+import { createShoppingItems } from "@/features/shopping-list/actions";
+import type { Ingredient } from "@/types/ingredient";
 
 type RecipeIngredientsProps = {
-  ingredients: Ingredient[]
-}
+  ingredients: Ingredient[];
+};
 
 function buildMemo(unit: string | null, notes: string | null): string | undefined {
-  if (unit && notes) return `${unit} / ${notes}`
-  if (unit) return unit
-  if (notes) return notes
-  return undefined
+  if (unit && notes) return `${unit} / ${notes}`;
+  if (unit) return unit;
+  if (notes) return notes;
+  return undefined;
 }
 
 export function RecipeIngredients({ ingredients }: RecipeIngredientsProps) {
-  const [addedIds, setAddedIds] = useState<Set<string>>(new Set())
-  const [loadingIds, setLoadingIds] = useState<Set<string>>(new Set())
-  const [isBulkLoading, setIsBulkLoading] = useState(false)
-  const [isBulkAdded, setIsBulkAdded] = useState(false)
+  const [addedIds, setAddedIds] = useState<Set<string>>(new Set());
+  const [loadingIds, setLoadingIds] = useState<Set<string>>(new Set());
+  const [isBulkLoading, setIsBulkLoading] = useState(false);
+  const [isBulkAdded, setIsBulkAdded] = useState(false);
 
   const handleAddSingle = async (ingredient: Ingredient) => {
-    setLoadingIds((prev) => new Set(prev).add(ingredient.id))
+    setLoadingIds((prev) => new Set(prev).add(ingredient.id));
     try {
       const result = await createShoppingItems([
         { name: ingredient.name, memo: buildMemo(ingredient.unit, ingredient.notes) },
-      ])
+      ]);
       if (result.ok) {
-        setAddedIds((prev) => new Set(prev).add(ingredient.id))
-        toast.success('買い物リストに追加しました')
+        setAddedIds((prev) => new Set(prev).add(ingredient.id));
+        toast.success("買い物リストに追加しました");
       } else {
-        toast.error(result.error.message)
+        toast.error(result.error.message);
       }
     } catch {
-      toast.error('買い物リストへの追加に失敗しました')
+      toast.error("買い物リストへの追加に失敗しました");
     } finally {
       setLoadingIds((prev) => {
-        const next = new Set(prev)
-        next.delete(ingredient.id)
-        return next
-      })
+        const next = new Set(prev);
+        next.delete(ingredient.id);
+        return next;
+      });
     }
-  }
+  };
 
   const handleAddAll = async () => {
-    const unadded = ingredients.filter((i) => !addedIds.has(i.id))
-    if (unadded.length === 0) return
+    const unadded = ingredients.filter((i) => !addedIds.has(i.id));
+    if (unadded.length === 0) return;
 
-    setIsBulkLoading(true)
+    setIsBulkLoading(true);
     try {
       const items = unadded.map((i) => ({
         name: i.name,
         memo: buildMemo(i.unit, i.notes),
-      }))
-      const result = await createShoppingItems(items)
+      }));
+      const result = await createShoppingItems(items);
       if (result.ok) {
-        setAddedIds(new Set(ingredients.map((i) => i.id)))
-        setIsBulkAdded(true)
-        toast.success(`${result.data.count}件を買い物リストに追加しました`)
+        setAddedIds(new Set(ingredients.map((i) => i.id)));
+        setIsBulkAdded(true);
+        toast.success(`${result.data.count}件を買い物リストに追加しました`);
       } else {
-        toast.error(result.error.message)
+        toast.error(result.error.message);
       }
     } catch {
-      toast.error('買い物リストへの追加に失敗しました')
+      toast.error("買い物リストへの追加に失敗しました");
     } finally {
-      setIsBulkLoading(false)
+      setIsBulkLoading(false);
     }
-  }
+  };
 
-  const allAdded = ingredients.length > 0 && ingredients.every((i) => addedIds.has(i.id))
+  const allAdded = ingredients.length > 0 && ingredients.every((i) => addedIds.has(i.id));
 
   return (
     <Card className="mb-8">
       <CardHeader
-        icon={
-          <BeakerIcon className="h-5 w-5 text-white" />
-        }
+        icon={<BeakerIcon className="h-5 w-5 text-white" />}
         iconColor="accent-ingredients"
         title="材料"
         actions={
           ingredients.length > 0 ? (
             <Button
-              variant={allAdded || isBulkAdded ? 'ghost' : 'secondary'}
+              variant={allAdded || isBulkAdded ? "ghost" : "secondary"}
               size="sm"
               isLoading={isBulkLoading}
               disabled={allAdded || isBulkAdded}
@@ -96,7 +94,7 @@ export function RecipeIngredients({ ingredients }: RecipeIngredientsProps) {
             >
               {allAdded || isBulkAdded ? (
                 <>
-                  <CheckIcon className="h-4 w-4 text-success" />
+                  <CheckIcon className="text-success h-4 w-4" />
                   <span className="text-success">追加済み</span>
                 </>
               ) : (
@@ -113,25 +111,31 @@ export function RecipeIngredients({ ingredients }: RecipeIngredientsProps) {
         {ingredients.length > 0 ? (
           <div className="space-y-2">
             {ingredients.map((ingredient) => {
-              const isAdded = addedIds.has(ingredient.id)
-              const isLoading = loadingIds.has(ingredient.id)
+              const isAdded = addedIds.has(ingredient.id);
+              const isLoading = loadingIds.has(ingredient.id);
 
               return (
                 <div
                   key={ingredient.id}
-                  className="flex items-center justify-between rounded-lg bg-linear-to-r from-section-header to-white p-3 ring-1 ring-section-header-border transition-all hover:shadow-md"
+                  className="from-section-header ring-section-header-border flex items-center justify-between rounded-lg bg-linear-to-r to-white p-3 ring-1 transition-all hover:shadow-md"
                 >
                   <div className="flex items-center gap-2">
-                    <div className="h-2 w-2 rounded-full bg-success" />
-                    <span className="font-semibold text-foreground">{ingredient.name}</span>
+                    <div className="bg-success h-2 w-2 rounded-full" />
+                    <span className="text-foreground font-semibold">{ingredient.name}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <div className="text-right">
-                      {ingredient.unit && <span className="text-sm font-medium text-muted-foreground">{ingredient.unit}</span>}
-                      {ingredient.notes && <div className="text-xs text-muted-foreground">{ingredient.notes}</div>}
+                      {ingredient.unit && (
+                        <span className="text-muted-foreground text-sm font-medium">
+                          {ingredient.unit}
+                        </span>
+                      )}
+                      {ingredient.notes && (
+                        <div className="text-muted-foreground text-xs">{ingredient.notes}</div>
+                      )}
                     </div>
                     <Button
-                      variant={isAdded ? 'ghost' : 'ghost'}
+                      variant={isAdded ? "ghost" : "ghost"}
                       size="icon"
                       className="h-8 w-8"
                       isLoading={isLoading}
@@ -139,17 +143,16 @@ export function RecipeIngredients({ ingredients }: RecipeIngredientsProps) {
                       onClick={() => handleAddSingle(ingredient)}
                       aria-label={`${ingredient.name}を買い物リストに追加`}
                     >
-                      {!isLoading && (
-                        isAdded ? (
-                          <CheckIcon className="h-4 w-4 text-success" />
+                      {!isLoading &&
+                        (isAdded ? (
+                          <CheckIcon className="text-success h-4 w-4" />
                         ) : (
-                          <ShoppingCartIcon className="h-4 w-4 text-muted-foreground hover:text-success" />
-                        )
-                      )}
+                          <ShoppingCartIcon className="text-muted-foreground hover:text-success h-4 w-4" />
+                        ))}
                     </Button>
                   </div>
                 </div>
-              )
+              );
             })}
           </div>
         ) : (
@@ -157,5 +160,5 @@ export function RecipeIngredients({ ingredients }: RecipeIngredientsProps) {
         )}
       </CardContent>
     </Card>
-  )
+  );
 }

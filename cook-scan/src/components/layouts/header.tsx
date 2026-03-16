@@ -1,29 +1,29 @@
-'use client'
+"use client";
 
-import { ReactNode, useState, useTransition } from 'react'
-import { BookIcon } from '@/components/icons/book-icon'
-import { InfoCircleIcon } from '@/components/icons/info-circle-icon'
-import { MenuIcon } from '@/components/icons/menu-icon'
-import { Sheet } from '@/components/ui/sheet'
-import { MobileNav } from '@/components/layouts/mobile-nav'
-import { logout } from '@/features/auth/actions'
+import { ReactNode, useState, useTransition } from "react";
+import { BookIcon } from "@/components/icons/book-icon";
+import { InfoCircleIcon } from "@/components/icons/info-circle-icon";
+import { MenuIcon } from "@/components/icons/menu-icon";
+import { Sheet } from "@/components/ui/sheet";
+import { MobileNav } from "@/components/layouts/mobile-nav";
+import { logout } from "@/features/auth/actions";
 
 type HeaderProps = {
-  title: string
-  subtitle?: string
-  rightAction?: ReactNode
-}
+  title: string;
+  subtitle?: string;
+  rightAction?: ReactNode;
+};
 
 export function Header({ title, subtitle, rightAction }: HeaderProps) {
-  const [isOpen, setIsOpen] = useState(false)
-  const [isPending, startTransition] = useTransition()
+  const [isOpen, setIsOpen] = useState(false);
+  const [isPending, startTransition] = useTransition();
 
   const handleLogout = () => {
     startTransition(async () => {
-      await logout()
-      setIsOpen(false)
-    })
-  }
+      await logout();
+      setIsOpen(false);
+    });
+  };
 
   return (
     <header className="relative overflow-hidden border-b border-slate-200 bg-white shadow-sm">
@@ -31,7 +31,7 @@ export function Header({ title, subtitle, rightAction }: HeaderProps) {
       <div className="absolute inset-0 bg-linear-to-r from-emerald-50/40 via-white to-teal-50/40" />
 
       {/* Accent border - Primary color */}
-      <div className="absolute bottom-0 left-0 right-0 h-1 bg-linear-to-r from-emerald-600 via-teal-500 to-emerald-600" />
+      <div className="absolute right-0 bottom-0 left-0 h-1 bg-linear-to-r from-emerald-600 via-teal-500 to-emerald-600" />
 
       <div className="relative mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between gap-4">
@@ -77,5 +77,5 @@ export function Header({ title, subtitle, rightAction }: HeaderProps) {
         />
       </Sheet>
     </header>
-  )
+  );
 }

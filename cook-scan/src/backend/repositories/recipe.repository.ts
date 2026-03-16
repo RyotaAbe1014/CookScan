@@ -3,16 +3,16 @@
  * Prismaクエリの集約
  */
 
-import { prisma } from '@/lib/prisma'
-import { Prisma } from '@prisma/client'
+import { prisma } from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
 import type {
   IngredientInput,
   StepInput,
   SourceInfoInput,
   RecipeDetailOutput,
   RecipeListOutput,
-} from '@/backend/domain/recipes'
-import type { RecipeBasic } from '@/types/recipe'
+} from "@/backend/domain/recipes";
+import type { RecipeBasic } from "@/types/recipe";
 
 // ===== Find Operations =====
 
@@ -21,7 +21,7 @@ import type { RecipeBasic } from '@/types/recipe'
  */
 export async function findRecipeById(
   recipeId: string,
-  userId: string
+  userId: string,
 ): Promise<RecipeDetailOutput | null> {
   return prisma.recipe.findFirst({
     where: {
@@ -30,10 +30,10 @@ export async function findRecipeById(
     },
     include: {
       ingredients: {
-        orderBy: { createdAt: 'asc' },
+        orderBy: { createdAt: "asc" },
       },
       steps: {
-        orderBy: { orderIndex: 'asc' },
+        orderBy: { orderIndex: "asc" },
       },
       recipeTags: {
         include: {
@@ -51,7 +51,7 @@ export async function findRecipeById(
             select: { id: true, title: true, imageUrl: true },
           },
         },
-        orderBy: { createdAt: 'asc' },
+        orderBy: { createdAt: "asc" },
       },
       parentRecipes: {
         include: {
@@ -61,7 +61,7 @@ export async function findRecipeById(
         },
       },
     },
-  })
+  });
 }
 
 /**
@@ -70,7 +70,7 @@ export async function findRecipeById(
 export async function findRecipesByUser(
   userId: string,
   searchQuery?: string,
-  tagFilters?: Prisma.RecipeWhereInput[]
+  tagFilters?: Prisma.RecipeWhereInput[],
 ): Promise<RecipeListOutput[]> {
   return prisma.recipe.findMany({
     where: {
@@ -78,7 +78,7 @@ export async function findRecipesByUser(
       ...(searchQuery && {
         title: {
           contains: searchQuery,
-          mode: 'insensitive',
+          mode: "insensitive",
         },
       }),
       ...(tagFilters && { AND: tagFilters }),
@@ -91,8 +91,8 @@ export async function findRecipesByUser(
         },
       },
     },
-    orderBy: { createdAt: 'desc' },
-  })
+    orderBy: { createdAt: "desc" },
+  });
 }
 
 /**
@@ -100,7 +100,7 @@ export async function findRecipesByUser(
  */
 export async function findRecentRecipesByUser(
   userId: string,
-  limit: number
+  limit: number,
 ): Promise<RecipeBasic[]> {
   return prisma.recipe.findMany({
     where: { userId },
@@ -124,9 +124,9 @@ export async function findRecentRecipesByUser(
         },
       },
     },
-    orderBy: { createdAt: 'desc' },
+    orderBy: { createdAt: "desc" },
     take: limit,
-  })
+  });
 }
 
 /**
@@ -135,17 +135,17 @@ export async function findRecentRecipesByUser(
 export async function checkRecipeOwnership(
   recipeId: string,
   userId: string,
-  tx?: Prisma.TransactionClient
+  tx?: Prisma.TransactionClient,
 ): Promise<boolean> {
-  const client = tx ?? prisma
+  const client = tx ?? prisma;
   const recipe = await client.recipe.findFirst({
     where: {
       id: recipeId,
       userId,
     },
     select: { id: true },
-  })
-  return recipe !== null
+  });
+  return recipe !== null;
 }
 
 // ===== Create Operations (Transaction用) =====
@@ -157,7 +157,7 @@ export async function createRecipe(
   tx: Prisma.TransactionClient,
   userId: string,
   title: string,
-  memo?: string
+  memo?: string,
 ) {
   return tx.recipe.create({
     data: {
@@ -165,7 +165,7 @@ export async function createRecipe(
       title,
       memo: memo || null,
     },
-  })
+  });
 }
 
 /**
@@ -174,9 +174,9 @@ export async function createRecipe(
 export async function createIngredients(
   tx: Prisma.TransactionClient,
   recipeId: string,
-  ingredients: IngredientInput[]
+  ingredients: IngredientInput[],
 ) {
-  if (ingredients.length === 0) return
+  if (ingredients.length === 0) return;
 
   await tx.ingredient.createMany({
     data: ingredients.map((ingredient) => ({
@@ -185,7 +185,7 @@ export async function createIngredients(
       unit: ingredient.unit || null,
       notes: ingredient.notes || null,
     })),
-  })
+  });
 }
 
 /**
@@ -194,9 +194,9 @@ export async function createIngredients(
 export async function createSteps(
   tx: Prisma.TransactionClient,
   recipeId: string,
-  steps: StepInput[]
+  steps: StepInput[],
 ) {
-  if (steps.length === 0) return
+  if (steps.length === 0) return;
 
   await tx.step.createMany({
     data: steps.map((step, index) => ({
@@ -205,7 +205,7 @@ export async function createSteps(
       instruction: step.instruction,
       timerSeconds: step.timerSeconds || null,
     })),
-  })
+  });
 }
 
 /**
@@ -215,7 +215,7 @@ export async function createSourceInfo(
   tx: Prisma.TransactionClient,
   recipeId: string,
   sourceInfo: SourceInfoInput,
-  sanitizedUrl: string | null
+  sanitizedUrl: string | null,
 ) {
   await tx.sourceInfo.create({
     data: {
@@ -224,7 +224,7 @@ export async function createSourceInfo(
       pageNumber: sourceInfo.pageNumber || null,
       sourceUrl: sanitizedUrl,
     },
-  })
+  });
 }
 
 /**
@@ -233,16 +233,16 @@ export async function createSourceInfo(
 export async function createRecipeTags(
   tx: Prisma.TransactionClient,
   recipeId: string,
-  tagIds: string[]
+  tagIds: string[],
 ) {
-  if (tagIds.length === 0) return
+  if (tagIds.length === 0) return;
 
   await tx.recipeTag.createMany({
     data: tagIds.map((tagId) => ({
       recipeId,
       tagId,
     })),
-  })
+  });
 }
 
 // ===== Update Operations (Transaction用) =====
@@ -254,7 +254,7 @@ export async function updateRecipe(
   tx: Prisma.TransactionClient,
   recipeId: string,
   title: string,
-  memo?: string
+  memo?: string,
 ) {
   return tx.recipe.update({
     where: { id: recipeId },
@@ -263,7 +263,7 @@ export async function updateRecipe(
       memo: memo || null,
       updatedAt: new Date(),
     },
-  })
+  });
 }
 
 // ===== Delete Operations (Transaction用) =====
@@ -275,27 +275,27 @@ export async function deleteRelatedData(tx: Prisma.TransactionClient, recipeId: 
   // 材料を削除
   await tx.ingredient.deleteMany({
     where: { recipeId },
-  })
+  });
 
   // 手順を削除
   await tx.step.deleteMany({
     where: { recipeId },
-  })
+  });
 
   // ソース情報を削除
   await tx.sourceInfo.deleteMany({
     where: { recipeId },
-  })
+  });
 
   // レシピタグを削除
   await tx.recipeTag.deleteMany({
     where: { recipeId },
-  })
+  });
 
   // 子レシピ関係を削除（親として）
   await tx.recipeRelation.deleteMany({
     where: { parentRecipeId: recipeId },
-  })
+  });
 }
 
 /**
@@ -305,15 +305,15 @@ export async function deleteRelatedData(tx: Prisma.TransactionClient, recipeId: 
  */
 export async function deleteRecipe(tx: Prisma.TransactionClient, recipeId: string) {
   // RecipeTagを削除（Cascadeで自動削除されるが、制約順序のため明示的に削除）
-  await tx.recipeTag.deleteMany({ where: { recipeId } })
+  await tx.recipeTag.deleteMany({ where: { recipeId } });
 
   // 子レシピ関係を削除（親として・子として）
   await tx.recipeRelation.deleteMany({
     where: { OR: [{ parentRecipeId: recipeId }, { childRecipeId: recipeId }] },
-  })
+  });
 
   // レシピ本体を削除（Ingredient, Step, SourceInfo, RecipeVersion, OcrProcessingHistoryはCascadeで自動削除）
   await tx.recipe.delete({
     where: { id: recipeId },
-  })
+  });
 }

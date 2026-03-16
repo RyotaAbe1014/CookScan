@@ -206,11 +206,13 @@ sequenceDiagram
 #### コンポーネント構成
 
 **タグ編集:**
+
 - **ファイル**: `src/features/tags/tag-item.tsx`
 - **タイプ**: Client Component
 - **スタイリング**: Tailwind CSS v4
 
 **タグカテゴリ編集:**
+
 - **ファイル**: `src/features/tags/category-item.tsx`
 - **タイプ**: Client Component
 - **スタイリング**: Tailwind CSS v4
@@ -226,46 +228,46 @@ sequenceDiagram
 
 ```typescript
 // TagItem の状態
-const [isEditing, setIsEditing] = useState(false)
-const [editName, setEditName] = useState(tag.name)
-const [editDescription, setEditDescription] = useState(tag.description || '')
-const [isSubmitting, setIsSubmitting] = useState(false)
+const [isEditing, setIsEditing] = useState(false);
+const [editName, setEditName] = useState(tag.name);
+const [editDescription, setEditDescription] = useState(tag.description || "");
+const [isSubmitting, setIsSubmitting] = useState(false);
 ```
 
 #### 主要な処理フロー
 
 ```typescript
 const handleEdit = async (e: React.FormEvent) => {
-  e.preventDefault()
+  e.preventDefault();
 
   // クライアント側バリデーション
   if (!editName.trim()) {
-    toast.error('タグ名を入力してください')
-    return
+    toast.error("タグ名を入力してください");
+    return;
   }
 
-  setIsSubmitting(true)
+  setIsSubmitting(true);
   try {
-    const result = await updateTag(tag.id, editName.trim(), editDescription.trim() || undefined)
+    const result = await updateTag(tag.id, editName.trim(), editDescription.trim() || undefined);
 
     if (isSuccess(result)) {
-      setIsEditing(false)
+      setIsEditing(false);
     } else {
-      toast.error(result.error.message)
+      toast.error(result.error.message);
     }
   } catch {
-    toast.error('タグの更新中にエラーが発生しました')
+    toast.error("タグの更新中にエラーが発生しました");
   } finally {
-    setIsSubmitting(false)
+    setIsSubmitting(false);
   }
-}
+};
 
 // キャンセル時の状態復元
 const handleCancel = () => {
-  setIsEditing(false)
-  setEditName(tag.name)
-  setEditDescription(tag.description || '')
-}
+  setIsEditing(false);
+  setEditName(tag.name);
+  setEditDescription(tag.description || "");
+};
 ```
 
 ### バックエンド
@@ -288,28 +290,22 @@ const handleCancel = () => {
 // src/backend/domain/tags/validators.ts
 
 const updateTagInputSchema = z.object({
-  tagId: z.string().min(1, 'タグIDが必要です'),
+  tagId: z.string().min(1, "タグIDが必要です"),
   name: z
     .string()
-    .min(1, 'タグ名を入力してください')
-    .max(50, 'タグ名は50文字以内で入力してください'),
-  description: z
-    .string()
-    .max(200, '説明は200文字以内で入力してください')
-    .optional(),
-})
+    .min(1, "タグ名を入力してください")
+    .max(50, "タグ名は50文字以内で入力してください"),
+  description: z.string().max(200, "説明は200文字以内で入力してください").optional(),
+});
 
 const updateTagCategoryInputSchema = z.object({
-  categoryId: z.string().min(1, 'カテゴリIDが必要です'),
+  categoryId: z.string().min(1, "カテゴリIDが必要です"),
   name: z
     .string()
-    .min(1, 'カテゴリ名を入力してください')
-    .max(50, 'カテゴリ名は50文字以内で入力してください'),
-  description: z
-    .string()
-    .max(200, '説明は200文字以内で入力してください')
-    .optional(),
-})
+    .min(1, "カテゴリ名を入力してください")
+    .max(50, "カテゴリ名は50文字以内で入力してください"),
+  description: z.string().max(200, "説明は200文字以内で入力してください").optional(),
+});
 ```
 
 #### 処理フロー（タグ編集）
@@ -329,15 +325,15 @@ const updateTagCategoryInputSchema = z.object({
 
 ```typescript
 export async function updateTag(userId: string, input: UpdateTagInput): Promise<void> {
-  const { tagId, name, description } = input
+  const { tagId, name, description } = input;
 
-  const tag = await TagRepository.findTagById(tagId)
+  const tag = await TagRepository.findTagById(tagId);
 
-  if (!tag) throw new Error('タグが見つかりません')
-  if (tag.isSystem) throw new Error('システムタグは編集できません')
-  if (tag.userId !== userId) throw new Error('このタグを編集する権限がありません')
+  if (!tag) throw new Error("タグが見つかりません");
+  if (tag.isSystem) throw new Error("システムタグは編集できません");
+  if (tag.userId !== userId) throw new Error("このタグを編集する権限がありません");
 
-  await TagRepository.updateTag(tagId, name, description)
+  await TagRepository.updateTag(tagId, name, description);
 }
 ```
 
@@ -353,7 +349,7 @@ export async function updateTag(tagId: string, name: string, description?: strin
       name,
       description: description || null,
     },
-  })
+  });
 }
 ```
 
@@ -417,19 +413,15 @@ model TagCategory {
 #### シグネチャ
 
 ```typescript
-async function updateTag(
-  tagId: string,
-  name: string,
-  description?: string
-): Promise<Result<void>>
+async function updateTag(tagId: string, name: string, description?: string): Promise<Result<void>>;
 ```
 
 #### パラメータ
 
-| 名前 | 型 | 説明 |
-|------|------|------|
-| tagId | `string` | 更新対象タグのID |
-| name | `string` | 新しいタグ名（1〜50文字） |
+| 名前        | 型                    | 説明                             |
+| ----------- | --------------------- | -------------------------------- |
+| tagId       | `string`              | 更新対象タグのID                 |
+| name        | `string`              | 新しいタグ名（1〜50文字）        |
 | description | `string \| undefined` | 新しい説明（0〜200文字、省略可） |
 
 #### 戻り値
@@ -442,13 +434,13 @@ type Result<void> =
 
 #### エラーコード
 
-| コード | メッセージ | 発生条件 |
-|--------|-----------|---------|
-| `UNAUTHENTICATED` | "認証が必要です" | 未ログイン |
-| `NOT_FOUND` | "タグが見つかりません" | 指定IDのタグが存在しない |
-| `FORBIDDEN` | "システムタグは編集できません" | `isSystem=true` のタグ |
-| `FORBIDDEN` | "このタグを編集する権限がありません" | 他ユーザーのタグ |
-| `SERVER_ERROR` | "タグの更新に失敗しました" | 予期しないエラー |
+| コード            | メッセージ                           | 発生条件                 |
+| ----------------- | ------------------------------------ | ------------------------ |
+| `UNAUTHENTICATED` | "認証が必要です"                     | 未ログイン               |
+| `NOT_FOUND`       | "タグが見つかりません"               | 指定IDのタグが存在しない |
+| `FORBIDDEN`       | "システムタグは編集できません"       | `isSystem=true` のタグ   |
+| `FORBIDDEN`       | "このタグを編集する権限がありません" | 他ユーザーのタグ         |
+| `SERVER_ERROR`    | "タグの更新に失敗しました"           | 予期しないエラー         |
 
 #### 処理詳細
 
@@ -474,16 +466,16 @@ type Result<void> =
 async function updateTagCategory(
   categoryId: string,
   name: string,
-  description?: string
-): Promise<Result<void>>
+  description?: string,
+): Promise<Result<void>>;
 ```
 
 #### パラメータ
 
-| 名前 | 型 | 説明 |
-|------|------|------|
-| categoryId | `string` | 更新対象カテゴリのID |
-| name | `string` | 新しいカテゴリ名（1〜50文字） |
+| 名前        | 型                    | 説明                             |
+| ----------- | --------------------- | -------------------------------- |
+| categoryId  | `string`              | 更新対象カテゴリのID             |
+| name        | `string`              | 新しいカテゴリ名（1〜50文字）    |
 | description | `string \| undefined` | 新しい説明（0〜200文字、省略可） |
 
 #### 戻り値
@@ -496,13 +488,13 @@ type Result<void> =
 
 #### エラーコード
 
-| コード | メッセージ | 発生条件 |
-|--------|-----------|---------|
-| `UNAUTHENTICATED` | "認証が必要です" | 未ログイン |
-| `NOT_FOUND` | "カテゴリが見つかりません" | 指定IDのカテゴリが存在しない |
-| `FORBIDDEN` | "システムカテゴリは編集できません" | `isSystem=true` のカテゴリ |
-| `FORBIDDEN` | "このカテゴリを編集する権限がありません" | 他ユーザーのカテゴリ |
-| `SERVER_ERROR` | "カテゴリの更新に失敗しました" | 予期しないエラー |
+| コード            | メッセージ                               | 発生条件                     |
+| ----------------- | ---------------------------------------- | ---------------------------- |
+| `UNAUTHENTICATED` | "認証が必要です"                         | 未ログイン                   |
+| `NOT_FOUND`       | "カテゴリが見つかりません"               | 指定IDのカテゴリが存在しない |
+| `FORBIDDEN`       | "システムカテゴリは編集できません"       | `isSystem=true` のカテゴリ   |
+| `FORBIDDEN`       | "このカテゴリを編集する権限がありません" | 他ユーザーのカテゴリ         |
+| `SERVER_ERROR`    | "カテゴリの更新に失敗しました"           | 予期しないエラー             |
 
 ## テスト
 

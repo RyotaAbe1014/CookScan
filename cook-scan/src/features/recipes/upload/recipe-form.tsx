@@ -1,30 +1,37 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import Image from 'next/image'
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
 
-import type { ExtractedRecipeData } from './types'
-import type { RecipeFormTagCategory } from '@/features/recipes/types/tag'
-import { createRecipe } from './actions'
-import { isSuccess } from '@/utils/result'
-import { useRecipeForm } from '@/features/recipes/hooks/use-recipe-form'
-import { Card, CardContent } from '@/components/ui/card'
-import { Alert } from '@/components/ui/alert'
-import { BasicInfoSection, TagSection, IngredientSection, StepSection, ChildRecipeSection, FormActions } from '@/features/recipes/components'
-import { CameraIcon } from '@/components/icons/camera-icon'
+import type { ExtractedRecipeData } from "./types";
+import type { RecipeFormTagCategory } from "@/features/recipes/types/tag";
+import { createRecipe } from "./actions";
+import { isSuccess } from "@/utils/result";
+import { useRecipeForm } from "@/features/recipes/hooks/use-recipe-form";
+import { Card, CardContent } from "@/components/ui/card";
+import { Alert } from "@/components/ui/alert";
+import {
+  BasicInfoSection,
+  TagSection,
+  IngredientSection,
+  StepSection,
+  ChildRecipeSection,
+  FormActions,
+} from "@/features/recipes/components";
+import { CameraIcon } from "@/components/icons/camera-icon";
 
 type Props = {
-  imageUrl: string | null
-  extractedData: ExtractedRecipeData | null
-  tagCategories: RecipeFormTagCategory[]
-}
+  imageUrl: string | null;
+  extractedData: ExtractedRecipeData | null;
+  tagCategories: RecipeFormTagCategory[];
+};
 
 export default function RecipeForm({ imageUrl, extractedData, tagCategories }: Props) {
-  const router = useRouter()
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [isChildRecipeDialogOpen, setIsChildRecipeDialogOpen] = useState(false)
+  const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [isChildRecipeDialogOpen, setIsChildRecipeDialogOpen] = useState(false);
 
   // カスタムフックで状態管理とロジックを統一
   const {
@@ -50,52 +57,53 @@ export default function RecipeForm({ imageUrl, extractedData, tagCategories }: P
     toggleTag,
   } = useRecipeForm({
     initialData: {
-      title: extractedData?.title || '',
+      title: extractedData?.title || "",
       sourceInfo: {
-        bookName: extractedData?.sourceInfo?.bookName || '',
-        pageNumber: extractedData?.sourceInfo?.pageNumber || '',
-        url: extractedData?.sourceInfo?.url || '',
+        bookName: extractedData?.sourceInfo?.bookName || "",
+        pageNumber: extractedData?.sourceInfo?.pageNumber || "",
+        url: extractedData?.sourceInfo?.url || "",
       },
       ingredients: extractedData?.ingredients || [],
       steps: extractedData?.steps || [],
-      memo: extractedData?.memo || '',
+      memo: extractedData?.memo || "",
       selectedTagIds: [],
       childRecipes: [],
     },
-  })
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError(null)
-    setIsSubmitting(true)
+    e.preventDefault();
+    setError(null);
+    setIsSubmitting(true);
 
     try {
       const result = await createRecipe({
         title,
-        sourceInfo: sourceInfo.bookName || sourceInfo.pageNumber || sourceInfo.url ? sourceInfo : null,
+        sourceInfo:
+          sourceInfo.bookName || sourceInfo.pageNumber || sourceInfo.url ? sourceInfo : null,
         ingredients,
         steps,
         memo,
         tags: selectedTagIds,
-        childRecipes: childRecipes.map(cr => ({
+        childRecipes: childRecipes.map((cr) => ({
           childRecipeId: cr.childRecipeId,
           quantity: cr.quantity || undefined,
           notes: cr.notes || undefined,
         })),
-      })
+      });
 
       if (isSuccess(result)) {
-        router.push(`/recipes/${result.data.recipeId}`)
+        router.push(`/recipes/${result.data.recipeId}`);
       } else {
-        setError(result.error.message)
-        setIsSubmitting(false)
+        setError(result.error.message);
+        setIsSubmitting(false);
       }
     } catch (err) {
-      console.error('Error creating recipe:', err)
-      setError('エラーが発生しました')
-      setIsSubmitting(false)
+      console.error("Error creating recipe:", err);
+      setError("エラーが発生しました");
+      setIsSubmitting(false);
     }
-  }
+  };
 
   return (
     <form onSubmit={handleSubmit} className="mx-auto max-w-4xl">
@@ -110,10 +118,10 @@ export default function RecipeForm({ imageUrl, extractedData, tagCategories }: P
           <Card>
             <CardContent>
               <div className="mb-4 flex items-center gap-2">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary shadow-md">
+                <div className="bg-primary flex h-10 w-10 items-center justify-center rounded-lg shadow-md">
                   <CameraIcon className="h-5 w-5 text-white" />
                 </div>
-                <h3 className="text-lg font-bold text-foreground">アップロードした画像</h3>
+                <h3 className="text-foreground text-lg font-bold">アップロードした画像</h3>
               </div>
               <Image
                 src={imageUrl}
@@ -158,12 +166,7 @@ export default function RecipeForm({ imageUrl, extractedData, tagCategories }: P
           onRemove={removeChildRecipe}
         />
 
-        <StepSection
-          steps={steps}
-          onAdd={addStep}
-          onUpdate={updateStep}
-          onRemove={removeStep}
-        />
+        <StepSection steps={steps} onAdd={addStep} onUpdate={updateStep} onRemove={removeStep} />
 
         {/* ボタン */}
         <Card>
@@ -172,11 +175,11 @@ export default function RecipeForm({ imageUrl, extractedData, tagCategories }: P
               isSubmitting={isSubmitting}
               disabled={!title}
               submitLabel="レシピを保存"
-              onCancel={() => router.push('/recipes')}
+              onCancel={() => router.push("/recipes")}
             />
           </CardContent>
         </Card>
       </div>
     </form>
-  )
+  );
 }

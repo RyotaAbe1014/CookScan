@@ -1,51 +1,50 @@
-'use client'
+"use client";
 
-import { useState, useOptimistic, useTransition } from 'react'
-import { useRouter } from 'next/navigation'
-import type { ShoppingItemOutput } from '@/backend/domain/shopping-items'
-import { updateShoppingItemCheck } from '@/features/shopping-list/actions'
-import { isSuccess } from '@/utils/result'
-import { ShoppingListEmptyState } from './shopping-list-empty-state'
-import { ShoppingItemRow } from './shopping-item-row'
-import { AddShoppingItemForm } from './add-shopping-item-form'
-import { DeleteCheckedItemsButton } from './delete-checked-items-button'
-import { EditShoppingItemDialog } from './edit-shopping-item-dialog'
-import { ShoppingListStatsBar } from './shopping-list-stats-bar'
+import { useState, useOptimistic, useTransition } from "react";
+import { useRouter } from "next/navigation";
+import type { ShoppingItemOutput } from "@/backend/domain/shopping-items";
+import { updateShoppingItemCheck } from "@/features/shopping-list/actions";
+import { isSuccess } from "@/utils/result";
+import { ShoppingListEmptyState } from "./shopping-list-empty-state";
+import { ShoppingItemRow } from "./shopping-item-row";
+import { AddShoppingItemForm } from "./add-shopping-item-form";
+import { DeleteCheckedItemsButton } from "./delete-checked-items-button";
+import { EditShoppingItemDialog } from "./edit-shopping-item-dialog";
+import { ShoppingListStatsBar } from "./shopping-list-stats-bar";
 
 type ShoppingListContentProps = {
-  items: ShoppingItemOutput[]
-}
+  items: ShoppingItemOutput[];
+};
 
 export function ShoppingListContent({ items }: ShoppingListContentProps) {
-  const router = useRouter()
-  const [editingItem, setEditingItem] = useState<ShoppingItemOutput | null>(null)
-  const [, startTransition] = useTransition()
-  const [optimisticItems, toggleOptimisticCheck] = useOptimistic(
-    items,
-    (state, itemId: string) =>
-      state.map((item) =>
-        item.id === itemId ? { ...item, isChecked: !item.isChecked } : item
-      )
-  )
+  const router = useRouter();
+  const [editingItem, setEditingItem] = useState<ShoppingItemOutput | null>(null);
+  const [, startTransition] = useTransition();
+  const [optimisticItems, toggleOptimisticCheck] = useOptimistic(items, (state, itemId: string) =>
+    state.map((item) => (item.id === itemId ? { ...item, isChecked: !item.isChecked } : item)),
+  );
 
   const handleToggleCheck = (itemId: string) => {
-    const item = optimisticItems.find((i) => i.id === itemId)
-    if (!item) return
+    const item = optimisticItems.find((i) => i.id === itemId);
+    if (!item) return;
     startTransition(async () => {
-      toggleOptimisticCheck(itemId)
-      const result = await updateShoppingItemCheck(itemId, !item.isChecked)
+      toggleOptimisticCheck(itemId);
+      const result = await updateShoppingItemCheck(itemId, !item.isChecked);
       if (!isSuccess(result)) {
-        router.refresh()
+        router.refresh();
       }
-    })
-  }
+    });
+  };
 
-  const uncheckedItems = optimisticItems.filter((item) => !item.isChecked)
-  const checkedItems = optimisticItems.filter((item) => item.isChecked)
+  const uncheckedItems = optimisticItems.filter((item) => !item.isChecked);
+  const checkedItems = optimisticItems.filter((item) => item.isChecked);
 
   return (
     <>
-      <ShoppingListStatsBar totalCount={optimisticItems.length} checkedCount={checkedItems.length} />
+      <ShoppingListStatsBar
+        totalCount={optimisticItems.length}
+        checkedCount={checkedItems.length}
+      />
 
       <AddShoppingItemForm />
 
@@ -55,8 +54,8 @@ export function ShoppingListContent({ items }: ShoppingListContentProps) {
         <div className="space-y-6">
           {/* 未チェックアイテム */}
           {uncheckedItems.length > 0 && (
-            <div className="rounded-xl bg-white shadow-card ring-1 ring-card-border">
-              <ul className="divide-y divide-muted">
+            <div className="shadow-card ring-card-border rounded-xl bg-white ring-1">
+              <ul className="divide-muted divide-y">
                 {uncheckedItems.map((item) => (
                   <ShoppingItemRow
                     key={item.id}
@@ -73,13 +72,13 @@ export function ShoppingListContent({ items }: ShoppingListContentProps) {
           {checkedItems.length > 0 && (
             <div>
               <div className="mb-3 flex items-center justify-between">
-                <h3 className="text-sm font-semibold text-muted-foreground">
+                <h3 className="text-muted-foreground text-sm font-semibold">
                   購入済み ({checkedItems.length})
                 </h3>
                 <DeleteCheckedItemsButton />
               </div>
-              <div className="rounded-xl bg-white/60 shadow-sm ring-1 ring-card-border">
-                <ul className="divide-y divide-muted">
+              <div className="ring-card-border rounded-xl bg-white/60 shadow-sm ring-1">
+                <ul className="divide-muted divide-y">
                   {checkedItems.map((item) => (
                     <ShoppingItemRow
                       key={item.id}
@@ -102,5 +101,5 @@ export function ShoppingListContent({ items }: ShoppingListContentProps) {
         onClose={() => setEditingItem(null)}
       />
     </>
-  )
+  );
 }
