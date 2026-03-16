@@ -12,10 +12,10 @@ export function WelcomeSection({ profile }: WelcomeSectionProps) {
 
   return (
     <div className="mb-8">
-      <h2 className="text-2xl font-bold text-foreground sm:text-3xl">
+      <h2 className="text-foreground text-2xl font-bold sm:text-3xl">
         こんにちは、{displayName}さん
       </h2>
-      <p className="mt-1 text-muted-foreground">今日は何を料理しますか？</p>
+      <p className="text-muted-foreground mt-1">今日は何を料理しますか？</p>
     </div>
   );
 }

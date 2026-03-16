@@ -37,7 +37,7 @@ export const InviteUserForm = () => {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label htmlFor="invite-email" className="block text-sm font-medium text-foreground mb-1">
+        <label htmlFor="invite-email" className="text-foreground mb-1 block text-sm font-medium">
           メールアドレス
         </label>
         <Input

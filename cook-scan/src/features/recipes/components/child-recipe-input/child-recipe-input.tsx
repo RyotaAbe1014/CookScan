@@ -6,16 +6,16 @@ import type { ChildRecipeInputProps } from "./types";
 
 export function ChildRecipeInput({ item, index, onUpdate, onRemove }: ChildRecipeInputProps) {
   return (
-    <div className="rounded-lg bg-linear-to-r from-secondary-light to-white p-4 ring-1 ring-secondary-light">
+    <div className="from-secondary-light ring-secondary-light rounded-lg bg-linear-to-r to-white p-4 ring-1">
       <div className="mb-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <div className="h-2 w-2 rounded-full bg-secondary" />
-          <span className="font-semibold text-foreground">{item.childRecipeTitle}</span>
+          <div className="bg-secondary h-2 w-2 rounded-full" />
+          <span className="text-foreground font-semibold">{item.childRecipeTitle}</span>
         </div>
         <button
           type="button"
           onClick={() => onRemove(index)}
-          className="rounded-lg p-1.5 text-muted-foreground transition-colors hover:bg-danger-light hover:text-danger"
+          className="text-muted-foreground hover:bg-danger-light hover:text-danger rounded-lg p-1.5 transition-colors"
           aria-label={`${item.childRecipeTitle}を削除`}
         >
           <TrashIcon className="h-4 w-4" />
@@ -25,7 +25,7 @@ export function ChildRecipeInput({ item, index, onUpdate, onRemove }: ChildRecip
         <div>
           <label
             htmlFor={`child-recipe-quantity-${index}`}
-            className="mb-1 block text-xs font-medium text-muted-foreground"
+            className="text-muted-foreground mb-1 block text-xs font-medium"
           >
             分量
           </label>
@@ -40,7 +40,7 @@ export function ChildRecipeInput({ item, index, onUpdate, onRemove }: ChildRecip
         <div>
           <label
             htmlFor={`child-recipe-notes-${index}`}
-            className="mb-1 block text-xs font-medium text-muted-foreground"
+            className="text-muted-foreground mb-1 block text-xs font-medium"
           >
             メモ
           </label>

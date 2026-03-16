@@ -75,9 +75,9 @@ function EditShoppingItemForm({
 
   return (
     <DialogContent maxWidth="max-w-md">
-      <DialogHeader className="bg-linear-to-r from-primary-light to-secondary-light">
+      <DialogHeader className="from-primary-light to-secondary-light bg-linear-to-r">
         <div className="flex items-start gap-4">
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-primary to-secondary-hover shadow-lg">
+          <div className="from-primary to-secondary-hover flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-linear-to-br shadow-lg">
             <PencilIcon className="h-6 w-6 text-white" />
           </div>
           <div className="flex-1">

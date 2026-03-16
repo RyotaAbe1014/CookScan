@@ -108,7 +108,7 @@ function TagForm({ categories }: TagFormProps) {
   return (
     <form onSubmit={handleTagSubmit} className="space-y-4">
       <div>
-        <label htmlFor="tag-category" className="block text-sm font-semibold text-foreground">
+        <label htmlFor="tag-category" className="text-foreground block text-sm font-semibold">
           カテゴリ <span className="text-danger">*</span>
         </label>
         <Select
@@ -131,7 +131,7 @@ function TagForm({ categories }: TagFormProps) {
       </div>
 
       <div>
-        <label htmlFor="tag-name" className="block text-sm font-semibold text-foreground">
+        <label htmlFor="tag-name" className="text-foreground block text-sm font-semibold">
           タグ名 <span className="text-danger">*</span>
         </label>
         <Input
@@ -147,7 +147,7 @@ function TagForm({ categories }: TagFormProps) {
       </div>
 
       <div>
-        <label htmlFor="tag-description" className="block text-sm font-semibold text-foreground">
+        <label htmlFor="tag-description" className="text-foreground block text-sm font-semibold">
           説明（任意）
         </label>
         <Textarea
@@ -218,7 +218,7 @@ function CategoryForm() {
   return (
     <form onSubmit={handleCategorySubmit} className="space-y-4">
       <div>
-        <label htmlFor="category-name" className="block text-sm font-semibold text-foreground">
+        <label htmlFor="category-name" className="text-foreground block text-sm font-semibold">
           カテゴリ名 <span className="text-danger">*</span>
         </label>
         <Input
@@ -236,7 +236,7 @@ function CategoryForm() {
       <div>
         <label
           htmlFor="category-description"
-          className="block text-sm font-semibold text-foreground"
+          className="text-foreground block text-sm font-semibold"
         >
           説明（任意）
         </label>
@@ -268,14 +268,14 @@ export function TagCreateForm({ categories }: TagCreateFormProps) {
   return (
     <div className="overflow-hidden rounded-xl bg-white shadow-md">
       {/* タブヘッダー */}
-      <div className="border-b border-border bg-white">
+      <div className="border-border border-b bg-white">
         <nav className="-mb-px flex" aria-label="Tabs">
           <button
             onClick={() => setActiveTab("tag")}
             className={`group relative w-1/2 border-b-2 px-6 py-4 text-sm font-medium transition-all ${
               activeTab === "tag"
                 ? "border-primary text-primary"
-                : "border-transparent text-muted-foreground hover:border-border-dark hover:text-muted-foreground"
+                : "text-muted-foreground hover:border-border-dark hover:text-muted-foreground border-transparent"
             }`}
           >
             <span className="flex items-center justify-center gap-2">
@@ -290,7 +290,7 @@ export function TagCreateForm({ categories }: TagCreateFormProps) {
             className={`group relative w-1/2 border-b-2 px-6 py-4 text-sm font-medium transition-all ${
               activeTab === "category"
                 ? "border-primary text-primary"
-                : "border-transparent text-muted-foreground hover:border-border-dark hover:text-muted-foreground"
+                : "text-muted-foreground hover:border-border-dark hover:text-muted-foreground border-transparent"
             }`}
           >
             <span className="flex items-center justify-center gap-2">

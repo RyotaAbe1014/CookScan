@@ -32,31 +32,31 @@ export function TodayMealPlanSection({ summary }: TodayMealPlanSectionProps) {
     <section aria-labelledby="today-meal-plan-heading" className="space-y-6">
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="h-1 w-12 rounded-full bg-primary" />
-          <h2 id="today-meal-plan-heading" className="text-2xl font-bold text-foreground">
+          <div className="bg-primary h-1 w-12 rounded-full" />
+          <h2 id="today-meal-plan-heading" className="text-foreground text-2xl font-bold">
             今日の献立
           </h2>
         </div>
 
         <Link
           href={summary.plannerHref}
-          className="inline-flex items-center gap-1 text-sm font-semibold text-primary transition-colors hover:text-primary-hover"
+          className="text-primary hover:text-primary-hover inline-flex items-center gap-1 text-sm font-semibold transition-colors"
         >
           献立プランナーへ
           <ChevronRightIcon className="h-4 w-4" />
         </Link>
       </div>
 
-      <Card className="bg-linear-to-br from-primary-light/55 via-white to-section-header">
+      <Card className="from-primary-light/55 to-section-header bg-linear-to-br via-white">
         <CardContent padding="lg" className="space-y-5">
           <div className="flex items-start gap-4">
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary text-white shadow-md">
+            <div className="bg-primary flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-white shadow-md">
               <CalendarIcon className="h-5 w-5" strokeWidth={2} />
             </div>
 
             <div className="space-y-1">
-              <p className="text-sm font-semibold text-primary">{summary.dateLabel}</p>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-primary text-sm font-semibold">{summary.dateLabel}</p>
+              <p className="text-muted-foreground text-sm">
                 {hasItems ? `今日の献立は${summary.items.length}件です` : "今日の献立は未登録です"}
               </p>
             </div>
@@ -70,26 +70,26 @@ export function TodayMealPlanSection({ summary }: TodayMealPlanSectionProps) {
                     key={item.id}
                     className="flex items-center gap-3 rounded-xl bg-white/90 px-4 py-3 shadow-sm ring-1 ring-gray-900/5"
                   >
-                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary-light text-xs font-bold text-primary">
+                    <span className="bg-primary-light text-primary flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-bold">
                       {index + 1}
                     </span>
-                    <span className="text-sm font-medium text-foreground">{item.title}</span>
+                    <span className="text-foreground text-sm font-medium">{item.title}</span>
                   </li>
                 ))}
               </ul>
 
               {remainingCount > 0 ? (
-                <p className="text-sm font-medium text-muted-foreground">他{remainingCount}件</p>
+                <p className="text-muted-foreground text-sm font-medium">他{remainingCount}件</p>
               ) : null}
             </div>
           ) : (
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <p className="text-sm text-muted-foreground">
+              <p className="text-muted-foreground text-sm">
                 献立プランナーから今日のレシピを追加できます。
               </p>
               <Link
                 href={summary.plannerHref}
-                className="inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-primary/25 transition-all hover:shadow-xl hover:shadow-primary/35"
+                className="bg-primary shadow-primary/25 hover:shadow-primary/35 inline-flex items-center justify-center gap-2 rounded-lg px-5 py-2.5 text-sm font-semibold text-white shadow-lg transition-all hover:shadow-xl"
               >
                 <PlusIcon className="h-4 w-4" />
                 献立を追加

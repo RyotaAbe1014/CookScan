@@ -2,10 +2,13 @@
   "name": "cook-scan",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "fmt": "vp fmt src",
+    "fmt:check": "vp fmt --check src",
     "lint": "vp lint src",
     "type-check": "tsc --noEmit",
     "test": "vp test",

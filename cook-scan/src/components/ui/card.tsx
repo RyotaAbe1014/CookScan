@@ -6,7 +6,7 @@ import { cn } from "@/lib/tailwind";
  * Card
  * ============================================================================= */
 
-const cardVariants = cva("overflow-hidden rounded-xl bg-white shadow-card ring-1 ring-gray-900/5", {
+const cardVariants = cva("shadow-card overflow-hidden rounded-xl bg-white ring-1 ring-gray-900/5", {
   variants: {
     hover: {
       true: "transition-all duration-200 hover:shadow-lg",
@@ -68,7 +68,7 @@ const CardHeader = forwardRef<HTMLDivElement, CardHeaderProps>(
       <div
         ref={ref}
         className={cn(
-          "border-b border-section-header-border bg-linear-to-r from-section-header to-white px-6 py-4",
+          "border-section-header-border from-section-header border-b bg-linear-to-r to-white px-6 py-4",
           className,
         )}
         {...props}

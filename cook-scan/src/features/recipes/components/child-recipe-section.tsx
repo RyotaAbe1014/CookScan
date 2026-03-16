@@ -36,7 +36,7 @@ export function ChildRecipeSection({
             <button
               type="button"
               onClick={onOpenDialog}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-linear-to-r from-secondary to-secondary px-3 py-2 text-sm font-semibold text-white shadow-md shadow-secondary/30 transition-all hover:shadow-lg hover:shadow-secondary/40"
+              className="from-secondary to-secondary shadow-secondary/30 hover:shadow-secondary/40 inline-flex items-center gap-1.5 rounded-lg bg-linear-to-r px-3 py-2 text-sm font-semibold text-white shadow-md transition-all hover:shadow-lg"
             >
               <PlusIcon className="h-4 w-4" stroke="currentColor" />
               サブレシピを追加
@@ -57,7 +57,7 @@ export function ChildRecipeSection({
               ))}
             </div>
           ) : (
-            <p className="text-sm text-muted-foreground">サブレシピが追加されていません</p>
+            <p className="text-muted-foreground text-sm">サブレシピが追加されていません</p>
           )}
         </CardContent>
       </Card>

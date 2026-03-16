@@ -16,13 +16,13 @@ export function RecentRecipesSection({ recipes }: RecentRecipesSectionProps) {
     <section className="space-y-6">
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="h-1 w-12 rounded-full bg-primary" />
-          <h2 className="text-2xl font-bold text-foreground">最近追加したレシピ</h2>
+          <div className="bg-primary h-1 w-12 rounded-full" />
+          <h2 className="text-foreground text-2xl font-bold">最近追加したレシピ</h2>
         </div>
 
         <Link
           href="/recipes"
-          className="inline-flex items-center gap-1 text-sm font-semibold text-primary transition-colors hover:text-primary-hover"
+          className="text-primary hover:text-primary-hover inline-flex items-center gap-1 text-sm font-semibold transition-colors"
         >
           すべて見る
           <ChevronRightIcon className="h-4 w-4" />
@@ -31,13 +31,13 @@ export function RecentRecipesSection({ recipes }: RecentRecipesSectionProps) {
 
       {recipes.length === 0 ? (
         <EmptyState
-          icon={<EmptyIcon className="h-10 w-10 text-muted-foreground" />}
+          icon={<EmptyIcon className="text-muted-foreground h-10 w-10" />}
           title="最近追加したレシピがありません"
           description="レシピをスキャンして、まずは1件追加しましょう"
           action={
             <Link
               href="/recipes/upload"
-              className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-primary/30 transition-all hover:shadow-xl hover:shadow-primary/40"
+              className="bg-primary shadow-primary/30 hover:shadow-primary/40 inline-flex items-center gap-2 rounded-lg px-6 py-3 text-sm font-semibold text-white shadow-lg transition-all hover:shadow-xl"
             >
               <PlusIcon className="h-5 w-5" />
               レシピをスキャン
@@ -51,7 +51,7 @@ export function RecentRecipesSection({ recipes }: RecentRecipesSectionProps) {
               <RecipeCard
                 recipe={recipe}
                 badge={
-                  <div className="inline-flex items-center gap-2 rounded-full bg-primary-light px-3 py-1 text-xs font-semibold text-primary">
+                  <div className="bg-primary-light text-primary inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold">
                     <BookOpenIcon className="h-3.5 w-3.5" />
                     最近追加
                   </div>

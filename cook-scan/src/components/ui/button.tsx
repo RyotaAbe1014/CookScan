@@ -5,7 +5,7 @@ import { SpinnerIcon } from "@/components/icons/spinner-icon";
 
 const buttonVariants = cva(
   // 共通スタイル - デザインシステムに準拠
-  "inline-flex items-center justify-center gap-2 rounded-lg font-semibold cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
+  "focus-visible:ring-primary inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg font-semibold focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
   {
     variants: {
       variant: {
@@ -14,7 +14,7 @@ const buttonVariants = cva(
           "bg-primary text-primary-foreground shadow-primary hover:bg-primary-hover hover:shadow-primary-hover transition-all duration-200",
         // セカンダリ: サブアクション（gray-300 背景）
         secondary:
-          "border border-border-dark bg-white text-foreground shadow-sm hover:bg-muted hover:text-primary transition-all duration-200",
+          "border-border-dark text-foreground hover:bg-muted hover:text-primary border bg-white shadow-sm transition-all duration-200",
         // ゴースト: テキストボタン
         ghost:
           "text-muted-foreground hover:bg-muted hover:text-foreground transition-colors duration-150",
@@ -25,7 +25,7 @@ const buttonVariants = cva(
         "danger-ghost":
           "text-danger hover:bg-danger-light hover:text-danger-hover transition-colors duration-150",
         // リンク: リンクスタイル
-        link: "text-primary underline-offset-4 hover:underline transition-colors duration-150",
+        link: "text-primary underline-offset-4 transition-colors duration-150 hover:underline",
       },
       size: {
         sm: "h-8 px-3 text-xs",

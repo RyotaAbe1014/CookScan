@@ -30,7 +30,7 @@ export function ShoppingItemRow({ item, onEdit, onToggleCheck }: ShoppingItemRow
 
   return (
     <li
-      className="flex cursor-pointer items-center gap-3 px-4 py-3 transition-colors duration-150 hover:bg-section-header"
+      className="hover:bg-section-header flex cursor-pointer items-center gap-3 px-4 py-3 transition-colors duration-150"
       role="button"
       tabIndex={0}
       onClick={() => onToggleCheck(item.id)}
@@ -49,11 +49,11 @@ export function ShoppingItemRow({ item, onEdit, onToggleCheck }: ShoppingItemRow
           onToggleCheck(item.id);
         }}
         className={cn(
-          "flex h-6 w-6 shrink-0 items-center justify-center rounded-md border-2 transition-all duration-200 cursor-pointer",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
+          "flex h-6 w-6 shrink-0 cursor-pointer items-center justify-center rounded-md border-2 transition-all duration-200",
+          "focus-visible:ring-primary focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none",
           item.isChecked
             ? "border-primary bg-primary text-white"
-            : "border-border-dark bg-white hover:border-primary",
+            : "border-border-dark hover:border-primary bg-white",
         )}
         aria-label={item.isChecked ? "チェックを外す" : "チェックする"}
       >
@@ -70,7 +70,7 @@ export function ShoppingItemRow({ item, onEdit, onToggleCheck }: ShoppingItemRow
         >
           {item.name}
         </p>
-        {item.memo && <p className="mt-0.5 truncate text-xs text-muted-foreground">{item.memo}</p>}
+        {item.memo && <p className="text-muted-foreground mt-0.5 truncate text-xs">{item.memo}</p>}
       </div>
 
       {/* アクションボタン */}

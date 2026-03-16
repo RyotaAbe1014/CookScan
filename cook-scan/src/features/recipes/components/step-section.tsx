@@ -22,7 +22,7 @@ export function StepSection({ steps, onAdd, onUpdate, onRemove }: Props) {
           <button
             type="button"
             onClick={onAdd}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-linear-to-r from-accent-steps to-accent-steps px-3 py-2 text-sm font-semibold text-white shadow-md shadow-accent-steps/30 transition-all hover:shadow-lg hover:shadow-accent-steps/40"
+            className="from-accent-steps to-accent-steps shadow-accent-steps/30 hover:shadow-accent-steps/40 inline-flex items-center gap-1.5 rounded-lg bg-linear-to-r px-3 py-2 text-sm font-semibold text-white shadow-md transition-all hover:shadow-lg"
           >
             <PlusIcon className="h-4 w-4" stroke="currentColor" />
             手順を追加

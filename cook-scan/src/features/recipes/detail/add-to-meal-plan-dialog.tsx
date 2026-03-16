@@ -85,7 +85,7 @@ export function AddToMealPlanDialog({
             >
               <ChevronLeftIcon className="h-5 w-5" />
             </Button>
-            <span className="text-sm font-medium text-foreground">{weekLabel}</span>
+            <span className="text-foreground text-sm font-medium">{weekLabel}</span>
             <Button
               type="button"
               variant="ghost"
@@ -107,14 +107,14 @@ export function AddToMealPlanDialog({
                   type="button"
                   disabled={isPending}
                   onClick={() => handleSelectDay(i)}
-                  className={`flex flex-col items-center rounded-lg p-2 text-xs transition-colors hover:bg-primary-light disabled:opacity-50 ${
+                  className={`hover:bg-primary-light flex flex-col items-center rounded-lg p-2 text-xs transition-colors disabled:opacity-50 ${
                     isToday
-                      ? "bg-primary-light font-bold text-primary-hover ring-1 ring-primary"
+                      ? "bg-primary-light text-primary-hover ring-primary font-bold ring-1"
                       : "text-foreground"
                   } ${i === 5 ? "text-accent-steps" : ""} ${i === 6 ? "text-danger" : ""}`}
                 >
                   <span className="font-medium">{label}</span>
-                  <span className="mt-0.5 text-[10px] text-muted-foreground">
+                  <span className="text-muted-foreground mt-0.5 text-[10px]">
                     {formatShortDate(weekDates[i])}
                   </span>
                 </button>

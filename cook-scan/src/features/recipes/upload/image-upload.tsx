@@ -270,16 +270,16 @@ export default function ImageUpload({ onUpload, onUploadingChange }: Props) {
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
-          className={`relative overflow-hidden rounded-xl border-2 border-dashed p-12 text-center shadow-lg ring-1 ring-card-border transition-all duration-300 ${
+          className={`ring-card-border relative overflow-hidden rounded-xl border-2 border-dashed p-12 text-center shadow-lg ring-1 transition-all duration-300 ${
             isDragging
               ? "border-primary bg-primary-light shadow-xl"
-              : "border-border-dark bg-white hover:border-primary hover:shadow-xl"
+              : "border-border-dark hover:border-primary bg-white hover:shadow-xl"
           }`}
         >
           <div className="flex flex-col items-center">
             <div
               className={`rounded-xl p-4 transition-colors ${
-                isDragging ? "bg-primary" : "bg-linear-to-br from-primary-light to-secondary-light"
+                isDragging ? "bg-primary" : "from-primary-light to-secondary-light bg-linear-to-br"
               }`}
             >
               <CloudUploadIcon
@@ -288,13 +288,13 @@ export default function ImageUpload({ onUpload, onUploadingChange }: Props) {
                 }`}
               />
             </div>
-            <p className="mt-6 text-lg font-bold text-foreground">画像をドラッグ&ドロップ</p>
+            <p className="text-foreground mt-6 text-lg font-bold">画像をドラッグ&ドロップ</p>
             <div className="mt-3 flex items-center gap-2">
-              <div className="h-px flex-1 bg-border-dark" />
-              <p className="text-sm text-muted-foreground">または</p>
-              <div className="h-px flex-1 bg-border-dark" />
+              <div className="bg-border-dark h-px flex-1" />
+              <p className="text-muted-foreground text-sm">または</p>
+              <div className="bg-border-dark h-px flex-1" />
             </div>
-            <p className="mt-3 flex items-center gap-1.5 text-sm text-muted-foreground">
+            <p className="text-muted-foreground mt-3 flex items-center gap-1.5 text-sm">
               <ClipboardIcon className="h-4 w-4" />
               Ctrl+V で貼り付け
             </p>
@@ -311,14 +311,14 @@ export default function ImageUpload({ onUpload, onUploadingChange }: Props) {
               ファイルを選択
             </Button>
             <div className="mt-6 space-y-3">
-              <p className="flex items-center justify-center gap-1.5 text-xs text-muted-foreground">
+              <p className="text-muted-foreground flex items-center justify-center gap-1.5 text-xs">
                 <InfoCircleIcon className="h-3.5 w-3.5" />
                 PNG、JPG、GIF形式（最大10MB）
               </p>
-              <div className="rounded-lg bg-primary-light/50 p-3 text-left ring-1 ring-primary-light/50">
+              <div className="bg-primary-light/50 ring-primary-light/50 rounded-lg p-3 text-left ring-1">
                 <div className="flex gap-2">
-                  <InfoCircleIcon className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                  <p className="text-xs leading-relaxed text-primary-hover">
+                  <InfoCircleIcon className="text-primary mt-0.5 h-4 w-4 shrink-0" />
+                  <p className="text-primary-hover text-xs leading-relaxed">
                     <span className="font-bold">ヒント:</span>{" "}
                     複数のファイルをアップロードする場合、レシピの続きに合わせて順番に設定すると、より正確に読み取ることができます。
                   </p>
@@ -328,7 +328,7 @@ export default function ImageUpload({ onUpload, onUploadingChange }: Props) {
           </div>
         </div>
       ) : (
-        <div className="overflow-hidden rounded-xl bg-white p-6 shadow-lg ring-1 ring-card-border">
+        <div className="ring-card-border overflow-hidden rounded-xl bg-white p-6 shadow-lg ring-1">
           <div className="relative">
             <Image
               src={preview}
@@ -341,9 +341,9 @@ export default function ImageUpload({ onUpload, onUploadingChange }: Props) {
             <button
               onClick={handleRemove}
               disabled={uploadStatus !== "idle"}
-              className="absolute -right-2 -top-2 rounded-full bg-white p-2.5 shadow-lg ring-1 ring-card-border transition-all hover:bg-danger-light hover:ring-danger-light disabled:cursor-not-allowed disabled:opacity-50"
+              className="ring-card-border hover:bg-danger-light hover:ring-danger-light absolute -top-2 -right-2 rounded-full bg-white p-2.5 shadow-lg ring-1 transition-all disabled:cursor-not-allowed disabled:opacity-50"
             >
-              <CloseIcon className="h-5 w-5 text-muted-foreground hover:text-danger" />
+              <CloseIcon className="text-muted-foreground hover:text-danger h-5 w-5" />
             </button>
           </div>
           {selectedImages.length > 1 && (
@@ -351,7 +351,7 @@ export default function ImageUpload({ onUpload, onUploadingChange }: Props) {
               {selectedImages.slice(1).map((image, index) => (
                 <div
                   key={`${image.file.name}-${image.file.size}-${image.file.lastModified}`}
-                  className="overflow-hidden rounded-lg ring-1 ring-card-border"
+                  className="ring-card-border overflow-hidden rounded-lg ring-1"
                 >
                   <Image
                     src={image.preview}

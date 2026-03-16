@@ -165,7 +165,7 @@ describe("FormField", () => {
     // Given: カスタムclassNameが用意されている
     // When: className propを渡してレンダリングする
     const { container } = render(
-      <FormField label="カスタム" className="mt-4 custom-field">
+      <FormField label="カスタム" className="custom-field mt-4">
         <input type="text" />
       </FormField>,
     );

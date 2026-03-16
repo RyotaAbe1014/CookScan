@@ -40,7 +40,7 @@ export function MealPlanDayCard({
   }
 
   return (
-    <div className={`rounded-xl border bg-white shadow-sm ${isToday ? "ring-2 ring-primary" : ""}`}>
+    <div className={`rounded-xl border bg-white shadow-sm ${isToday ? "ring-primary ring-2" : ""}`}>
       <div
         className={`flex items-center justify-between rounded-t-xl px-4 py-3 ${
           isSunday ? "bg-danger-light" : isSaturday ? "bg-accent-steps-light" : "bg-section-header"
@@ -54,9 +54,9 @@ export function MealPlanDayCard({
           >
             {DAY_LABELS[dayOfWeek]}
           </span>
-          <span className="text-sm text-muted-foreground">{formatShortDate(date)}</span>
+          <span className="text-muted-foreground text-sm">{formatShortDate(date)}</span>
           {isToday && (
-            <span className="rounded-full bg-primary-light px-2 py-0.5 text-xs font-medium text-primary-hover">
+            <span className="bg-primary-light text-primary-hover rounded-full px-2 py-0.5 text-xs font-medium">
               今日
             </span>
           )}
@@ -69,17 +69,17 @@ export function MealPlanDayCard({
 
       <div className="min-h-[60px] p-3">
         {items.length === 0 ? (
-          <p className="py-2 text-center text-sm text-muted-foreground">レシピなし</p>
+          <p className="text-muted-foreground py-2 text-center text-sm">レシピなし</p>
         ) : (
           <ul className="space-y-2">
             {items.map((item) => (
               <li
                 key={item.id}
-                className="flex items-center justify-between rounded-lg bg-section-header px-3 py-2"
+                className="bg-section-header flex items-center justify-between rounded-lg px-3 py-2"
               >
                 <Link
                   href={`/recipes/${item.recipe.id}`}
-                  className="text-sm font-medium text-foreground hover:underline"
+                  className="text-foreground text-sm font-medium hover:underline"
                 >
                   {item.recipe.title}
                 </Link>

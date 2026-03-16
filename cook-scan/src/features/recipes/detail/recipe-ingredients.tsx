@@ -94,7 +94,7 @@ export function RecipeIngredients({ ingredients }: RecipeIngredientsProps) {
             >
               {allAdded || isBulkAdded ? (
                 <>
-                  <CheckIcon className="h-4 w-4 text-success" />
+                  <CheckIcon className="text-success h-4 w-4" />
                   <span className="text-success">追加済み</span>
                 </>
               ) : (
@@ -117,21 +117,21 @@ export function RecipeIngredients({ ingredients }: RecipeIngredientsProps) {
               return (
                 <div
                   key={ingredient.id}
-                  className="flex items-center justify-between rounded-lg bg-linear-to-r from-section-header to-white p-3 ring-1 ring-section-header-border transition-all hover:shadow-md"
+                  className="from-section-header ring-section-header-border flex items-center justify-between rounded-lg bg-linear-to-r to-white p-3 ring-1 transition-all hover:shadow-md"
                 >
                   <div className="flex items-center gap-2">
-                    <div className="h-2 w-2 rounded-full bg-success" />
-                    <span className="font-semibold text-foreground">{ingredient.name}</span>
+                    <div className="bg-success h-2 w-2 rounded-full" />
+                    <span className="text-foreground font-semibold">{ingredient.name}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <div className="text-right">
                       {ingredient.unit && (
-                        <span className="text-sm font-medium text-muted-foreground">
+                        <span className="text-muted-foreground text-sm font-medium">
                           {ingredient.unit}
                         </span>
                       )}
                       {ingredient.notes && (
-                        <div className="text-xs text-muted-foreground">{ingredient.notes}</div>
+                        <div className="text-muted-foreground text-xs">{ingredient.notes}</div>
                       )}
                     </div>
                     <Button
@@ -145,9 +145,9 @@ export function RecipeIngredients({ ingredients }: RecipeIngredientsProps) {
                     >
                       {!isLoading &&
                         (isAdded ? (
-                          <CheckIcon className="h-4 w-4 text-success" />
+                          <CheckIcon className="text-success h-4 w-4" />
                         ) : (
-                          <ShoppingCartIcon className="h-4 w-4 text-muted-foreground hover:text-success" />
+                          <ShoppingCartIcon className="text-muted-foreground hover:text-success h-4 w-4" />
                         ))}
                     </Button>
                   </div>

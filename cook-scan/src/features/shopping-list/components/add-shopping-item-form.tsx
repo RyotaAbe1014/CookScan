@@ -39,11 +39,11 @@ export function AddShoppingItemForm() {
     <div className="mb-6">
       <form
         onSubmit={handleSubmit}
-        className="rounded-xl bg-white p-4 shadow-card ring-1 ring-card-border"
+        className="shadow-card ring-card-border rounded-xl bg-white p-4 ring-1"
       >
         <div className="flex items-center gap-3">
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary-light">
-            <PlusIcon className="h-4 w-4 text-primary" />
+          <div className="bg-primary-light flex h-8 w-8 shrink-0 items-center justify-center rounded-lg">
+            <PlusIcon className="text-primary h-4 w-4" />
           </div>
           <Input
             ref={inputRef}
@@ -72,7 +72,7 @@ export function AddShoppingItemForm() {
           <button
             type="button"
             onClick={() => setShowMemo(true)}
-            className="mt-2 ml-11 text-xs text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+            className="text-muted-foreground hover:text-foreground mt-2 ml-11 cursor-pointer text-xs transition-colors"
           >
             + メモを追加
           </button>
@@ -90,7 +90,7 @@ export function AddShoppingItemForm() {
           </div>
         )}
 
-        {error && <p className="mt-2 ml-11 text-xs text-danger">{error}</p>}
+        {error && <p className="text-danger mt-2 ml-11 text-xs">{error}</p>}
       </form>
     </div>
   );

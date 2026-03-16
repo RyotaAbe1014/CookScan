@@ -67,7 +67,7 @@ export function AddRecipeDialog({
 
         <div className="p-4">
           <div className="relative mb-4">
-            <SearchIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <SearchIcon className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
             <Input
               placeholder="レシピを検索..."
               value={search}
@@ -78,7 +78,7 @@ export function AddRecipeDialog({
 
           <div className="max-h-[300px] overflow-y-auto">
             {filtered.length === 0 ? (
-              <p className="py-4 text-center text-sm text-muted-foreground">
+              <p className="text-muted-foreground py-4 text-center text-sm">
                 レシピが見つかりません
               </p>
             ) : (

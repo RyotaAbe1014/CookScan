@@ -25,13 +25,13 @@ export function RecipeSteps({ recipeId, recipeTitle, steps }: RecipeStepsProps) 
             {steps.map((step) => (
               <div
                 key={step.id}
-                className="group flex gap-4 rounded-lg bg-linear-to-r from-section-header to-white p-4 ring-1 ring-section-header-border transition-all hover:shadow-md"
+                className="group from-section-header ring-section-header-border flex gap-4 rounded-lg bg-linear-to-r to-white p-4 ring-1 transition-all hover:shadow-md"
               >
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-linear-to-br from-accent-steps to-accent-steps text-base font-bold text-white shadow-md">
+                <div className="from-accent-steps to-accent-steps flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-linear-to-br text-base font-bold text-white shadow-md">
                   {step.orderIndex}
                 </div>
                 <div className="flex-1">
-                  <p className="leading-relaxed text-foreground">{step.instruction}</p>
+                  <p className="text-foreground leading-relaxed">{step.instruction}</p>
                   {step.timerSeconds && (
                     <StepTimer
                       stepId={step.id}

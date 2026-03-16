@@ -95,14 +95,14 @@ export function RecipeDetailActions({ recipe, initialShareInfo }: Props) {
           variant="secondary"
           size="sm"
           onClick={() => setIsMealPlanDialogOpen(true)}
-          className="border border-section-header-border"
+          className="border-section-header-border border"
         >
           <CalendarIcon className="h-4 w-4" />
           献立に追加
         </Button>
         <Link
           href={`/recipes/${recipe.id}/edit`}
-          className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-3 py-2 text-xs font-semibold text-white shadow-lg shadow-primary/30 transition-all hover:shadow-xl hover:shadow-primary/40 sm:gap-2 sm:px-4 sm:text-sm"
+          className="bg-primary shadow-primary/30 hover:shadow-primary/40 inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-semibold text-white shadow-lg transition-all hover:shadow-xl sm:gap-2 sm:px-4 sm:text-sm"
         >
           <PencilIcon className="h-4 w-4" />
           編集
@@ -113,7 +113,7 @@ export function RecipeDetailActions({ recipe, initialShareInfo }: Props) {
           size="sm"
           onClick={handleDownloadClick}
           isLoading={isDownloading}
-          className="border border-section-header-border"
+          className="border-section-header-border border"
         >
           <DownloadIcon className="h-4 w-4" />
           ダウンロード
@@ -123,7 +123,7 @@ export function RecipeDetailActions({ recipe, initialShareInfo }: Props) {
           variant="danger-ghost"
           size="sm"
           onClick={handleDeleteClick}
-          className="border border-danger-light"
+          className="border-danger-light border"
         >
           <TrashIcon className="h-4 w-4" />
           削除
@@ -147,7 +147,7 @@ export function RecipeDetailActions({ recipe, initialShareInfo }: Props) {
 
       {downloadError && (
         <div className="fixed inset-x-0 bottom-6 z-50 flex justify-center px-4">
-          <div className="flex items-center gap-2 rounded-full bg-danger-hover px-4 py-2 text-sm font-semibold text-white shadow-lg">
+          <div className="bg-danger-hover flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold text-white shadow-lg">
             <ExclamationTriangleIcon className="h-4 w-4" />
             保存できませんでした
           </div>

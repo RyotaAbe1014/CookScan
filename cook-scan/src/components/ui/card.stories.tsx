@@ -86,7 +86,7 @@ export const WithHeaderActions: Story = {
         iconColor="accent-steps"
         title="調理手順"
         actions={
-          <button className="rounded-md bg-primary px-3 py-1 text-xs text-white">編集</button>
+          <button className="bg-primary rounded-md px-3 py-1 text-xs text-white">編集</button>
         }
       />
       <CardContent>

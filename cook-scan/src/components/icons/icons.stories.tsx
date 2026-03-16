@@ -142,10 +142,10 @@ export const AllIcons: Story = {
       {Object.entries(allIcons).map(([name, Icon]) => (
         <div
           key={name}
-          className="flex flex-col items-center gap-2 rounded-lg border border-gray-200 p-4 hover:bg-muted"
+          className="hover:bg-muted flex flex-col items-center gap-2 rounded-lg border border-gray-200 p-4"
         >
           <Icon className="h-6 w-6 text-gray-700" />
-          <span className="text-[10px] text-muted-foreground">{name.replace("Icon", "")}</span>
+          <span className="text-muted-foreground text-[10px]">{name.replace("Icon", "")}</span>
         </div>
       ))}
     </div>
@@ -166,7 +166,7 @@ export const IconSizes: Story = {
         {sizes.map(({ label, cls }) => (
           <div key={label} className="flex flex-col items-center gap-2">
             <HomeIcon className={`${cls} text-primary`} />
-            <span className="text-xs text-muted-foreground">{label}</span>
+            <span className="text-muted-foreground text-xs">{label}</span>
           </div>
         ))}
       </div>
@@ -189,7 +189,7 @@ export const IconColors: Story = {
         {colors.map(({ label, cls }) => (
           <div key={label} className="flex flex-col items-center gap-2">
             <HomeIcon className={`h-8 w-8 ${cls}`} />
-            <span className="text-xs text-muted-foreground">{label}</span>
+            <span className="text-muted-foreground text-xs">{label}</span>
           </div>
         ))}
       </div>
@@ -208,7 +208,7 @@ export const NavigationIcons: Story = {
             className="flex flex-col items-center gap-2 rounded-lg border border-gray-200 p-4"
           >
             <Icon className="h-6 w-6 text-gray-700" />
-            <span className="text-[10px] text-muted-foreground">{name.replace("Icon", "")}</span>
+            <span className="text-muted-foreground text-[10px]">{name.replace("Icon", "")}</span>
           </div>
         ))}
       </div>
@@ -238,7 +238,7 @@ export const ActionIcons: Story = {
             className="flex flex-col items-center gap-2 rounded-lg border border-gray-200 p-4"
           >
             <Icon className="h-6 w-6 text-gray-700" />
-            <span className="text-[10px] text-muted-foreground">{name.replace("Icon", "")}</span>
+            <span className="text-muted-foreground text-[10px]">{name.replace("Icon", "")}</span>
           </div>
         ))}
       </div>
@@ -268,7 +268,7 @@ export const StatusIcons: Story = {
             className="flex flex-col items-center gap-2 rounded-lg border border-gray-200 p-4"
           >
             <Icon className="h-6 w-6 text-gray-700" />
-            <span className="text-[10px] text-muted-foreground">{name.replace("Icon", "")}</span>
+            <span className="text-muted-foreground text-[10px]">{name.replace("Icon", "")}</span>
           </div>
         ))}
       </div>
@@ -300,7 +300,7 @@ export const RecipeIcons: Story = {
             className="flex flex-col items-center gap-2 rounded-lg border border-gray-200 p-4"
           >
             <Icon className="h-6 w-6 text-gray-700" />
-            <span className="text-[10px] text-muted-foreground">{name.replace("Icon", "")}</span>
+            <span className="text-muted-foreground text-[10px]">{name.replace("Icon", "")}</span>
           </div>
         ))}
       </div>

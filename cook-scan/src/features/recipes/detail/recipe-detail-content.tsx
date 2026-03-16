@@ -49,8 +49,8 @@ export function RecipeDetailContent({ recipe, initialShareInfo }: RecipeDetailCo
           <h1 className="bg-primary bg-clip-text text-2xl font-bold tracking-tight text-transparent sm:text-3xl">
             {recipe.title}
           </h1>
-          <p className="mt-2 flex items-center gap-1.5 text-sm text-muted-foreground">
-            <InfoCircleIcon className="h-4 w-4 text-primary" />
+          <p className="text-muted-foreground mt-2 flex items-center gap-1.5 text-sm">
+            <InfoCircleIcon className="text-primary h-4 w-4" />
             作成日: {new Date(recipe.createdAt).toLocaleDateString("ja-JP")}
           </p>
         </div>

@@ -53,34 +53,25 @@ export function RecipeSearch({ resultCount }: Props) {
     <div className="mb-6">
       <form onSubmit={handleSearch} className="relative">
         <div
-          className={`
-          group relative overflow-hidden rounded-2xl bg-white shadow-lg ring-1 transition-all duration-300
-          ${
+          className={`group relative overflow-hidden rounded-2xl bg-white shadow-lg ring-1 transition-all duration-300 ${
             isFocused
-              ? "ring-2 ring-primary shadow-xl shadow-primary/20"
+              ? "ring-primary shadow-primary/20 shadow-xl ring-2"
               : "ring-card-border hover:shadow-xl"
-          }
-        `}
+          } `}
         >
           {/* Animated gradient background on focus */}
           <div
-            className={`
-            absolute inset-0 bg-linear-to-r from-primary-light via-secondary-light to-accent-steps-light opacity-0 transition-opacity duration-500
-            ${isFocused ? "opacity-100" : "group-hover:opacity-50"}
-          `}
+            className={`from-primary-light via-secondary-light to-accent-steps-light absolute inset-0 bg-linear-to-r opacity-0 transition-opacity duration-500 ${isFocused ? "opacity-100" : "group-hover:opacity-50"} `}
           />
 
           <div className="relative flex items-center gap-3 p-4">
             {/* Search Icon */}
             <div
-              className={`
-              flex h-11 w-11 shrink-0 items-center justify-center rounded-xl transition-all duration-300
-              ${
+              className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl transition-all duration-300 ${
                 isFocused
-                  ? "bg-primary shadow-lg shadow-primary/40 scale-110"
-                  : "bg-linear-to-br from-muted to-section-header-border"
-              }
-            `}
+                  ? "bg-primary shadow-primary/40 scale-110 shadow-lg"
+                  : "from-muted to-section-header-border bg-linear-to-br"
+              } `}
             >
               <SearchIcon
                 className={`h-5 w-5 transition-colors duration-300 ${isFocused ? "text-white" : "text-muted-foreground"}`}
@@ -95,7 +86,7 @@ export function RecipeSearch({ resultCount }: Props) {
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
               placeholder="レシピ名で検索..."
-              className="flex-1 bg-transparent text-base font-medium text-foreground placeholder-muted-foreground outline-none"
+              className="text-foreground placeholder-muted-foreground flex-1 bg-transparent text-base font-medium outline-none"
             />
 
             {/* Clear Button */}
@@ -103,10 +94,10 @@ export function RecipeSearch({ resultCount }: Props) {
               <button
                 type="button"
                 onClick={handleClear}
-                className="group/clear flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-muted transition-all hover:bg-danger-light hover:scale-110"
+                className="group/clear bg-muted hover:bg-danger-light flex h-9 w-9 shrink-0 items-center justify-center rounded-lg transition-all hover:scale-110"
                 aria-label="検索をクリア"
               >
-                <CloseIcon className="h-4 w-4 text-muted-foreground transition-colors group-hover/clear:text-danger-hover" />
+                <CloseIcon className="text-muted-foreground group-hover/clear:text-danger-hover h-4 w-4 transition-colors" />
               </button>
             )}
 
@@ -114,7 +105,7 @@ export function RecipeSearch({ resultCount }: Props) {
             <button
               type="submit"
               disabled={query.trim().length === 0}
-              className="group/btn relative flex h-11 w-11 sm:w-auto items-center justify-center gap-2 overflow-hidden rounded-xl bg-primary px-3 sm:px-6 font-semibold text-white shadow-lg shadow-primary/30 transition-all hover:shadow-xl hover:shadow-primary/40 disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none"
+              className="group/btn bg-primary shadow-primary/30 hover:shadow-primary/40 relative flex h-11 w-11 items-center justify-center gap-2 overflow-hidden rounded-xl px-3 font-semibold text-white shadow-lg transition-all hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none sm:w-auto sm:px-6"
             >
               {/* Shine effect on hover */}
               <div className="absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-white/20 to-transparent transition-transform duration-500 group-hover/btn:translate-x-full" />
@@ -130,14 +121,14 @@ export function RecipeSearch({ resultCount }: Props) {
       {hasActiveSearch && typeof resultCount === "number" && (
         <div className="mt-3 flex items-center justify-between px-2">
           <div className="flex items-center gap-2">
-            <div className="flex h-6 w-6 items-center justify-center rounded-md bg-primary">
+            <div className="bg-primary flex h-6 w-6 items-center justify-center rounded-md">
               <DocumentSearchIcon className="h-3.5 w-3.5 text-white" />
             </div>
-            <p className="text-sm font-medium text-foreground">
-              検索結果: <span className="font-bold text-primary">{resultCount}</span>件
+            <p className="text-foreground text-sm font-medium">
+              検索結果: <span className="text-primary font-bold">{resultCount}</span>件
               {currentQuery && (
-                <span className="ml-2 text-muted-foreground">
-                  「<span className="font-semibold text-foreground">{currentQuery}</span>」
+                <span className="text-muted-foreground ml-2">
+                  「<span className="text-foreground font-semibold">{currentQuery}</span>」
                 </span>
               )}
             </p>

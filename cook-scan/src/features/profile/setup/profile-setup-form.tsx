@@ -41,9 +41,9 @@ export default function ProfileSetupForm({ userId, userEmail }: ProfileSetupForm
       <div className="space-y-2">
         <label
           htmlFor="email"
-          className="flex items-center gap-2 text-sm font-medium text-foreground"
+          className="text-foreground flex items-center gap-2 text-sm font-medium"
         >
-          <div className="flex h-5 w-5 items-center justify-center rounded bg-muted-foreground">
+          <div className="bg-muted-foreground flex h-5 w-5 items-center justify-center rounded">
             <EnvelopeIcon className="h-3 w-3 text-white" />
           </div>
           メールアドレス
@@ -59,19 +59,19 @@ export default function ProfileSetupForm({ userId, userEmail }: ProfileSetupForm
             hasIcon
           />
           <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-            <MailIcon className="h-5 w-5 text-muted-foreground" />
+            <MailIcon className="text-muted-foreground h-5 w-5" />
           </div>
         </div>
-        <p className="text-xs text-muted-foreground">認証済みのメールアドレスです</p>
+        <p className="text-muted-foreground text-xs">認証済みのメールアドレスです</p>
       </div>
 
       {/* Name Field - プライマリフィールド */}
       <div className="space-y-2">
         <label
           htmlFor="name"
-          className="flex items-center gap-2 text-sm font-medium text-foreground"
+          className="text-foreground flex items-center gap-2 text-sm font-medium"
         >
-          <div className="flex h-5 w-5 items-center justify-center rounded bg-primary">
+          <div className="bg-primary flex h-5 w-5 items-center justify-center rounded">
             <UserIcon className="h-3 w-3 text-white" />
           </div>
           お名前
@@ -89,10 +89,10 @@ export default function ProfileSetupForm({ userId, userEmail }: ProfileSetupForm
             hasIcon
           />
           <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-            <UserCircleIcon className="h-5 w-5 text-primary" />
+            <UserCircleIcon className="text-primary h-5 w-5" />
           </div>
         </div>
-        <p className="text-xs text-muted-foreground">レシピ管理で表示される名前です</p>
+        <p className="text-muted-foreground text-xs">レシピ管理で表示される名前です</p>
       </div>
 
       {/* Error Message */}
@@ -105,7 +105,7 @@ export default function ProfileSetupForm({ userId, userEmail }: ProfileSetupForm
         size="lg"
         disabled={isPending || !name.trim()}
         isLoading={isPending}
-        className="w-full shadow-md hover:shadow-lg transition-shadow"
+        className="w-full shadow-md transition-shadow hover:shadow-lg"
       >
         {isPending ? (
           "作成中..."

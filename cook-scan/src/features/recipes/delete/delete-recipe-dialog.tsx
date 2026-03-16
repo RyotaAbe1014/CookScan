@@ -59,15 +59,15 @@ export default function DeleteRecipeDialog({ recipeId, recipeTitle, isOpen, onCl
     >
       <DialogContent maxWidth="max-w-md">
         {/* Header with gradient */}
-        <DialogHeader className="bg-linear-to-r from-danger-light to-danger-light">
+        <DialogHeader className="from-danger-light to-danger-light bg-linear-to-r">
           <div className="flex items-start gap-4">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-danger-light to-danger shadow-lg">
+            <div className="from-danger-light to-danger flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-linear-to-br shadow-lg">
               <WarningIcon className="h-6 w-6 text-white" />
             </div>
             <div className="flex-1">
               <DialogTitle>レシピを削除</DialogTitle>
               <DialogDescription className="mt-2 leading-relaxed">
-                「<span className="font-semibold text-foreground">{recipeTitle}</span>
+                「<span className="text-foreground font-semibold">{recipeTitle}</span>
                 」を削除してもよろしいですか？
               </DialogDescription>
             </div>

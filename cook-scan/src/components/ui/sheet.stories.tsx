@@ -40,18 +40,18 @@ export const Default: Story = {
               </button>
             </div>
             <nav className="flex flex-col gap-2 p-4">
-              <Link href="/dashboard" className="rounded-md px-3 py-2 text-sm hover:bg-muted">
+              <Link href="/dashboard" className="hover:bg-muted rounded-md px-3 py-2 text-sm">
                 ダッシュボード
               </Link>
-              <Link href="/recipes" className="rounded-md px-3 py-2 text-sm hover:bg-muted">
+              <Link href="/recipes" className="hover:bg-muted rounded-md px-3 py-2 text-sm">
                 レシピ一覧
               </Link>
-              <Link href="/tags" className="rounded-md px-3 py-2 text-sm hover:bg-muted">
+              <Link href="/tags" className="hover:bg-muted rounded-md px-3 py-2 text-sm">
                 タグ管理
               </Link>
               <Link
                 href="/settings/profile"
-                className="rounded-md px-3 py-2 text-sm hover:bg-muted"
+                className="hover:bg-muted rounded-md px-3 py-2 text-sm"
               >
                 設定
               </Link>

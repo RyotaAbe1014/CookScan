@@ -76,7 +76,7 @@ export function RecipeShareButton({ recipeId, initialShareInfo }: Props) {
         variant="secondary"
         size="sm"
         onClick={() => setIsOpen(true)}
-        className="border border-border"
+        className="border-border border"
       >
         <LinkIcon className="h-4 w-4" />
         共有
@@ -99,7 +99,7 @@ export function RecipeShareButton({ recipeId, initialShareInfo }: Props) {
                     type="text"
                     readOnly
                     value={shareUrl}
-                    className="flex-1 rounded-lg border border-border bg-section-header px-3 py-2 text-sm text-foreground"
+                    className="border-border bg-section-header text-foreground flex-1 rounded-lg border px-3 py-2 text-sm"
                   />
                   <Button type="button" variant="primary" size="sm" onClick={handleCopy}>
                     {copied ? (

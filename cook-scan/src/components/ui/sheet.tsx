@@ -36,7 +36,7 @@ export function Sheet({ isOpen, onClose, children, className }: SheetProps) {
     <div
       className={cn(
         "fixed inset-0 z-50 flex justify-end transition-all duration-300",
-        isOpen ? "visible" : "invisible pointer-events-none",
+        isOpen ? "visible" : "pointer-events-none invisible",
       )}
       role="dialog"
       aria-modal="true"

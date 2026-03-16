@@ -1,6 +1,12 @@
 import { defineConfig } from "vite-plus";
 
 export default defineConfig({
+  fmt: {
+    ignorePatterns: [],
+    sortTailwindcss: {
+      functions: ["clsx", "cn", "cva", "tw"],
+    },
+  },
   lint: {
     plugins: ["oxc", "typescript", "unicorn", "react", "nextjs"],
     categories: {

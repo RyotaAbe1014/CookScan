@@ -30,7 +30,7 @@ export function FormField({
   className,
   labelVariant = "default",
 }: FormFieldProps) {
-  const labelClasses = cn("flex items-center gap-2 font-medium text-foreground", {
+  const labelClasses = cn("text-foreground flex items-center gap-2 font-medium", {
     "mb-2 text-sm": labelVariant === "default",
     "mb-2 text-sm font-semibold": labelVariant === "semibold",
     "mb-1 text-xs": labelVariant === "compact",

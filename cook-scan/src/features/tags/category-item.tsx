@@ -103,13 +103,13 @@ export function CategoryItem({ category, currentUserId }: CategoryItemProps) {
 
   return (
     <Card hover>
-      <div className="border-b border-border bg-white px-6 py-5">
+      <div className="border-border border-b bg-white px-6 py-5">
         {isEditing ? (
           <form onSubmit={handleEdit} className="space-y-3">
             <div>
               <label
                 htmlFor={`edit-category-name-${category.id}`}
-                className="block text-sm font-medium text-muted-foreground"
+                className="text-muted-foreground block text-sm font-medium"
               >
                 カテゴリ名
               </label>
@@ -127,7 +127,7 @@ export function CategoryItem({ category, currentUserId }: CategoryItemProps) {
             <div>
               <label
                 htmlFor={`edit-category-description-${category.id}`}
-                className="block text-sm font-medium text-muted-foreground"
+                className="text-muted-foreground block text-sm font-medium"
               >
                 説明（任意）
               </label>
@@ -160,19 +160,19 @@ export function CategoryItem({ category, currentUserId }: CategoryItemProps) {
         ) : (
           <div className="flex items-center justify-between">
             <div className="flex flex-1 items-center gap-4">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-primary shadow-sm">
+              <div className="bg-primary flex h-12 w-12 shrink-0 items-center justify-center rounded-lg shadow-sm">
                 <FolderIcon className="h-6 w-6 text-white" />
               </div>
               <div className="flex-1">
-                <h3 className="text-xl font-bold text-foreground">{category.name}</h3>
-                <p className="mt-1 flex items-center gap-2 text-sm text-muted-foreground">
+                <h3 className="text-foreground text-xl font-bold">{category.name}</h3>
+                <p className="text-muted-foreground mt-1 flex items-center gap-2 text-sm">
                   {category.isSystem ? (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-accent-steps-light px-2 py-0.5 text-xs font-medium text-accent-steps">
+                    <span className="bg-accent-steps-light text-accent-steps inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium">
                       <BadgeCheckIcon className="h-3 w-3" />
                       システム
                     </span>
                   ) : (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-primary-light px-2 py-0.5 text-xs font-medium text-primary-hover">
+                    <span className="bg-primary-light text-primary-hover inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium">
                       <UserCircleSolidIcon className="h-3 w-3" />
                       ユーザー
                     </span>
@@ -181,9 +181,9 @@ export function CategoryItem({ category, currentUserId }: CategoryItemProps) {
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <div className="flex items-center gap-2 rounded-lg border border-primary-light bg-primary-light px-4 py-2">
-                <TagIcon className="h-5 w-5 text-primary" />
-                <span className="text-sm font-semibold text-foreground">
+              <div className="border-primary-light bg-primary-light flex items-center gap-2 rounded-lg border px-4 py-2">
+                <TagIcon className="text-primary h-5 w-5" />
+                <span className="text-foreground text-sm font-semibold">
                   {category.tags.length}
                 </span>
               </div>
@@ -191,19 +191,19 @@ export function CategoryItem({ category, currentUserId }: CategoryItemProps) {
                 <div className="flex gap-1">
                   <button
                     onClick={() => setIsEditing(true)}
-                    className="rounded-lg p-2 transition-colors hover:bg-primary-light"
+                    className="hover:bg-primary-light rounded-lg p-2 transition-colors"
                     title="編集"
                     disabled={isSubmitting}
                   >
-                    <PencilIcon className="h-5 w-5 text-primary" />
+                    <PencilIcon className="text-primary h-5 w-5" />
                   </button>
                   <button
                     onClick={handleDelete}
-                    className="rounded-lg p-2 transition-colors hover:bg-danger-light"
+                    className="hover:bg-danger-light rounded-lg p-2 transition-colors"
                     title="削除"
                     disabled={isSubmitting}
                   >
-                    <TrashIcon className="h-5 w-5 text-danger-hover" />
+                    <TrashIcon className="text-danger-hover h-5 w-5" />
                   </button>
                 </div>
               )}
@@ -214,7 +214,7 @@ export function CategoryItem({ category, currentUserId }: CategoryItemProps) {
 
       <CardContent padding="sm" className="px-6">
         {category.tags.length === 0 ? (
-          <p className="text-sm text-muted-foreground">このカテゴリにはまだタグがありません。</p>
+          <p className="text-muted-foreground text-sm">このカテゴリにはまだタグがありません。</p>
         ) : (
           <div className="flex flex-wrap gap-3">
             {category.tags.map((tag) => {

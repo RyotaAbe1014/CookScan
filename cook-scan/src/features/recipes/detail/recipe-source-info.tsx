@@ -20,39 +20,39 @@ export function RecipeSourceInfo({ sourceInfo }: RecipeSourceInfoProps) {
       <CardContent>
         <div className="space-y-3 text-sm">
           {sourceInfo.sourceName && (
-            <div className="flex items-start gap-2 rounded-lg bg-linear-to-r from-section-header to-white p-3 ring-1 ring-section-header-border">
-              <BookOpenIcon className="mt-0.5 h-4 w-4 shrink-0 text-warning" />
+            <div className="from-section-header ring-section-header-border flex items-start gap-2 rounded-lg bg-linear-to-r to-white p-3 ring-1">
+              <BookOpenIcon className="text-warning mt-0.5 h-4 w-4 shrink-0" />
               <div>
-                <span className="font-semibold text-foreground">本の名前</span>
-                <p className="mt-1 text-muted-foreground">{sourceInfo.sourceName}</p>
+                <span className="text-foreground font-semibold">本の名前</span>
+                <p className="text-muted-foreground mt-1">{sourceInfo.sourceName}</p>
               </div>
             </div>
           )}
           {sourceInfo.pageNumber && (
-            <div className="flex items-start gap-2 rounded-lg bg-linear-to-r from-section-header to-white p-3 ring-1 ring-section-header-border">
-              <DocumentIcon className="mt-0.5 h-4 w-4 shrink-0 text-success" />
+            <div className="from-section-header ring-section-header-border flex items-start gap-2 rounded-lg bg-linear-to-r to-white p-3 ring-1">
+              <DocumentIcon className="text-success mt-0.5 h-4 w-4 shrink-0" />
               <div>
-                <span className="font-semibold text-foreground">ページ番号</span>
-                <p className="mt-1 text-muted-foreground">{sourceInfo.pageNumber}</p>
+                <span className="text-foreground font-semibold">ページ番号</span>
+                <p className="text-muted-foreground mt-1">{sourceInfo.pageNumber}</p>
               </div>
             </div>
           )}
           {sourceInfo.sourceUrl && (
-            <div className="flex items-start gap-2 rounded-lg bg-linear-to-r from-section-header to-white p-3 ring-1 ring-section-header-border">
-              <LinkIcon className="mt-0.5 h-4 w-4 shrink-0 text-accent-steps" />
+            <div className="from-section-header ring-section-header-border flex items-start gap-2 rounded-lg bg-linear-to-r to-white p-3 ring-1">
+              <LinkIcon className="text-accent-steps mt-0.5 h-4 w-4 shrink-0" />
               <div className="flex-1 overflow-hidden">
-                <span className="font-semibold text-foreground">参照URL</span>
+                <span className="text-foreground font-semibold">参照URL</span>
                 {isValidHttpUrl(sourceInfo.sourceUrl) ? (
                   <a
                     href={sourceInfo.sourceUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-1 block truncate text-primary transition-colors hover:text-primary-hover hover:underline"
+                    className="text-primary hover:text-primary-hover mt-1 block truncate transition-colors hover:underline"
                   >
                     {sourceInfo.sourceUrl}
                   </a>
                 ) : (
-                  <p className="mt-1 truncate text-muted-foreground">{sourceInfo.sourceUrl}</p>
+                  <p className="text-muted-foreground mt-1 truncate">{sourceInfo.sourceUrl}</p>
                 )}
               </div>
             </div>

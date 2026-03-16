@@ -14,7 +14,7 @@ export function RecipeMemo({ memo }: RecipeMemoProps) {
         title="メモ"
       />
       <CardContent>
-        <p className="whitespace-pre-wrap text-sm leading-relaxed text-muted-foreground">{memo}</p>
+        <p className="text-muted-foreground text-sm leading-relaxed whitespace-pre-wrap">{memo}</p>
       </CardContent>
     </Card>
   );

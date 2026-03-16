@@ -12,16 +12,16 @@ export function IngredientInputMobile({
   onRemove,
 }: IngredientInputProps) {
   return (
-    <div className="group relative overflow-hidden rounded-2xl bg-linear-to-br from-white via-section-header/50 to-primary-light/30 p-4 shadow-sm ring-1 ring-section-header-border/80 transition-all duration-300 active:scale-[0.98]">
+    <div className="group via-section-header/50 to-primary-light/30 ring-section-header-border/80 relative overflow-hidden rounded-2xl bg-linear-to-br from-white p-4 shadow-sm ring-1 transition-all duration-300 active:scale-[0.98]">
       {/* Decorative accent */}
-      <div className="absolute left-0 top-0 h-full w-1 bg-linear-to-b from-success via-primary to-secondary-hover" />
+      <div className="from-success via-primary to-secondary-hover absolute top-0 left-0 h-full w-1 bg-linear-to-b" />
 
       <div className="space-y-3 pl-2">
         {/* Row 1: Name */}
         <div>
           <label
             htmlFor={`ingredient-name-${index}`}
-            className="mb-1.5 block text-xs font-semibold tracking-wide text-muted-foreground uppercase"
+            className="text-muted-foreground mb-1.5 block text-xs font-semibold tracking-wide uppercase"
           >
             材料名
           </label>
@@ -41,7 +41,7 @@ export function IngredientInputMobile({
         <div>
           <label
             htmlFor={`ingredient-unit-${index}`}
-            className="mb-1.5 block text-xs font-semibold tracking-wide text-muted-foreground uppercase"
+            className="text-muted-foreground mb-1.5 block text-xs font-semibold tracking-wide uppercase"
           >
             分量
           </label>
@@ -60,7 +60,7 @@ export function IngredientInputMobile({
         <div>
           <label
             htmlFor={`ingredient-notes-${index}`}
-            className="mb-1.5 block text-xs font-semibold tracking-wide text-muted-foreground uppercase"
+            className="text-muted-foreground mb-1.5 block text-xs font-semibold tracking-wide uppercase"
           >
             メモ
           </label>
@@ -81,7 +81,7 @@ export function IngredientInputMobile({
             type="button"
             onClick={() => onRemove(index)}
             disabled={!canDelete}
-            className="flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-muted text-sm font-medium text-muted-foreground transition-all duration-200 hover:bg-danger-light hover:text-danger active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40"
+            className="bg-muted text-muted-foreground hover:bg-danger-light hover:text-danger flex h-11 w-full items-center justify-center gap-2 rounded-xl text-sm font-medium transition-all duration-200 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40"
             aria-label="材料を削除"
           >
             <TrashIcon className="h-4 w-4" stroke="currentColor" />
