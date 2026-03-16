@@ -301,9 +301,10 @@ describe("recipe.service", () => {
         ["child-1"],
       );
       expect(RecipeRelationRepository.checkCircularReference).toHaveBeenCalledWith(
-        "recipe-new",
-        "child-1",
-      );
+        mockTx,
+        'recipe-new',
+        'child-1'
+      )
       expect(RecipeRelationRepository.createRecipeRelations).toHaveBeenCalledWith(
         mockTx,
         "recipe-new",
