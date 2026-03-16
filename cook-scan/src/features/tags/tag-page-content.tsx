@@ -1,13 +1,13 @@
-import { TagCreateForm } from './tag-create-form'
-import { CategoryItem } from './category-item'
-import { TagEmptyState } from './tag-empty-state'
-import type { TagCategoryWithTags } from '@/types/tag'
-import { TagIcon } from '@/components/icons/tag-icon'
+import { TagCreateForm } from "./tag-create-form";
+import { CategoryItem } from "./category-item";
+import { TagEmptyState } from "./tag-empty-state";
+import type { TagCategoryWithTags } from "@/types/tag";
+import { TagIcon } from "@/components/icons/tag-icon";
 
 type TagPageContentProps = {
-  tagCategories: TagCategoryWithTags[]
-  currentUserId: string
-}
+  tagCategories: TagCategoryWithTags[];
+  currentUserId: string;
+};
 
 export function TagPageContent({ tagCategories, currentUserId }: TagPageContentProps) {
   return (
@@ -17,13 +17,15 @@ export function TagPageContent({ tagCategories, currentUserId }: TagPageContentP
       {/* タグ一覧セクション */}
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-foreground">登録済みのタグ</h2>
-          <p className="mt-1 text-sm text-muted-foreground">カテゴリごとに整理されたタグ一覧</p>
+          <h2 className="text-foreground text-2xl font-bold">登録済みのタグ</h2>
+          <p className="text-muted-foreground mt-1 text-sm">カテゴリごとに整理されたタグ一覧</p>
         </div>
         {tagCategories.length > 0 && (
-          <div className="flex items-center gap-2 rounded-lg bg-primary-light px-4 py-2 border border-primary-light">
-            <TagIcon className="h-5 w-5 text-primary" />
-            <span className="text-sm font-medium text-foreground">{tagCategories.length} カテゴリ</span>
+          <div className="bg-primary-light border-primary-light flex items-center gap-2 rounded-lg border px-4 py-2">
+            <TagIcon className="text-primary h-5 w-5" />
+            <span className="text-foreground text-sm font-medium">
+              {tagCategories.length} カテゴリ
+            </span>
           </div>
         )}
       </div>
@@ -38,5 +40,5 @@ export function TagPageContent({ tagCategories, currentUserId }: TagPageContentP
         </div>
       )}
     </div>
-  )
+  );
 }

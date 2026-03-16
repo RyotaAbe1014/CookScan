@@ -15,24 +15,28 @@
 ### 機能詳細
 
 #### パスワード変更フォーム
+
 - 現在のパスワード入力フィールド
 - 新しいパスワード入力フィールド
 - 新しいパスワード確認入力フィールド
 - セキュリティ警告：「パスワード変更後、すべてのデバイスから自動的にログアウトされます」
 
 #### パスワード強度要件
+
 - 8文字以上
 - 大文字1文字以上
 - 小文字1文字以上
 - 数字1文字以上
 
 #### UI/UX
+
 - 各フィールドにアイコン表示（KeyIcon、ShieldCheckIcon、CheckCircleOutlineIcon）
 - フィールドごとに色分け（スレート系、エメラルド系、ティール系）
 - 送信中はボタン無効化＋ローディング表示
 - バリデーションエラーはフィールド直下に表示
 
 #### その他
+
 - パスワード設定機能（`/password/setup`）は招待直後の初期セットアップ用として別途存在
 
 ### ユーザーフロー
@@ -99,20 +103,23 @@ sequenceDiagram
 ### フロントエンド
 
 #### コンポーネント構成
+
 - **ファイル**: `src/features/profile/password/password-change-form.tsx`
 - **タイプ**: Client Component
 - **スタイリング**: Tailwind CSS
 
 #### 使用コンポーネント
+
 - `PasswordInput` - パスワード入力フィールド
 - アイコン: `KeyIcon`, `ShieldCheckIcon`, `CheckCircleOutlineIcon`
 
 #### 状態管理
+
 ```typescript
 const [formData, setFormData] = useState({
-  currentPassword: '',
-  newPassword: '',
-  confirmPassword: '',
+  currentPassword: "",
+  newPassword: "",
+  confirmPassword: "",
 });
 const [errors, setErrors] = useState<Record<string, string>>({});
 const [isPending, startTransition] = useTransition();
@@ -121,31 +128,34 @@ const [isPending, startTransition] = useTransition();
 ### バックエンド
 
 #### Server Action
+
 - **ファイル**: `src/features/profile/password/actions.ts`
 - **関数**: `updatePassword(formData: PasswordChangeFormData): Promise<Result<void>>`
 - **ディレクティブ**: `'use server'`
 
 #### バリデーションスキーマ
+
 ```typescript
 const passwordChangeSchema = z
   .object({
-    currentPassword: z.string().min(1, '現在のパスワードを入力してください'),
+    currentPassword: z.string().min(1, "現在のパスワードを入力してください"),
     newPassword: z
       .string()
-      .min(8, 'パスワードは8文字以上である必要があります')
+      .min(8, "パスワードは8文字以上である必要があります")
       .regex(
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-        'パスワードには大文字、小文字、数字を含める必要があります'
+        "パスワードには大文字、小文字、数字を含める必要があります",
       ),
     confirmPassword: z.string(),
   })
   .refine((data) => data.newPassword === data.confirmPassword, {
-    message: 'パスワードが一致しません',
-    path: ['confirmPassword'],
+    message: "パスワードが一致しません",
+    path: ["confirmPassword"],
   });
 ```
 
 #### 処理フロー
+
 1. 認証ユーザーの確認（`getUser()`）
 2. Zodスキーマによるバリデーション
 3. 現在のパスワードで再認証（`signInWithPassword`）
@@ -154,21 +164,24 @@ const passwordChangeSchema = z
 6. ログイン画面へリダイレクト
 
 #### 使用ライブラリ
+
 - `zod` - バリデーション
 - `@supabase/ssr` - Supabase サーバークライアント
 
 ### Result型ユーティリティ
 
 #### ファイル
+
 - `src/utils/result/`
 
 #### 主要関数
-```typescript
-type Result<T> = Success<T> | Failure
 
-type Success<T> = { ok: true; data: T }
-type Failure = { ok: false; error: AppError }
-type AppError = { code: ErrorCode; message: string; details?: Record<string, unknown> }
+```typescript
+type Result<T> = Success<T> | Failure;
+
+type Success<T> = { ok: true; data: T };
+type Failure = { ok: false; error: AppError };
+type AppError = { code: ErrorCode; message: string; details?: Record<string, unknown> };
 ```
 
 ## データモデル
@@ -180,41 +193,48 @@ type AppError = { code: ErrorCode; message: string; details?: Record<string, unk
 ### updatePassword (Server Action)
 
 #### 概要
+
 認証済みユーザーのパスワードを変更する。現在のパスワードによる再認証後、新パスワードに更新し、全デバイスからログアウトする。
 
 #### シグネチャ
+
 ```typescript
-async function updatePassword(formData: PasswordChangeFormData): Promise<Result<void>>
+async function updatePassword(formData: PasswordChangeFormData): Promise<Result<void>>;
 ```
 
 #### パラメータ
-| 名前 | 型 | 説明 |
-|------|------|------|
+
+| 名前     | 型                     | 説明                         |
+| -------- | ---------------------- | ---------------------------- |
 | formData | PasswordChangeFormData | パスワード変更フォームデータ |
 
 #### FormDataフィールド
-| フィールド名 | 型 | 必須 | バリデーション |
-|------------|------|------|--------------|
-| currentPassword | string | ✓ | 1文字以上 |
-| newPassword | string | ✓ | 8文字以上、大文字・小文字・数字を含む |
-| confirmPassword | string | ✓ | newPasswordと一致 |
+
+| フィールド名    | 型     | 必須 | バリデーション                        |
+| --------------- | ------ | ---- | ------------------------------------- |
+| currentPassword | string | ✓    | 1文字以上                             |
+| newPassword     | string | ✓    | 8文字以上、大文字・小文字・数字を含む |
+| confirmPassword | string | ✓    | newPasswordと一致                     |
 
 #### 戻り値
+
 ```typescript
-Promise<Result<void>>
+Promise<Result<void>>;
 // 成功時: { ok: true, data: undefined } → redirect('/login')
 // 失敗時: { ok: false, error: AppError }
 ```
 
 #### エラーコード
-| コード | メッセージ | 発生条件 |
-|--------|-----------|---------|
-| UNAUTHENTICATED | 認証が必要です | 未認証ユーザーのアクセス |
-| VALIDATION_ERROR | （各フィールドのエラーメッセージ） | バリデーション失敗 |
-| VALIDATION_ERROR | 現在のパスワードが正しくありません | 再認証失敗 |
-| SERVER_ERROR | パスワードの更新に失敗しました | Supabase更新エラー |
+
+| コード           | メッセージ                         | 発生条件                 |
+| ---------------- | ---------------------------------- | ------------------------ |
+| UNAUTHENTICATED  | 認証が必要です                     | 未認証ユーザーのアクセス |
+| VALIDATION_ERROR | （各フィールドのエラーメッセージ） | バリデーション失敗       |
+| VALIDATION_ERROR | 現在のパスワードが正しくありません | 再認証失敗               |
+| SERVER_ERROR     | パスワードの更新に失敗しました     | Supabase更新エラー       |
 
 #### 処理詳細
+
 1. `supabase.auth.getUser()`で認証確認
 2. Zodスキーマでフォームデータをバリデーション
 3. `signInWithPassword`で現在のパスワードを検証
@@ -225,10 +245,12 @@ Promise<Result<void>>
 ## テスト
 
 ### テストファイル
+
 - **ファイル**: `src/features/profile/password/__tests__/password-change-form.test.tsx`
 - **フレームワーク**: Vitest, React Testing Library
 
 ### テストケース
+
 1. **フォームフィールドのレンダリング確認**
    - 3つのパスワード入力フィールドが表示されること
 

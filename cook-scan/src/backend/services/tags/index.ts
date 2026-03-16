@@ -2,4 +2,4 @@
  * Tag Service Layer Exports
  */
 
-export * from './tag.service'
+export * from "./tag.service";

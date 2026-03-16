@@ -1,29 +1,29 @@
-'use client'
+"use client";
 
-import { useState, useMemo, useTransition } from 'react'
+import { useState, useMemo, useTransition } from "react";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogDescription,
-} from '@/components/ui/dialog'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
-import { SearchIcon } from '@/components/icons/search-icon'
-import { isSuccess } from '@/utils/result'
-import { addMealPlanItem } from '../actions'
-import { DAY_LABELS } from '../utils'
-import type { RecipeListOutput } from '@/backend/domain/recipes'
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { SearchIcon } from "@/components/icons/search-icon";
+import { isSuccess } from "@/utils/result";
+import { addMealPlanItem } from "../actions";
+import { DAY_LABELS } from "../utils";
+import type { RecipeListOutput } from "@/backend/domain/recipes";
 
 type AddRecipeDialogProps = {
-  open: boolean
-  onOpenChange: (open: boolean) => void
-  dayOfWeek: number | null
-  weekStart: string
-  recipes: RecipeListOutput[]
-  onItemAdded: () => void
-}
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  dayOfWeek: number | null;
+  weekStart: string;
+  recipes: RecipeListOutput[];
+  onItemAdded: () => void;
+};
 
 export function AddRecipeDialog({
   open,
@@ -33,25 +33,25 @@ export function AddRecipeDialog({
   recipes,
   onItemAdded,
 }: AddRecipeDialogProps) {
-  const [search, setSearch] = useState('')
-  const [isPending, startTransition] = useTransition()
+  const [search, setSearch] = useState("");
+  const [isPending, startTransition] = useTransition();
 
   const filtered = useMemo(() => {
-    const query = search.toLowerCase()
-    return recipes.filter((r) => r.title.toLowerCase().includes(query))
-  }, [recipes, search])
+    const query = search.toLowerCase();
+    return recipes.filter((r) => r.title.toLowerCase().includes(query));
+  }, [recipes, search]);
 
   function handleSelect(recipeId: string) {
-    if (dayOfWeek === null) return
+    if (dayOfWeek === null) return;
 
     startTransition(async () => {
-      const result = await addMealPlanItem(weekStart, dayOfWeek, recipeId)
+      const result = await addMealPlanItem(weekStart, dayOfWeek, recipeId);
       if (isSuccess(result)) {
-        onItemAdded()
-        onOpenChange(false)
-        setSearch('')
+        onItemAdded();
+        onOpenChange(false);
+        setSearch("");
       }
-    })
+    });
   }
 
   return (
@@ -67,7 +67,7 @@ export function AddRecipeDialog({
 
         <div className="p-4">
           <div className="relative mb-4">
-            <SearchIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <SearchIcon className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
             <Input
               placeholder="レシピを検索..."
               value={search}
@@ -78,7 +78,7 @@ export function AddRecipeDialog({
 
           <div className="max-h-[300px] overflow-y-auto">
             {filtered.length === 0 ? (
-              <p className="py-4 text-center text-sm text-muted-foreground">
+              <p className="text-muted-foreground py-4 text-center text-sm">
                 レシピが見つかりません
               </p>
             ) : (
@@ -101,5 +101,5 @@ export function AddRecipeDialog({
         </div>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

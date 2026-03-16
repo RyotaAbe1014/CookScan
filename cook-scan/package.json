@@ -2,17 +2,20 @@
   "name": "cook-scan",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint src",
+    "fmt": "vp fmt src",
+    "fmt:check": "vp fmt --check src",
+    "lint": "vp lint src",
     "type-check": "tsc --noEmit",
-    "test": "vitest",
-    "test:run": "vitest run",
-    "test:coverage": "vitest run --coverage",
-    "test:watch": "vitest --watch",
-    "test:ui": "vitest --ui",
+    "test": "vp test",
+    "test:run": "vp test run",
+    "test:coverage": "vp test run --coverage",
+    "test:watch": "vp test --watch",
+    "test:ui": "vp test --ui",
     "db:generate": "prisma generate",
     "db:format": "prisma format",
     "db:validate": "prisma validate",
@@ -72,7 +75,6 @@
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.2",
     "@vitest/coverage-v8": "^4.0.16",
-    "eslint": "^9.39.2",
     "eslint-config-next": "^16.1.5",
     "jsdom": "^28.1.0",
     "mastra": "^1.3.12",
@@ -80,8 +82,16 @@
     "tailwindcss": "^4",
     "tsx": "^4.20.3",
     "typescript": "5.9.3",
+    "vite-plus": "catalog:",
     "vite-tsconfig-paths": "^6.1.1",
-    "vitest": "^4.0.15"
+    "vitest": "catalog:"
+  },
+  "packageManager": "pnpm@10.32.1",
+  "pnpm": {
+    "overrides": {
+      "undici": ">=7.24.0",
+      "flatted": ">=3.4.0"
+    }
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

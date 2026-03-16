@@ -1,76 +1,74 @@
-'use client'
+"use client";
 
-import { useRouter, useSearchParams } from 'next/navigation'
-import { FilterIcon } from '@/components/icons/filter-icon'
-import { CloseIcon } from '@/components/icons/close-icon'
-import { CheckSolidIcon } from '@/components/icons/check-solid-icon'
-import { CheckCircleOutlineIcon } from '@/components/icons/check-circle-outline-icon'
-import { useCallback } from 'react'
-import { Card, CardHeader, CardContent } from '@/components/ui/card'
-import { Route } from 'next'
+import { useRouter, useSearchParams } from "next/navigation";
+import { FilterIcon } from "@/components/icons/filter-icon";
+import { CloseIcon } from "@/components/icons/close-icon";
+import { CheckSolidIcon } from "@/components/icons/check-solid-icon";
+import { CheckCircleOutlineIcon } from "@/components/icons/check-circle-outline-icon";
+import { useCallback } from "react";
+import { Card, CardHeader, CardContent } from "@/components/ui/card";
+import { Route } from "next";
 
 type Tag = {
-  id: string
-  name: string
-}
+  id: string;
+  name: string;
+};
 
 type TagCategory = {
-  id: string
-  name: string
-  tags: Tag[]
-}
+  id: string;
+  name: string;
+  tags: Tag[];
+};
 
 type TagFilterProps = {
-  tagCategories: TagCategory[]
-}
+  tagCategories: TagCategory[];
+};
 
 export function TagFilter({ tagCategories }: TagFilterProps) {
-  const router = useRouter()
-  const searchParams = useSearchParams()
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
-  const selectedTags = searchParams.getAll('tag')
+  const selectedTags = searchParams.getAll("tag");
 
   const createQueryString = useCallback(
     (tagId: string) => {
-      const params = new URLSearchParams(searchParams.toString())
-      const currentTags = params.getAll('tag')
+      const params = new URLSearchParams(searchParams.toString());
+      const currentTags = params.getAll("tag");
 
       // Remove all existing tag params
-      params.delete('tag')
+      params.delete("tag");
 
       if (currentTags.includes(tagId)) {
         // Remove the tag if already selected
-        currentTags
-          .filter(t => t !== tagId)
-          .forEach(t => params.append('tag', t))
+        currentTags.filter((t) => t !== tagId).forEach((t) => params.append("tag", t));
       } else {
         // Add the tag
-        currentTags.forEach(t => params.append('tag', t))
-        params.append('tag', tagId)
+        currentTags.forEach((t) => params.append("tag", t));
+        params.append("tag", tagId);
       }
 
-      return params.toString()
+      return params.toString();
     },
-    [searchParams]
-  )
+    [searchParams],
+  );
 
   const clearFilters = useCallback(() => {
-    router.push('/recipes')
-  }, [router])
+    router.push("/recipes");
+  }, [router]);
 
   const handleTagClick = useCallback(
     (tagId: string) => {
-      const queryString = createQueryString(tagId)
-      router.push(`/recipes${queryString ? `?${queryString}` : ''}` as Route)
+      const queryString = createQueryString(tagId);
+      router.push(`/recipes${queryString ? `?${queryString}` : ""}` as Route);
     },
-    [createQueryString, router]
-  )
+    [createQueryString, router],
+  );
 
   // Filter categories that have tags
-  const categoriesWithTags = tagCategories.filter(cat => cat.tags.length > 0)
+  const categoriesWithTags = tagCategories.filter((cat) => cat.tags.length > 0);
 
   if (categoriesWithTags.length === 0) {
-    return null
+    return null;
   }
 
   return (
@@ -78,13 +76,13 @@ export function TagFilter({ tagCategories }: TagFilterProps) {
       <CardHeader>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <FilterIcon className="h-5 w-5 text-primary" />
-            <h2 className="text-base font-semibold text-foreground">タグで絞り込み</h2>
+            <FilterIcon className="text-primary h-5 w-5" />
+            <h2 className="text-foreground text-base font-semibold">タグで絞り込み</h2>
           </div>
           {selectedTags.length > 0 && (
             <button
               onClick={clearFilters}
-              className="flex items-center gap-1.5 rounded-lg bg-muted px-3 py-1.5 text-xs font-medium text-foreground transition-all hover:bg-section-header-border"
+              className="bg-muted text-foreground hover:bg-section-header-border flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-all"
             >
               <CloseIcon className="h-3.5 w-3.5" />
               クリア
@@ -98,33 +96,26 @@ export function TagFilter({ tagCategories }: TagFilterProps) {
           {categoriesWithTags.map((category) => (
             <div key={category.id}>
               <div className="mb-2 flex items-center gap-2">
-                <div className="h-1 w-1 rounded-full bg-primary" />
-                <h3 className="text-sm font-semibold text-foreground">
-                  {category.name}
-                </h3>
+                <div className="bg-primary h-1 w-1 rounded-full" />
+                <h3 className="text-foreground text-sm font-semibold">{category.name}</h3>
               </div>
               <div className="flex flex-wrap gap-2">
                 {category.tags.map((tag) => {
-                  const isSelected = selectedTags.includes(tag.id)
+                  const isSelected = selectedTags.includes(tag.id);
                   return (
                     <button
                       key={tag.id}
                       onClick={() => handleTagClick(tag.id)}
-                      className={`
-                        inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium
-                        transition-all duration-200
-                        ${isSelected
-                          ? 'bg-primary text-white shadow-lg shadow-primary/30 ring-2 ring-primary'
-                          : 'bg-muted text-foreground ring-1 ring-section-header-border hover:bg-section-header-border hover:ring-border-dark'
-                        }
-                      `}
+                      className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 ${
+                        isSelected
+                          ? "bg-primary shadow-primary/30 ring-primary text-white shadow-lg ring-2"
+                          : "bg-muted text-foreground ring-section-header-border hover:bg-section-header-border hover:ring-border-dark ring-1"
+                      } `}
                     >
-                      {isSelected && (
-                        <CheckSolidIcon className="h-3.5 w-3.5" />
-                      )}
+                      {isSelected && <CheckSolidIcon className="h-3.5 w-3.5" />}
                       {tag.name}
                     </button>
-                  )
+                  );
                 })}
               </div>
             </div>
@@ -132,14 +123,14 @@ export function TagFilter({ tagCategories }: TagFilterProps) {
         </div>
 
         {selectedTags.length > 0 && (
-          <div className="mt-4 flex items-center gap-2 rounded-lg bg-primary-light px-4 py-3 ring-1 ring-primary-light">
-            <CheckCircleOutlineIcon className="h-4 w-4 text-primary" />
-            <p className="text-sm font-medium text-foreground">
+          <div className="bg-primary-light ring-primary-light mt-4 flex items-center gap-2 rounded-lg px-4 py-3 ring-1">
+            <CheckCircleOutlineIcon className="text-primary h-4 w-4" />
+            <p className="text-foreground text-sm font-medium">
               {selectedTags.length}件のタグで絞り込み中
             </p>
           </div>
         )}
       </CardContent>
     </Card>
-  )
+  );
 }

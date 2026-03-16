@@ -1,98 +1,98 @@
-import type { Meta, StoryObj } from '@storybook/nextjs'
-import { Button } from './button'
-import { PlusIcon } from '@/components/icons/plus-icon'
-import { TrashIcon } from '@/components/icons/trash-icon'
+import type { Meta, StoryObj } from "@storybook/nextjs";
+import { Button } from "./button";
+import { PlusIcon } from "@/components/icons/plus-icon";
+import { TrashIcon } from "@/components/icons/trash-icon";
 
 const meta = {
-  title: 'UI/Button',
+  title: "UI/Button",
   component: Button,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {
     variant: {
-      control: 'select',
-      options: ['primary', 'secondary', 'ghost', 'danger', 'danger-ghost', 'link'],
+      control: "select",
+      options: ["primary", "secondary", "ghost", "danger", "danger-ghost", "link"],
     },
     size: {
-      control: 'select',
-      options: ['sm', 'md', 'lg', 'icon'],
+      control: "select",
+      options: ["sm", "md", "lg", "icon"],
     },
-    isLoading: { control: 'boolean' },
-    disabled: { control: 'boolean' },
+    isLoading: { control: "boolean" },
+    disabled: { control: "boolean" },
   },
-} satisfies Meta<typeof Button>
+} satisfies Meta<typeof Button>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
   args: {
-    variant: 'primary',
-    children: 'プライマリ',
+    variant: "primary",
+    children: "プライマリ",
   },
-}
+};
 
 export const Secondary: Story = {
   args: {
-    variant: 'secondary',
-    children: 'セカンダリ',
+    variant: "secondary",
+    children: "セカンダリ",
   },
-}
+};
 
 export const Ghost: Story = {
   args: {
-    variant: 'ghost',
-    children: 'ゴースト',
+    variant: "ghost",
+    children: "ゴースト",
   },
-}
+};
 
 export const Danger: Story = {
   args: {
-    variant: 'danger',
-    children: '削除',
+    variant: "danger",
+    children: "削除",
   },
-}
+};
 
 export const DangerGhost: Story = {
   args: {
-    variant: 'danger-ghost',
-    children: '削除',
+    variant: "danger-ghost",
+    children: "削除",
   },
-}
+};
 
 export const Link: Story = {
   args: {
-    variant: 'link',
-    children: 'リンク',
+    variant: "link",
+    children: "リンク",
   },
-}
+};
 
 export const Small: Story = {
   args: {
-    size: 'sm',
-    children: '小さいボタン',
+    size: "sm",
+    children: "小さいボタン",
   },
-}
+};
 
 export const Large: Story = {
   args: {
-    size: 'lg',
-    children: '大きいボタン',
+    size: "lg",
+    children: "大きいボタン",
   },
-}
+};
 
 export const Loading: Story = {
   args: {
     isLoading: true,
-    children: '読み込み中...',
+    children: "読み込み中...",
   },
-}
+};
 
 export const Disabled: Story = {
   args: {
     disabled: true,
-    children: '無効',
+    children: "無効",
   },
-}
+};
 
 export const WithIcon: Story = {
   args: {
@@ -103,16 +103,16 @@ export const WithIcon: Story = {
       </>
     ),
   },
-}
+};
 
 export const IconButton: Story = {
   args: {
-    size: 'icon',
-    variant: 'danger-ghost',
-    'aria-label': '削除',
+    size: "icon",
+    variant: "danger-ghost",
+    "aria-label": "削除",
     children: <TrashIcon className="h-5 w-5" />,
   },
-}
+};
 
 export const AllVariants: Story = {
   render: () => (
@@ -125,7 +125,7 @@ export const AllVariants: Story = {
       <Button variant="link">リンク</Button>
     </div>
   ),
-}
+};
 
 export const AllSizes: Story = {
   render: () => (
@@ -138,4 +138,4 @@ export const AllSizes: Story = {
       </Button>
     </div>
   ),
-}
+};

@@ -160,9 +160,9 @@ sequenceDiagram
 
 ```typescript
 // DeleteRecipeDialog
-const [error, setError] = useState<string | null>(null)
-const [isPending, startTransition] = useTransition()
-const router = useRouter()
+const [error, setError] = useState<string | null>(null);
+const [isPending, startTransition] = useTransition();
+const router = useRouter();
 ```
 
 #### 主要な処理フロー
@@ -171,18 +171,18 @@ const router = useRouter()
 const handleDelete = async () => {
   startTransition(async () => {
     try {
-      const result = await deleteRecipe(recipeId)
+      const result = await deleteRecipe(recipeId);
       if (isSuccess(result)) {
-        router.push('/recipes')
-        handleClose()
+        router.push("/recipes");
+        handleClose();
       } else {
-        setError(result.error.message)
+        setError(result.error.message);
       }
     } catch {
-      setError('エラーが発生しました')
+      setError("エラーが発生しました");
     }
-  })
-}
+  });
+};
 ```
 
 ### バックエンド
@@ -217,13 +217,13 @@ const handleDelete = async () => {
 
 ```typescript
 export async function deleteRecipe(userId: string, recipeId: string): Promise<void> {
-  const hasOwnership = await RecipeRepository.checkRecipeOwnership(recipeId, userId)
+  const hasOwnership = await RecipeRepository.checkRecipeOwnership(recipeId, userId);
   if (!hasOwnership) {
-    throw new Error('レシピが見つかりません')
+    throw new Error("レシピが見つかりません");
   }
   await prisma.$transaction(async (tx) => {
-    await RecipeRepository.deleteRecipe(tx, recipeId)
-  })
+    await RecipeRepository.deleteRecipe(tx, recipeId);
+  });
 }
 ```
 
@@ -237,13 +237,13 @@ export async function deleteRecipe(userId: string, recipeId: string): Promise<vo
 
 ```typescript
 // 所有権チェック
-export async function checkRecipeOwnership(recipeId: string, userId: string): Promise<boolean>
+export async function checkRecipeOwnership(recipeId: string, userId: string): Promise<boolean>;
 
 // 関連データ削除（ingredient, step, sourceInfo, recipeTag, recipeRelation(parent)）
-export async function deleteRelatedData(tx: TransactionClient, recipeId: string): Promise<void>
+export async function deleteRelatedData(tx: TransactionClient, recipeId: string): Promise<void>;
 
 // レシピ削除（関連データ含む全削除）
-export async function deleteRecipe(tx: TransactionClient, recipeId: string): Promise<void>
+export async function deleteRecipe(tx: TransactionClient, recipeId: string): Promise<void>;
 ```
 
 ## データモデル
@@ -295,17 +295,17 @@ model RecipeRelation {
 
 #### 削除対象テーブル一覧
 
-| テーブル | 削除方法 | 備考 |
-|---------|---------|------|
-| `ingredients` | `deleteMany` | レシピに紐づく材料 |
-| `steps` | `deleteMany` | レシピに紐づく手順 |
-| `source_infos` | `deleteMany` | レシピのソース情報 |
-| `recipe_tags` | `deleteMany` | レシピのタグ関係 |
-| `recipe_relations` | `deleteMany` | 親レシピとして参照 |
-| `recipe_relations` | `deleteMany` | 子レシピとして参照 |
-| `recipe_versions` | `deleteMany` | レシピのバージョン履歴 |
-| `ocr_processing_history` | `deleteMany` | OCR処理履歴 |
-| `recipes` | `delete` | レシピ本体 |
+| テーブル                 | 削除方法     | 備考                   |
+| ------------------------ | ------------ | ---------------------- |
+| `ingredients`            | `deleteMany` | レシピに紐づく材料     |
+| `steps`                  | `deleteMany` | レシピに紐づく手順     |
+| `source_infos`           | `deleteMany` | レシピのソース情報     |
+| `recipe_tags`            | `deleteMany` | レシピのタグ関係       |
+| `recipe_relations`       | `deleteMany` | 親レシピとして参照     |
+| `recipe_relations`       | `deleteMany` | 子レシピとして参照     |
+| `recipe_versions`        | `deleteMany` | レシピのバージョン履歴 |
+| `ocr_processing_history` | `deleteMany` | OCR処理履歴            |
+| `recipes`                | `delete`     | レシピ本体             |
 
 ## API仕様
 
@@ -318,13 +318,13 @@ model RecipeRelation {
 #### シグネチャ
 
 ```typescript
-async function deleteRecipe(recipeId: string): Promise<Result<void>>
+async function deleteRecipe(recipeId: string): Promise<Result<void>>;
 ```
 
 #### パラメータ
 
-| 名前 | 型 | 説明 |
-|------|------|------|
+| 名前       | 型       | 説明                 |
+| ---------- | -------- | -------------------- |
 | `recipeId` | `string` | 削除するレシピのUUID |
 
 #### 戻り値
@@ -337,12 +337,12 @@ type Result<void> =
 
 #### エラーコード
 
-| コード | メッセージ | 発生条件 |
-|--------|-----------|---------|
-| `UNAUTHENTICATED` | 「認証が必要です」 | 未ログイン |
-| `UNAUTHENTICATED` | 「プロフィール設定が必要です」 | プロフィール未設定 |
-| `NOT_FOUND` | 「レシピが見つかりません」 | レシピが存在しないか、他ユーザーのレシピ |
-| `SERVER_ERROR` | 「レシピの削除に失敗しました」 | サーバーエラー |
+| コード            | メッセージ                     | 発生条件                                 |
+| ----------------- | ------------------------------ | ---------------------------------------- |
+| `UNAUTHENTICATED` | 「認証が必要です」             | 未ログイン                               |
+| `UNAUTHENTICATED` | 「プロフィール設定が必要です」 | プロフィール未設定                       |
+| `NOT_FOUND`       | 「レシピが見つかりません」     | レシピが存在しないか、他ユーザーのレシピ |
+| `SERVER_ERROR`    | 「レシピの削除に失敗しました」 | サーバーエラー                           |
 
 #### 処理詳細
 

@@ -1,82 +1,82 @@
-import { render, screen, fireEvent } from '@testing-library/react'
-import { Sheet } from './sheet'
-import { vi } from 'vitest'
+import { render, screen, fireEvent } from "@testing-library/react";
+import { Sheet } from "./sheet";
+import { vi } from "vite-plus/test";
 
-describe('Sheet', () => {
-  test('isOpenがtrueの場合、ダイアログが表示される', () => {
-    const onClose = vi.fn()
+describe("Sheet", () => {
+  test("isOpenがtrueの場合、ダイアログが表示される", () => {
+    const onClose = vi.fn();
     render(
       <Sheet isOpen={true} onClose={onClose}>
         <div>Sheet Content</div>
-      </Sheet>
-    )
+      </Sheet>,
+    );
 
-    const dialog = screen.getByRole('dialog')
-    expect(dialog).toBeInTheDocument()
-    expect(dialog).toHaveClass('visible')
-    expect(screen.getByText('Sheet Content')).toBeInTheDocument()
-  })
+    const dialog = screen.getByRole("dialog");
+    expect(dialog).toBeInTheDocument();
+    expect(dialog).toHaveClass("visible");
+    expect(screen.getByText("Sheet Content")).toBeInTheDocument();
+  });
 
-  test('isOpenがfalseの場合、ダイアログが非表示になる', () => {
-    const onClose = vi.fn()
+  test("isOpenがfalseの場合、ダイアログが非表示になる", () => {
+    const onClose = vi.fn();
     render(
       <Sheet isOpen={false} onClose={onClose}>
         <div>Sheet Content</div>
-      </Sheet>
-    )
+      </Sheet>,
+    );
 
-    const dialog = screen.getByRole('dialog', { hidden: true })
-    expect(dialog).toHaveClass('invisible')
-  })
+    const dialog = screen.getByRole("dialog", { hidden: true });
+    expect(dialog).toHaveClass("invisible");
+  });
 
-  test('オーバーレイをクリックするとonCloseが呼ばれる', () => {
-    const onClose = vi.fn()
+  test("オーバーレイをクリックするとonCloseが呼ばれる", () => {
+    const onClose = vi.fn();
     render(
       <Sheet isOpen={true} onClose={onClose}>
         <div>Sheet Content</div>
-      </Sheet>
-    )
+      </Sheet>,
+    );
 
     // オーバーレイは aria-hidden="true" を持つ
-    const overlay = screen.getByLabelText('Overlay')
-    fireEvent.click(overlay)
+    const overlay = screen.getByLabelText("Overlay");
+    fireEvent.click(overlay);
 
-    expect(onClose).toHaveBeenCalledTimes(1)
-  })
+    expect(onClose).toHaveBeenCalledTimes(1);
+  });
 
-  test('コンテンツをクリックしてもonCloseは呼ばれない', () => {
-    const onClose = vi.fn()
+  test("コンテンツをクリックしてもonCloseは呼ばれない", () => {
+    const onClose = vi.fn();
     render(
       <Sheet isOpen={true} onClose={onClose}>
         <div data-testid="content">Sheet Content</div>
-      </Sheet>
-    )
+      </Sheet>,
+    );
 
-    fireEvent.click(screen.getByTestId('content'))
-    expect(onClose).not.toHaveBeenCalled()
-  })
+    fireEvent.click(screen.getByTestId("content"));
+    expect(onClose).not.toHaveBeenCalled();
+  });
 
-  test('EscapeキーでonCloseが呼ばれる', () => {
-    const onClose = vi.fn()
+  test("EscapeキーでonCloseが呼ばれる", () => {
+    const onClose = vi.fn();
     render(
       <Sheet isOpen={true} onClose={onClose}>
         <div>Sheet Content</div>
-      </Sheet>
-    )
+      </Sheet>,
+    );
 
-    fireEvent.keyDown(window, { key: 'Escape' })
-    expect(onClose).toHaveBeenCalledTimes(1)
-  })
+    fireEvent.keyDown(window, { key: "Escape" });
+    expect(onClose).toHaveBeenCalledTimes(1);
+  });
 
-  test('isOpenがfalseのときはEscapeキーでonCloseが呼ばれない', () => {
-    const onClose = vi.fn()
+  test("isOpenがfalseのときはEscapeキーでonCloseが呼ばれない", () => {
+    const onClose = vi.fn();
     render(
       <Sheet isOpen={false} onClose={onClose}>
         <div>Sheet Content</div>
-      </Sheet>
-    )
+      </Sheet>,
+    );
 
-    fireEvent.keyDown(window, { key: 'Escape' })
-    expect(onClose).not.toHaveBeenCalled()
-  })
-})
+    fireEvent.keyDown(window, { key: "Escape" });
+    expect(onClose).not.toHaveBeenCalled();
+  });
+});

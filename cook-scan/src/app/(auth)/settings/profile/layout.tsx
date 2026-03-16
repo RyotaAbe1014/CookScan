@@ -1,12 +1,12 @@
-import { ReactNode } from 'react'
-import { AuthLayoutWrapper } from '@/components/layouts/auth-layout-wrapper'
-import { PageContainer } from '@/components/layouts/page-container'
-import Link from 'next/link'
-import { ChevronLeftIcon } from '@/components/icons/chevron-left-icon'
+import { ReactNode } from "react";
+import { AuthLayoutWrapper } from "@/components/layouts/auth-layout-wrapper";
+import { PageContainer } from "@/components/layouts/page-container";
+import Link from "next/link";
+import { ChevronLeftIcon } from "@/components/icons/chevron-left-icon";
 
 type ProfileEditLayoutProps = {
-  children: ReactNode
-}
+  children: ReactNode;
+};
 
 export default function ProfileEditLayout({ children }: ProfileEditLayoutProps) {
   return (
@@ -24,5 +24,5 @@ export default function ProfileEditLayout({ children }: ProfileEditLayoutProps) 
     >
       <PageContainer>{children}</PageContainer>
     </AuthLayoutWrapper>
-  )
+  );
 }

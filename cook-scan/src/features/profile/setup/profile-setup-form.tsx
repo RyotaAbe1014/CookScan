@@ -1,46 +1,49 @@
-'use client'
+"use client";
 
-import { useState, useTransition } from 'react'
-import { createProfile } from './actions'
-import { isSuccess } from '@/utils/result'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Alert } from '@/components/ui/alert'
-import { EnvelopeIcon } from '@/components/icons/envelope-icon'
-import { MailIcon } from '@/components/icons/mail-icon'
-import { UserIcon } from '@/components/icons/user-icon'
-import { UserCircleIcon } from '@/components/icons/user-circle-icon'
-import { CheckCircleOutlineIcon } from '@/components/icons/check-circle-outline-icon'
+import { useState, useTransition } from "react";
+import { createProfile } from "./actions";
+import { isSuccess } from "@/utils/result";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Alert } from "@/components/ui/alert";
+import { EnvelopeIcon } from "@/components/icons/envelope-icon";
+import { MailIcon } from "@/components/icons/mail-icon";
+import { UserIcon } from "@/components/icons/user-icon";
+import { UserCircleIcon } from "@/components/icons/user-circle-icon";
+import { CheckCircleOutlineIcon } from "@/components/icons/check-circle-outline-icon";
 
 type ProfileSetupFormProps = {
-  userId: string
-  userEmail: string
-}
+  userId: string;
+  userEmail: string;
+};
 
 export default function ProfileSetupForm({ userId, userEmail }: ProfileSetupFormProps) {
-  const [name, setName] = useState('')
-  const [error, setError] = useState<string | null>(null)
-  const [isPending, startTransition] = useTransition()
+  const [name, setName] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [isPending, startTransition] = useTransition();
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    setError(null)
+    e.preventDefault();
+    setError(null);
 
     startTransition(async () => {
-      const result = await createProfile(userId, userEmail, name)
+      const result = await createProfile(userId, userEmail, name);
       // 成功時はリダイレクトされるため、失敗時のみエラーを設定
       if (!isSuccess(result)) {
-        setError(result.error.message)
+        setError(result.error.message);
       }
-    })
-  }
+    });
+  };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-8 p-8">
       {/* Email Field - 無効化フィールド */}
       <div className="space-y-2">
-        <label htmlFor="email" className="flex items-center gap-2 text-sm font-medium text-foreground">
-          <div className="flex h-5 w-5 items-center justify-center rounded bg-muted-foreground">
+        <label
+          htmlFor="email"
+          className="text-foreground flex items-center gap-2 text-sm font-medium"
+        >
+          <div className="bg-muted-foreground flex h-5 w-5 items-center justify-center rounded">
             <EnvelopeIcon className="h-3 w-3 text-white" />
           </div>
           メールアドレス
@@ -56,16 +59,19 @@ export default function ProfileSetupForm({ userId, userEmail }: ProfileSetupForm
             hasIcon
           />
           <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-            <MailIcon className="h-5 w-5 text-muted-foreground" />
+            <MailIcon className="text-muted-foreground h-5 w-5" />
           </div>
         </div>
-        <p className="text-xs text-muted-foreground">認証済みのメールアドレスです</p>
+        <p className="text-muted-foreground text-xs">認証済みのメールアドレスです</p>
       </div>
 
       {/* Name Field - プライマリフィールド */}
       <div className="space-y-2">
-        <label htmlFor="name" className="flex items-center gap-2 text-sm font-medium text-foreground">
-          <div className="flex h-5 w-5 items-center justify-center rounded bg-primary">
+        <label
+          htmlFor="name"
+          className="text-foreground flex items-center gap-2 text-sm font-medium"
+        >
+          <div className="bg-primary flex h-5 w-5 items-center justify-center rounded">
             <UserIcon className="h-3 w-3 text-white" />
           </div>
           お名前
@@ -83,16 +89,14 @@ export default function ProfileSetupForm({ userId, userEmail }: ProfileSetupForm
             hasIcon
           />
           <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-            <UserCircleIcon className="h-5 w-5 text-primary" />
+            <UserCircleIcon className="text-primary h-5 w-5" />
           </div>
         </div>
-        <p className="text-xs text-muted-foreground">レシピ管理で表示される名前です</p>
+        <p className="text-muted-foreground text-xs">レシピ管理で表示される名前です</p>
       </div>
 
       {/* Error Message */}
-      {error && (
-        <Alert variant="error">{error}</Alert>
-      )}
+      {error && <Alert variant="error">{error}</Alert>}
 
       {/* Submit Button - emerald primary */}
       <Button
@@ -101,10 +105,10 @@ export default function ProfileSetupForm({ userId, userEmail }: ProfileSetupForm
         size="lg"
         disabled={isPending || !name.trim()}
         isLoading={isPending}
-        className="w-full shadow-md hover:shadow-lg transition-shadow"
+        className="w-full shadow-md transition-shadow hover:shadow-lg"
       >
         {isPending ? (
-          '作成中...'
+          "作成中..."
         ) : (
           <>
             <CheckCircleOutlineIcon className="h-5 w-5" />
@@ -113,5 +117,5 @@ export default function ProfileSetupForm({ userId, userEmail }: ProfileSetupForm
         )}
       </Button>
     </form>
-  )
+  );
 }

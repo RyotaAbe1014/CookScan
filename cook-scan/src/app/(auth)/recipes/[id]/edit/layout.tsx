@@ -1,16 +1,16 @@
-import { ReactNode } from 'react'
-import { AuthLayoutWrapper } from '@/components/layouts/auth-layout-wrapper'
-import { PageContainer } from '@/components/layouts/page-container'
-import Link from 'next/link'
-import { ChevronLeftIcon } from '@/components/icons/chevron-left-icon'
+import { ReactNode } from "react";
+import { AuthLayoutWrapper } from "@/components/layouts/auth-layout-wrapper";
+import { PageContainer } from "@/components/layouts/page-container";
+import Link from "next/link";
+import { ChevronLeftIcon } from "@/components/icons/chevron-left-icon";
 
 type RecipeEditLayoutProps = {
-  children: ReactNode
-  params: Promise<{ id: string }>
-}
+  children: ReactNode;
+  params: Promise<{ id: string }>;
+};
 
 export default async function RecipeEditLayout({ children, params }: RecipeEditLayoutProps) {
-  const { id } = await params
+  const { id } = await params;
 
   return (
     <AuthLayoutWrapper
@@ -27,5 +27,5 @@ export default async function RecipeEditLayout({ children, params }: RecipeEditL
     >
       <PageContainer>{children}</PageContainer>
     </AuthLayoutWrapper>
-  )
+  );
 }

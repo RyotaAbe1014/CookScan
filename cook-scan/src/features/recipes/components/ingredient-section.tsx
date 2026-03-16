@@ -1,15 +1,15 @@
-import { Card, CardHeader, CardContent } from '@/components/ui/card'
-import { BeakerIcon } from '@/components/icons/beaker-icon'
-import { PlusIcon } from '@/components/icons/plus-icon'
-import { IngredientInput } from './ingredient-input'
-import type { IngredientFormData } from '@/types/forms'
+import { Card, CardHeader, CardContent } from "@/components/ui/card";
+import { BeakerIcon } from "@/components/icons/beaker-icon";
+import { PlusIcon } from "@/components/icons/plus-icon";
+import { IngredientInput } from "./ingredient-input";
+import type { IngredientFormData } from "@/types/forms";
 
 type Props = {
-  ingredients: IngredientFormData[]
-  onAdd: () => void
-  onUpdate: (index: number, field: keyof IngredientFormData, value: string) => void
-  onRemove: (index: number) => void
-}
+  ingredients: IngredientFormData[];
+  onAdd: () => void;
+  onUpdate: (index: number, field: keyof IngredientFormData, value: string) => void;
+  onRemove: (index: number) => void;
+};
 
 export function IngredientSection({ ingredients, onAdd, onUpdate, onRemove }: Props) {
   return (
@@ -22,7 +22,7 @@ export function IngredientSection({ ingredients, onAdd, onUpdate, onRemove }: Pr
           <button
             type="button"
             onClick={onAdd}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-linear-to-r from-success to-primary px-3 py-2 text-sm font-semibold text-white shadow-md shadow-success/30 transition-all hover:shadow-lg hover:shadow-success/40"
+            className="from-success to-primary shadow-success/30 hover:shadow-success/40 inline-flex items-center gap-1.5 rounded-lg bg-linear-to-r px-3 py-2 text-sm font-semibold text-white shadow-md transition-all hover:shadow-lg"
           >
             <PlusIcon className="h-4 w-4" stroke="currentColor" />
             材料を追加
@@ -44,5 +44,5 @@ export function IngredientSection({ ingredients, onAdd, onUpdate, onRemove }: Pr
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

@@ -1,88 +1,88 @@
-import type { Meta, StoryObj } from '@storybook/nextjs'
-import { FormField } from './form-field'
-import { Input } from './input'
-import { Select } from './select'
-import { Textarea } from './textarea'
-import { UserIcon } from '@/components/icons/user-icon'
-import { MailIcon } from '@/components/icons/mail-icon'
-import { TagIcon } from '@/components/icons/tag-icon'
+import type { Meta, StoryObj } from "@storybook/nextjs";
+import { FormField } from "./form-field";
+import { Input } from "./input";
+import { Select } from "./select";
+import { Textarea } from "./textarea";
+import { UserIcon } from "@/components/icons/user-icon";
+import { MailIcon } from "@/components/icons/mail-icon";
+import { TagIcon } from "@/components/icons/tag-icon";
 
 const meta = {
-  title: 'UI/FormField',
+  title: "UI/FormField",
   component: FormField,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {
     labelVariant: {
-      control: 'select',
-      options: ['default', 'semibold', 'compact'],
+      control: "select",
+      options: ["default", "semibold", "compact"],
     },
-    required: { control: 'boolean' },
+    required: { control: "boolean" },
   },
-} satisfies Meta<typeof FormField>
+} satisfies Meta<typeof FormField>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    label: 'レシピ名',
-    htmlFor: 'recipe-name',
+    label: "レシピ名",
+    htmlFor: "recipe-name",
     children: <Input id="recipe-name" placeholder="レシピ名を入力" />,
   },
-}
+};
 
 export const Required: Story = {
   args: {
-    label: 'メールアドレス',
-    htmlFor: 'email',
+    label: "メールアドレス",
+    htmlFor: "email",
     required: true,
     children: <Input id="email" type="email" placeholder="example@example.com" />,
   },
-}
+};
 
 export const WithIcon: Story = {
   args: {
-    label: 'ユーザー名',
-    htmlFor: 'username',
+    label: "ユーザー名",
+    htmlFor: "username",
     icon: <UserIcon />,
     children: <Input id="username" placeholder="ユーザー名" />,
   },
-}
+};
 
 export const WithIconAndRequired: Story = {
   args: {
-    label: 'メールアドレス',
-    htmlFor: 'email-icon',
+    label: "メールアドレス",
+    htmlFor: "email-icon",
     icon: <MailIcon />,
     required: true,
     children: <Input id="email-icon" type="email" placeholder="example@example.com" />,
   },
-}
+};
 
 export const Semibold: Story = {
   args: {
-    label: 'タグ名',
-    htmlFor: 'tag',
-    labelVariant: 'semibold',
+    label: "タグ名",
+    htmlFor: "tag",
+    labelVariant: "semibold",
     icon: <TagIcon />,
-    iconColorClass: 'text-amber-500',
+    iconColorClass: "text-amber-500",
     children: <Input id="tag" placeholder="タグ名を入力" />,
   },
-}
+};
 
 export const Compact: Story = {
   args: {
-    label: 'メモ',
-    htmlFor: 'note',
-    labelVariant: 'compact',
+    label: "メモ",
+    htmlFor: "note",
+    labelVariant: "compact",
     children: <Input id="note" size="sm" placeholder="メモ" />,
   },
-}
+};
 
 export const WithSelect: Story = {
   args: {
-    label: 'カテゴリ',
-    htmlFor: 'category',
+    label: "カテゴリ",
+    htmlFor: "category",
     required: true,
     children: (
       <Select id="category">
@@ -93,22 +93,20 @@ export const WithSelect: Story = {
       </Select>
     ),
   },
-}
+};
 
 export const WithTextarea: Story = {
   args: {
-    label: '説明',
-    htmlFor: 'description',
-    children: (
-      <Textarea id="description" rows={4} placeholder="レシピの説明を入力..." />
-    ),
+    label: "説明",
+    htmlFor: "description",
+    children: <Textarea id="description" rows={4} placeholder="レシピの説明を入力..." />,
   },
-}
+};
 
 export const FormExample: Story = {
   args: {
-    label: 'レシピ名',
-    htmlFor: 'form-name',
+    label: "レシピ名",
+    htmlFor: "form-name",
     required: true,
     children: (
       <div className="flex w-96 flex-col gap-4">
@@ -127,5 +125,5 @@ export const FormExample: Story = {
         </FormField>
       </div>
     ),
-  }
-}
+  },
+};

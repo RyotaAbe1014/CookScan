@@ -1,117 +1,115 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { toast } from 'sonner'
-import { updateTagCategory, deleteTagCategory } from './actions'
-import { isSuccess } from '@/utils/result'
-import { TagItem } from './tag-item'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { Card, CardContent } from '@/components/ui/card'
-import { FolderIcon } from '@/components/icons/folder-icon'
-import { BadgeCheckIcon } from '@/components/icons/badge-check-icon'
-import { UserCircleSolidIcon } from '@/components/icons/user-circle-solid-icon'
-import { TagIcon } from '@/components/icons/tag-icon'
-import { PencilIcon } from '@/components/icons/pencil-icon'
-import { TrashIcon } from '@/components/icons/trash-icon'
+import { useState } from "react";
+import { toast } from "sonner";
+import { updateTagCategory, deleteTagCategory } from "./actions";
+import { isSuccess } from "@/utils/result";
+import { TagItem } from "./tag-item";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent } from "@/components/ui/card";
+import { FolderIcon } from "@/components/icons/folder-icon";
+import { BadgeCheckIcon } from "@/components/icons/badge-check-icon";
+import { UserCircleSolidIcon } from "@/components/icons/user-circle-solid-icon";
+import { TagIcon } from "@/components/icons/tag-icon";
+import { PencilIcon } from "@/components/icons/pencil-icon";
+import { TrashIcon } from "@/components/icons/trash-icon";
 
 type Tag = {
-  id: string
-  name: string
-  description: string | null
-  isSystem: boolean
-  userId: string | null
-  recipeTags: { recipeId: string }[]
-}
+  id: string;
+  name: string;
+  description: string | null;
+  isSystem: boolean;
+  userId: string | null;
+  recipeTags: { recipeId: string }[];
+};
 
 type CategoryItemProps = {
   category: {
-    id: string
-    name: string
-    description: string | null
-    isSystem: boolean
-    userId: string | null
-    tags: Tag[]
-  }
-  currentUserId: string
-}
+    id: string;
+    name: string;
+    description: string | null;
+    isSystem: boolean;
+    userId: string | null;
+    tags: Tag[];
+  };
+  currentUserId: string;
+};
 
 export function CategoryItem({ category, currentUserId }: CategoryItemProps) {
-  const [isEditing, setIsEditing] = useState(false)
-  const [editName, setEditName] = useState(category.name)
-  const [editDescription, setEditDescription] = useState(category.description || '')
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isEditing, setIsEditing] = useState(false);
+  const [editName, setEditName] = useState(category.name);
+  const [editDescription, setEditDescription] = useState(category.description || "");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const isUserOwned = category.userId === currentUserId
+  const isUserOwned = category.userId === currentUserId;
 
   const handleEdit = async (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
 
     if (!editName.trim()) {
-      toast.error('カテゴリ名を入力してください')
-      return
+      toast.error("カテゴリ名を入力してください");
+      return;
     }
 
-    setIsSubmitting(true)
+    setIsSubmitting(true);
 
     try {
       const result = await updateTagCategory(
         category.id,
         editName.trim(),
-        editDescription.trim() || undefined
-      )
+        editDescription.trim() || undefined,
+      );
 
       if (isSuccess(result)) {
-        setIsEditing(false)
+        setIsEditing(false);
       } else {
-        toast.error(result.error.message)
+        toast.error(result.error.message);
       }
     } catch {
-      toast.error('カテゴリの更新中にエラーが発生しました')
+      toast.error("カテゴリの更新中にエラーが発生しました");
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
   const handleDelete = async () => {
-    if (
-      !confirm(`カテゴリ「${category.name}」を削除しますか？この操作は取り消せません。`)
-    ) {
-      return
+    if (!confirm(`カテゴリ「${category.name}」を削除しますか？この操作は取り消せません。`)) {
+      return;
     }
 
-    setIsSubmitting(true)
+    setIsSubmitting(true);
 
     try {
-      const result = await deleteTagCategory(category.id)
+      const result = await deleteTagCategory(category.id);
 
       if (!isSuccess(result)) {
-        toast.error(result.error.message)
-        setIsSubmitting(false)
+        toast.error(result.error.message);
+        setIsSubmitting(false);
       }
       // 成功時はページがリロードされるのでローディング状態を維持
     } catch {
-      toast.error('カテゴリの削除中にエラーが発生しました')
-      setIsSubmitting(false)
+      toast.error("カテゴリの削除中にエラーが発生しました");
+      setIsSubmitting(false);
     }
-  }
+  };
 
   const handleCancel = () => {
-    setIsEditing(false)
-    setEditName(category.name)
-    setEditDescription(category.description || '')
-  }
+    setIsEditing(false);
+    setEditName(category.name);
+    setEditDescription(category.description || "");
+  };
 
   return (
     <Card hover>
-      <div className="border-b border-border bg-white px-6 py-5">
+      <div className="border-border border-b bg-white px-6 py-5">
         {isEditing ? (
           <form onSubmit={handleEdit} className="space-y-3">
             <div>
               <label
                 htmlFor={`edit-category-name-${category.id}`}
-                className="block text-sm font-medium text-muted-foreground"
+                className="text-muted-foreground block text-sm font-medium"
               >
                 カテゴリ名
               </label>
@@ -129,7 +127,7 @@ export function CategoryItem({ category, currentUserId }: CategoryItemProps) {
             <div>
               <label
                 htmlFor={`edit-category-description-${category.id}`}
-                className="block text-sm font-medium text-muted-foreground"
+                className="text-muted-foreground block text-sm font-medium"
               >
                 説明（任意）
               </label>
@@ -146,7 +144,7 @@ export function CategoryItem({ category, currentUserId }: CategoryItemProps) {
 
             <div className="flex gap-2">
               <Button type="submit" isLoading={isSubmitting} size="sm">
-                {isSubmitting ? '保存中...' : '保存'}
+                {isSubmitting ? "保存中..." : "保存"}
               </Button>
               <Button
                 type="button"
@@ -162,19 +160,19 @@ export function CategoryItem({ category, currentUserId }: CategoryItemProps) {
         ) : (
           <div className="flex items-center justify-between">
             <div className="flex flex-1 items-center gap-4">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-primary shadow-sm">
+              <div className="bg-primary flex h-12 w-12 shrink-0 items-center justify-center rounded-lg shadow-sm">
                 <FolderIcon className="h-6 w-6 text-white" />
               </div>
               <div className="flex-1">
-                <h3 className="text-xl font-bold text-foreground">{category.name}</h3>
-                <p className="mt-1 flex items-center gap-2 text-sm text-muted-foreground">
+                <h3 className="text-foreground text-xl font-bold">{category.name}</h3>
+                <p className="text-muted-foreground mt-1 flex items-center gap-2 text-sm">
                   {category.isSystem ? (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-accent-steps-light px-2 py-0.5 text-xs font-medium text-accent-steps">
+                    <span className="bg-accent-steps-light text-accent-steps inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium">
                       <BadgeCheckIcon className="h-3 w-3" />
                       システム
                     </span>
                   ) : (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-primary-light px-2 py-0.5 text-xs font-medium text-primary-hover">
+                    <span className="bg-primary-light text-primary-hover inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium">
                       <UserCircleSolidIcon className="h-3 w-3" />
                       ユーザー
                     </span>
@@ -183,9 +181,9 @@ export function CategoryItem({ category, currentUserId }: CategoryItemProps) {
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <div className="flex items-center gap-2 rounded-lg border border-primary-light bg-primary-light px-4 py-2">
-                <TagIcon className="h-5 w-5 text-primary" />
-                <span className="text-sm font-semibold text-foreground">
+              <div className="border-primary-light bg-primary-light flex items-center gap-2 rounded-lg border px-4 py-2">
+                <TagIcon className="text-primary h-5 w-5" />
+                <span className="text-foreground text-sm font-semibold">
                   {category.tags.length}
                 </span>
               </div>
@@ -193,19 +191,19 @@ export function CategoryItem({ category, currentUserId }: CategoryItemProps) {
                 <div className="flex gap-1">
                   <button
                     onClick={() => setIsEditing(true)}
-                    className="rounded-lg p-2 transition-colors hover:bg-primary-light"
+                    className="hover:bg-primary-light rounded-lg p-2 transition-colors"
                     title="編集"
                     disabled={isSubmitting}
                   >
-                    <PencilIcon className="h-5 w-5 text-primary" />
+                    <PencilIcon className="text-primary h-5 w-5" />
                   </button>
                   <button
                     onClick={handleDelete}
-                    className="rounded-lg p-2 transition-colors hover:bg-danger-light"
+                    className="hover:bg-danger-light rounded-lg p-2 transition-colors"
                     title="削除"
                     disabled={isSubmitting}
                   >
-                    <TrashIcon className="h-5 w-5 text-danger-hover" />
+                    <TrashIcon className="text-danger-hover h-5 w-5" />
                   </button>
                 </div>
               )}
@@ -216,20 +214,25 @@ export function CategoryItem({ category, currentUserId }: CategoryItemProps) {
 
       <CardContent padding="sm" className="px-6">
         {category.tags.length === 0 ? (
-          <p className="text-sm text-muted-foreground">このカテゴリにはまだタグがありません。</p>
+          <p className="text-muted-foreground text-sm">このカテゴリにはまだタグがありません。</p>
         ) : (
           <div className="flex flex-wrap gap-3">
             {category.tags.map((tag) => {
-              const usageCount = tag.recipeTags.length
-              const isTagUserOwned = tag.userId === currentUserId
+              const usageCount = tag.recipeTags.length;
+              const isTagUserOwned = tag.userId === currentUserId;
 
               return (
-                <TagItem key={tag.id} tag={tag} usageCount={usageCount} isUserOwned={isTagUserOwned} />
-              )
+                <TagItem
+                  key={tag.id}
+                  tag={tag}
+                  usageCount={usageCount}
+                  isUserOwned={isTagUserOwned}
+                />
+              );
             })}
           </div>
         )}
       </CardContent>
     </Card>
-  )
+  );
 }

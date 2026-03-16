@@ -175,23 +175,23 @@ sequenceDiagram
 
 #### コンポーネント構成
 
-| コンポーネント | ファイルパス | タイプ | 役割 |
-|---|---|---|---|
-| RecipeDetailPage | `src/app/(auth)/recipes/[id]/page.tsx` | Server Component | ルーティング、Suspenseラッパー |
-| RecipeDetailServerContent | `src/features/recipes/detail/recipe-detail-server-content.tsx` | Server Component | データ取得・認可チェック |
-| RecipeDetailContent | `src/features/recipes/detail/recipe-detail-content.tsx` | Client Component | レイアウト・状態管理 |
-| CookingTimerManager | `src/features/recipes/detail/cooking-timer-manager.tsx` | Client Component (SSR=false) | アクティブタイマー一覧 |
-| RecipeIngredients | `src/features/recipes/detail/recipe-ingredients.tsx` | Client Component | 材料表示・買い物リスト連携 |
-| RecipeSteps | `src/features/recipes/detail/recipe-steps.tsx` | Client Component | 調理手順表示 |
-| StepTimer | `src/features/recipes/detail/step-timer.tsx` | Client Component | 個別ステップタイマー |
-| RecipeImageSection | `src/features/recipes/detail/recipe-image-section.tsx` | Client Component | 画像表示 |
-| RecipeSourceInfo | `src/features/recipes/detail/recipe-source-info.tsx` | Client Component | ソース情報表示 |
-| RecipeMemo | `src/features/recipes/detail/recipe-memo.tsx` | Client Component | メモ表示 |
-| RecipeTagsSection | `src/features/recipes/detail/recipe-tags-section.tsx` | Client Component | タグ表示（カテゴリ別） |
-| RecipeChildRecipesSection | `src/features/recipes/detail/recipe-child-recipes-section.tsx` | Client Component | サブレシピリンク |
-| RecipeParentRecipesSection | `src/features/recipes/detail/recipe-parent-recipes-section.tsx` | Client Component | 親レシピリンク |
-| RecipeDetailActions | `src/features/recipes/detail/recipe-detail-actions.tsx` | Client Component | 編集・ダウンロード・削除 |
-| DeleteRecipeDialog | `src/features/recipes/delete/delete-recipe-dialog.tsx` | Client Component | 削除確認ダイアログ |
+| コンポーネント             | ファイルパス                                                    | タイプ                       | 役割                           |
+| -------------------------- | --------------------------------------------------------------- | ---------------------------- | ------------------------------ |
+| RecipeDetailPage           | `src/app/(auth)/recipes/[id]/page.tsx`                          | Server Component             | ルーティング、Suspenseラッパー |
+| RecipeDetailServerContent  | `src/features/recipes/detail/recipe-detail-server-content.tsx`  | Server Component             | データ取得・認可チェック       |
+| RecipeDetailContent        | `src/features/recipes/detail/recipe-detail-content.tsx`         | Client Component             | レイアウト・状態管理           |
+| CookingTimerManager        | `src/features/recipes/detail/cooking-timer-manager.tsx`         | Client Component (SSR=false) | アクティブタイマー一覧         |
+| RecipeIngredients          | `src/features/recipes/detail/recipe-ingredients.tsx`            | Client Component             | 材料表示・買い物リスト連携     |
+| RecipeSteps                | `src/features/recipes/detail/recipe-steps.tsx`                  | Client Component             | 調理手順表示                   |
+| StepTimer                  | `src/features/recipes/detail/step-timer.tsx`                    | Client Component             | 個別ステップタイマー           |
+| RecipeImageSection         | `src/features/recipes/detail/recipe-image-section.tsx`          | Client Component             | 画像表示                       |
+| RecipeSourceInfo           | `src/features/recipes/detail/recipe-source-info.tsx`            | Client Component             | ソース情報表示                 |
+| RecipeMemo                 | `src/features/recipes/detail/recipe-memo.tsx`                   | Client Component             | メモ表示                       |
+| RecipeTagsSection          | `src/features/recipes/detail/recipe-tags-section.tsx`           | Client Component             | タグ表示（カテゴリ別）         |
+| RecipeChildRecipesSection  | `src/features/recipes/detail/recipe-child-recipes-section.tsx`  | Client Component             | サブレシピリンク               |
+| RecipeParentRecipesSection | `src/features/recipes/detail/recipe-parent-recipes-section.tsx` | Client Component             | 親レシピリンク                 |
+| RecipeDetailActions        | `src/features/recipes/detail/recipe-detail-actions.tsx`         | Client Component             | 編集・ダウンロード・削除       |
+| DeleteRecipeDialog         | `src/features/recipes/delete/delete-recipe-dialog.tsx`          | Client Component             | 削除確認ダイアログ             |
 
 #### 状態管理
 
@@ -200,25 +200,25 @@ sequenceDiagram
 ```typescript
 // timer-atoms.ts
 type PersistedTimerState = {
-  stepId: string
-  recipeId: string
-  recipeTitle: string
-  stepNumber: number
-  instruction: string
-  totalSeconds: number
-  startedAt: number
-  elapsedSeconds: number
-  runningSinceSeconds: number | null // 実行中ならタイムスタンプ、停止中はnull
-}
+  stepId: string;
+  recipeId: string;
+  recipeTitle: string;
+  stepNumber: number;
+  instruction: string;
+  totalSeconds: number;
+  startedAt: number;
+  elapsedSeconds: number;
+  runningSinceSeconds: number | null; // 実行中ならタイムスタンプ、停止中はnull
+};
 
 // グローバルタイマー状態
-const timerStatesAtom: Atom<Record<string, PersistedTimerState>>
+const timerStatesAtom: Atom<Record<string, PersistedTimerState>>;
 // レシピごとのタイマー状態
-const recipeTimerStatesAtomFamily: AtomFamily<string, PersistedTimerState[]>
+const recipeTimerStatesAtomFamily: AtomFamily<string, PersistedTimerState[]>;
 // 全停止アクション
-const stopAllTimersAtomFamily: AtomFamily<string, void>
+const stopAllTimersAtomFamily: AtomFamily<string, void>;
 // 古いタイマー削除
-const cleanupOldTimerStatesAtom: Atom<void>
+const cleanupOldTimerStatesAtom: Atom<void>;
 ```
 
 #### ユーティリティ関数
@@ -367,41 +367,41 @@ model SourceInfo {
 #### シグネチャ
 
 ```typescript
-async function getRecipeById(recipeId: string): Promise<ActionResult<RecipeDetailOutput>>
+async function getRecipeById(recipeId: string): Promise<ActionResult<RecipeDetailOutput>>;
 ```
 
 #### パラメータ
 
-| 名前 | 型 | 説明 |
-|------|------|------|
+| 名前     | 型       | 説明                       |
+| -------- | -------- | -------------------------- |
 | recipeId | `string` | 取得対象のレシピID（UUID） |
 
 #### 戻り値
 
 ```typescript
 type RecipeDetailOutput = {
-  id: string
-  userId: string
-  title: string
-  imageUrl: string | null
-  memo: string | null
-  createdAt: Date
-  updatedAt: Date
-  ingredients: Ingredient[]
-  steps: Step[]
-  recipeTags: RecipeTagWithCategory[]
-  sourceInfo: SourceInfo[]
-  childRecipes: ChildRecipeRelation[]
-  parentRecipes: ParentRecipeRelation[]
-}
+  id: string;
+  userId: string;
+  title: string;
+  imageUrl: string | null;
+  memo: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+  ingredients: Ingredient[];
+  steps: Step[];
+  recipeTags: RecipeTagWithCategory[];
+  sourceInfo: SourceInfo[];
+  childRecipes: ChildRecipeRelation[];
+  parentRecipes: ParentRecipeRelation[];
+};
 ```
 
 #### エラーコード
 
-| コード | メッセージ | 発生条件 |
-|--------|-----------|---------|
-| UNAUTHENTICATED | 未認証エラー | ログインしていない場合 |
-| NOT_FOUND | レシピが見つかりません | 存在しないID・他ユーザーのレシピ |
+| コード          | メッセージ             | 発生条件                         |
+| --------------- | ---------------------- | -------------------------------- |
+| UNAUTHENTICATED | 未認証エラー           | ログインしていない場合           |
+| NOT_FOUND       | レシピが見つかりません | 存在しないID・他ユーザーのレシピ |
 
 #### 処理詳細
 
@@ -422,13 +422,13 @@ type RecipeDetailOutput = {
 #### シグネチャ
 
 ```typescript
-async function deleteRecipe(recipeId: string): Promise<ActionResult<void>>
+async function deleteRecipe(recipeId: string): Promise<ActionResult<void>>;
 ```
 
 #### パラメータ
 
-| 名前 | 型 | 説明 |
-|------|------|------|
+| 名前     | 型       | 説明                       |
+| -------- | -------- | -------------------------- |
 | recipeId | `string` | 削除対象のレシピID（UUID） |
 
 #### 処理詳細
@@ -443,10 +443,10 @@ async function deleteRecipe(recipeId: string): Promise<ActionResult<void>>
 
 #### エラーコード
 
-| コード | メッセージ | 発生条件 |
-|--------|-----------|---------|
-| UNAUTHENTICATED | 未認証エラー | ログインしていない場合 |
-| NOT_FOUND | レシピが見つかりません | 存在しないID・他ユーザーのレシピ |
+| コード          | メッセージ             | 発生条件                         |
+| --------------- | ---------------------- | -------------------------------- |
+| UNAUTHENTICATED | 未認証エラー           | ログインしていない場合           |
+| NOT_FOUND       | レシピが見つかりません | 存在しないID・他ユーザーのレシピ |
 
 ## テスト
 

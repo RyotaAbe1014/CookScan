@@ -1,33 +1,33 @@
-import type { Meta, StoryObj } from '@storybook/nextjs'
-import { useState } from 'react'
-import Link from 'next/link'
-import { Sheet } from './sheet'
-import { Button } from './button'
-import { CloseIcon } from '@/components/icons/close-icon'
+import type { Meta, StoryObj } from "@storybook/nextjs";
+import { useState } from "react";
+import Link from "next/link";
+import { Sheet } from "./sheet";
+import { Button } from "./button";
+import { CloseIcon } from "@/components/icons/close-icon";
 
 const meta = {
-  title: 'UI/Sheet',
+  title: "UI/Sheet",
   component: Sheet,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   parameters: {
-    layout: 'fullscreen',
+    layout: "fullscreen",
   },
   argTypes: {
-    isOpen: { control: 'boolean' },
+    isOpen: { control: "boolean" },
   },
-} satisfies Meta<typeof Sheet>
+} satisfies Meta<typeof Sheet>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
     isOpen: false,
-    onClose: () => { },
+    onClose: () => {},
     children: null,
   },
   render: function SheetStory() {
-    const [isOpen, setIsOpen] = useState(false)
+    const [isOpen, setIsOpen] = useState(false);
     return (
       <div className="p-8">
         <Button onClick={() => setIsOpen(true)}>シートを開く</Button>
@@ -40,37 +40,38 @@ export const Default: Story = {
               </button>
             </div>
             <nav className="flex flex-col gap-2 p-4">
-              <Link href="/dashboard" className="rounded-md px-3 py-2 text-sm hover:bg-muted">
+              <Link href="/dashboard" className="hover:bg-muted rounded-md px-3 py-2 text-sm">
                 ダッシュボード
               </Link>
-              <Link href="/recipes" className="rounded-md px-3 py-2 text-sm hover:bg-muted">
+              <Link href="/recipes" className="hover:bg-muted rounded-md px-3 py-2 text-sm">
                 レシピ一覧
               </Link>
-              <Link href="/tags" className="rounded-md px-3 py-2 text-sm hover:bg-muted">
+              <Link href="/tags" className="hover:bg-muted rounded-md px-3 py-2 text-sm">
                 タグ管理
               </Link>
-              <Link href="/settings/profile" className="rounded-md px-3 py-2 text-sm hover:bg-muted">
+              <Link
+                href="/settings/profile"
+                className="hover:bg-muted rounded-md px-3 py-2 text-sm"
+              >
                 設定
               </Link>
             </nav>
           </div>
         </Sheet>
       </div>
-    )
+    );
   },
-}
+};
 
 export const AlwaysOpen: Story = {
   args: {
     isOpen: true,
-    onClose: () => { },
+    onClose: () => {},
     children: (
       <div className="p-6">
         <h2 className="text-lg font-semibold">シートコンテンツ</h2>
-        <p className="mt-2 text-sm text-gray-600">
-          ここにコンテンツが入ります。
-        </p>
+        <p className="mt-2 text-sm text-gray-600">ここにコンテンツが入ります。</p>
       </div>
     ),
   },
-}
+};

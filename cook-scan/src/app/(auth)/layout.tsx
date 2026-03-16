@@ -1,25 +1,23 @@
-import { redirect } from 'next/navigation'
-import { createClient } from '@/lib/supabase/server'
-import { checkUserProfile } from '@/features/auth/auth-utils'
+import { redirect } from "next/navigation";
+import { createClient } from "@/lib/supabase/server";
+import { checkUserProfile } from "@/features/auth/auth-utils";
 
-export default async function AuthLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+export default async function AuthLayout({ children }: { children: React.ReactNode }) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   // 未認証の場合はログインページへ
   if (!user) {
-    redirect('/login')
+    redirect("/login");
   }
 
   // プロフィール設定ページ以外で、プロフィールが未設定の場合
-  const { hasProfile } = await checkUserProfile()
+  const { hasProfile } = await checkUserProfile();
   if (!hasProfile) {
-    redirect('/profile/setup')
+    redirect("/profile/setup");
   }
 
-  return <>{children}</>
+  return <>{children}</>;
 }

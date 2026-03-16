@@ -12,10 +12,7 @@ export async function POST(request: NextRequest) {
   try {
     const { hasAuth, hasProfile, profile } = await checkUserProfile();
     if (!hasAuth || !hasProfile || !profile) {
-      return NextResponse.json(
-        { success: false, error: "認証が必要です" },
-        { status: 401 },
-      );
+      return NextResponse.json({ success: false, error: "認証が必要です" }, { status: 401 });
     }
 
     if (!S3_BUCKET_NAME) {
@@ -49,10 +46,7 @@ export async function POST(request: NextRequest) {
       }),
     );
 
-    return NextResponse.json(
-      { success: true, result: { jobId, files } },
-      { status: 200 },
-    );
+    return NextResponse.json({ success: true, result: { jobId, files } }, { status: 200 });
   } catch (error) {
     console.error(error);
     return NextResponse.json(

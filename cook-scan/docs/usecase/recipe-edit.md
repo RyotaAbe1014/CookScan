@@ -15,6 +15,7 @@
 ### 機能詳細
 
 #### 編集可能な項目
+
 - **レシピタイトル**（必須、最大100文字）
 - **ソース情報**（本の名前・ページ番号・参照URL）
 - **材料**（名前・単位・備考、複数登録、追加・削除可能）
@@ -24,6 +25,7 @@
 - **子レシピ**（サブレシピの関連付け、数量・備考付き）
 
 #### UI/UX
+
 - 既存データを初期値としてフォームに事前入力
 - 画像がある場合はプレビュー表示
 - 材料・手順は最低1件必須（canDelete制御）
@@ -33,6 +35,7 @@
 - レイアウトヘッダーに詳細画面への戻るリンクを配置
 
 #### その他
+
 - 子レシピはダイアログ（ChildRecipeSelectorDialog）で選択
 - 手順のorderIndexは自動的に再計算される
 - URLはサニタイズ処理を経て保存される
@@ -126,17 +129,17 @@ sequenceDiagram
 
 #### コンポーネント構成
 
-| コンポーネント | ファイル | タイプ |
-|-------------|---------|--------|
-| RecipeEditPage | `src/app/(auth)/recipes/[id]/edit/page.tsx` | Server Component |
-| RecipeEditPageContent | `src/features/recipes/edit/recipe-edit-page-content.tsx` | Server Component |
-| RecipeEditForm | `src/features/recipes/edit/recipe-edit-form.tsx` | Client Component |
-| BasicInfoSection | `src/features/recipes/components/basic-info-section.tsx` | Client Component |
-| TagSection | `src/features/recipes/components/tag-section.tsx` | Client Component |
-| IngredientSection | `src/features/recipes/components/ingredient-section.tsx` | Client Component |
-| StepSection | `src/features/recipes/components/step-section.tsx` | Client Component |
-| ChildRecipeSection | `src/features/recipes/components/child-recipe-section.tsx` | Client Component |
-| FormActions | `src/features/recipes/components/form-actions/index.tsx` | Client Component |
+| コンポーネント        | ファイル                                                   | タイプ           |
+| --------------------- | ---------------------------------------------------------- | ---------------- |
+| RecipeEditPage        | `src/app/(auth)/recipes/[id]/edit/page.tsx`                | Server Component |
+| RecipeEditPageContent | `src/features/recipes/edit/recipe-edit-page-content.tsx`   | Server Component |
+| RecipeEditForm        | `src/features/recipes/edit/recipe-edit-form.tsx`           | Client Component |
+| BasicInfoSection      | `src/features/recipes/components/basic-info-section.tsx`   | Client Component |
+| TagSection            | `src/features/recipes/components/tag-section.tsx`          | Client Component |
+| IngredientSection     | `src/features/recipes/components/ingredient-section.tsx`   | Client Component |
+| StepSection           | `src/features/recipes/components/step-section.tsx`         | Client Component |
+| ChildRecipeSection    | `src/features/recipes/components/child-recipe-section.tsx` | Client Component |
+| FormActions           | `src/features/recipes/components/form-actions/index.tsx`   | Client Component |
 
 #### 状態管理
 
@@ -161,10 +164,10 @@ sequenceDiagram
 ```typescript
 const handleSubmit = async () => {
   if (!title.trim()) {
-    setError('タイトルを入力してください')
-    return
+    setError("タイトルを入力してください");
+    return;
   }
-  setIsSubmitting(true)
+  setIsSubmitting(true);
 
   const request: UpdateRecipeRequest = {
     recipeId,
@@ -175,16 +178,16 @@ const handleSubmit = async () => {
     memo,
     tags: selectedTagIds,
     childRecipes,
-  }
+  };
 
-  const result = await updateRecipe(request)
+  const result = await updateRecipe(request);
   if (isSuccess(result)) {
-    router.push(`/recipes/${recipeId}`)
+    router.push(`/recipes/${recipeId}`);
   } else {
-    setError(result.error.message)
-    setIsSubmitting(false)
+    setError(result.error.message);
+    setIsSubmitting(false);
   }
-}
+};
 ```
 
 ### バックエンド
@@ -200,17 +203,18 @@ const handleSubmit = async () => {
 ```typescript
 // src/backend/domain/recipes/validators.ts
 export const updateRecipeInputSchema = z.object({
-  recipeId: z.string().min(1, 'レシピIDが必要です'),
-  title: z.string()
-    .min(1, 'タイトルを入力してください')
-    .max(100, 'タイトルは100文字以内で入力してください'),
+  recipeId: z.string().min(1, "レシピIDが必要です"),
+  title: z
+    .string()
+    .min(1, "タイトルを入力してください")
+    .max(100, "タイトルは100文字以内で入力してください"),
   sourceInfo: sourceInfoInputSchema.nullable(),
   ingredients: z.array(ingredientInputSchema),
   steps: z.array(stepInputSchema.extend({ orderIndex: z.number() })),
-  memo: z.string().max(1000, 'メモは1000文字以内').optional(),
+  memo: z.string().max(1000, "メモは1000文字以内").optional(),
   tags: z.array(z.string()),
   childRecipes: z.array(childRecipeRelationInputSchema).optional(),
-})
+});
 
 // 個別スキーマ
 // ingredientInputSchema: name(1-100文字), unit(0-50文字), notes(0-200文字)
@@ -262,12 +266,12 @@ model Recipe {
 
 ### 関連モデル（更新対象）
 
-| モデル | フィールド | 説明 |
-|-------|----------|------|
-| Ingredient | name, unit, notes | 材料（削除・再作成） |
-| Step | orderIndex, instruction, timerSeconds | 手順（削除・再作成） |
-| SourceInfo | sourceType, sourceName, sourceUrl, pageNumber | ソース情報（削除・再作成） |
-| RecipeTag | recipeId, tagId | タグ関連付け（削除・再作成） |
+| モデル         | フィールド                                     | 説明                         |
+| -------------- | ---------------------------------------------- | ---------------------------- |
+| Ingredient     | name, unit, notes                              | 材料（削除・再作成）         |
+| Step           | orderIndex, instruction, timerSeconds          | 手順（削除・再作成）         |
+| SourceInfo     | sourceType, sourceName, sourceUrl, pageNumber  | ソース情報（削除・再作成）   |
+| RecipeTag      | recipeId, tagId                                | タグ関連付け（削除・再作成） |
 | RecipeRelation | parentRecipeId, childRecipeId, quantity, notes | 子レシピ関係（削除・再作成） |
 
 ## API仕様
@@ -275,35 +279,36 @@ model Recipe {
 ### updateRecipe (Server Action)
 
 #### 概要
+
 認証済みユーザーが自分のレシピを更新するServer Action。トランザクションで全関連データを削除・再作成する。
 
 #### シグネチャ
+
 ```typescript
-async function updateRecipe(
-  request: UpdateRecipeRequest
-): Promise<Result<{ recipeId: string }>>
+async function updateRecipe(request: UpdateRecipeRequest): Promise<Result<{ recipeId: string }>>;
 ```
 
 #### パラメータ
 
-| 名前 | 型 | 説明 |
-|------|------|------|
+| 名前    | 型                  | 説明     |
+| ------- | ------------------- | -------- |
 | request | UpdateRecipeRequest | 更新内容 |
 
 #### UpdateRecipeRequest の構造
 
-| フィールド名 | 型 | 必須 | バリデーション |
-|------------|------|------|--------------|
-| recipeId | string | ✓ | 1文字以上 |
-| title | string | ✓ | 1〜100文字 |
-| sourceInfo | SourceInfoFormData \| null | | bookName(0-200), pageNumber(0-20), url(0-2000) |
-| ingredients | IngredientFormData[] | ✓ | name(1-100), unit(0-50), notes(0-200) |
-| steps | StepFormData[] | ✓ | instruction(1-1000), timerSeconds(正数) |
-| memo | string | | 最大1000文字 |
-| tags | string[] | ✓ | タグID配列 |
-| childRecipes | ChildRecipeFormData[] | | childRecipeId(必須), quantity(0-100), notes(0-500) |
+| フィールド名 | 型                         | 必須 | バリデーション                                     |
+| ------------ | -------------------------- | ---- | -------------------------------------------------- |
+| recipeId     | string                     | ✓    | 1文字以上                                          |
+| title        | string                     | ✓    | 1〜100文字                                         |
+| sourceInfo   | SourceInfoFormData \| null |      | bookName(0-200), pageNumber(0-20), url(0-2000)     |
+| ingredients  | IngredientFormData[]       | ✓    | name(1-100), unit(0-50), notes(0-200)              |
+| steps        | StepFormData[]             | ✓    | instruction(1-1000), timerSeconds(正数)            |
+| memo         | string                     |      | 最大1000文字                                       |
+| tags         | string[]                   | ✓    | タグID配列                                         |
+| childRecipes | ChildRecipeFormData[]      |      | childRecipeId(必須), quantity(0-100), notes(0-500) |
 
 #### 戻り値
+
 ```typescript
 type Result<{ recipeId: string }> =
   | { ok: true; data: { recipeId: string } }
@@ -312,14 +317,15 @@ type Result<{ recipeId: string }> =
 
 #### エラーコード
 
-| コード | メッセージ | 発生条件 |
-|--------|-----------|---------|
-| UNAUTHENTICATED | 認証が必要です | 未ログイン、またはプロフィール未設定 |
-| NOT_FOUND | 見つかりません | レシピが存在しない、または他ユーザーのレシピ |
-| VALIDATION_ERROR | バリデーションエラー | 入力値がスキーマに違反 |
-| SERVER_ERROR | サーバーエラーが発生しました | 予期しないエラー |
+| コード           | メッセージ                   | 発生条件                                     |
+| ---------------- | ---------------------------- | -------------------------------------------- |
+| UNAUTHENTICATED  | 認証が必要です               | 未ログイン、またはプロフィール未設定         |
+| NOT_FOUND        | 見つかりません               | レシピが存在しない、または他ユーザーのレシピ |
+| VALIDATION_ERROR | バリデーションエラー         | 入力値がスキーマに違反                       |
+| SERVER_ERROR     | サーバーエラーが発生しました | 予期しないエラー                             |
 
 #### 処理詳細
+
 1. `withAuth` で認証状態を確認（Supabase Auth + プロフィール確認）
 2. `updateRecipeInputSchema` でZodバリデーション実施
 3. `RecipeService.updateRecipe(userId, input)` を呼び出し
@@ -330,6 +336,7 @@ type Result<{ recipeId: string }> =
 ## テスト
 
 ### テストファイル
+
 - **ファイル**: `src/features/recipes/edit/__tests__/recipe-edit-form.test.tsx`
 - **フレームワーク**: Vitest + React Testing Library
 

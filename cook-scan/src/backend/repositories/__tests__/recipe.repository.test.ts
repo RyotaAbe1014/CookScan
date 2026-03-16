@@ -1,29 +1,29 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from "vite-plus/test";
 
-vi.mock('@/lib/prisma', () => ({
+vi.mock("@/lib/prisma", () => ({
   prisma: {
     recipe: {
       findMany: vi.fn(),
     },
   },
-}))
+}));
 
-import { prisma } from '@/lib/prisma'
-import { findRecentRecipesByUser } from '../recipe.repository'
+import { prisma } from "@/lib/prisma";
+import { findRecentRecipesByUser } from "../recipe.repository";
 
-describe('recipe.repository', () => {
+describe("recipe.repository", () => {
   beforeEach(() => {
-    vi.clearAllMocks()
-  })
+    vi.clearAllMocks();
+  });
 
-  describe('findRecentRecipesByUser', () => {
-    it('正常系: createdAt降順かつ指定件数で最近追加したレシピを取得するクエリを組み立てる', async () => {
-      vi.mocked(prisma.recipe.findMany).mockResolvedValueOnce([])
+  describe("findRecentRecipesByUser", () => {
+    it("正常系: createdAt降順かつ指定件数で最近追加したレシピを取得するクエリを組み立てる", async () => {
+      vi.mocked(prisma.recipe.findMany).mockResolvedValueOnce([]);
 
-      await findRecentRecipesByUser('user-1', 3)
+      await findRecentRecipesByUser("user-1", 3);
 
       expect(prisma.recipe.findMany).toHaveBeenCalledWith({
-        where: { userId: 'user-1' },
+        where: { userId: "user-1" },
         select: {
           id: true,
           title: true,
@@ -44,9 +44,9 @@ describe('recipe.repository', () => {
             },
           },
         },
-        orderBy: { createdAt: 'desc' },
+        orderBy: { createdAt: "desc" },
         take: 3,
-      })
-    })
-  })
-})
+      });
+    });
+  });
+});

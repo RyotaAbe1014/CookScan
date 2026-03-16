@@ -3,12 +3,12 @@
  * ビジネスロジックとトランザクション管理
  */
 
-import { prisma } from '@/lib/prisma'
-import { Prisma } from '@prisma/client'
-import * as RecipeRepository from '@/backend/repositories/recipe.repository'
-import * as RecipeRelationRepository from '@/backend/repositories/recipe-relation.repository'
-import * as TagRepository from '@/backend/repositories/tag.repository'
-import { sanitizeUrl } from '@/utils/url-validation'
+import { prisma } from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
+import * as RecipeRepository from "@/backend/repositories/recipe.repository";
+import * as RecipeRelationRepository from "@/backend/repositories/recipe-relation.repository";
+import * as TagRepository from "@/backend/repositories/tag.repository";
+import { sanitizeUrl } from "@/utils/url-validation";
 import type {
   CreateRecipeInput,
   UpdateRecipeInput,
@@ -17,8 +17,8 @@ import type {
   CreateRecipeResult,
   UpdateRecipeResult,
   ChildRecipeRelationInput,
-} from '@/backend/domain/recipes'
-import type { RecipeBasic } from '@/types/recipe'
+} from "@/backend/domain/recipes";
+import type { RecipeBasic } from "@/types/recipe";
 
 // ===== Recipe Retrieval =====
 
@@ -27,9 +27,9 @@ import type { RecipeBasic } from '@/types/recipe'
  */
 export async function getRecipeById(
   recipeId: string,
-  userId: string
+  userId: string,
 ): Promise<RecipeDetailOutput | null> {
-  return RecipeRepository.findRecipeById(recipeId, userId)
+  return RecipeRepository.findRecipeById(recipeId, userId);
 }
 
 /**
@@ -38,19 +38,16 @@ export async function getRecipeById(
 export async function getRecipes(
   userId: string,
   searchQuery?: string,
-  tagFilters?: Prisma.RecipeWhereInput[]
+  tagFilters?: Prisma.RecipeWhereInput[],
 ): Promise<RecipeListOutput[]> {
-  return RecipeRepository.findRecipesByUser(userId, searchQuery, tagFilters)
+  return RecipeRepository.findRecipesByUser(userId, searchQuery, tagFilters);
 }
 
 /**
  * ユーザーの最近追加したレシピ一覧を取得
  */
-export async function getRecentRecipes(
-  userId: string,
-  limit = 3
-): Promise<RecipeBasic[]> {
-  return RecipeRepository.findRecentRecipesByUser(userId, limit)
+export async function getRecentRecipes(userId: string, limit = 3): Promise<RecipeBasic[]> {
+  return RecipeRepository.findRecentRecipesByUser(userId, limit);
 }
 
 /**
@@ -60,32 +57,33 @@ async function validateAndCreateChildRecipeRelations(
   tx: Prisma.TransactionClient,
   userId: string,
   parentRecipeId: string,
-  childRecipes?: ChildRecipeRelationInput[]
+  childRecipes?: ChildRecipeRelationInput[],
 ): Promise<void> {
-  if (!childRecipes || childRecipes.length === 0) return
+  if (!childRecipes || childRecipes.length === 0) return;
 
-  const childRecipeIds = childRecipes.map((cr) => cr.childRecipeId)
+  const childRecipeIds = childRecipes.map((cr) => cr.childRecipeId);
   const hasValidOwnership = await RecipeRelationRepository.validateChildRecipeOwnership(
     tx,
     userId,
-    childRecipeIds
-  )
+    childRecipeIds,
+  );
 
   if (!hasValidOwnership) {
-    throw new Error('無効な子レシピが含まれています')
+    throw new Error("無効な子レシピが含まれています");
   }
 
   for (const childRecipe of childRecipes) {
     const isCircular = await RecipeRelationRepository.checkCircularReference(
+      tx,
       parentRecipeId,
-      childRecipe.childRecipeId
-    )
+      childRecipe.childRecipeId,
+    );
     if (isCircular) {
-      throw new Error('循環参照が検出されました。子レシピの設定を見直してください')
+      throw new Error("循環参照が検出されました。子レシピの設定を見直してください");
     }
   }
 
-  await RecipeRelationRepository.createRecipeRelations(tx, parentRecipeId, childRecipes)
+  await RecipeRelationRepository.createRecipeRelations(tx, parentRecipeId, childRecipes);
 }
 
 // ===== Recipe Creation =====
@@ -95,44 +93,44 @@ async function validateAndCreateChildRecipeRelations(
  */
 export async function createRecipe(
   userId: string,
-  input: CreateRecipeInput
+  input: CreateRecipeInput,
 ): Promise<CreateRecipeResult> {
-  const { title, sourceInfo, ingredients, steps, memo, tags, childRecipes } = input
+  const { title, sourceInfo, ingredients, steps, memo, tags, childRecipes } = input;
 
   // タグのバリデーション
-  const { validTagIds, isValid } = await TagRepository.validateTagIdsForUser(tags ?? [], userId)
+  const { validTagIds, isValid } = await TagRepository.validateTagIdsForUser(tags ?? [], userId);
 
   if (!isValid) {
-    throw new Error('無効なタグが含まれています')
+    throw new Error("無効なタグが含まれています");
   }
 
   // トランザクション実行
   const recipe = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
     // レシピ作成
-    const newRecipe = await RecipeRepository.createRecipe(tx, userId, title, memo)
+    const newRecipe = await RecipeRepository.createRecipe(tx, userId, title, memo);
 
     // 材料作成
-    await RecipeRepository.createIngredients(tx, newRecipe.id, ingredients)
+    await RecipeRepository.createIngredients(tx, newRecipe.id, ingredients);
 
     // 手順作成
-    await RecipeRepository.createSteps(tx, newRecipe.id, steps)
+    await RecipeRepository.createSteps(tx, newRecipe.id, steps);
 
     // ソース情報作成
     if (sourceInfo && (sourceInfo.bookName || sourceInfo.pageNumber || sourceInfo.url)) {
-      const sanitizedUrl = sanitizeUrl(sourceInfo.url)
-      await RecipeRepository.createSourceInfo(tx, newRecipe.id, sourceInfo, sanitizedUrl)
+      const sanitizedUrl = sanitizeUrl(sourceInfo.url);
+      await RecipeRepository.createSourceInfo(tx, newRecipe.id, sourceInfo, sanitizedUrl);
     }
 
     // レシピタグ作成
-    await RecipeRepository.createRecipeTags(tx, newRecipe.id, validTagIds)
+    await RecipeRepository.createRecipeTags(tx, newRecipe.id, validTagIds);
 
     // 子レシピ関係作成
-    await validateAndCreateChildRecipeRelations(tx, userId, newRecipe.id, childRecipes)
+    await validateAndCreateChildRecipeRelations(tx, userId, newRecipe.id, childRecipes);
 
-    return newRecipe
-  })
+    return newRecipe;
+  });
 
-  return { recipeId: recipe.id }
+  return { recipeId: recipe.id };
 }
 
 // ===== Recipe Update =====
@@ -142,51 +140,51 @@ export async function createRecipe(
  */
 export async function updateRecipe(
   userId: string,
-  input: UpdateRecipeInput
+  input: UpdateRecipeInput,
 ): Promise<UpdateRecipeResult> {
-  const { recipeId, title, sourceInfo, ingredients, steps, memo, tags, childRecipes } = input
+  const { recipeId, title, sourceInfo, ingredients, steps, memo, tags, childRecipes } = input;
 
   const updatedRecipe = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
     // 所有権チェック
-    const hasOwnership = await RecipeRepository.checkRecipeOwnership(recipeId, userId, tx)
+    const hasOwnership = await RecipeRepository.checkRecipeOwnership(recipeId, userId, tx);
     if (!hasOwnership) {
-      throw new Error('レシピが見つかりません')
+      throw new Error("レシピが見つかりません");
     }
 
     // タグのバリデーション
-    const { validTagIds, isValid } = await TagRepository.validateTagIdsForUser(tags ?? [], userId)
+    const { validTagIds, isValid } = await TagRepository.validateTagIdsForUser(tags ?? [], userId);
     if (!isValid) {
-      throw new Error('無効なタグが含まれています')
+      throw new Error("無効なタグが含まれています");
     }
 
     // レシピ基本情報を更新
-    const recipe = await RecipeRepository.updateRecipe(tx, recipeId, title, memo)
+    const recipe = await RecipeRepository.updateRecipe(tx, recipeId, title, memo);
 
     // 既存の関連データを削除
-    await RecipeRepository.deleteRelatedData(tx, recipeId)
+    await RecipeRepository.deleteRelatedData(tx, recipeId);
 
     // 材料作成
-    await RecipeRepository.createIngredients(tx, recipeId, ingredients)
+    await RecipeRepository.createIngredients(tx, recipeId, ingredients);
 
     // 手順作成
-    await RecipeRepository.createSteps(tx, recipeId, steps)
+    await RecipeRepository.createSteps(tx, recipeId, steps);
 
     // ソース情報作成
     if (sourceInfo && (sourceInfo.bookName || sourceInfo.pageNumber || sourceInfo.url)) {
-      const sanitizedUrl = sanitizeUrl(sourceInfo.url)
-      await RecipeRepository.createSourceInfo(tx, recipeId, sourceInfo, sanitizedUrl)
+      const sanitizedUrl = sanitizeUrl(sourceInfo.url);
+      await RecipeRepository.createSourceInfo(tx, recipeId, sourceInfo, sanitizedUrl);
     }
 
     // レシピタグ作成
-    await RecipeRepository.createRecipeTags(tx, recipeId, validTagIds)
+    await RecipeRepository.createRecipeTags(tx, recipeId, validTagIds);
 
     // 子レシピ関係作成
-    await validateAndCreateChildRecipeRelations(tx, userId, recipeId, childRecipes)
+    await validateAndCreateChildRecipeRelations(tx, userId, recipeId, childRecipes);
 
-    return recipe
-  })
+    return recipe;
+  });
 
-  return { recipeId: updatedRecipe.id }
+  return { recipeId: updatedRecipe.id };
 }
 
 // ===== Recipe Deletion =====
@@ -196,11 +194,11 @@ export async function updateRecipe(
  */
 export async function deleteRecipe(userId: string, recipeId: string): Promise<void> {
   await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
-    const hasOwnership = await RecipeRepository.checkRecipeOwnership(recipeId, userId, tx)
+    const hasOwnership = await RecipeRepository.checkRecipeOwnership(recipeId, userId, tx);
     if (!hasOwnership) {
-      throw new Error('レシピが見つかりません')
+      throw new Error("レシピが見つかりません");
     }
 
-    await RecipeRepository.deleteRecipe(tx, recipeId)
-  })
+    await RecipeRepository.deleteRecipe(tx, recipeId);
+  });
 }

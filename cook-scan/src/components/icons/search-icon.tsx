@@ -1,14 +1,8 @@
-import { IconProps } from './types'
+import { IconProps } from "./types";
 
 export function SearchIcon({ className, ...props }: IconProps) {
   return (
-    <svg
-      className={className}
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-      {...props}
-    >
+    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" {...props}>
       <path
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -16,5 +10,5 @@ export function SearchIcon({ className, ...props }: IconProps) {
         d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
       />
     </svg>
-  )
+  );
 }

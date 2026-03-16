@@ -1,9 +1,9 @@
-'use client'
+"use client";
 
-import { Button } from '@/components/ui/button'
-import { CheckIcon } from '@/components/icons/check-icon'
-import { CloseIcon } from '@/components/icons/close-icon'
-import type { FormActionsProps } from './types'
+import { Button } from "@/components/ui/button";
+import { CheckIcon } from "@/components/icons/check-icon";
+import { CloseIcon } from "@/components/icons/close-icon";
+import type { FormActionsProps } from "./types";
 
 export function FormActionsMobile({
   isSubmitting,
@@ -21,10 +21,8 @@ export function FormActionsMobile({
         size="lg"
         className="w-full py-4 text-base"
       >
-        {!isSubmitting && (
-          <CheckIcon className="h-5 w-5" />
-        )}
-        {isSubmitting ? '保存中...' : submitLabel}
+        {!isSubmitting && <CheckIcon className="h-5 w-5" />}
+        {isSubmitting ? "保存中..." : submitLabel}
       </Button>
 
       {/* Secondary action: Cancel button */}
@@ -39,5 +37,5 @@ export function FormActionsMobile({
         キャンセル
       </Button>
     </div>
-  )
+  );
 }

@@ -1,22 +1,22 @@
-'use client'
+"use client";
 
-import Link from 'next/link'
-import { useTransition } from 'react'
-import { Button } from '@/components/ui/button'
-import { PlusIcon } from '@/components/icons/plus-icon'
-import { TrashIcon } from '@/components/icons/trash-icon'
-import { isSuccess } from '@/utils/result'
-import { removeMealPlanItem } from '../actions'
-import { DAY_LABELS, formatShortDate } from '../utils'
-import type { MealPlanItemOutput } from '@/backend/domain/meal-plans'
+import Link from "next/link";
+import { useTransition } from "react";
+import { Button } from "@/components/ui/button";
+import { PlusIcon } from "@/components/icons/plus-icon";
+import { TrashIcon } from "@/components/icons/trash-icon";
+import { isSuccess } from "@/utils/result";
+import { removeMealPlanItem } from "../actions";
+import { DAY_LABELS, formatShortDate } from "../utils";
+import type { MealPlanItemOutput } from "@/backend/domain/meal-plans";
 
 type MealPlanDayCardProps = {
-  dayOfWeek: number
-  date: Date
-  items: MealPlanItemOutput[]
-  onAddRecipe: (dayOfWeek: number) => void
-  onItemRemoved: () => void
-}
+  dayOfWeek: number;
+  date: Date;
+  items: MealPlanItemOutput[];
+  onAddRecipe: (dayOfWeek: number) => void;
+  onItemRemoved: () => void;
+};
 
 export function MealPlanDayCard({
   dayOfWeek,
@@ -25,61 +25,43 @@ export function MealPlanDayCard({
   onAddRecipe,
   onItemRemoved,
 }: MealPlanDayCardProps) {
-  const [isPending, startTransition] = useTransition()
-  const isToday = new Date().toDateString() === date.toDateString()
-  const isSaturday = dayOfWeek === 5
-  const isSunday = dayOfWeek === 6
+  const [isPending, startTransition] = useTransition();
+  const isToday = new Date().toDateString() === date.toDateString();
+  const isSaturday = dayOfWeek === 5;
+  const isSunday = dayOfWeek === 6;
 
   function handleRemove(itemId: string) {
     startTransition(async () => {
-      const result = await removeMealPlanItem(itemId)
+      const result = await removeMealPlanItem(itemId);
       if (isSuccess(result)) {
-        onItemRemoved()
+        onItemRemoved();
       }
-    })
+    });
   }
 
   return (
-    <div
-      className={`rounded-xl border bg-white shadow-sm ${
-        isToday ? 'ring-2 ring-primary' : ''
-      }`}
-    >
+    <div className={`rounded-xl border bg-white shadow-sm ${isToday ? "ring-primary ring-2" : ""}`}>
       <div
         className={`flex items-center justify-between rounded-t-xl px-4 py-3 ${
-          isSunday
-            ? 'bg-danger-light'
-            : isSaturday
-              ? 'bg-accent-steps-light'
-              : 'bg-section-header'
+          isSunday ? "bg-danger-light" : isSaturday ? "bg-accent-steps-light" : "bg-section-header"
         }`}
       >
         <div className="flex items-center gap-2">
           <span
             className={`text-sm font-bold ${
-              isSunday
-                ? 'text-danger'
-                : isSaturday
-                  ? 'text-accent-steps'
-                  : 'text-foreground'
+              isSunday ? "text-danger" : isSaturday ? "text-accent-steps" : "text-foreground"
             }`}
           >
             {DAY_LABELS[dayOfWeek]}
           </span>
-          <span className="text-sm text-muted-foreground">
-            {formatShortDate(date)}
-          </span>
+          <span className="text-muted-foreground text-sm">{formatShortDate(date)}</span>
           {isToday && (
-            <span className="rounded-full bg-primary-light px-2 py-0.5 text-xs font-medium text-primary-hover">
+            <span className="bg-primary-light text-primary-hover rounded-full px-2 py-0.5 text-xs font-medium">
               今日
             </span>
           )}
         </div>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => onAddRecipe(dayOfWeek)}
-        >
+        <Button variant="ghost" size="sm" onClick={() => onAddRecipe(dayOfWeek)}>
           <PlusIcon className="h-4 w-4" />
           追加
         </Button>
@@ -87,19 +69,17 @@ export function MealPlanDayCard({
 
       <div className="min-h-[60px] p-3">
         {items.length === 0 ? (
-          <p className="py-2 text-center text-sm text-muted-foreground">
-            レシピなし
-          </p>
+          <p className="text-muted-foreground py-2 text-center text-sm">レシピなし</p>
         ) : (
           <ul className="space-y-2">
             {items.map((item) => (
               <li
                 key={item.id}
-                className="flex items-center justify-between rounded-lg bg-section-header px-3 py-2"
+                className="bg-section-header flex items-center justify-between rounded-lg px-3 py-2"
               >
                 <Link
                   href={`/recipes/${item.recipe.id}`}
-                  className="text-sm font-medium text-foreground hover:underline"
+                  className="text-foreground text-sm font-medium hover:underline"
                 >
                   {item.recipe.title}
                 </Link>
@@ -117,5 +97,5 @@ export function MealPlanDayCard({
         )}
       </div>
     </div>
-  )
+  );
 }

@@ -24,16 +24,16 @@
 
 ## プロジェクト概要
 
-| 項目 | 技術スタック |
-|------|-------------|
+| 項目           | 技術スタック                                                |
+| -------------- | ----------------------------------------------------------- |
 | フロントエンド | Next.js 16.1.5 (App Router), React 19.2.4, TypeScript 5.9.3 |
-| スタイリング | Tailwind CSS v4 |
-| 状態管理 | Jotai 2.16.1 |
-| データベース | PostgreSQL + Prisma 6.12.0 |
-| 認証 | Supabase Auth |
-| AI/ML | Mastra 1.2.0 + OpenAI + Google Generative AI |
-| テスト | Vitest 4.0.15 + Testing Library |
-| デプロイ | Vercel + Terraform |
+| スタイリング   | Tailwind CSS v4                                             |
+| 状態管理       | Jotai 2.16.1                                                |
+| データベース   | PostgreSQL + Prisma 6.12.0                                  |
+| 認証           | Supabase Auth                                               |
+| AI/ML          | Mastra 1.2.0 + OpenAI + Google Generative AI                |
+| テスト         | Vitest 4.0.15 + Testing Library                             |
+| デプロイ       | Vercel + Terraform                                          |
 
 **ソースファイル数:** 約286ファイル
 **テストファイル数:** 約81ファイル
@@ -45,6 +45,7 @@
 ### SEC-01: 環境変数の未検証アクセス【中】
 
 **該当ファイル:**
+
 - `src/backend/mastra/models/google.ts:4`
 - `src/backend/mastra/models/openai.ts:4`
 - `src/lib/supabase/middleware.ts:10-11`
@@ -121,6 +122,7 @@ for (const file of files) {
 ### VAL-02: 文字列フィールドの最大長未設定【中】
 
 **該当ファイル:**
+
 - `src/backend/domain/recipes/validators.ts:45` (`title`)
 - `src/backend/domain/shopping-items/validators.ts:9` (`name`)
 - `src/backend/domain/tags/validators.ts` (複数フィールド)
@@ -159,6 +161,7 @@ timerSeconds: z.number().optional(), // 負数や0も許容される
 ### ERR-01: 汎用的なエラーレスポンス【高】
 
 **該当ファイル:**
+
 - `src/app/(auth)/recipes/extract/text/route.ts:40-45`
 - `src/app/(auth)/recipes/extract/file/route.ts:47-52`
 
@@ -175,6 +178,7 @@ catch (error) {
 ```
 
 **問題点:**
+
 - エラー監視サービスとの連携なし
 - バリデーションエラー、タイムアウト、レートリミットの区別なし
 - リクエストIDによるトレーシング不可
@@ -186,6 +190,7 @@ catch (error) {
 ### ERR-02: エラーメッセージの文字列マッチング【中】
 
 **該当ファイル:**
+
 - `src/features/shopping-list/actions.ts:81-86, 109-114, 133-138, 159-161`
 - `src/features/tags/actions.ts` (複数箇所)
 - `src/features/recipes/detail/actions.ts`
@@ -193,15 +198,16 @@ catch (error) {
 **課題:** エラー分類がメッセージの文字列マッチングに依存している。
 
 ```typescript
-if (error.message.includes('見つかりません')) {
-  return failure(Errors.notFound('アイテム'))
+if (error.message.includes("見つかりません")) {
+  return failure(Errors.notFound("アイテム"));
 }
-if (error.message.includes('権限がありません')) {
-  return failure(Errors.forbidden(error.message))
+if (error.message.includes("権限がありません")) {
+  return failure(Errors.forbidden(error.message));
 }
 ```
 
 **問題点:**
+
 - エラーメッセージの変更でハンドリングが壊れる
 - 日本語テキストがエラー判定の境界になっている
 - 異なるファイルに散在する同じロジック
@@ -211,10 +217,10 @@ if (error.message.includes('権限がありません')) {
 ```typescript
 // 推奨: カスタムエラークラス
 class NotFoundError extends AppError {
-  readonly code = 'NOT_FOUND' as const
+  readonly code = "NOT_FOUND" as const;
 }
 class ForbiddenError extends AppError {
-  readonly code = 'FORBIDDEN' as const
+  readonly code = "FORBIDDEN" as const;
 }
 ```
 
@@ -240,6 +246,7 @@ class ForbiddenError extends AppError {
 ### TYPE-01: テストコードでの `any` 型使用【中】
 
 **該当ファイル:**
+
 - `src/backend/services/recipes/__tests__/recipe.service.test.ts:42`
 - `src/features/recipes/upload/__tests__/image-upload.test.tsx:247`
 - `src/features/recipes/upload/__tests__/recipe-upload-content.test.tsx:18, 37, 56`
@@ -248,7 +255,7 @@ class ForbiddenError extends AppError {
 **課題:**
 
 ```typescript
-vi.mocked(prisma.$transaction).mockImplementation(async (callback: any) => callback(mockTx))
+vi.mocked(prisma.$transaction).mockImplementation(async (callback: any) => callback(mockTx));
 ```
 
 **影響:** テストの型安全性が損なわれ、リファクタリング時に型エラーを検出できない。
@@ -264,7 +271,7 @@ vi.mocked(prisma.$transaction).mockImplementation(async (callback: any) => callb
 **課題:**
 
 ```typescript
-const parsed = JSON.parse(stored) as Array<[string, PersistedTimerState]>
+const parsed = JSON.parse(stored) as Array<[string, PersistedTimerState]>;
 ```
 
 `JSON.parse()` の戻り値に対して型アサーションのみで、スキーマバリデーションがない。
@@ -278,6 +285,7 @@ const parsed = JSON.parse(stored) as Array<[string, PersistedTimerState]>
 ### DUP-01: エラーハンドリングパターンの重複【中】
 
 **該当ファイル:**
+
 - `src/features/shopping-list/actions.ts` (7箇所のcatchブロック)
 - `src/features/tags/actions.ts` (7箇所のcatchブロック)
 - `src/features/recipes/upload/actions.ts`
@@ -308,12 +316,12 @@ const parsed = JSON.parse(stored) as Array<[string, PersistedTimerState]>
 ```typescript
 function withErrorHandling<T>(
   fn: () => Promise<T>,
-  context: { entityName: string; operation: string }
+  context: { entityName: string; operation: string },
 ): Promise<Result<T>> {
   try {
-    return success(await fn())
+    return success(await fn());
   } catch (error) {
-    return handleActionError(error, context)
+    return handleActionError(error, context);
   }
 }
 ```
@@ -349,11 +357,11 @@ return prisma.recipe.findMany({
 
 ```typescript
 while (queue.length > 0) {
-  const currentId = queue.shift()!
+  const currentId = queue.shift()!;
   const children = await prisma.recipeRelation.findMany({
     where: { parentRecipeId: currentId }, // ループ内クエリ
     select: { childRecipeId: true },
-  })
+  });
 }
 ```
 
@@ -366,6 +374,7 @@ while (queue.length > 0) {
 ### PERF-03: 買い物リストの並べ替えにおける競合状態【中】
 
 **該当ファイル:**
+
 - `src/backend/repositories/shopping-item.repository.ts:93-101`
 - `src/backend/services/shopping-items/shopping-item.service.ts:33-36`
 
@@ -373,8 +382,8 @@ while (queue.length > 0) {
 
 ```typescript
 // 2つの逐次クエリ間で別リクエストが割り込む可能性
-const maxOrder = await ShoppingItemRepository.getMaxDisplayOrder(userId)
-const item = await ShoppingItemRepository.createShoppingItem(userId, name, maxOrder + 1, memo)
+const maxOrder = await ShoppingItemRepository.getMaxDisplayOrder(userId);
+const item = await ShoppingItemRepository.createShoppingItem(userId, name, maxOrder + 1, memo);
 ```
 
 **推奨対応:** データベースシーケンスまたはアトミックなインクリメント操作を使用する。
@@ -386,11 +395,13 @@ const item = await ShoppingItemRepository.createShoppingItem(userId, name, maxOr
 ### TEST-01: テストカバレッジの不足【中】
 
 **現状:**
+
 - テストファイル: 約81ファイル
 - ソースファイル: 約286ファイル
 - **カバレッジ率: 約28%**
 
 **未テスト領域:**
+
 - APIルート（`src/app/(auth)/recipes/extract/` 配下）
 - サービス層の包括的テスト
 - エラーパスのテスト
@@ -404,6 +415,7 @@ const item = await ShoppingItemRepository.createShoppingItem(userId, name, maxOr
 ### TEST-02: エラーケースのテスト不足【中】
 
 **課題:** テストがハッピーパスに偏っており、以下のケースがテストされていない:
+
 - 不正な入力
 - データベースエラー
 - 権限チェックの失敗
@@ -438,6 +450,7 @@ instructions: `
 ### ARCH-02: APIルートの認証チェック不足【中】
 
 **該当ファイル:**
+
 - `src/app/(auth)/recipes/extract/text/route.ts`
 - `src/app/(auth)/recipes/extract/file/route.ts`
 
@@ -466,6 +479,7 @@ export async function POST(request: NextRequest) {
 **現状:** プロジェクト全体で `console.error()` が45箇所以上使用されている。
 
 **問題点:**
+
 - ログレベル（info, warn, error, debug）の区分なし
 - 構造化ログ（JSON形式）未対応
 - リクエストIDによるトレーシング不可
@@ -482,6 +496,7 @@ export async function POST(request: NextRequest) {
 **課題:** APIルートに対するOpenAPI/Swagger等のドキュメントが存在しない。
 
 **該当ルート:**
+
 - `/app/(auth)/recipes/extract/text/route.ts`
 - `/app/(auth)/recipes/extract/file/route.ts`
 - `/app/auth/confirm/route.ts`
@@ -508,47 +523,51 @@ GOOGLE_GENERATIVE_AI_API_KEY=...
 
 ### 課題一覧
 
-| ID | カテゴリ | 重要度 | 課題概要 |
-|----|---------|--------|---------|
-| VAL-01 | 入力バリデーション | 高 | ファイルアップロードのタイプ・サイズ未検証 |
-| ARCH-01 | アーキテクチャ | 高 | AIエージェントの指示文が未実装 |
-| ERR-01 | エラーハンドリング | 高 | 汎用的なエラーレスポンス |
-| SEC-01 | セキュリティ | 中 | 環境変数の未検証アクセス |
-| SEC-02 | セキュリティ | 中 | リダイレクトURLの未検証 |
-| VAL-02 | 入力バリデーション | 中 | 文字列フィールドの最大長未設定 |
-| ERR-02 | エラーハンドリング | 中 | エラーメッセージの文字列マッチング |
-| ERR-03 | エラーハンドリング | 中 | サイレントなcatchブロック |
-| TYPE-01 | 型安全性 | 中 | テストコードでの `any` 型使用 |
-| DUP-01 | コード重複 | 中 | エラーハンドリングパターンの重複 |
-| PERF-01 | パフォーマンス | 中 | ページネーション未実装 |
-| PERF-02 | パフォーマンス | 中 | N+1クエリ問題 |
-| PERF-03 | パフォーマンス | 中 | 競合状態 |
-| TEST-01 | テスト | 中 | テストカバレッジ約28% |
-| TEST-02 | テスト | 中 | エラーケースのテスト不足 |
-| ARCH-02 | アーキテクチャ | 中 | APIルートの認証チェック不足 |
-| DOC-01 | ドキュメント | 中 | API仕様書の未整備 |
-| VAL-03 | 入力バリデーション | 低 | タイマー秒数の正数バリデーション未設定 |
-| TYPE-02 | 型安全性 | 低 | JSON.parseの型安全性不足 |
-| LOG-01 | ロギング | 低 | 構造化ロギングの未導入 |
-| DOC-02 | ドキュメント | 低 | READMEの環境変数名の誤り |
+| ID      | カテゴリ           | 重要度 | 課題概要                                   |
+| ------- | ------------------ | ------ | ------------------------------------------ |
+| VAL-01  | 入力バリデーション | 高     | ファイルアップロードのタイプ・サイズ未検証 |
+| ARCH-01 | アーキテクチャ     | 高     | AIエージェントの指示文が未実装             |
+| ERR-01  | エラーハンドリング | 高     | 汎用的なエラーレスポンス                   |
+| SEC-01  | セキュリティ       | 中     | 環境変数の未検証アクセス                   |
+| SEC-02  | セキュリティ       | 中     | リダイレクトURLの未検証                    |
+| VAL-02  | 入力バリデーション | 中     | 文字列フィールドの最大長未設定             |
+| ERR-02  | エラーハンドリング | 中     | エラーメッセージの文字列マッチング         |
+| ERR-03  | エラーハンドリング | 中     | サイレントなcatchブロック                  |
+| TYPE-01 | 型安全性           | 中     | テストコードでの `any` 型使用              |
+| DUP-01  | コード重複         | 中     | エラーハンドリングパターンの重複           |
+| PERF-01 | パフォーマンス     | 中     | ページネーション未実装                     |
+| PERF-02 | パフォーマンス     | 中     | N+1クエリ問題                              |
+| PERF-03 | パフォーマンス     | 中     | 競合状態                                   |
+| TEST-01 | テスト             | 中     | テストカバレッジ約28%                      |
+| TEST-02 | テスト             | 中     | エラーケースのテスト不足                   |
+| ARCH-02 | アーキテクチャ     | 中     | APIルートの認証チェック不足                |
+| DOC-01  | ドキュメント       | 中     | API仕様書の未整備                          |
+| VAL-03  | 入力バリデーション | 低     | タイマー秒数の正数バリデーション未設定     |
+| TYPE-02 | 型安全性           | 低     | JSON.parseの型安全性不足                   |
+| LOG-01  | ロギング           | 低     | 構造化ロギングの未導入                     |
+| DOC-02  | ドキュメント       | 低     | READMEの環境変数名の誤り                   |
 
 ### 対応優先度
 
 **1. 最優先（即対応）:**
+
 - VAL-01: ファイルアップロードのバリデーション追加
 - ARCH-01: AIエージェント指示文の実装
 - ARCH-02: APIルートの認証チェック追加
 
 **2. 高優先（次スプリント）:**
+
 - ERR-01 / ERR-02 / DUP-01: エラーハンドリングの統一・集約
 - VAL-02: 全テキストフィールドの最大長設定
 - SEC-01: 環境変数バリデーションの導入
 
 **3. 中優先（定期メンテナンス）:**
+
 - PERF-01 / PERF-02 / PERF-03: パフォーマンス改善
 - TEST-01 / TEST-02: テストカバレッジの向上
 - LOG-01: 構造化ロギングの導入
 
 **4. 低優先:**
+
 - DOC-01 / DOC-02: ドキュメント整備
 - VAL-03 / TYPE-02: 軽微なバリデーション・型改善

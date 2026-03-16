@@ -1,37 +1,37 @@
-'use client'
+"use client";
 
-import { useState, useTransition } from 'react'
-import { updatePassword, type PasswordChangeFormData } from './actions'
-import { isSuccess } from '@/utils/result'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Alert } from '@/components/ui/alert'
-import { LockIcon } from '@/components/icons/lock-icon'
-import { KeyIcon } from '@/components/icons/key-icon'
-import { ShieldCheckIcon } from '@/components/icons/shield-check-icon'
-import { CheckCircleOutlineIcon } from '@/components/icons/check-circle-outline-icon'
+import { useState, useTransition } from "react";
+import { updatePassword, type PasswordChangeFormData } from "./actions";
+import { isSuccess } from "@/utils/result";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Alert } from "@/components/ui/alert";
+import { LockIcon } from "@/components/icons/lock-icon";
+import { KeyIcon } from "@/components/icons/key-icon";
+import { ShieldCheckIcon } from "@/components/icons/shield-check-icon";
+import { CheckCircleOutlineIcon } from "@/components/icons/check-circle-outline-icon";
 
 export function PasswordChangeForm() {
-  const [isPending, startTransition] = useTransition()
+  const [isPending, startTransition] = useTransition();
   const [formData, setFormData] = useState<PasswordChangeFormData>({
-    currentPassword: '',
-    newPassword: '',
-    confirmPassword: '',
-  })
-  const [error, setError] = useState<string | null>(null)
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError(null)
+    e.preventDefault();
+    setError(null);
 
     startTransition(async () => {
-      const result = await updatePassword(formData)
+      const result = await updatePassword(formData);
       // 成功時は自動的に /login にリダイレクトされるため、失敗時のみエラーを設定
       if (!isSuccess(result)) {
-        setError(result.error.message)
+        setError(result.error.message);
       }
-    })
-  }
+    });
+  };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6 p-8">
@@ -42,9 +42,9 @@ export function PasswordChangeForm() {
       <div className="space-y-2">
         <label
           htmlFor="currentPassword"
-          className="flex items-center gap-2 text-sm font-medium text-foreground"
+          className="text-foreground flex items-center gap-2 text-sm font-medium"
         >
-          <div className="flex h-5 w-5 items-center justify-center rounded bg-muted-foreground">
+          <div className="bg-muted-foreground flex h-5 w-5 items-center justify-center rounded">
             <LockIcon className="h-3 w-3 text-white" />
           </div>
           現在のパスワード
@@ -55,9 +55,7 @@ export function PasswordChangeForm() {
             type="password"
             id="currentPassword"
             value={formData.currentPassword}
-            onChange={(e) =>
-              setFormData({ ...formData, currentPassword: e.target.value })
-            }
+            onChange={(e) => setFormData({ ...formData, currentPassword: e.target.value })}
             placeholder="現在のパスワードを入力"
             disabled={isPending}
             required
@@ -65,19 +63,19 @@ export function PasswordChangeForm() {
             hasIcon
           />
           <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-            <KeyIcon className="h-5 w-5 text-muted-foreground" />
+            <KeyIcon className="text-muted-foreground h-5 w-5" />
           </div>
         </div>
-        <p className="text-xs text-muted-foreground">本人確認のため、現在のパスワードが必要です</p>
+        <p className="text-muted-foreground text-xs">本人確認のため、現在のパスワードが必要です</p>
       </div>
 
       {/* 新しいパスワード - emerald系（新規設定） */}
       <div className="space-y-2">
         <label
           htmlFor="newPassword"
-          className="flex items-center gap-2 text-sm font-medium text-foreground"
+          className="text-foreground flex items-center gap-2 text-sm font-medium"
         >
-          <div className="flex h-5 w-5 items-center justify-center rounded bg-primary">
+          <div className="bg-primary flex h-5 w-5 items-center justify-center rounded">
             <LockIcon className="h-3 w-3 text-white" />
           </div>
           新しいパスワード
@@ -88,9 +86,7 @@ export function PasswordChangeForm() {
             type="password"
             id="newPassword"
             value={formData.newPassword}
-            onChange={(e) =>
-              setFormData({ ...formData, newPassword: e.target.value })
-            }
+            onChange={(e) => setFormData({ ...formData, newPassword: e.target.value })}
             placeholder="8文字以上、大文字・小文字・数字を含む"
             disabled={isPending}
             required
@@ -98,12 +94,13 @@ export function PasswordChangeForm() {
             hasIcon
           />
           <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-            <ShieldCheckIcon className="h-5 w-5 text-primary" />
+            <ShieldCheckIcon className="text-primary h-5 w-5" />
           </div>
         </div>
-        <div className="rounded-md bg-primary-light p-3">
-          <p className="text-xs text-primary-hover">
-            <strong>セキュリティ要件:</strong> パスワードは8文字以上で、大文字、小文字、数字を含める必要があります
+        <div className="bg-primary-light rounded-md p-3">
+          <p className="text-primary-hover text-xs">
+            <strong>セキュリティ要件:</strong>{" "}
+            パスワードは8文字以上で、大文字、小文字、数字を含める必要があります
           </p>
         </div>
       </div>
@@ -112,9 +109,9 @@ export function PasswordChangeForm() {
       <div className="space-y-2">
         <label
           htmlFor="confirmPassword"
-          className="flex items-center gap-2 text-sm font-medium text-foreground"
+          className="text-foreground flex items-center gap-2 text-sm font-medium"
         >
-          <div className="flex h-5 w-5 items-center justify-center rounded bg-secondary">
+          <div className="bg-secondary flex h-5 w-5 items-center justify-center rounded">
             <CheckCircleOutlineIcon className="h-3 w-3 text-white" />
           </div>
           新しいパスワード（確認）
@@ -125,9 +122,7 @@ export function PasswordChangeForm() {
             type="password"
             id="confirmPassword"
             value={formData.confirmPassword}
-            onChange={(e) =>
-              setFormData({ ...formData, confirmPassword: e.target.value })
-            }
+            onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
             placeholder="もう一度入力してください"
             disabled={isPending}
             required
@@ -135,15 +130,18 @@ export function PasswordChangeForm() {
             hasIcon
           />
           <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-            <CheckCircleOutlineIcon className="h-5 w-5 text-secondary" />
+            <CheckCircleOutlineIcon className="text-secondary h-5 w-5" />
           </div>
         </div>
-        <p className="text-xs text-muted-foreground">入力ミスを防ぐため、もう一度入力してください</p>
+        <p className="text-muted-foreground text-xs">
+          入力ミスを防ぐため、もう一度入力してください
+        </p>
       </div>
 
       {/* セキュリティ警告 - amber warning */}
       <Alert variant="warning">
-        <strong>重要:</strong> パスワード変更後、すべてのデバイスから自動的にログアウトされます。新しいパスワードで再度ログインしてください。
+        <strong>重要:</strong>{" "}
+        パスワード変更後、すべてのデバイスから自動的にログアウトされます。新しいパスワードで再度ログインしてください。
       </Alert>
 
       {/* ボタン */}
@@ -154,10 +152,10 @@ export function PasswordChangeForm() {
           size="lg"
           isLoading={isPending}
           disabled={isPending}
-          className="w-full shadow-md hover:shadow-lg transition-shadow"
+          className="w-full shadow-md transition-shadow hover:shadow-lg"
         >
           {isPending ? (
-            'パスワードを変更中...'
+            "パスワードを変更中..."
           ) : (
             <>
               <CheckCircleOutlineIcon className="h-5 w-5" />
@@ -177,5 +175,5 @@ export function PasswordChangeForm() {
         </Button>
       </div>
     </form>
-  )
+  );
 }

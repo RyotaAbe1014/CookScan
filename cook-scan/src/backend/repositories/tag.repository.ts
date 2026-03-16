@@ -3,7 +3,7 @@
  * Prismaクエリの集約
  */
 
-import { prisma } from '@/lib/prisma'
+import { prisma } from "@/lib/prisma";
 
 // ===== Tag Category Operations =====
 
@@ -18,7 +18,7 @@ export async function createTagCategory(userId: string, name: string, descriptio
       description: description || null,
       isSystem: false,
     },
-  })
+  });
 }
 
 /**
@@ -28,7 +28,7 @@ export async function findTagCategoryById(categoryId: string) {
   return prisma.tagCategory.findUnique({
     where: { id: categoryId },
     include: { tags: true },
-  })
+  });
 }
 
 /**
@@ -41,7 +41,7 @@ export async function updateTagCategory(categoryId: string, name: string, descri
       name,
       description: description || null,
     },
-  })
+  });
 }
 
 /**
@@ -50,7 +50,7 @@ export async function updateTagCategory(categoryId: string, name: string, descri
 export async function deleteTagCategory(categoryId: string) {
   return prisma.tagCategory.delete({
     where: { id: categoryId },
-  })
+  });
 }
 
 /**
@@ -63,11 +63,11 @@ export async function findTagCategoriesByUser(userId: string) {
     },
     include: {
       tags: {
-        orderBy: { name: 'asc' },
+        orderBy: { name: "asc" },
       },
     },
-    orderBy: { createdAt: 'asc' },
-  })
+    orderBy: { createdAt: "asc" },
+  });
 }
 
 /**
@@ -92,8 +92,8 @@ export async function findTagCategoriesWithRecipeTags(userId: string) {
         },
       },
     },
-    orderBy: { createdAt: 'asc' },
-  })
+    orderBy: { createdAt: "asc" },
+  });
 }
 
 // ===== Tag Operations =====
@@ -105,7 +105,7 @@ export async function createTag(
   categoryId: string,
   userId: string,
   name: string,
-  description?: string
+  description?: string,
 ) {
   return prisma.tag.create({
     data: {
@@ -115,7 +115,7 @@ export async function createTag(
       isSystem: false,
       userId,
     },
-  })
+  });
 }
 
 /**
@@ -128,7 +128,7 @@ export async function findTagById(tagId: string) {
       category: true,
       recipeTags: true,
     },
-  })
+  });
 }
 
 /**
@@ -141,7 +141,7 @@ export async function updateTag(tagId: string, name: string, description?: strin
       name,
       description: description || null,
     },
-  })
+  });
 }
 
 /**
@@ -150,7 +150,7 @@ export async function updateTag(tagId: string, name: string, description?: strin
 export async function deleteTag(tagId: string) {
   return prisma.tag.delete({
     where: { id: tagId },
-  })
+  });
 }
 
 /**
@@ -159,12 +159,12 @@ export async function deleteTag(tagId: string) {
  */
 export async function validateTagIdsForUser(
   tagIds: string[],
-  userId: string
+  userId: string,
 ): Promise<{ validTagIds: string[]; isValid: boolean }> {
-  const uniqueTagIds = Array.from(new Set(tagIds)).filter(Boolean)
+  const uniqueTagIds = Array.from(new Set(tagIds)).filter(Boolean);
 
   if (uniqueTagIds.length === 0) {
-    return { validTagIds: [], isValid: true }
+    return { validTagIds: [], isValid: true };
   }
 
   const validTags = await prisma.tag.findMany({
@@ -173,12 +173,12 @@ export async function validateTagIdsForUser(
       OR: [{ isSystem: true }, { user: { id: userId } }],
     },
     select: { id: true },
-  })
+  });
 
-  const validTagIds = validTags.map((tag) => tag.id)
+  const validTagIds = validTags.map((tag) => tag.id);
 
   return {
     validTagIds,
     isValid: validTagIds.length === uniqueTagIds.length,
-  }
+  };
 }

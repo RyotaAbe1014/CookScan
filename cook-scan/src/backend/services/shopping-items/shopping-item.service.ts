@@ -3,7 +3,7 @@
  * ビジネスロジック
  */
 
-import * as ShoppingItemRepository from '@/backend/repositories/shopping-item.repository'
+import * as ShoppingItemRepository from "@/backend/repositories/shopping-item.repository";
 import type {
   CreateShoppingItemInput,
   CreateShoppingItemsInput,
@@ -12,13 +12,13 @@ import type {
   ReorderShoppingItemsInput,
   CreateShoppingItemResult,
   ShoppingItemOutput,
-} from '@/backend/domain/shopping-items'
+} from "@/backend/domain/shopping-items";
 
 /**
  * 買い物アイテム一覧を取得
  */
 export async function getShoppingItems(userId: string): Promise<ShoppingItemOutput[]> {
-  return ShoppingItemRepository.findShoppingItemsByUser(userId)
+  return ShoppingItemRepository.findShoppingItemsByUser(userId);
 }
 
 /**
@@ -26,14 +26,14 @@ export async function getShoppingItems(userId: string): Promise<ShoppingItemOutp
  */
 export async function createShoppingItem(
   userId: string,
-  input: CreateShoppingItemInput
+  input: CreateShoppingItemInput,
 ): Promise<CreateShoppingItemResult> {
-  const { name, memo } = input
+  const { name, memo } = input;
 
-  const maxOrder = await ShoppingItemRepository.getMaxDisplayOrder(userId)
-  const item = await ShoppingItemRepository.createShoppingItem(userId, name, maxOrder + 1, memo)
+  const maxOrder = await ShoppingItemRepository.getMaxDisplayOrder(userId);
+  const item = await ShoppingItemRepository.createShoppingItem(userId, name, maxOrder + 1, memo);
 
-  return { itemId: item.id }
+  return { itemId: item.id };
 }
 
 /**
@@ -41,19 +41,19 @@ export async function createShoppingItem(
  */
 export async function createShoppingItems(
   userId: string,
-  input: CreateShoppingItemsInput
+  input: CreateShoppingItemsInput,
 ): Promise<{ count: number }> {
-  const { items } = input
+  const { items } = input;
 
-  const maxOrder = await ShoppingItemRepository.getMaxDisplayOrder(userId)
+  const maxOrder = await ShoppingItemRepository.getMaxDisplayOrder(userId);
   const itemsWithOrder = items.map((item, index) => ({
     name: item.name,
     memo: item.memo,
     displayOrder: maxOrder + 1 + index,
-  }))
+  }));
 
-  const created = await ShoppingItemRepository.createShoppingItems(userId, itemsWithOrder)
-  return { count: created.length }
+  const created = await ShoppingItemRepository.createShoppingItems(userId, itemsWithOrder);
+  return { count: created.length };
 }
 
 /**
@@ -61,21 +61,21 @@ export async function createShoppingItems(
  */
 export async function updateShoppingItem(
   userId: string,
-  input: UpdateShoppingItemInput
+  input: UpdateShoppingItemInput,
 ): Promise<void> {
-  const { itemId, name, memo } = input
+  const { itemId, name, memo } = input;
 
-  const item = await ShoppingItemRepository.findShoppingItemById(itemId)
+  const item = await ShoppingItemRepository.findShoppingItemById(itemId);
 
   if (!item) {
-    throw new Error('アイテムが見つかりません')
+    throw new Error("アイテムが見つかりません");
   }
 
   if (item.userId !== userId) {
-    throw new Error('このアイテムを編集する権限がありません')
+    throw new Error("このアイテムを編集する権限がありません");
   }
 
-  await ShoppingItemRepository.updateShoppingItem(itemId, name, memo)
+  await ShoppingItemRepository.updateShoppingItem(itemId, name, memo);
 }
 
 /**
@@ -83,38 +83,38 @@ export async function updateShoppingItem(
  */
 export async function updateShoppingItemCheck(
   userId: string,
-  input: UpdateShoppingItemCheckInput
+  input: UpdateShoppingItemCheckInput,
 ): Promise<void> {
-  const { itemId, isChecked } = input
+  const { itemId, isChecked } = input;
 
-  const item = await ShoppingItemRepository.findShoppingItemById(itemId)
+  const item = await ShoppingItemRepository.findShoppingItemById(itemId);
 
   if (!item) {
-    throw new Error('アイテムが見つかりません')
+    throw new Error("アイテムが見つかりません");
   }
 
   if (item.userId !== userId) {
-    throw new Error('このアイテムを編集する権限がありません')
+    throw new Error("このアイテムを編集する権限がありません");
   }
 
-  await ShoppingItemRepository.updateShoppingItemCheck(itemId, isChecked)
+  await ShoppingItemRepository.updateShoppingItemCheck(itemId, isChecked);
 }
 
 /**
  * 買い物アイテムを削除
  */
 export async function deleteShoppingItem(userId: string, itemId: string): Promise<void> {
-  const item = await ShoppingItemRepository.findShoppingItemById(itemId)
+  const item = await ShoppingItemRepository.findShoppingItemById(itemId);
 
   if (!item) {
-    throw new Error('アイテムが見つかりません')
+    throw new Error("アイテムが見つかりません");
   }
 
   if (item.userId !== userId) {
-    throw new Error('このアイテムを削除する権限がありません')
+    throw new Error("このアイテムを削除する権限がありません");
   }
 
-  await ShoppingItemRepository.deleteShoppingItem(itemId)
+  await ShoppingItemRepository.deleteShoppingItem(itemId);
 }
 
 /**
@@ -122,25 +122,25 @@ export async function deleteShoppingItem(userId: string, itemId: string): Promis
  */
 export async function reorderShoppingItems(
   userId: string,
-  input: ReorderShoppingItemsInput
+  input: ReorderShoppingItemsInput,
 ): Promise<void> {
-  const { itemIds } = input
+  const { itemIds } = input;
 
   // 全アイテムが自分のものか確認
-  const items = await ShoppingItemRepository.findShoppingItemsByUser(userId)
-  const ownedItemIds = new Set(items.map((item) => item.id))
+  const items = await ShoppingItemRepository.findShoppingItemsByUser(userId);
+  const ownedItemIds = new Set(items.map((item) => item.id));
 
-  const invalidIds = itemIds.filter((id) => !ownedItemIds.has(id))
+  const invalidIds = itemIds.filter((id) => !ownedItemIds.has(id));
   if (invalidIds.length > 0) {
-    throw new Error('並び替え対象に無効なアイテムが含まれています')
+    throw new Error("並び替え対象に無効なアイテムが含まれています");
   }
 
-  await ShoppingItemRepository.reorderShoppingItems(itemIds)
+  await ShoppingItemRepository.reorderShoppingItems(itemIds);
 }
 
 /**
  * チェック済みアイテムを一括削除
  */
 export async function deleteCheckedItems(userId: string): Promise<void> {
-  await ShoppingItemRepository.deleteCheckedItems(userId)
+  await ShoppingItemRepository.deleteCheckedItems(userId);
 }

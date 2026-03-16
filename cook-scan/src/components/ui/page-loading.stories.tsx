@@ -1,16 +1,16 @@
-import type { Meta, StoryObj } from '@storybook/nextjs'
-import { PageLoading } from './page-loading'
+import type { Meta, StoryObj } from "@storybook/nextjs";
+import { PageLoading } from "./page-loading";
 
 const meta = {
-  title: 'UI/PageLoading',
+  title: "UI/PageLoading",
   component: PageLoading,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   parameters: {
-    layout: 'fullscreen',
+    layout: "fullscreen",
   },
-} satisfies Meta<typeof PageLoading>
+} satisfies Meta<typeof PageLoading>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {}
+export const Default: Story = {};
