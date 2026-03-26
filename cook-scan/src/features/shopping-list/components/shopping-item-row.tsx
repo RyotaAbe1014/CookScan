@@ -29,25 +29,11 @@ export function ShoppingItemRow({ item, onEdit, onToggleCheck }: ShoppingItemRow
   };
 
   return (
-    <li
-      className="hover:bg-section-header flex cursor-pointer items-center gap-3 px-4 py-3 transition-colors duration-150"
-      role="button"
-      tabIndex={0}
-      onClick={() => onToggleCheck(item.id)}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          onToggleCheck(item.id);
-        }
-      }}
-    >
+    <li className="hover:bg-section-header flex items-center gap-3 px-4 py-3 transition-colors duration-150">
       {/* チェックボックス */}
       <button
         type="button"
-        onClick={(e) => {
-          e.stopPropagation();
-          onToggleCheck(item.id);
-        }}
+        onClick={() => onToggleCheck(item.id)}
         className={cn(
           "flex h-6 w-6 shrink-0 cursor-pointer items-center justify-center rounded-md border-2 transition-all duration-200",
           "focus-visible:ring-primary focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none",
@@ -60,8 +46,12 @@ export function ShoppingItemRow({ item, onEdit, onToggleCheck }: ShoppingItemRow
         {item.isChecked && <CheckIcon className="h-4 w-4" />}
       </button>
 
-      {/* アイテム情報 */}
-      <div className="min-w-0 flex-1">
+      {/* アイテム情報（クリックでチェック切替） */}
+      <button
+        type="button"
+        className="min-w-0 flex-1 cursor-pointer text-left"
+        onClick={() => onToggleCheck(item.id)}
+      >
         <p
           className={cn(
             "text-sm font-medium transition-colors duration-200",
@@ -71,7 +61,7 @@ export function ShoppingItemRow({ item, onEdit, onToggleCheck }: ShoppingItemRow
           {item.name}
         </p>
         {item.memo && <p className="text-muted-foreground mt-0.5 truncate text-xs">{item.memo}</p>}
-      </div>
+      </button>
 
       {/* アクションボタン */}
       <div className="flex shrink-0 items-center gap-1">

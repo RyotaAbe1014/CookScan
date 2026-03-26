@@ -163,14 +163,13 @@ describe("ShoppingItemRow", () => {
       expect(defaultProps.onToggleCheck).toHaveBeenCalledWith("item-1");
     });
 
-    it("行のどこをクリックしてもonToggleCheckが呼ばれる", async () => {
+    it("アイテム名をクリックしてもonToggleCheckが呼ばれる", async () => {
       // Given: アイテムが用意されている
       const user = userEvent.setup();
       render(<ShoppingItemRow {...defaultProps} />);
 
-      // When: li要素をクリック
-      const listItem = screen.getByText("牛乳").closest("li")!;
-      await user.click(listItem);
+      // When: アイテム名のテキストをクリック
+      await user.click(screen.getByText("牛乳"));
 
       // Then: onToggleCheckがアイテムIDで呼ばれる
       expect(defaultProps.onToggleCheck).toHaveBeenCalledWith("item-1");
