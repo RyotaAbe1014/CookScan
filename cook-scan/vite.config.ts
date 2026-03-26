@@ -102,6 +102,12 @@ export default defineConfig({
           node: true,
         },
       },
+      {
+        files: ["**/*.test.{ts,tsx}", "**/__tests__/**/*.{ts,tsx}"],
+        rules: {
+          "@typescript-eslint/unbound-method": "off",
+        },
+      },
     ],
     options: {
       typeAware: true,
