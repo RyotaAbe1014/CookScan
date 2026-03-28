@@ -1,16 +1,61 @@
 import { NextRequest, NextResponse } from "next/server";
+import { createUIMessageStreamResponse } from 'ai';
+import { handleChatStream } from '@mastra/ai-sdk';
 import { mastra } from "@/backend/mastra";
 import { checkUserProfile } from "@/features/auth/auth-utils";
 import * as RecipeDevelopmentService from "@/backend/services/recipes/recipe-development-session.service"
 import { toAISdkV5Messages } from '@mastra/ai-sdk/ui'
 
-// 会話
-export async function POST(request: NextRequest) {
+// 会話継続
+export async function POST(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { hasAuth, hasProfile, profile } = await checkUserProfile();
+  if (!hasAuth || !hasProfile || !profile) {
+    return NextResponse.json(
+      { success: false, error: "認証が必要です" },
+      { status: 401 },
+    );
+  }
+
+  const { id } = await params;
+  const session = await RecipeDevelopmentService.getRecipeDevelopmentSessionById(id);
+  if (!session) {
+    return NextResponse.json(
+      { success: false, error: "セッションが見つかりません" },
+      { status: 404 },
+    );
+  }
+
+  if (session.userId !== profile.id) {
+    return NextResponse.json(
+      { success: false, error: "アクセス権限がありません" },
+      { status: 403 },
+    );
+  }
+
+  const body = await request.json();
+
+  const stream = await handleChatStream({
+    mastra,
+    agentId: "recipeDevelopmentAgent",
+    params: {
+      ...body,
+      memory: {
+        ...body.memory,
+        thread: session.threadId,
+        resource: profile.id,
+      }
+    },
+  });
+
+  return createUIMessageStreamResponse({ stream: stream });
 }
 
 // チャット詳細
 export async function GET(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { hasAuth, hasProfile, profile } = await checkUserProfile();
@@ -57,7 +102,7 @@ export async function GET(
 
 // チャット削除
 export async function DELETE(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { hasAuth, hasProfile, profile } = await checkUserProfile();

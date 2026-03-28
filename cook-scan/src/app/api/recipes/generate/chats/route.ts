@@ -43,13 +43,12 @@ export async function POST(request: NextRequest) {
       }
     },
   });
-  // issueで定義中
-  return createUIMessageStreamResponse({ stream: stream as any });
+  return createUIMessageStreamResponse({ stream: stream });
   // 7. 失敗時は保存したセッションを削除 or エラー状態にする
 }
 
 // チャット一覧
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   const { hasAuth, hasProfile, profile } = await checkUserProfile();
   if (!hasAuth || !hasProfile || !profile) {
     return NextResponse.json(
