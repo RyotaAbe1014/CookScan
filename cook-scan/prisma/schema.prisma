@@ -24,13 +24,14 @@ model User {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   // Relations
-  recipes              Recipe[]
-  tagCategories        TagCategory[]
-  tags                 Tag[]
-  ocrProcessingHistory OcrProcessingHistory[]
-  recipeVersions       RecipeVersion[]
-  shoppingItems        ShoppingItem[]
-  mealPlans            MealPlan[]
+  recipes                   Recipe[]
+  tagCategories             TagCategory[]
+  tags                      Tag[]
+  ocrProcessingHistory      OcrProcessingHistory[]
+  recipeVersions            RecipeVersion[]
+  shoppingItems             ShoppingItem[]
+  mealPlans                 MealPlan[]
+  recipeDevelopmentSessions RecipeDevelopmentSession[]
 
   @@map("users")
 }
@@ -274,4 +275,16 @@ model RecipeShare {
   recipe Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
 
   @@map("recipe_shares")
+}
+
+// レシピ生成会話セッションテーブル
+model RecipeDevelopmentSession {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  threadId  String   @unique
+  title     String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id])
 }
