@@ -46,7 +46,7 @@ export function useRecipeSearch(
     (e: React.KeyboardEvent) => {
       if (e.key === "Enter") {
         e.preventDefault();
-        handleSearch(searchQuery);
+        void handleSearch(searchQuery);
       }
     },
     [handleSearch, searchQuery],
@@ -54,7 +54,7 @@ export function useRecipeSearch(
 
   useEffect(() => {
     if (isOpen) {
-      handleSearch();
+      void handleSearch();
     }
     // oxlint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);

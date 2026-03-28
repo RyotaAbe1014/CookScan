@@ -12,7 +12,7 @@ import {
 } from "@/features/meal-planner/utils";
 import type { TodayMealPlanSummary } from "@/features/meal-planner/components/today-meal-plan-section";
 import { PageContainer } from "@/components/layouts/page-container";
-import type { RecipeBasic } from "@/types/recipe";
+
 import { DashboardContent } from "./dashboard-content";
 
 function createTodayMealPlanSummary(

@@ -1,12 +1,11 @@
 import { defineConfig } from "vite-plus";
 import react from "@vitejs/plugin-react";
-import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
-  plugins: [
-    tsconfigPaths(), // @/* パスエイリアス解決
-    react(),
-  ],
+  resolve: {
+    tsconfigPaths: true, // @/* パスエイリアス解決
+  },
+  plugins: [react()],
   test: {
     environment: "jsdom",
     globals: true, // describe, it, expect等をグローバルに
