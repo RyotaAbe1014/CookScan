@@ -97,7 +97,7 @@ resource "aws_s3_bucket_cors_configuration" "s3_cors" {
 # Lambda
 data "archive_file" "cookscan_ocr" {
   type        = "zip"
-  source_file = "${path.module}/../lambda/dist/handler.mjs"
+  source_file = "${path.module}/../lambda/dist/handler.js"
   output_path = "${path.module}/../lambda/lambda.zip"
 }
 
@@ -166,6 +166,12 @@ resource "aws_lambda_function" "cookscan_lambda_function" {
   runtime     = "nodejs22.x"
   timeout     = 300
   memory_size = 256
+
+  environment {
+    variables = {
+      S3_BUCKET_NAME = aws_s3_bucket.s3_bucket.bucket
+    }
+  }
 
   tags = {
     Name = var.aws_lambda_function_name

@@ -3,16 +3,15 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "build": "esbuild src/handler.ts --bundle --platform=node --target=node22 --outfile=dist/handler.mjs --format=esm --external:@aws-sdk/*",
+    "build": "esbuild src/handler.ts --bundle --platform=node --target=node22 --outfile=dist/handler.js --format=cjs --external:@aws-sdk/*",
     "test": "vitest run",
     "test:watch": "vitest",
     "type-check": "tsc --noEmit",
-    "package": "npm run build && cd dist && zip -r ../lambda.zip handler.mjs"
+    "package": "npm run build && cd dist && zip -r -FS ../lambda.zip handler.js"
   },
   "dependencies": {
     "@ai-sdk/google": "^3.0.64",
     "@aws-sdk/client-s3": "^3.1037.0",
-    "@sentry/aws-serverless": "^10.51.0",
     "ai": "^6.0.168"
   },
   "devDependencies": {

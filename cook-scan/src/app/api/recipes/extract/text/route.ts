@@ -8,7 +8,7 @@ export async function POST(request: NextRequest) {
     const { text } = body;
 
     if (!text || typeof text !== "string") {
-      return NextResponse.json({ success: false, error: "textは必須です" }, { status: 400 });
+      return NextResponse.json({ status: "error", error: "textは必須です" }, { status: 400 });
     }
 
     const workflow = mastra.getWorkflow("textToRecipeWorkflow");
@@ -26,22 +26,22 @@ export async function POST(request: NextRequest) {
       response.status === "tripwire"
     ) {
       return NextResponse.json(
-        { success: false, error: "Failed to process request" },
+        { status: "error", error: "Failed to process request" },
         { status: 500 },
       );
     }
     if (response.status !== "success") {
       return NextResponse.json(
-        { success: false, error: "Unexpected workflow status" },
+        { status: "error", error: "Unexpected workflow status" },
         { status: 500 },
       );
     }
 
-    return NextResponse.json({ success: true, result: response.result }, { status: 200 });
+    return NextResponse.json({ status: "success", result: response.result }, { status: 200 });
   } catch (error) {
     console.error(error);
     return NextResponse.json(
-      { success: false, error: "Failed to process request" },
+      { status: "error", error: "Failed to process request" },
       { status: 500 },
     );
   }
