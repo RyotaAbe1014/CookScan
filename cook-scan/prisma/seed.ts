@@ -32,7 +32,7 @@ async function main() {
   };
 
   // タグカテゴリとタグを作成
-  for (const [key, categoryData] of Object.entries(tagData)) {
+  for (const categoryData of Object.values(tagData)) {
     // カテゴリを作成
     const category = await prisma.tagCategory.create({
       data: {

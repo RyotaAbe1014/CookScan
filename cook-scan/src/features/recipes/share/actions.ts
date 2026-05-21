@@ -12,13 +12,13 @@ import type { ShareInfoOutput } from "@/backend/domain/recipes";
 export async function createShareLink(recipeId: string): Promise<Result<ShareInfoOutput>> {
   return withAuth(async (profile) => {
     try {
-      const share = await RecipeShareService.createShare(profile.id, recipeId)
-      if (!share) return failure(Errors.notFound('レシピ'))
-      return success(share)
+      const share = await RecipeShareService.createShare(profile.id, recipeId);
+      if (!share) return failure(Errors.notFound("レシピ"));
+      return success(share);
     } catch {
-      return failure(Errors.server('共有リンクの作成に失敗しました'))
+      return failure(Errors.server("共有リンクの作成に失敗しました"));
     }
-  })
+  });
 }
 
 /**
@@ -27,13 +27,13 @@ export async function createShareLink(recipeId: string): Promise<Result<ShareInf
 export async function removeShareLink(recipeId: string): Promise<Result<void>> {
   return withAuth(async (profile) => {
     try {
-      const removed = await RecipeShareService.removeShare(profile.id, recipeId)
-      if (!removed) return failure(Errors.notFound('共有リンク'))
-      return success(undefined)
+      const removed = await RecipeShareService.removeShare(profile.id, recipeId);
+      if (!removed) return failure(Errors.notFound("共有リンク"));
+      return success(undefined);
     } catch {
-      return failure(Errors.server('共有リンクの無効化に失敗しました'))
+      return failure(Errors.server("共有リンクの無効化に失敗しました"));
     }
-  })
+  });
 }
 
 /**
@@ -42,10 +42,10 @@ export async function removeShareLink(recipeId: string): Promise<Result<void>> {
 export async function getShareInfo(recipeId: string): Promise<Result<ShareInfoOutput | null>> {
   return withAuth(async (profile) => {
     try {
-      const share = await RecipeShareService.getShareInfo(profile.id, recipeId)
-      return success(share)
+      const share = await RecipeShareService.getShareInfo(profile.id, recipeId);
+      return success(share);
     } catch {
-      return failure(Errors.server('共有情報の取得に失敗しました'))
+      return failure(Errors.server("共有情報の取得に失敗しました"));
     }
-  })
+  });
 }

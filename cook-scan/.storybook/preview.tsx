@@ -1,5 +1,6 @@
 import type { Preview } from "@storybook/nextjs";
 import React from "react";
+// @ts-expect-error Storybook handles global CSS imports at build time.
 import "../src/app/globals.css";
 
 const preview: Preview = {

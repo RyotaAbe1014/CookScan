@@ -11,14 +11,11 @@ const config: StorybookConfig = {
     options: {},
   },
   staticDirs: ["../public"],
-  docs: {
-    autodocs: "tag",
-  },
   typescript: {
     reactDocgen: "react-docgen-typescript",
   },
   webpackFinal: async (config) => {
-    if (config.resolve) {
+    if (config.resolve && !Array.isArray(config.resolve.alias)) {
       config.resolve.alias = {
         ...config.resolve.alias,
         "@": path.resolve(__dirname, "../src"),
