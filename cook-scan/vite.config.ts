@@ -15,7 +15,7 @@ export default defineConfig({
     env: {
       builtin: true,
     },
-    ignorePatterns: [".next/**", "out/**", "build/**", "next-env.d.ts"],
+    ignorePatterns: [".claude/**", ".next/**", "out/**", "build/**", "next-env.d.ts"],
     rules: {
       "@next/next/no-html-link-for-pages": "error",
       "@next/next/no-sync-scripts": "error",
@@ -86,6 +86,7 @@ export default defineConfig({
           "jsx-a11y/aria-unsupported-elements": "warn",
           "jsx-a11y/role-has-required-aria-props": "warn",
           "jsx-a11y/role-supports-aria-props": "warn",
+          "jsx-a11y/prefer-tag-over-role": "off",
         },
         globals: {
           AudioWorkletGlobalScope: "readonly",

@@ -113,7 +113,7 @@ export function ChildRecipeSelectorDialog({
               レシピ一覧
             </div>
             <div
-              className="bg-section-header/50 scrollbar-thin scrollbar-thumb-section-header-border scrollbar-track-transparent relative h-[240px] space-y-2 overflow-y-auto rounded-xl border p-2"
+              className="bg-section-header/50 scrollbar-thumb-section-header-border relative h-[240px] scrollbar-thin scrollbar-track-transparent space-y-2 overflow-y-auto rounded-xl border p-2"
               role="listbox"
               aria-label="レシピ一覧"
             >
