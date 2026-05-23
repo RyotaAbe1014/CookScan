@@ -1,8 +1,15 @@
 import { withSentryConfig } from "@sentry/nextjs";
 import type { NextConfig } from "next";
+import { dirname } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const projectRoot = dirname(fileURLToPath(import.meta.url));
 
 const nextConfig: NextConfig = {
   serverExternalPackages: ["@mastra/*"],
+  turbopack: {
+    root: projectRoot,
+  },
   typedRoutes: true,
 };
 
