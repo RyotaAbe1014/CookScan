@@ -12,6 +12,7 @@ vi.mock("@/features/recipes/upload/method-selector", () => ({
       <button onClick={() => onSelect("scan")}>スキャン</button>
       <button onClick={() => onSelect("manual")}>手動入力</button>
       <button onClick={() => onSelect("text-input")}>テキスト入力</button>
+      <button onClick={() => onSelect("ai-generate")}>AI生成</button>
     </div>
   ),
 }));
@@ -64,6 +65,10 @@ vi.mock("@/features/recipes/upload/text-input", () => ({
       </button>
     </div>
   ),
+}));
+
+vi.mock("@/features/recipes/upload/ai-recipe-generator", () => ({
+  AiRecipeGenerator: () => <div data-testid="ai-recipe-generator">AIレシピ生成</div>,
 }));
 
 vi.mock("@/features/recipes/upload/recipe-form", () => ({
@@ -128,6 +133,16 @@ describe("RecipeUploadContent", () => {
     expect(screen.queryByTestId("method-selector")).not.toBeInTheDocument();
   });
 
+  it("navigates to AI recipe generator when ai-generate method is selected", async () => {
+    const user = userEvent.setup();
+    render(<RecipeUploadContent tagCategories={mockTagCategories} />);
+
+    await user.click(screen.getByText("AI生成"));
+
+    expect(screen.getByTestId("ai-recipe-generator")).toBeInTheDocument();
+    expect(screen.queryByTestId("method-selector")).not.toBeInTheDocument();
+  });
+
   it("navigates to form when manual method is selected", async () => {
     const user = userEvent.setup();
     render(<RecipeUploadContent tagCategories={mockTagCategories} />);
@@ -164,6 +179,17 @@ describe("RecipeUploadContent", () => {
 
     await user.click(screen.getByText("テキスト入力"));
     expect(screen.getByTestId("text-input")).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: /戻る/ }));
+    expect(screen.getByTestId("method-selector")).toBeInTheDocument();
+  });
+
+  it("navigates back to method selection from AI recipe generator", async () => {
+    const user = userEvent.setup();
+    render(<RecipeUploadContent tagCategories={mockTagCategories} />);
+
+    await user.click(screen.getByText("AI生成"));
+    expect(screen.getByTestId("ai-recipe-generator")).toBeInTheDocument();
 
     await user.click(screen.getByRole("button", { name: /戻る/ }));
     expect(screen.getByTestId("method-selector")).toBeInTheDocument();

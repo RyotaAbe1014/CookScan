@@ -4,13 +4,15 @@ import { useState } from "react";
 import MethodSelector from "@/features/recipes/upload/method-selector";
 import ImageUpload from "@/features/recipes/upload/image-upload";
 import RecipeForm from "@/features/recipes/upload/recipe-form";
+import { AiRecipeGenerator } from "@/features/recipes/upload/ai-recipe-generator";
 import type { ExtractedRecipeData } from "@/features/recipes/upload/types";
 import type { RecipeFormTagCategory } from "@/features/recipes/types/tag";
 import { Button } from "@/components/ui/button";
 import { TextInput } from "./text-input";
 import { ChevronLeftIcon } from "@/components/icons/chevron-left-icon";
 
-type Step = "method-selection" | "image-upload" | "text-input" | "form";
+type Step = "method-selection" | "image-upload" | "text-input" | "ai-generate" | "form";
+type RecipeUploadMethod = "scan" | "manual" | "text-input" | "ai-generate";
 
 type Props = {
   tagCategories: RecipeFormTagCategory[];
@@ -22,13 +24,14 @@ export default function RecipeUploadContent({ tagCategories }: Props) {
   const [extractedData, setExtractedData] = useState<ExtractedRecipeData | null>(null);
   const [isUploading, setIsUploading] = useState(false);
 
-  const stepMap: Record<string, Step> = {
+  const stepMap: Record<RecipeUploadMethod, Step> = {
     scan: "image-upload",
     "text-input": "text-input",
+    "ai-generate": "ai-generate",
     manual: "form",
   };
 
-  const handleMethodSelect = (method: "scan" | "manual" | "text-input") => {
+  const handleMethodSelect = (method: RecipeUploadMethod) => {
     setCurrentStep(stepMap[method]);
   };
 
@@ -67,6 +70,8 @@ export default function RecipeUploadContent({ tagCategories }: Props) {
       )}
 
       {currentStep === "text-input" && <TextInput handleTextInput={handleTextInput} />}
+
+      {currentStep === "ai-generate" && <AiRecipeGenerator />}
 
       {currentStep === "form" && (
         <RecipeForm
