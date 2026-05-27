@@ -3,9 +3,10 @@ import { CheckSolidIcon } from "@/components/icons/check-solid-icon";
 import { AdjustmentsIcon } from "@/components/icons/adjustments-icon";
 import { DocumentTextIcon } from "@/components/icons/document-text-icon";
 import { CheckCircleOutlineIcon } from "@/components/icons/check-circle-outline-icon";
+import { LightningBoltIcon } from "@/components/icons/lightning-bolt-icon";
 
 type Props = {
-  onSelect: (method: "scan" | "manual" | "text-input") => void;
+  onSelect: (method: "scan" | "manual" | "text-input" | "ai-generate") => void;
 };
 
 export default function MethodSelector({ onSelect }: Props) {
@@ -77,6 +78,28 @@ export default function MethodSelector({ onSelect }: Props) {
           <div className="text-foreground mt-4 inline-flex items-center gap-1 text-sm font-medium">
             <CheckCircleOutlineIcon className="h-4 w-4" />
             詳細な編集が可能
+          </div>
+        </div>
+      </button>
+
+      <button
+        onClick={() => onSelect("ai-generate")}
+        className="group ring-card-border relative overflow-hidden rounded-xl bg-white p-8 text-left shadow-lg ring-1 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+      >
+        <div className="from-accent-ingredients-light to-accent-steps-light absolute top-0 right-0 h-32 w-32 translate-x-8 -translate-y-8 rounded-full bg-linear-to-br opacity-50 transition-transform group-hover:scale-110" />
+        <div className="relative flex flex-col items-center text-center">
+          <div className="from-accent-ingredients to-accent-steps rounded-xl bg-linear-to-br p-4 shadow-lg transition-transform group-hover:scale-110">
+            <LightningBoltIcon className="h-12 w-12 text-white" />
+          </div>
+          <h3 className="text-foreground mt-4 text-xl font-bold">AIで献立・レシピ提案</h3>
+          <p className="text-muted-foreground mt-2 text-sm leading-relaxed">
+            手持ちの食材や希望を入力して、AIが作りやすいレシピを提案します
+          </p>
+          <div className="mt-4 flex items-center gap-2">
+            <span className="bg-accent-ingredients-light text-accent-ingredients ring-accent-ingredients inline-flex items-center gap-1 rounded-lg px-3 py-1.5 text-xs font-semibold ring-1">
+              <LightningBoltIcon className="h-3.5 w-3.5" />
+              AI提案
+            </span>
           </div>
         </div>
       </button>
