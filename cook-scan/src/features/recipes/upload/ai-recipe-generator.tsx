@@ -16,6 +16,7 @@ type GenerateRecipeResponse =
         message: string;
         intent: "chat" | "recipe_draft";
         recipeDraft: AiRecipeDraft | null;
+        suggestions: string[];
       };
     }
   | {
@@ -24,7 +25,6 @@ type GenerateRecipeResponse =
     };
 
 const minChars = 5;
-const suggestionPrompts = ["もっと時短にして", "買い足しなしで作りたい", "子供向けにして"];
 const initialAssistantMessage =
   "冷蔵庫にある食材や、作りたい雰囲気を教えてください。条件があれば一緒に書くと、レシピの下書きまで作れます。";
 
@@ -40,6 +40,7 @@ type Props = {
 export function AiRecipeGenerator({ tagCategories }: Props) {
   const [prompt, setPrompt] = useState("");
   const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [suggestions, setSuggestions] = useState<string[]>([]);
   const [recipeDraft, setRecipeDraft] = useState<AiRecipeDraft | null>(null);
   const [recipeDraftVersion, setRecipeDraftVersion] = useState(0);
   const [error, setError] = useState<string | null>(null);
@@ -88,6 +89,7 @@ export function AiRecipeGenerator({ tagCategories }: Props) {
           ...currentMessages,
           { role: "assistant", content: data.result.message },
         ]);
+        setSuggestions(data.result.suggestions);
         if (data.result.intent === "recipe_draft" && data.result.recipeDraft) {
           setRecipeDraft(data.result.recipeDraft);
           setRecipeDraftVersion((currentVersion) => currentVersion + 1);
@@ -107,7 +109,17 @@ export function AiRecipeGenerator({ tagCategories }: Props) {
     await sendMessage(prompt);
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing) {
+      e.preventDefault();
+      if (!isLoading && prompt.trim()) {
+        void sendMessage(prompt);
+      }
+    }
+  };
+
   const hasRecipeDraft = recipeDraft !== null;
+  const canSubmit = !isLoading && prompt.trim().length > 0;
 
   return (
     <div
@@ -162,9 +174,9 @@ export function AiRecipeGenerator({ tagCategories }: Props) {
 
             {error && <Alert variant="error">{error}</Alert>}
 
-            {messages.some((message) => message.role === "assistant") && (
+            {suggestions.length > 0 && (
               <div className="flex flex-wrap gap-2">
-                {suggestionPrompts.map((suggestion) => (
+                {suggestions.map((suggestion) => (
                   <Button
                     key={suggestion}
                     type="button"
@@ -183,6 +195,7 @@ export function AiRecipeGenerator({ tagCategories }: Props) {
               <Textarea
                 value={prompt}
                 onChange={handleChange}
+                onKeyDown={handleKeyDown}
                 placeholder="例：鶏むね肉、玉ねぎ、卵があります。20分くらいで作れる夕飯にしたいです。"
                 rows={2}
                 className="min-h-[64px] flex-1 resize-none"
@@ -190,7 +203,7 @@ export function AiRecipeGenerator({ tagCategories }: Props) {
               />
               <Button
                 onClick={handleSubmit}
-                disabled={isLoading}
+                disabled={!canSubmit}
                 isLoading={isLoading}
                 size="lg"
                 className="self-end"
@@ -204,7 +217,7 @@ export function AiRecipeGenerator({ tagCategories }: Props) {
       </div>
 
       {recipeDraft && (
-        <div>
+        <div className="max-h-[calc(100vh-160px)] overflow-y-auto pr-1">
           <div className="mb-6">
             <h2 className="text-foreground text-xl font-bold">レシピ下書き</h2>
             <p className="text-muted-foreground mt-2 text-sm leading-relaxed">

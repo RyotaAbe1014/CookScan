@@ -33,6 +33,7 @@ describe("POST /api/recipes/generate", () => {
           steps: [{ instruction: "卵を炒める", timerSeconds: null }],
           memo: "足りないもの: なし",
         },
+        suggestions: ["もっと時短にする", "買い足しなしにする"],
       },
     } as Awaited<ReturnType<typeof generateObject>>);
 
@@ -58,6 +59,7 @@ describe("POST /api/recipes/generate", () => {
           steps: [{ instruction: "卵を炒める", timerSeconds: null }],
           memo: "足りないもの: なし",
         },
+        suggestions: ["もっと時短にする", "買い足しなしにする"],
       },
     });
     expect(generateObject).toHaveBeenCalledWith(
@@ -74,6 +76,7 @@ describe("POST /api/recipes/generate", () => {
         message: "時短版にします。",
         intent: "chat",
         recipeDraft: null,
+        suggestions: ["さらに簡単にする"],
       },
     } as Awaited<ReturnType<typeof generateObject>>);
 

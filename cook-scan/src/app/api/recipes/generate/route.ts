@@ -39,6 +39,7 @@ const responseSchema = z.object({
   message: z.string(),
   intent: z.enum(["chat", "recipe_draft"]),
   recipeDraft: recipeDraftSchema.nullable(),
+  suggestions: z.array(z.string()).min(1).max(4),
 });
 
 const systemPrompt = `
@@ -53,6 +54,7 @@ const systemPrompt = `
 - message: チャット吹き出しに表示する短い自然な返答
 - intent: レシピ下書きを作る場合は "recipe_draft"、質問への返答だけなら "chat"
 - recipeDraft: intent が "recipe_draft" の場合だけレシピ下書きを入れる。intent が "chat" の場合は null
+- suggestions: 次にユーザーが押せる短い提案を1〜4件。会話内容や作成したレシピに合わせて毎回変える
 
 方針:
 - ユーザーがレシピ作成、献立提案、材料から料理を作る相談、既存提案の調整を求めたら recipe_draft にする

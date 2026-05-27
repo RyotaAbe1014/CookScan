@@ -39,17 +39,40 @@ describe("AiRecipeGenerator", () => {
     expect(screen.getByText("AIで献立・レシピ提案")).toBeInTheDocument();
     expect(screen.getByText(/冷蔵庫にある食材や/)).toBeInTheDocument();
     expect(screen.getByPlaceholderText(/鶏むね肉、玉ねぎ、卵/)).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /レシピを提案/ })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /レシピを提案/ })).toBeDisabled();
   });
 
-  it("shows error and does not call API when prompt is empty", async () => {
-    const user = userEvent.setup();
+  it("does not call API when prompt is empty", async () => {
     render(<AiRecipeGenerator tagCategories={mockTagCategories} />);
 
-    await user.click(screen.getByRole("button", { name: /レシピを提案/ }));
-
-    expect(screen.getByText("希望や食材を入力してください")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /レシピを提案/ })).toBeDisabled();
     expect(global.fetch).not.toHaveBeenCalled();
+  });
+
+  it("submits with Enter", async () => {
+    const user = userEvent.setup();
+    (global.fetch as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
+      json: async () => ({
+        status: "success",
+        result: {
+          message: "この材料なら作れます。",
+          intent: "chat",
+          recipeDraft: null,
+          suggestions: ["もっと時短にする"],
+        },
+      }),
+    });
+
+    render(<AiRecipeGenerator tagCategories={mockTagCategories} />);
+
+    await user.type(
+      screen.getByPlaceholderText(/鶏むね肉、玉ねぎ、卵/),
+      "鶏むね肉と卵で作りたい{Enter}",
+    );
+
+    await waitFor(() => {
+      expect(global.fetch).toHaveBeenCalled();
+    });
   });
 
   it("shows chat message when API returns chat response", async () => {
@@ -61,6 +84,7 @@ describe("AiRecipeGenerator", () => {
           message: "この材料なら作れます。",
           intent: "chat",
           recipeDraft: null,
+          suggestions: ["もっと時短にする", "買い足しなしにする"],
         },
       }),
     });
@@ -76,6 +100,8 @@ describe("AiRecipeGenerator", () => {
     await waitFor(() => {
       expect(screen.getByText("この材料なら作れます。")).toBeInTheDocument();
     });
+    expect(screen.getByRole("button", { name: "もっと時短にする" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "買い足しなしにする" })).toBeInTheDocument();
     expect(screen.getByText("鶏むね肉と卵で20分以内の夕飯にしたい")).toBeInTheDocument();
     expect(global.fetch).toHaveBeenCalledWith(
       "/api/recipes/generate",
@@ -102,6 +128,7 @@ describe("AiRecipeGenerator", () => {
             steps: [{ instruction: "鶏むね肉を焼く", timerSeconds: null }],
             memo: "足りないもの: なし",
           },
+          suggestions: ["子供向けにする"],
         },
       }),
     });
@@ -136,6 +163,7 @@ describe("AiRecipeGenerator", () => {
             steps: [{ instruction: "鶏むね肉を焼く", timerSeconds: null }],
             memo: "足りないもの: なし",
           },
+          suggestions: ["保存前に調整する"],
         },
       }),
     });
@@ -186,6 +214,7 @@ describe("AiRecipeGenerator", () => {
               steps: [{ instruction: "鶏むね肉を焼く", timerSeconds: null }],
               memo: null,
             },
+            suggestions: ["もっと時短にして"],
           },
         }),
       })
@@ -196,6 +225,7 @@ describe("AiRecipeGenerator", () => {
             message: "さらに時短するなら、鶏むね肉を薄めに切ります。",
             intent: "chat",
             recipeDraft: null,
+            suggestions: ["買い足しなしで作る"],
           },
         }),
       });
