@@ -37,7 +37,8 @@ describe("AiRecipeGenerator", () => {
     render(<AiRecipeGenerator tagCategories={mockTagCategories} />);
 
     expect(screen.getByText("AIで献立・レシピ提案")).toBeInTheDocument();
-    expect(screen.getByPlaceholderText(/冷蔵庫に鶏むね肉/)).toBeInTheDocument();
+    expect(screen.getByText(/冷蔵庫にある食材や/)).toBeInTheDocument();
+    expect(screen.getByPlaceholderText(/鶏むね肉、玉ねぎ、卵/)).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /レシピを提案/ })).toBeInTheDocument();
   });
 
@@ -67,7 +68,7 @@ describe("AiRecipeGenerator", () => {
     render(<AiRecipeGenerator tagCategories={mockTagCategories} />);
 
     await user.type(
-      screen.getByPlaceholderText(/冷蔵庫に鶏むね肉/),
+      screen.getByPlaceholderText(/鶏むね肉、玉ねぎ、卵/),
       "鶏むね肉と卵で20分以内の夕飯にしたい",
     );
     await user.click(screen.getByRole("button", { name: /レシピを提案/ }));
@@ -108,7 +109,7 @@ describe("AiRecipeGenerator", () => {
     render(<AiRecipeGenerator tagCategories={mockTagCategories} />);
 
     await user.type(
-      screen.getByPlaceholderText(/冷蔵庫に鶏むね肉/),
+      screen.getByPlaceholderText(/鶏むね肉、玉ねぎ、卵/),
       "鶏むね肉と卵で20分以内の夕飯にしたい",
     );
     await user.click(screen.getByRole("button", { name: /レシピを提案/ }));
@@ -142,7 +143,7 @@ describe("AiRecipeGenerator", () => {
     render(<AiRecipeGenerator tagCategories={mockTagCategories} />);
 
     await user.type(
-      screen.getByPlaceholderText(/冷蔵庫に鶏むね肉/),
+      screen.getByPlaceholderText(/鶏むね肉、玉ねぎ、卵/),
       "鶏むね肉と卵で20分以内の夕飯にしたい",
     );
     await user.click(screen.getByRole("button", { name: /レシピを提案/ }));
@@ -202,7 +203,7 @@ describe("AiRecipeGenerator", () => {
     render(<AiRecipeGenerator tagCategories={mockTagCategories} />);
 
     await user.type(
-      screen.getByPlaceholderText(/冷蔵庫に鶏むね肉/),
+      screen.getByPlaceholderText(/鶏むね肉、玉ねぎ、卵/),
       "鶏むね肉と卵で20分以内の夕飯にしたい",
     );
     await user.click(screen.getByRole("button", { name: /レシピを提案/ }));
@@ -242,7 +243,7 @@ describe("AiRecipeGenerator", () => {
 
     render(<AiRecipeGenerator tagCategories={mockTagCategories} />);
 
-    await user.type(screen.getByPlaceholderText(/冷蔵庫に鶏むね肉/), "卵と米で作りたい");
+    await user.type(screen.getByPlaceholderText(/鶏むね肉、玉ねぎ、卵/), "卵と米で作りたい");
     await user.click(screen.getByRole("button", { name: /レシピを提案/ }));
 
     await waitFor(() => {

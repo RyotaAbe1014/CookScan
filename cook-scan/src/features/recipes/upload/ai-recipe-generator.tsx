@@ -25,6 +25,8 @@ type GenerateRecipeResponse =
 
 const minChars = 5;
 const suggestionPrompts = ["もっと時短にして", "買い足しなしで作りたい", "子供向けにして"];
+const initialAssistantMessage =
+  "冷蔵庫にある食材や、作りたい雰囲気を教えてください。条件があれば一緒に書くと、レシピの下書きまで作れます。";
 
 type ChatMessage = {
   role: "user" | "assistant";
@@ -116,8 +118,8 @@ export function AiRecipeGenerator({ tagCategories }: Props) {
       }
     >
       <div>
-        <div className="mb-6 text-center">
-          <div className="mb-3 flex items-center justify-center gap-2">
+        <div className="mb-6">
+          <div className="mb-3 flex items-center gap-2">
             <div className="from-accent-ingredients to-accent-steps flex h-10 w-10 items-center justify-center rounded-lg bg-linear-to-br shadow-md">
               <LightningBoltIcon className="h-5 w-5 text-white" />
             </div>
@@ -139,39 +141,36 @@ export function AiRecipeGenerator({ tagCategories }: Props) {
           </div>
 
           <div className="space-y-4 p-6">
-            {messages.length > 0 && (
-              <div className="border-border bg-muted/20 max-h-[520px] space-y-4 overflow-y-auto rounded-lg border p-4">
-                {messages.map((message, index) => (
-                  <div
-                    key={`${message.role}-${index}`}
-                    className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}
-                  >
-                    <div
-                      className={`max-w-[85%] rounded-xl px-4 py-3 text-sm leading-7 whitespace-pre-wrap ${
-                        message.role === "user"
-                          ? "bg-primary text-primary-foreground"
-                          : "text-foreground ring-border bg-white shadow-sm ring-1"
-                      }`}
-                    >
-                      {message.content}
-                    </div>
-                  </div>
-                ))}
+            <div className="border-border bg-muted/20 max-h-[520px] min-h-[260px] space-y-4 overflow-y-auto rounded-lg border p-4">
+              <div className="flex justify-start">
+                <div className="text-foreground ring-border max-w-[85%] rounded-xl bg-white px-4 py-3 text-sm leading-7 whitespace-pre-wrap shadow-sm ring-1">
+                  {initialAssistantMessage}
+                </div>
               </div>
-            )}
+              {messages.map((message, index) => (
+                <div
+                  key={`${message.role}-${index}`}
+                  className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}
+                >
+                  <div
+                    className={`max-w-[85%] rounded-xl px-4 py-3 text-sm leading-7 whitespace-pre-wrap ${
+                      message.role === "user"
+                        ? "bg-primary text-primary-foreground"
+                        : "text-foreground ring-border bg-white shadow-sm ring-1"
+                    }`}
+                  >
+                    {message.content}
+                  </div>
+                </div>
+              ))}
+            </div>
 
             <Textarea
               value={prompt}
               onChange={handleChange}
-              placeholder={
-                messages.length === 0
-                  ? "例：冷蔵庫に鶏むね肉、玉ねぎ、卵があります。20分くらいで作れる夕飯にしたいです。辛いものは避けたいです。"
-                  : "例：もっと時短にして / 買い足しなしで作りたい / 子供向けにして"
-              }
-              rows={messages.length === 0 ? 8 : 4}
-              className={
-                messages.length === 0 ? "min-h-[220px] resize-y" : "min-h-[120px] resize-y"
-              }
+              placeholder="例：鶏むね肉、玉ねぎ、卵があります。20分くらいで作れる夕飯にしたいです。"
+              rows={3}
+              className="min-h-[96px] resize-y"
               disabled={isLoading}
             />
 
