@@ -3,16 +3,21 @@ import { generateObject } from "ai";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
+const USER_ROLE = "user";
+const ASSISTANT_ROLE = "assistant";
+const MESSAGE_ROLES = [USER_ROLE, ASSISTANT_ROLE] as const;
+const MAX_SUGGESTION_COUNT = 4;
+
 const requestSchema = z.object({
   messages: z
     .array(
       z.object({
-        role: z.enum(["user", "assistant"]),
+        role: z.enum(MESSAGE_ROLES),
         content: z.string().trim().min(1),
       }),
     )
     .min(1, "messagesは1件以上必要です")
-    .refine((messages) => messages[messages.length - 1]?.role === "user", {
+    .refine((messages) => messages[messages.length - 1]?.role === USER_ROLE, {
       message: "最後のメッセージはuserである必要があります",
     }),
 });
@@ -43,11 +48,11 @@ const responseSchema = z.object({
   message: z.string(),
   intent: z.enum(["chat", "recipe_draft"]),
   recipeDraft: recipeDraftSchema.nullable(),
-  suggestions: z.array(z.string().min(1)).min(1).max(4),
+  suggestions: z.array(z.string().min(1)).min(1).max(MAX_SUGGESTION_COUNT),
 });
 
 const systemPrompt = `
-あなたは家庭料理に強いAIレシピアシスタントです。
+あなたはレシピ作成に強いAIレシピアシスタントです。
 必ず日本語で回答してください。
 ユーザーの手持ち食材、希望、制約をもとに、実際に作りやすいレシピを1つ提案してください。
 会話履歴がある場合は、直前までの提案内容を踏まえて調整してください。
@@ -71,13 +76,14 @@ const systemPrompt = `
 
 function buildConversationPrompt(
   messages: Array<{
-    role: "user" | "assistant";
+    role: (typeof MESSAGE_ROLES)[number];
     content: string;
   }>,
 ) {
+  // User/assistant labels and separators preserve turn order for follow-up recipe adjustments.
   return messages
     .map((message) => {
-      const speaker = message.role === "user" ? "ユーザー" : "アシスタント";
+      const speaker = message.role === USER_ROLE ? "ユーザー" : "アシスタント";
       return `${speaker}:\n${message.content}`;
     })
     .join("\n\n---\n\n");
@@ -92,6 +98,7 @@ export async function POST(request: NextRequest) {
       schema: responseSchema,
       system: systemPrompt,
       prompt: buildConversationPrompt(body.messages),
+      // Keep enough variation for recipe ideation while schema validation keeps the output usable.
       temperature: 0.7,
     });
 
