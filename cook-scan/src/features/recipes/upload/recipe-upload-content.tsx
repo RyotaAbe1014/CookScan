@@ -71,7 +71,7 @@ export default function RecipeUploadContent({ tagCategories }: Props) {
 
       {currentStep === "text-input" && <TextInput handleTextInput={handleTextInput} />}
 
-      {currentStep === "ai-generate" && <AiRecipeGenerator />}
+      {currentStep === "ai-generate" && <AiRecipeGenerator tagCategories={tagCategories} />}
 
       {currentStep === "form" && (
         <RecipeForm

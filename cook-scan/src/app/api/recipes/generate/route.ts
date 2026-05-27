@@ -1,5 +1,5 @@
 import { openaiGpt } from "@/backend/ai/models/openai";
-import { generateText } from "ai";
+import { generateObject } from "ai";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
@@ -17,26 +17,48 @@ const requestSchema = z.object({
     }),
 });
 
+const recipeDraftSchema = z.object({
+  title: z.string(),
+  ingredients: z.array(
+    z.object({
+      name: z.string(),
+      unit: z.string(),
+      notes: z.string().nullable(),
+    }),
+  ),
+  steps: z.array(
+    z.object({
+      instruction: z.string(),
+      timerSeconds: z.number().nullable(),
+    }),
+  ),
+  memo: z.string().nullable(),
+});
+
+const responseSchema = z.object({
+  message: z.string(),
+  intent: z.enum(["chat", "recipe_draft"]),
+  recipeDraft: recipeDraftSchema.nullable(),
+});
+
 const systemPrompt = `
 あなたは家庭料理に強いAIレシピアシスタントです。
 必ず日本語で回答してください。
 ユーザーの手持ち食材、希望、制約をもとに、実際に作りやすいレシピを1つ提案してください。
 会話履歴がある場合は、直前までの提案内容を踏まえて調整してください。
 
-出力はMarkdown調のプレーンテキストにしてください。
-コードフェンスやJSONは出力しないでください。
+出力は指定された構造だけにしてください。
 
-必ず以下の要素を含めてください。
-- 短い会話文
-- レシピ名
-- 材料
-- 作り方
-- 足りないもの
-- アレンジ案
+フィールドの方針:
+- message: チャット吹き出しに表示する短い自然な返答
+- intent: レシピ下書きを作る場合は "recipe_draft"、質問への返答だけなら "chat"
+- recipeDraft: intent が "recipe_draft" の場合だけレシピ下書きを入れる。intent が "chat" の場合は null
 
 方針:
+- ユーザーがレシピ作成、献立提案、材料から料理を作る相談、既存提案の調整を求めたら recipe_draft にする
 - 手持ち食材をできるだけ優先する
-- 足りないものがない場合は「足りないもの: なし」と書く
+- 不足食材や補足は recipeDraft.memo に含める
+- 材料の分量が不明な場合は unit に「適量」と書く
 - 作り方は初心者でも分かる粒度にする
 - 危険な調理や衛生的に問題のある提案はしない
 `;
@@ -59,8 +81,9 @@ export async function POST(request: NextRequest) {
   try {
     const body = requestSchema.parse(await request.json());
 
-    const { text } = await generateText({
+    const { object } = await generateObject({
       model: openaiGpt,
+      schema: responseSchema,
       system: systemPrompt,
       prompt: buildConversationPrompt(body.messages),
       temperature: 0.7,
@@ -69,9 +92,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         status: "success",
-        result: {
-          markdown: text.trim(),
-        },
+        result: object,
       },
       { status: 200 },
     );

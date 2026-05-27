@@ -1,10 +1,10 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vite-plus/test";
 import type { NextRequest } from "next/server";
-import { generateText } from "ai";
+import { generateObject } from "ai";
 import { POST } from "./route";
 
 vi.mock("ai", () => ({
-  generateText: vi.fn(),
+  generateObject: vi.fn(),
 }));
 
 vi.mock("@/backend/ai/models/openai", () => ({
@@ -22,10 +22,19 @@ describe("POST /api/recipes/generate", () => {
     consoleErrorSpy.mockClear();
   });
 
-  it("returns generated markdown", async () => {
-    vi.mocked(generateText).mockResolvedValueOnce({
-      text: "この材料なら作れます。\n\n## レシピ名\n卵チャーハン",
-    } as Awaited<ReturnType<typeof generateText>>);
+  it("returns generated recipe draft", async () => {
+    vi.mocked(generateObject).mockResolvedValueOnce({
+      object: {
+        message: "卵チャーハンの下書きを作りました。",
+        intent: "recipe_draft",
+        recipeDraft: {
+          title: "卵チャーハン",
+          ingredients: [{ name: "卵", unit: "1個", notes: null }],
+          steps: [{ instruction: "卵を炒める", timerSeconds: null }],
+          memo: "足りないもの: なし",
+        },
+      },
+    } as Awaited<ReturnType<typeof generateObject>>);
 
     const response = await POST(
       new Request("http://localhost/api/recipes/generate", {
@@ -41,10 +50,17 @@ describe("POST /api/recipes/generate", () => {
     expect(body).toEqual({
       status: "success",
       result: {
-        markdown: "この材料なら作れます。\n\n## レシピ名\n卵チャーハン",
+        message: "卵チャーハンの下書きを作りました。",
+        intent: "recipe_draft",
+        recipeDraft: {
+          title: "卵チャーハン",
+          ingredients: [{ name: "卵", unit: "1個", notes: null }],
+          steps: [{ instruction: "卵を炒める", timerSeconds: null }],
+          memo: "足りないもの: なし",
+        },
       },
     });
-    expect(generateText).toHaveBeenCalledWith(
+    expect(generateObject).toHaveBeenCalledWith(
       expect.objectContaining({
         model: "mock-openai-model",
         prompt: "ユーザー:\n卵とご飯で簡単に作りたい",
@@ -53,9 +69,13 @@ describe("POST /api/recipes/generate", () => {
   });
 
   it("passes conversation history to prompt", async () => {
-    vi.mocked(generateText).mockResolvedValueOnce({
-      text: "時短版にします。",
-    } as Awaited<ReturnType<typeof generateText>>);
+    vi.mocked(generateObject).mockResolvedValueOnce({
+      object: {
+        message: "時短版にします。",
+        intent: "chat",
+        recipeDraft: null,
+      },
+    } as Awaited<ReturnType<typeof generateObject>>);
 
     await POST(
       new Request("http://localhost/api/recipes/generate", {
@@ -70,7 +90,7 @@ describe("POST /api/recipes/generate", () => {
       }) as NextRequest,
     );
 
-    expect(generateText).toHaveBeenCalledWith(
+    expect(generateObject).toHaveBeenCalledWith(
       expect.objectContaining({
         prompt:
           "ユーザー:\n鶏肉で作りたい\n\n---\n\nアシスタント:\n## レシピ名\n鶏肉炒め\n\n---\n\nユーザー:\nもっと時短にして",
@@ -89,11 +109,11 @@ describe("POST /api/recipes/generate", () => {
 
     expect(response.status).toBe(400);
     expect(body.status).toBe("error");
-    expect(generateText).not.toHaveBeenCalled();
+    expect(generateObject).not.toHaveBeenCalled();
   });
 
   it("returns 500 when generation fails", async () => {
-    vi.mocked(generateText).mockRejectedValueOnce(new Error("AI error"));
+    vi.mocked(generateObject).mockRejectedValueOnce(new Error("AI error"));
 
     const response = await POST(
       new Request("http://localhost/api/recipes/generate", {
