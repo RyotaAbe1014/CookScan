@@ -31,6 +31,7 @@ const initialAssistantMessage =
 type ChatMessage = {
   role: "user" | "assistant";
   content: string;
+  context?: string;
 };
 
 type Props = {
@@ -51,6 +52,37 @@ export function AiRecipeGenerator({ tagCategories }: Props) {
     if (error) setError(null);
   };
 
+  const formatRecipeDraftForContext = (draft: AiRecipeDraft) => {
+    const ingredients = draft.ingredients
+      .map((ingredient) => {
+        const notes = ingredient.notes ? ` (${ingredient.notes})` : "";
+        return `- ${ingredient.name}: ${ingredient.unit}${notes}`;
+      })
+      .join("\n");
+    const steps = draft.steps
+      .map((step, index) => {
+        const timer = step.timerSeconds ? ` (${step.timerSeconds}秒)` : "";
+        return `${index + 1}. ${step.instruction}${timer}`;
+      })
+      .join("\n");
+
+    return [
+      "レシピ下書き:",
+      `タイトル: ${draft.title}`,
+      "材料:",
+      ingredients,
+      "手順:",
+      steps,
+      `メモ: ${draft.memo ?? "なし"}`,
+    ].join("\n");
+  };
+
+  const buildRequestMessages = (nextMessages: ChatMessage[]) =>
+    nextMessages.map((message) => ({
+      role: message.role,
+      content: message.context ? `${message.content}\n\n${message.context}` : message.content,
+    }));
+
   const sendMessage = async (content: string) => {
     const trimmedPrompt = content.trim();
 
@@ -68,6 +100,7 @@ export function AiRecipeGenerator({ tagCategories }: Props) {
 
     setError(null);
     setIsLoading(true);
+    setSuggestions([]);
     setMessages(nextMessages);
     setPrompt("");
 
@@ -77,7 +110,7 @@ export function AiRecipeGenerator({ tagCategories }: Props) {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ messages: nextMessages }),
+        body: JSON.stringify({ messages: buildRequestMessages(nextMessages) }),
       });
       const data: GenerateRecipeResponse = await response.json().catch(() => ({
         status: "error" as const,
@@ -85,9 +118,13 @@ export function AiRecipeGenerator({ tagCategories }: Props) {
       }));
 
       if (data.status === "success") {
+        const draftContext =
+          data.result.intent === "recipe_draft" && data.result.recipeDraft
+            ? formatRecipeDraftForContext(data.result.recipeDraft)
+            : undefined;
         setMessages((currentMessages) => [
           ...currentMessages,
-          { role: "assistant", content: data.result.message },
+          { role: "assistant", content: data.result.message, context: draftContext },
         ]);
         setSuggestions(data.result.suggestions);
         if (data.result.intent === "recipe_draft" && data.result.recipeDraft) {

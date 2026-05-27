@@ -18,20 +18,24 @@ const requestSchema = z.object({
 });
 
 const recipeDraftSchema = z.object({
-  title: z.string(),
-  ingredients: z.array(
-    z.object({
-      name: z.string(),
-      unit: z.string(),
-      notes: z.string().nullable(),
-    }),
-  ),
-  steps: z.array(
-    z.object({
-      instruction: z.string(),
-      timerSeconds: z.number().nullable(),
-    }),
-  ),
+  title: z.string().min(1),
+  ingredients: z
+    .array(
+      z.object({
+        name: z.string().min(1),
+        unit: z.string().min(1),
+        notes: z.string().nullable(),
+      }),
+    )
+    .min(1),
+  steps: z
+    .array(
+      z.object({
+        instruction: z.string().min(1),
+        timerSeconds: z.number().nullable(),
+      }),
+    )
+    .min(1),
   memo: z.string().nullable(),
 });
 
@@ -39,7 +43,7 @@ const responseSchema = z.object({
   message: z.string(),
   intent: z.enum(["chat", "recipe_draft"]),
   recipeDraft: recipeDraftSchema.nullable(),
-  suggestions: z.array(z.string()).min(1).max(4),
+  suggestions: z.array(z.string().min(1)).min(1).max(4),
 });
 
 const systemPrompt = `

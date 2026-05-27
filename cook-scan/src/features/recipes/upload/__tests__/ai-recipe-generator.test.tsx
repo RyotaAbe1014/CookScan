@@ -247,19 +247,15 @@ describe("AiRecipeGenerator", () => {
     await waitFor(() => {
       expect(screen.getByText(/さらに時短するなら/)).toBeInTheDocument();
     });
-    expect(global.fetch).toHaveBeenLastCalledWith(
-      "/api/recipes/generate",
-      expect.objectContaining({
-        method: "POST",
-        body: JSON.stringify({
-          messages: [
-            { role: "user", content: "鶏むね肉と卵で20分以内の夕飯にしたい" },
-            { role: "assistant", content: "レシピ下書きを作りました。" },
-            { role: "user", content: "もっと時短にして" },
-          ],
-        }),
-      }),
-    );
+    const lastCall = (global.fetch as ReturnType<typeof vi.fn>).mock.calls.at(-1)!;
+    const requestInit = lastCall[1] as RequestInit;
+    const body = JSON.parse(requestInit.body as string);
+    expect(lastCall[0]).toBe("/api/recipes/generate");
+    expect(requestInit.method).toBe("POST");
+    expect(body.messages).toHaveLength(3);
+    expect(body.messages[1].content).toContain("レシピ下書き:");
+    expect(body.messages[1].content).toContain("タイトル: 鶏むね肉の卵とじ");
+    expect(body.messages[2]).toEqual({ role: "user", content: "もっと時短にして" });
   });
 
   it("shows error when API returns error", async () => {
