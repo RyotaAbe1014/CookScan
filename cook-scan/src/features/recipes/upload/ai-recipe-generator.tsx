@@ -114,34 +114,29 @@ export function AiRecipeGenerator({ tagCategories }: Props) {
       className={
         hasRecipeDraft
           ? "mx-auto grid max-w-7xl gap-6 lg:grid-cols-[minmax(0,0.9fr)_minmax(420px,1.1fr)]"
-          : "mx-auto max-w-3xl"
+          : "mx-auto max-w-5xl"
       }
     >
       <div>
-        <div className="mb-6">
-          <div className="mb-3 flex items-center gap-2">
-            <div className="from-accent-ingredients to-accent-steps flex h-10 w-10 items-center justify-center rounded-lg bg-linear-to-br shadow-md">
-              <LightningBoltIcon className="h-5 w-5 text-white" />
-            </div>
-            <h2 className="text-foreground text-xl font-bold">AIで献立・レシピ提案</h2>
-          </div>
-          <p className="text-muted-foreground text-sm leading-relaxed">
-            最初に食材や希望を入力し、そのあと追加の要望でレシピを調整できます
-          </p>
-        </div>
-
-        <div className="ring-card-border overflow-hidden rounded-xl bg-white shadow-lg ring-1">
+        <div className="ring-card-border flex min-h-[calc(100vh-220px)] flex-col overflow-hidden rounded-xl bg-white shadow-lg ring-1">
           <div className="border-border from-section-header border-b bg-linear-to-r to-white px-6 py-4">
-            <div className="flex items-center gap-2">
-              <div className="from-accent-ingredients to-accent-steps flex h-8 w-8 items-center justify-center rounded-lg bg-linear-to-br">
-                <DocumentTextIcon className="h-4 w-4 text-white" />
+            <div className="flex items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <div className="from-accent-ingredients to-accent-steps flex h-9 w-9 items-center justify-center rounded-lg bg-linear-to-br">
+                  <DocumentTextIcon className="h-4 w-4 text-white" />
+                </div>
+                <div>
+                  <h2 className="text-foreground text-base font-bold">AIで献立・レシピ提案</h2>
+                  <p className="text-muted-foreground mt-0.5 text-xs">
+                    食材や希望を送ると、会話しながらレシピ下書きまで作れます
+                  </p>
+                </div>
               </div>
-              <span className="text-foreground text-sm font-semibold">AIレシピチャット</span>
             </div>
           </div>
 
-          <div className="space-y-4 p-6">
-            <div className="border-border bg-muted/20 max-h-[520px] min-h-[260px] space-y-4 overflow-y-auto rounded-lg border p-4">
+          <div className="flex flex-1 flex-col gap-4 p-6">
+            <div className="border-border bg-muted/20 min-h-[320px] flex-1 space-y-4 overflow-y-auto rounded-lg border p-4">
               <div className="flex justify-start">
                 <div className="text-foreground ring-border max-w-[85%] rounded-xl bg-white px-4 py-3 text-sm leading-7 whitespace-pre-wrap shadow-sm ring-1">
                   {initialAssistantMessage}
@@ -165,15 +160,6 @@ export function AiRecipeGenerator({ tagCategories }: Props) {
               ))}
             </div>
 
-            <Textarea
-              value={prompt}
-              onChange={handleChange}
-              placeholder="例：鶏むね肉、玉ねぎ、卵があります。20分くらいで作れる夕飯にしたいです。"
-              rows={3}
-              className="min-h-[96px] resize-y"
-              disabled={isLoading}
-            />
-
             {error && <Alert variant="error">{error}</Alert>}
 
             {messages.some((message) => message.role === "assistant") && (
@@ -193,8 +179,22 @@ export function AiRecipeGenerator({ tagCategories }: Props) {
               </div>
             )}
 
-            <div className="flex justify-end">
-              <Button onClick={handleSubmit} disabled={isLoading} isLoading={isLoading} size="lg">
+            <div className="flex gap-3">
+              <Textarea
+                value={prompt}
+                onChange={handleChange}
+                placeholder="例：鶏むね肉、玉ねぎ、卵があります。20分くらいで作れる夕飯にしたいです。"
+                rows={2}
+                className="min-h-[64px] flex-1 resize-none"
+                disabled={isLoading}
+              />
+              <Button
+                onClick={handleSubmit}
+                disabled={isLoading}
+                isLoading={isLoading}
+                size="lg"
+                className="self-end"
+              >
                 {!isLoading && <LightningBoltIcon className="h-5 w-5" />}
                 {isLoading ? "考え中..." : messages.length === 0 ? "レシピを提案" : "送信"}
               </Button>
