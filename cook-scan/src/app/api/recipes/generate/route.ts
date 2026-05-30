@@ -98,8 +98,7 @@ export async function POST(request: NextRequest) {
       schema: responseSchema,
       system: systemPrompt,
       prompt: buildConversationPrompt(body.messages),
-      // Keep enough variation for recipe ideation while schema validation keeps the output usable.
-      temperature: 0.7,
+      // gpt-5-mini is a reasoning model: temperature is unsupported (only the default is allowed).
     });
 
     return NextResponse.json(
