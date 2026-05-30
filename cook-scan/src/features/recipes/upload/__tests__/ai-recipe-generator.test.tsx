@@ -16,6 +16,37 @@ vi.mock("../actions", () => ({
   createRecipe: (...args: [CreateRecipeRequest]) => mockCreateRecipe(...args),
 }));
 
+// 参照レシピ選択モーダルが使う Server Action をモック。
+vi.mock("@/features/recipes/list/actions", () => ({
+  getRecipesWithFilters: vi.fn(),
+}));
+
+// Radix Dialog Portal をインラインレンダリングに変更（モーダル内容をテスト可能にする）。
+vi.mock("@radix-ui/react-dialog", async () => {
+  const actual =
+    await vi.importActual<typeof import("@radix-ui/react-dialog")>("@radix-ui/react-dialog");
+  return {
+    ...actual,
+    Portal: ({ children }: { children: React.ReactNode }) => children,
+  };
+});
+
+import { getRecipesWithFilters } from "@/features/recipes/list/actions";
+
+function buildReferenceListItem(id: string, title: string) {
+  return {
+    id,
+    userId: "user-1",
+    title,
+    imageUrl: null,
+    memo: null,
+    createdAt: new Date("2026-01-01"),
+    updatedAt: new Date("2026-01-01"),
+    ingredients: [],
+    recipeTags: [],
+  };
+}
+
 global.fetch = vi.fn();
 
 describe("AiRecipeGenerator", () => {
@@ -31,6 +62,13 @@ describe("AiRecipeGenerator", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockCreateRecipe.mockResolvedValue({ ok: true, data: { recipeId: "recipe-1" } });
+    vi.mocked(getRecipesWithFilters).mockResolvedValue({
+      ok: true,
+      data: [
+        buildReferenceListItem("recipe-1", "カレー"),
+        buildReferenceListItem("recipe-2", "シチュー"),
+      ],
+    });
   });
 
   it("renders the AI recipe generation form", () => {
@@ -275,5 +313,95 @@ describe("AiRecipeGenerator", () => {
     await waitFor(() => {
       expect(screen.getByText("レシピ生成に失敗しました")).toBeInTheDocument();
     });
+  });
+
+  it("参照レシピを選んで送信すると referenceRecipeIds が body に含まれる", async () => {
+    const user = userEvent.setup();
+    (global.fetch as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
+      json: async () => ({
+        status: "success",
+        result: {
+          message: "2つを合わせた下書きです。",
+          intent: "chat",
+          recipeDraft: null,
+          suggestions: ["辛くする"],
+        },
+      }),
+    });
+
+    render(<AiRecipeGenerator tagCategories={mockTagCategories} />);
+
+    // モーダルを開いてレシピを2件選び、参照に追加する
+    await user.click(screen.getByRole("button", { name: /レシピを参照/ }));
+    await waitFor(() => {
+      expect(screen.getByText("カレー")).toBeInTheDocument();
+    });
+    await user.click(screen.getByText("カレー"));
+    await user.click(screen.getByText("シチュー"));
+    await user.click(screen.getByRole("button", { name: /2件を参照に追加/ }));
+
+    // チップが表示される
+    await waitFor(() => {
+      expect(screen.getByRole("button", { name: /カレーを参照から外す/ })).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: /シチューを参照から外す/ })).toBeInTheDocument();
+    });
+
+    await user.type(screen.getByPlaceholderText(/鶏むね肉、玉ねぎ、卵/), "この2つを合体させて");
+    await user.click(screen.getByRole("button", { name: /レシピを提案/ }));
+
+    await waitFor(() => {
+      expect(global.fetch).toHaveBeenCalled();
+    });
+    const lastCall = (global.fetch as ReturnType<typeof vi.fn>).mock.calls.at(-1)!;
+    const body = JSON.parse((lastCall[1] as RequestInit).body as string);
+    expect(body.referenceRecipeIds).toEqual(["recipe-1", "recipe-2"]);
+    expect(body.messages).toEqual([{ role: "user", content: "この2つを合体させて" }]);
+  });
+
+  it("チップの×で参照を外すと referenceRecipeIds から除外される", async () => {
+    const user = userEvent.setup();
+    (global.fetch as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
+      json: async () => ({
+        status: "success",
+        result: {
+          message: "カレーをアレンジします。",
+          intent: "chat",
+          recipeDraft: null,
+          suggestions: ["辛くする"],
+        },
+      }),
+    });
+
+    render(<AiRecipeGenerator tagCategories={mockTagCategories} />);
+
+    await user.click(screen.getByRole("button", { name: /レシピを参照/ }));
+    await waitFor(() => {
+      expect(screen.getByText("カレー")).toBeInTheDocument();
+    });
+    await user.click(screen.getByText("カレー"));
+    await user.click(screen.getByText("シチュー"));
+    await user.click(screen.getByRole("button", { name: /2件を参照に追加/ }));
+
+    // シチューのチップを外す
+    await waitFor(() => {
+      expect(screen.getByRole("button", { name: /シチューを参照から外す/ })).toBeInTheDocument();
+    });
+    await user.click(screen.getByRole("button", { name: /シチューを参照から外す/ }));
+
+    await waitFor(() => {
+      expect(
+        screen.queryByRole("button", { name: /シチューを参照から外す/ }),
+      ).not.toBeInTheDocument();
+    });
+
+    await user.type(screen.getByPlaceholderText(/鶏むね肉、玉ねぎ、卵/), "カレーをアレンジして");
+    await user.click(screen.getByRole("button", { name: /レシピを提案/ }));
+
+    await waitFor(() => {
+      expect(global.fetch).toHaveBeenCalled();
+    });
+    const lastCall = (global.fetch as ReturnType<typeof vi.fn>).mock.calls.at(-1)!;
+    const body = JSON.parse((lastCall[1] as RequestInit).body as string);
+    expect(body.referenceRecipeIds).toEqual(["recipe-1"]);
   });
 });

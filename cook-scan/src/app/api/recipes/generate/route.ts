@@ -1,4 +1,7 @@
 import { openaiGpt } from "@/backend/ai/models/openai";
+import * as RecipeRepository from "@/backend/repositories/recipe.repository";
+import type { RecipeDetailOutput } from "@/backend/domain/recipes";
+import { checkUserProfile } from "@/features/auth/auth-utils";
 import { generateObject } from "ai";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
@@ -7,6 +10,9 @@ const USER_ROLE = "user";
 const ASSISTANT_ROLE = "assistant";
 const MESSAGE_ROLES = [USER_ROLE, ASSISTANT_ROLE] as const;
 const MAX_SUGGESTION_COUNT = 4;
+
+// 参照レシピが見つからなかった場合に投げる識別用エラー。
+class ReferenceRecipeNotFoundError extends Error {}
 
 const requestSchema = z.object({
   messages: z
@@ -20,6 +26,7 @@ const requestSchema = z.object({
     .refine((messages) => messages[messages.length - 1]?.role === USER_ROLE, {
       message: "最後のメッセージはuserである必要があります",
     }),
+  referenceRecipeIds: z.array(z.string().uuid()).optional(),
 });
 
 const recipeDraftSchema = z.object({
@@ -72,7 +79,59 @@ const systemPrompt = `
 - 材料の分量が不明な場合は unit に「適量」と書く
 - 作り方は初心者でも分かる粒度にする
 - 危険な調理や衛生的に問題のある提案はしない
+
+参照レシピが渡された場合:
+- 参照レシピはユーザーが持ち込んだ既存レシピです。これらを「素材」として、ユーザーの指示に沿って合成・アレンジした新しいレシピを提案してください
+- ただし下書きを作るかどうかはユーザーの本文の意図に従ってください。参照レシピについての質問なら chat で答えるだけにします
+- 参照元のレシピをそのまま複製するのではなく、指示に応じて発展・改変させてください
 `;
+
+// 参照レシピを合成・アレンジのプロンプト文脈に変換する。
+// 含める情報は title + 材料 + 手順 + memo（レシピ下書きのテキスト化と同じ粒度）。
+function formatReferenceRecipe(recipe: RecipeDetailOutput) {
+  const ingredients = recipe.ingredients
+    .map((ingredient) => {
+      const unit = ingredient.unit ?? "適量";
+      const notes = ingredient.notes ? ` (${ingredient.notes})` : "";
+      return `- ${ingredient.name}: ${unit}${notes}`;
+    })
+    .join("\n");
+  const steps = recipe.steps
+    .map((step, index) => {
+      const timer = step.timerSeconds ? ` (${step.timerSeconds}秒)` : "";
+      return `${index + 1}. ${step.instruction}${timer}`;
+    })
+    .join("\n");
+
+  return [
+    `タイトル: ${recipe.title}`,
+    "材料:",
+    ingredients || "（なし）",
+    "手順:",
+    steps || "（なし）",
+    `メモ: ${recipe.memo ?? "なし"}`,
+  ].join("\n");
+}
+
+// 渡された参照レシピIDをユーザー本人のレシピとして解決する。
+// 一つでも見つからなければ ReferenceRecipeNotFoundError を投げる（部分成功させない）。
+async function resolveReferenceRecipes(
+  recipeIds: string[],
+  userId: string,
+): Promise<RecipeDetailOutput[]> {
+  const recipes = await Promise.all(
+    recipeIds.map((recipeId) => RecipeRepository.findRecipeById(recipeId, userId)),
+  );
+
+  const resolved: RecipeDetailOutput[] = [];
+  for (const recipe of recipes) {
+    if (recipe === null) {
+      throw new ReferenceRecipeNotFoundError();
+    }
+    resolved.push(recipe);
+  }
+  return resolved;
+}
 
 function buildConversationPrompt(
   messages: Array<{
@@ -89,15 +148,45 @@ function buildConversationPrompt(
     .join("\n\n---\n\n");
 }
 
+// 参照レシピを会話プロンプトの先頭に添えるブロックへ整形する。
+function buildReferenceRecipesBlock(recipes: RecipeDetailOutput[]) {
+  const blocks = recipes
+    .map((recipe, index) => `参照レシピ${index + 1}:\n${formatReferenceRecipe(recipe)}`)
+    .join("\n\n---\n\n");
+  return `以下はユーザーが持ち込んだ参照レシピです。これらを素材として扱ってください。\n\n${blocks}`;
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = requestSchema.parse(await request.json());
+
+    const referenceRecipeIds = body.referenceRecipeIds ?? [];
+
+    // 参照レシピを使う場合のみ認証とDB解決が必要。
+    let referenceBlock: string | null = null;
+    if (referenceRecipeIds.length > 0) {
+      const { hasAuth, hasProfile, profile } = await checkUserProfile();
+      if (!hasAuth || !hasProfile || !profile) {
+        return NextResponse.json(
+          { status: "error", error: "認証が必要です" },
+          { status: 401 },
+        );
+      }
+
+      const referenceRecipes = await resolveReferenceRecipes(referenceRecipeIds, profile.id);
+      referenceBlock = buildReferenceRecipesBlock(referenceRecipes);
+    }
+
+    const conversationPrompt = buildConversationPrompt(body.messages);
+    const prompt = referenceBlock
+      ? `${referenceBlock}\n\n===\n\n${conversationPrompt}`
+      : conversationPrompt;
 
     const { object } = await generateObject({
       model: openaiGpt,
       schema: responseSchema,
       system: systemPrompt,
-      prompt: buildConversationPrompt(body.messages),
+      prompt,
       // gpt-5-mini is a reasoning model: temperature is unsupported (only the default is allowed).
     });
 
@@ -110,6 +199,13 @@ export async function POST(request: NextRequest) {
     );
   } catch (error) {
     console.error(error);
+
+    if (error instanceof ReferenceRecipeNotFoundError) {
+      return NextResponse.json(
+        { status: "error", error: "参照したレシピが見つかりません。選び直してください" },
+        { status: 400 },
+      );
+    }
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(
