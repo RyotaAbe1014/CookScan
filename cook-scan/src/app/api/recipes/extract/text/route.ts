@@ -83,8 +83,7 @@ export async function POST(request: NextRequest) {
       schema: recipeSchema,
       system: systemPrompt,
       prompt: text,
-      temperature: 0,
-      topP: 0.1,
+      // gpt-5-mini is a reasoning model: temperature/topP are unsupported (only the default is allowed).
     });
 
     return NextResponse.json({ status: "success", result: object }, { status: 200 });
