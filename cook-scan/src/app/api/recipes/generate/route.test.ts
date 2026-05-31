@@ -68,6 +68,12 @@ describe("POST /api/recipes/generate", () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    // デフォルトは認証済みユーザー。未認証ケースは各テストで上書きする。
+    vi.mocked(checkUserProfile).mockResolvedValue({
+      hasAuth: true,
+      hasProfile: true,
+      profile: { id: "user-1" },
+    } as Awaited<ReturnType<typeof checkUserProfile>>);
   });
 
   afterEach(() => {
@@ -188,11 +194,6 @@ describe("POST /api/recipes/generate", () => {
   });
 
   it("injects reference recipes into the prompt when referenceRecipeIds are provided", async () => {
-    vi.mocked(checkUserProfile).mockResolvedValueOnce({
-      hasAuth: true,
-      hasProfile: true,
-      profile: { id: "user-1" },
-    } as Awaited<ReturnType<typeof checkUserProfile>>);
     vi.mocked(RecipeRepository.findRecipeById)
       .mockResolvedValueOnce(buildRecipeDetail(RECIPE_ID_A, "鶏の照り焼き"))
       .mockResolvedValueOnce(buildRecipeDetail(RECIPE_ID_B, "野菜炒め"));
@@ -233,11 +234,6 @@ describe("POST /api/recipes/generate", () => {
   });
 
   it("returns 400 when a reference recipe is not found", async () => {
-    vi.mocked(checkUserProfile).mockResolvedValueOnce({
-      hasAuth: true,
-      hasProfile: true,
-      profile: { id: "user-1" },
-    } as Awaited<ReturnType<typeof checkUserProfile>>);
     // 1件目は存在、2件目は見つからない（削除済み or 他人のレシピ）。
     vi.mocked(RecipeRepository.findRecipeById)
       .mockResolvedValueOnce(buildRecipeDetail(RECIPE_ID_A, "鶏の照り焼き"))
@@ -262,8 +258,30 @@ describe("POST /api/recipes/generate", () => {
     expect(generateObject).not.toHaveBeenCalled();
   });
 
+  it("returns 401 when unauthenticated, even without reference recipes", async () => {
+    // 参照レシピの有無に関わらず、LLM呼び出しを伴うため認証は必須。
+    vi.mocked(checkUserProfile).mockResolvedValue({
+      hasAuth: false,
+      hasProfile: false,
+    } as Awaited<ReturnType<typeof checkUserProfile>>);
+
+    const response = await POST(
+      new Request("http://localhost/api/recipes/generate", {
+        method: "POST",
+        body: JSON.stringify({
+          messages: [{ role: "user", content: "鶏むね肉と卵で作りたい" }],
+        }),
+      }) as NextRequest,
+    );
+    const body = await response.json();
+
+    expect(response.status).toBe(401);
+    expect(body).toEqual({ status: "error", error: "認証が必要です" });
+    expect(generateObject).not.toHaveBeenCalled();
+  });
+
   it("returns 401 when referencing recipes without authentication", async () => {
-    vi.mocked(checkUserProfile).mockResolvedValueOnce({
+    vi.mocked(checkUserProfile).mockResolvedValue({
       hasAuth: false,
       hasProfile: false,
     } as Awaited<ReturnType<typeof checkUserProfile>>);

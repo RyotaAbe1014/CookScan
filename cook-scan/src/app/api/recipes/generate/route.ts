@@ -158,21 +158,21 @@ function buildReferenceRecipesBlock(recipes: RecipeDetailOutput[]) {
 
 export async function POST(request: NextRequest) {
   try {
+    const { hasAuth, hasProfile, profile } = await checkUserProfile();
+    if (!hasAuth || !hasProfile || !profile) {
+      return NextResponse.json(
+        { status: "error", error: "認証が必要です" },
+        { status: 401 },
+      );
+    }
+
     const body = requestSchema.parse(await request.json());
 
     const referenceRecipeIds = body.referenceRecipeIds ?? [];
 
-    // 参照レシピを使う場合のみ認証とDB解決が必要。
+    // 参照レシピが指定された場合のみ、本人のレシピとして解決して文脈に注入する。
     let referenceBlock: string | null = null;
     if (referenceRecipeIds.length > 0) {
-      const { hasAuth, hasProfile, profile } = await checkUserProfile();
-      if (!hasAuth || !hasProfile || !profile) {
-        return NextResponse.json(
-          { status: "error", error: "認証が必要です" },
-          { status: 401 },
-        );
-      }
-
       const referenceRecipes = await resolveReferenceRecipes(referenceRecipeIds, profile.id);
       referenceBlock = buildReferenceRecipesBlock(referenceRecipes);
     }
