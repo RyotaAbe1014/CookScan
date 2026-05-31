@@ -118,6 +118,7 @@ describe("POST /api/recipes/generate", () => {
           memo: "足りないもの: なし",
         },
         suggestions: ["もっと時短にする", "買い足しなしにする"],
+        referenceContext: null,
       },
     });
     expect(generateObject).toHaveBeenCalledWith(
@@ -231,6 +232,37 @@ describe("POST /api/recipes/generate", () => {
     expect(promptArg).toContain("参照レシピ2:");
     expect(promptArg).toContain("野菜炒め");
     expect(promptArg).toContain("この2つを合体させて");
+
+    // クライアントが会話履歴に焼き込めるよう、整形済みテキストをレスポンスにも返す。
+    const body = await response.json();
+    expect(body.result.referenceContext).toContain("鶏の照り焼き");
+    expect(body.result.referenceContext).toContain("野菜炒め");
+  });
+
+  it("returns null referenceContext when no reference recipes are provided", async () => {
+    vi.mocked(generateObject).mockResolvedValueOnce({
+      object: {
+        message: "作れます。",
+        intent: "chat",
+        recipeDraft: null,
+        suggestions: ["時短にする"],
+      },
+    } as Awaited<ReturnType<typeof generateObject>>);
+
+    const response = await POST(
+      new Request("http://localhost/api/recipes/generate", {
+        method: "POST",
+        body: JSON.stringify({
+          messages: [{ role: "user", content: "鶏むね肉で作りたい" }],
+        }),
+      }) as NextRequest,
+    );
+    const body = await response.json();
+
+    expect(response.status).toBe(200);
+    // 参照レシピがなければ焼き込み用テキストは返さない。
+    expect(body.result.referenceContext).toBeNull();
+    expect(RecipeRepository.findRecipeById).not.toHaveBeenCalled();
   });
 
   it("returns 400 when a reference recipe is not found", async () => {

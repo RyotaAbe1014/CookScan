@@ -319,7 +319,8 @@ describe("AiRecipeGenerator", () => {
     // --- Given helpers ---
 
     // API が chat 応答を返す状態にする。
-    function givenChatResponse() {
+    // referenceContext を渡すと、サーバーが新規参照レシピを解決して返した状況を再現する。
+    function givenChatResponse(referenceContext: string | null = null) {
       (global.fetch as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
         json: async () => ({
           status: "success",
@@ -328,6 +329,7 @@ describe("AiRecipeGenerator", () => {
             intent: "chat",
             recipeDraft: null,
             suggestions: ["辛くする"],
+            referenceContext,
           },
         }),
       });
@@ -353,10 +355,12 @@ describe("AiRecipeGenerator", () => {
     // --- When helpers ---
 
     async function whenSubmitMessage(user: ReturnType<typeof userEvent.setup>, text: string) {
+      const callsBefore = (global.fetch as ReturnType<typeof vi.fn>).mock.calls.length;
       await user.type(screen.getByPlaceholderText(/鶏むね肉、玉ねぎ、卵/), text);
-      await user.click(screen.getByRole("button", { name: /レシピを提案/ }));
+      // 送信ボタンのラベルは初回「レシピを提案」、2ターン目以降は「送信」。
+      await user.click(screen.getByRole("button", { name: /レシピを提案|送信/ }));
       await waitFor(() => {
-        expect(global.fetch).toHaveBeenCalled();
+        expect((global.fetch as ReturnType<typeof vi.fn>).mock.calls.length).toBe(callsBefore + 1);
       });
     }
 
@@ -443,6 +447,42 @@ describe("AiRecipeGenerator", () => {
 
       // Then: 残ったカレーのIDだけが body に乗る
       expect(lastRequestBody().referenceRecipeIds).toEqual(["recipe-1"]);
+    });
+
+    it("一度焼き込んだ参照レシピは、次のターンで再送されない", async () => {
+      // Given: カレーを参照して送信済み（サーバーが整形テキストを返した）
+      const user = userEvent.setup();
+      render(<AiRecipeGenerator tagCategories={mockTagCategories} />);
+      await givenReferencedRecipes(user, ["カレー"]);
+      givenChatResponse("タイトル: カレー\n材料:\n- 玉ねぎ: 1個");
+      await whenSubmitMessage(user, "これをアレンジして");
+      // 1ターン目では新規参照として ID が送られている
+      expect(lastRequestBody().referenceRecipeIds).toEqual(["recipe-1"]);
+
+      // When: 同じ参照のまま追加で送信する
+      givenChatResponse();
+      await whenSubmitMessage(user, "もっと辛くして");
+
+      // Then: 2ターン目では referenceRecipeIds は送られない（重複注入を避ける）
+      expect(lastRequestBody().referenceRecipeIds).toBeUndefined();
+    });
+
+    it("焼き込んだ参照レシピの内容は、次のターンの会話履歴に含まれる", async () => {
+      // Given: カレーを参照して送信済み（整形テキストが履歴に焼き込まれる）
+      const user = userEvent.setup();
+      render(<AiRecipeGenerator tagCategories={mockTagCategories} />);
+      await givenReferencedRecipes(user, ["カレー"]);
+      givenChatResponse("タイトル: カレー\n材料:\n- 玉ねぎ: 1個");
+      await whenSubmitMessage(user, "これをアレンジして");
+
+      // When: 追加で送信する
+      givenChatResponse();
+      await whenSubmitMessage(user, "もっと辛くして");
+
+      // Then: 焼き込まれた参照テキストが2ターン目の messages に残っている
+      const messages = lastRequestBody().messages as Array<{ role: string; content: string }>;
+      const userMessage = messages.find((message) => message.content.includes("これをアレンジして"));
+      expect(userMessage?.content).toContain("タイトル: カレー");
     });
   });
 });

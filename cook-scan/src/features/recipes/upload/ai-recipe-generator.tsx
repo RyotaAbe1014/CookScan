@@ -20,6 +20,9 @@ type GenerateRecipeResponse =
         intent: "chat" | "recipe_draft";
         recipeDraft: AiRecipeDraft | null;
         suggestions: string[];
+        // 新規参照レシピを送ったときだけ、サーバーが整形したレシピ全文が返る。
+        // クライアントはこれを会話履歴に焼き込み、以降は再送しない。
+        referenceContext: string | null;
       };
     }
   | {
@@ -49,8 +52,10 @@ export function AiRecipeGenerator({ tagCategories }: Props) {
   const [recipeDraftVersion, setRecipeDraftVersion] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  // 参照レシピはセッション中保持され、送信のたびにIDをAPIへ送る。
+  // 参照レシピはセッション中保持される。レシピ全文は「新しく加わったターン」だけ
+  // 送信し、サーバーが返す整形テキストを会話履歴に焼き込むことで再送を避ける。
   const [referenceRecipes, setReferenceRecipes] = useState<ReferenceRecipe[]>([]);
+  const [injectedReferenceIds, setInjectedReferenceIds] = useState<Set<string>>(new Set());
   const [isPickerOpen, setIsPickerOpen] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -103,6 +108,12 @@ export function AiRecipeGenerator({ tagCategories }: Props) {
     }
 
     const nextMessages: ChatMessage[] = [...messages, { role: "user", content: trimmedPrompt }];
+    const userMessageIndex = nextMessages.length - 1;
+
+    // まだ会話履歴に焼き込んでいない参照レシピだけを送る（重複注入を避ける）。
+    const newReferenceIds = referenceRecipes
+      .filter((recipe) => !injectedReferenceIds.has(recipe.id))
+      .map((recipe) => recipe.id);
 
     setError(null);
     setIsLoading(true);
@@ -118,8 +129,8 @@ export function AiRecipeGenerator({ tagCategories }: Props) {
         },
         body: JSON.stringify({
           messages: buildRequestMessages(nextMessages),
-          ...(referenceRecipes.length > 0 && {
-            referenceRecipeIds: referenceRecipes.map((recipe) => recipe.id),
+          ...(newReferenceIds.length > 0 && {
+            referenceRecipeIds: newReferenceIds,
           }),
         }),
       });
@@ -133,10 +144,32 @@ export function AiRecipeGenerator({ tagCategories }: Props) {
           data.result.intent === "recipe_draft" && data.result.recipeDraft
             ? formatRecipeDraftForContext(data.result.recipeDraft)
             : undefined;
-        setMessages((currentMessages) => [
-          ...currentMessages,
-          { role: "assistant", content: data.result.message, context: draftContext },
-        ]);
+        const referenceContext = data.result.referenceContext;
+        setMessages((currentMessages) => {
+          // 新規参照レシピが解決された場合、その全文を直前のuserメッセージへ焼き込む。
+          // 以降のターンでは履歴として送られるため、レシピIDの再送が不要になる。
+          const withReference = referenceContext
+            ? currentMessages.map((message, index) =>
+                index === userMessageIndex
+                  ? {
+                      ...message,
+                      context: message.context
+                        ? `${message.context}\n\n${referenceContext}`
+                        : referenceContext,
+                    }
+                  : message,
+              )
+            : currentMessages;
+          return [
+            ...withReference,
+            { role: "assistant", content: data.result.message, context: draftContext },
+          ];
+        });
+        if (newReferenceIds.length > 0 && referenceContext) {
+          setInjectedReferenceIds(
+            (current) => new Set([...current, ...newReferenceIds]),
+          );
+        }
         setSuggestions(data.result.suggestions);
         if (data.result.intent === "recipe_draft" && data.result.recipeDraft) {
           setRecipeDraft(data.result.recipeDraft);

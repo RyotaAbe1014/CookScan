@@ -193,7 +193,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         status: "success",
-        result: object,
+        // referenceContext は、クライアントが会話履歴に焼き込んで次回以降の
+        // 再送を避けるためのテキスト。初回（新規参照ID送信時）のみ非null。
+        result: { ...object, referenceContext: referenceBlock },
       },
       { status: 200 },
     );
