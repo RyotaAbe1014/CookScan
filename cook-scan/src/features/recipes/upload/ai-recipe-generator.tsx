@@ -6,8 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import type { RecipeFormTagCategory } from "@/features/recipes/types/tag";
 import { AiRecipeDraftForm, type AiRecipeDraft } from "./ai-recipe-draft-form";
+import { ReferenceRecipePicker, type ReferenceRecipe } from "./reference-recipe-picker";
 import { DocumentTextIcon } from "@/components/icons/document-text-icon";
 import { LightningBoltIcon } from "@/components/icons/lightning-bolt-icon";
+import { BookOpenIcon } from "@/components/icons/book-open-icon";
+import { CloseIcon } from "@/components/icons/close-icon";
 
 type GenerateRecipeResponse =
   | {
@@ -17,6 +20,9 @@ type GenerateRecipeResponse =
         intent: "chat" | "recipe_draft";
         recipeDraft: AiRecipeDraft | null;
         suggestions: string[];
+        // 新規参照レシピを送ったときだけ、サーバーが整形したレシピ全文が返る。
+        // クライアントはこれを会話履歴に焼き込み、以降は再送しない。
+        referenceContext: string | null;
       };
     }
   | {
@@ -46,6 +52,11 @@ export function AiRecipeGenerator({ tagCategories }: Props) {
   const [recipeDraftVersion, setRecipeDraftVersion] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  // 参照レシピはセッション中保持される。レシピ全文は「新しく加わったターン」だけ
+  // 送信し、サーバーが返す整形テキストを会話履歴に焼き込むことで再送を避ける。
+  const [referenceRecipes, setReferenceRecipes] = useState<ReferenceRecipe[]>([]);
+  const [injectedReferenceIds, setInjectedReferenceIds] = useState<Set<string>>(new Set());
+  const [isPickerOpen, setIsPickerOpen] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setPrompt(e.target.value);
@@ -97,6 +108,12 @@ export function AiRecipeGenerator({ tagCategories }: Props) {
     }
 
     const nextMessages: ChatMessage[] = [...messages, { role: "user", content: trimmedPrompt }];
+    const userMessageIndex = nextMessages.length - 1;
+
+    // まだ会話履歴に焼き込んでいない参照レシピだけを送る（重複注入を避ける）。
+    const newReferenceIds = referenceRecipes
+      .filter((recipe) => !injectedReferenceIds.has(recipe.id))
+      .map((recipe) => recipe.id);
 
     setError(null);
     setIsLoading(true);
@@ -110,7 +127,12 @@ export function AiRecipeGenerator({ tagCategories }: Props) {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ messages: buildRequestMessages(nextMessages) }),
+        body: JSON.stringify({
+          messages: buildRequestMessages(nextMessages),
+          ...(newReferenceIds.length > 0 && {
+            referenceRecipeIds: newReferenceIds,
+          }),
+        }),
       });
       const data: GenerateRecipeResponse = await response.json().catch(() => ({
         status: "error" as const,
@@ -122,10 +144,32 @@ export function AiRecipeGenerator({ tagCategories }: Props) {
           data.result.intent === "recipe_draft" && data.result.recipeDraft
             ? formatRecipeDraftForContext(data.result.recipeDraft)
             : undefined;
-        setMessages((currentMessages) => [
-          ...currentMessages,
-          { role: "assistant", content: data.result.message, context: draftContext },
-        ]);
+        const referenceContext = data.result.referenceContext;
+        setMessages((currentMessages) => {
+          // 新規参照レシピが解決された場合、その全文を直前のuserメッセージへ焼き込む。
+          // 以降のターンでは履歴として送られるため、レシピIDの再送が不要になる。
+          const withReference = referenceContext
+            ? currentMessages.map((message, index) =>
+                index === userMessageIndex
+                  ? {
+                      ...message,
+                      context: message.context
+                        ? `${message.context}\n\n${referenceContext}`
+                        : referenceContext,
+                    }
+                  : message,
+              )
+            : currentMessages;
+          return [
+            ...withReference,
+            { role: "assistant", content: data.result.message, context: draftContext },
+          ];
+        });
+        if (newReferenceIds.length > 0 && referenceContext) {
+          setInjectedReferenceIds(
+            (current) => new Set([...current, ...newReferenceIds]),
+          );
+        }
         setSuggestions(data.result.suggestions);
         if (data.result.intent === "recipe_draft" && data.result.recipeDraft) {
           setRecipeDraft(data.result.recipeDraft);
@@ -144,6 +188,10 @@ export function AiRecipeGenerator({ tagCategories }: Props) {
 
   const handleSubmit = async () => {
     await sendMessage(prompt);
+  };
+
+  const removeReferenceRecipe = (id: string) => {
+    setReferenceRecipes((current) => current.filter((recipe) => recipe.id !== id));
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -228,6 +276,36 @@ export function AiRecipeGenerator({ tagCategories }: Props) {
               </div>
             )}
 
+            <div className="flex flex-wrap items-center gap-2">
+              <Button
+                type="button"
+                variant="secondary"
+                size="sm"
+                disabled={isLoading}
+                onClick={() => setIsPickerOpen(true)}
+              >
+                <BookOpenIcon className="h-4 w-4" />
+                レシピを参照
+              </Button>
+              {referenceRecipes.map((recipe) => (
+                <span
+                  key={recipe.id}
+                  className="bg-primary/10 text-primary ring-primary/20 inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium ring-1"
+                >
+                  {recipe.title}
+                  <button
+                    type="button"
+                    aria-label={`${recipe.title}を参照から外す`}
+                    onClick={() => removeReferenceRecipe(recipe.id)}
+                    className="hover:text-primary-hover"
+                    disabled={isLoading}
+                  >
+                    <CloseIcon className="h-3 w-3" />
+                  </button>
+                </span>
+              ))}
+            </div>
+
             <div className="flex gap-3">
               <Textarea
                 value={prompt}
@@ -269,6 +347,13 @@ export function AiRecipeGenerator({ tagCategories }: Props) {
           />
         </div>
       )}
+
+      <ReferenceRecipePicker
+        open={isPickerOpen}
+        onClose={() => setIsPickerOpen(false)}
+        selected={referenceRecipes}
+        onConfirm={setReferenceRecipes}
+      />
     </div>
   );
 }

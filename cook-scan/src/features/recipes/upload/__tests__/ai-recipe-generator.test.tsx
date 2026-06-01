@@ -16,6 +16,37 @@ vi.mock("../actions", () => ({
   createRecipe: (...args: [CreateRecipeRequest]) => mockCreateRecipe(...args),
 }));
 
+// 参照レシピ選択モーダルが使う Server Action をモック。
+vi.mock("@/features/recipes/list/actions", () => ({
+  getRecipesWithFilters: vi.fn(),
+}));
+
+// Radix Dialog Portal をインラインレンダリングに変更（モーダル内容をテスト可能にする）。
+vi.mock("@radix-ui/react-dialog", async () => {
+  const actual =
+    await vi.importActual<typeof import("@radix-ui/react-dialog")>("@radix-ui/react-dialog");
+  return {
+    ...actual,
+    Portal: ({ children }: { children: React.ReactNode }) => children,
+  };
+});
+
+import { getRecipesWithFilters } from "@/features/recipes/list/actions";
+
+function buildReferenceListItem(id: string, title: string) {
+  return {
+    id,
+    userId: "user-1",
+    title,
+    imageUrl: null,
+    memo: null,
+    createdAt: new Date("2026-01-01"),
+    updatedAt: new Date("2026-01-01"),
+    ingredients: [],
+    recipeTags: [],
+  };
+}
+
 global.fetch = vi.fn();
 
 describe("AiRecipeGenerator", () => {
@@ -31,6 +62,13 @@ describe("AiRecipeGenerator", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockCreateRecipe.mockResolvedValue({ ok: true, data: { recipeId: "recipe-1" } });
+    vi.mocked(getRecipesWithFilters).mockResolvedValue({
+      ok: true,
+      data: [
+        buildReferenceListItem("recipe-1", "カレー"),
+        buildReferenceListItem("recipe-2", "シチュー"),
+      ],
+    });
   });
 
   it("renders the AI recipe generation form", () => {
@@ -274,6 +312,177 @@ describe("AiRecipeGenerator", () => {
 
     await waitFor(() => {
       expect(screen.getByText("レシピ生成に失敗しました")).toBeInTheDocument();
+    });
+  });
+
+  describe("参照レシピ機能", () => {
+    // --- Given helpers ---
+
+    // API が chat 応答を返す状態にする。
+    // referenceContext を渡すと、サーバーが新規参照レシピを解決して返した状況を再現する。
+    function givenChatResponse(referenceContext: string | null = null) {
+      (global.fetch as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
+        json: async () => ({
+          status: "success",
+          result: {
+            message: "了解しました。",
+            intent: "chat",
+            recipeDraft: null,
+            suggestions: ["辛くする"],
+            referenceContext,
+          },
+        }),
+      });
+    }
+
+    // モーダルを開き、指定したタイトルのレシピを参照に追加した状態にする。
+    async function givenReferencedRecipes(user: ReturnType<typeof userEvent.setup>, titles: string[]) {
+      await user.click(screen.getByRole("button", { name: /レシピを参照/ }));
+      await waitFor(() => {
+        expect(screen.getByText(titles[0])).toBeInTheDocument();
+      });
+      for (const title of titles) {
+        await user.click(screen.getByText(title));
+      }
+      await user.click(screen.getByRole("button", { name: new RegExp(`${titles.length}件を参照に追加`) }));
+      await waitFor(() => {
+        expect(
+          screen.getByRole("button", { name: new RegExp(`${titles[0]}を参照から外す`) }),
+        ).toBeInTheDocument();
+      });
+    }
+
+    // --- When helpers ---
+
+    async function whenSubmitMessage(user: ReturnType<typeof userEvent.setup>, text: string) {
+      const callsBefore = (global.fetch as ReturnType<typeof vi.fn>).mock.calls.length;
+      await user.type(screen.getByPlaceholderText(/鶏むね肉、玉ねぎ、卵/), text);
+      // 送信ボタンのラベルは初回「レシピを提案」、2ターン目以降は「送信」。
+      await user.click(screen.getByRole("button", { name: /レシピを提案|送信/ }));
+      await waitFor(() => {
+        expect((global.fetch as ReturnType<typeof vi.fn>).mock.calls.length).toBe(callsBefore + 1);
+      });
+    }
+
+    // --- Then helper ---
+
+    function lastRequestBody() {
+      const lastCall = (global.fetch as ReturnType<typeof vi.fn>).mock.calls.at(-1)!;
+      return JSON.parse((lastCall[1] as RequestInit).body as string);
+    }
+
+    it("参照レシピを追加すると、対応するチップが表示される", async () => {
+      // Given: レンダリング済みの画面
+      const user = userEvent.setup();
+      render(<AiRecipeGenerator tagCategories={mockTagCategories} />);
+
+      // When: モーダルからカレーとシチューを参照に追加する
+      await givenReferencedRecipes(user, ["カレー", "シチュー"]);
+
+      // Then: 両方のチップが表示される
+      expect(screen.getByRole("button", { name: /カレーを参照から外す/ })).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: /シチューを参照から外す/ })).toBeInTheDocument();
+    });
+
+    it("参照レシピがある状態で送信すると、body に referenceRecipeIds が含まれる", async () => {
+      // Given: カレーとシチューを参照中、API は chat 応答を返す
+      const user = userEvent.setup();
+      render(<AiRecipeGenerator tagCategories={mockTagCategories} />);
+      await givenReferencedRecipes(user, ["カレー", "シチュー"]);
+      givenChatResponse();
+
+      // When: メッセージを送信する
+      await whenSubmitMessage(user, "この2つを合体させて");
+
+      // Then: 参照中の全レシピIDが body に乗る
+      expect(lastRequestBody().referenceRecipeIds).toEqual(["recipe-1", "recipe-2"]);
+    });
+
+    it("参照レシピがない状態で送信すると、body に referenceRecipeIds を含めない", async () => {
+      // Given: 参照レシピなし、API は chat 応答を返す
+      const user = userEvent.setup();
+      render(<AiRecipeGenerator tagCategories={mockTagCategories} />);
+      givenChatResponse();
+
+      // When: メッセージを送信する
+      await whenSubmitMessage(user, "鶏むね肉で作りたい");
+
+      // Then: referenceRecipeIds は付与されない
+      expect(lastRequestBody().referenceRecipeIds).toBeUndefined();
+    });
+
+    it("チップの×を押すと、そのチップが消える", async () => {
+      // Given: カレーとシチューを参照中
+      const user = userEvent.setup();
+      render(<AiRecipeGenerator tagCategories={mockTagCategories} />);
+      await givenReferencedRecipes(user, ["カレー", "シチュー"]);
+
+      // When: シチューのチップを外す
+      await user.click(screen.getByRole("button", { name: /シチューを参照から外す/ }));
+
+      // Then: シチューのチップだけが消え、カレーは残る
+      await waitFor(() => {
+        expect(
+          screen.queryByRole("button", { name: /シチューを参照から外す/ }),
+        ).not.toBeInTheDocument();
+      });
+      expect(screen.getByRole("button", { name: /カレーを参照から外す/ })).toBeInTheDocument();
+    });
+
+    it("参照を外して送信すると、外したレシピIDが body から除外される", async () => {
+      // Given: カレーとシチューを参照中で、シチューを外した状態
+      const user = userEvent.setup();
+      render(<AiRecipeGenerator tagCategories={mockTagCategories} />);
+      await givenReferencedRecipes(user, ["カレー", "シチュー"]);
+      await user.click(screen.getByRole("button", { name: /シチューを参照から外す/ }));
+      await waitFor(() => {
+        expect(
+          screen.queryByRole("button", { name: /シチューを参照から外す/ }),
+        ).not.toBeInTheDocument();
+      });
+      givenChatResponse();
+
+      // When: メッセージを送信する
+      await whenSubmitMessage(user, "カレーをアレンジして");
+
+      // Then: 残ったカレーのIDだけが body に乗る
+      expect(lastRequestBody().referenceRecipeIds).toEqual(["recipe-1"]);
+    });
+
+    it("一度焼き込んだ参照レシピは、次のターンで再送されない", async () => {
+      // Given: カレーを参照して送信済み（サーバーが整形テキストを返した）
+      const user = userEvent.setup();
+      render(<AiRecipeGenerator tagCategories={mockTagCategories} />);
+      await givenReferencedRecipes(user, ["カレー"]);
+      givenChatResponse("タイトル: カレー\n材料:\n- 玉ねぎ: 1個");
+      await whenSubmitMessage(user, "これをアレンジして");
+      // 1ターン目では新規参照として ID が送られている
+      expect(lastRequestBody().referenceRecipeIds).toEqual(["recipe-1"]);
+
+      // When: 同じ参照のまま追加で送信する
+      givenChatResponse();
+      await whenSubmitMessage(user, "もっと辛くして");
+
+      // Then: 2ターン目では referenceRecipeIds は送られない（重複注入を避ける）
+      expect(lastRequestBody().referenceRecipeIds).toBeUndefined();
+    });
+
+    it("焼き込んだ参照レシピの内容は、次のターンの会話履歴に含まれる", async () => {
+      // Given: カレーを参照して送信済み（整形テキストが履歴に焼き込まれる）
+      const user = userEvent.setup();
+      render(<AiRecipeGenerator tagCategories={mockTagCategories} />);
+      await givenReferencedRecipes(user, ["カレー"]);
+      givenChatResponse("タイトル: カレー\n材料:\n- 玉ねぎ: 1個");
+      await whenSubmitMessage(user, "これをアレンジして");
+
+      // When: 追加で送信する
+      givenChatResponse();
+      await whenSubmitMessage(user, "もっと辛くして");
+
+      // Then: 焼き込まれた参照テキストが2ターン目の messages に残っている
+      const messages = lastRequestBody().messages as Array<{ role: string; content: string }>;
+      const userMessage = messages.find((message) => message.content.includes("これをアレンジして"));
+      expect(userMessage?.content).toContain("タイトル: カレー");
     });
   });
 });
