@@ -1,7 +1,18 @@
 import { openaiGpt } from "@/backend/ai/models/openai";
+import { checkUserProfile } from "@/features/auth/auth-utils";
 import { generateObject } from "ai";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
+
+const MAX_TEXT_LENGTH = 20000;
+
+const requestSchema = z.object({
+  text: z
+    .string()
+    .trim()
+    .min(1, "textは必須です")
+    .max(MAX_TEXT_LENGTH, `textは${MAX_TEXT_LENGTH}文字以内で指定してください`),
+});
 
 const recipeSchema = z.object({
   title: z.string(),
@@ -71,12 +82,19 @@ const systemPrompt = `
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-    const { text } = body;
-
-    if (!text || typeof text !== "string") {
-      return NextResponse.json({ status: "error", error: "textは必須です" }, { status: 400 });
+    const { hasAuth, hasProfile, profile } = await checkUserProfile();
+    if (!hasAuth || !hasProfile || !profile) {
+      return NextResponse.json({ status: "error", error: "認証が必要です" }, { status: 401 });
     }
+
+    const parsed = requestSchema.safeParse(await request.json());
+    if (!parsed.success) {
+      return NextResponse.json(
+        { status: "error", error: parsed.error.issues[0]?.message ?? "textは必須です" },
+        { status: 400 },
+      );
+    }
+    const { text } = parsed.data;
 
     const { object } = await generateObject({
       model: openaiGpt,

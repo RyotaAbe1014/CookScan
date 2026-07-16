@@ -10,6 +10,10 @@ const USER_ROLE = "user";
 const ASSISTANT_ROLE = "assistant";
 const MESSAGE_ROLES = [USER_ROLE, ASSISTANT_ROLE] as const;
 const MAX_SUGGESTION_COUNT = 4;
+// 参照レシピ全文やレシピ下書きが履歴に焼き込まれるため、1メッセージの上限は余裕を持たせる。
+const MAX_MESSAGE_LENGTH = 20000;
+const MAX_MESSAGE_COUNT = 50;
+const MAX_REFERENCE_RECIPE_COUNT = 10;
 
 // 参照レシピが見つからなかった場合に投げる識別用エラー。
 class ReferenceRecipeNotFoundError extends Error {}
@@ -19,14 +23,22 @@ const requestSchema = z.object({
     .array(
       z.object({
         role: z.enum(MESSAGE_ROLES),
-        content: z.string().trim().min(1),
+        content: z
+          .string()
+          .trim()
+          .min(1)
+          .max(MAX_MESSAGE_LENGTH, `メッセージは${MAX_MESSAGE_LENGTH}文字以内で入力してください`),
       }),
     )
     .min(1, "messagesは1件以上必要です")
+    .max(MAX_MESSAGE_COUNT, `messagesは${MAX_MESSAGE_COUNT}件以内にしてください`)
     .refine((messages) => messages[messages.length - 1]?.role === USER_ROLE, {
       message: "最後のメッセージはuserである必要があります",
     }),
-  referenceRecipeIds: z.array(z.string().uuid()).optional(),
+  referenceRecipeIds: z
+    .array(z.uuid())
+    .max(MAX_REFERENCE_RECIPE_COUNT, `参照レシピは${MAX_REFERENCE_RECIPE_COUNT}件までです`)
+    .optional(),
 });
 
 const recipeDraftSchema = z.object({
