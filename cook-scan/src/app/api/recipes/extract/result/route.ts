@@ -2,8 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { GetObjectCommand } from "@aws-sdk/client-s3";
 import { getS3Client } from "@/lib/aws/s3";
 import { checkUserProfile } from "@/features/auth/auth-utils";
+import { z } from "zod";
 
 const S3_BUCKET_NAME = process.env.S3_BUCKET_NAME;
+
+// presign ルートで randomUUID() により発行された値のみ受け付ける。
+// S3 キーに連結するため、パス断片などの混入をここで遮断する。
+const jobIdSchema = z.string().uuid();
 
 export async function GET(request: NextRequest) {
   try {
@@ -12,10 +17,11 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ success: false, error: "認証が必要です" }, { status: 401 });
     }
 
-    const jobId = request.nextUrl.searchParams.get("jobId");
-    if (!jobId) {
-      return NextResponse.json({ success: false, error: "jobId は必須です" }, { status: 400 });
+    const parsedJobId = jobIdSchema.safeParse(request.nextUrl.searchParams.get("jobId"));
+    if (!parsedJobId.success) {
+      return NextResponse.json({ success: false, error: "jobId が不正です" }, { status: 400 });
     }
+    const jobId = parsedJobId.data;
 
     if (!S3_BUCKET_NAME) {
       throw new Error("環境変数 AWS_S3_BUCKET_NAME が設定されていません");

@@ -2,8 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { SendMessageCommand } from "@aws-sdk/client-sqs";
 import { getSQSClient } from "@/lib/aws/sqs";
 import { checkUserProfile } from "@/features/auth/auth-utils";
+import { z } from "zod";
 
 const AWS_SQS_QUEUE_URL = process.env.AWS_SQS_QUEUE_URL;
+
+// presign ルートで randomUUID() により発行された値のみ受け付ける。
+// S3 プレフィックスに連結するため、パス断片などの混入をここで遮断する。
+const jobIdSchema = z.string().uuid();
 
 export async function POST(request: NextRequest) {
   try {
@@ -17,11 +22,12 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { jobId } = body;
+    const parsedJobId = jobIdSchema.safeParse(body.jobId);
 
-    if (typeof jobId !== "string" || !jobId) {
-      return NextResponse.json({ success: false, error: "jobId は必須です" }, { status: 400 });
+    if (!parsedJobId.success) {
+      return NextResponse.json({ success: false, error: "jobId が不正です" }, { status: 400 });
     }
+    const jobId = parsedJobId.data;
 
     const userId = profile.id;
     const s3Prefix = `uploads/${userId}/${jobId}/`;
