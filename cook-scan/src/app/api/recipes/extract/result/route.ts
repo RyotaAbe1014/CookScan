@@ -8,7 +8,7 @@ const S3_BUCKET_NAME = process.env.S3_BUCKET_NAME;
 
 // presign ルートで randomUUID() により発行された値のみ受け付ける。
 // S3 キーに連結するため、パス断片などの混入をここで遮断する。
-const jobIdSchema = z.string().uuid();
+const jobIdSchema = z.uuid();
 
 export async function GET(request: NextRequest) {
   try {

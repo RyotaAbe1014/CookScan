@@ -36,7 +36,7 @@ const requestSchema = z.object({
       message: "最後のメッセージはuserである必要があります",
     }),
   referenceRecipeIds: z
-    .array(z.string().uuid())
+    .array(z.uuid())
     .max(MAX_REFERENCE_RECIPE_COUNT, `参照レシピは${MAX_REFERENCE_RECIPE_COUNT}件までです`)
     .optional(),
 });

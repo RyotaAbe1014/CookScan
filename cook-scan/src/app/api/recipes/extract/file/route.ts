@@ -8,7 +8,7 @@ const AWS_SQS_QUEUE_URL = process.env.AWS_SQS_QUEUE_URL;
 
 // presign ルートで randomUUID() により発行された値のみ受け付ける。
 // S3 プレフィックスに連結するため、パス断片などの混入をここで遮断する。
-const jobIdSchema = z.string().uuid();
+const jobIdSchema = z.uuid();
 
 export async function POST(request: NextRequest) {
   try {
